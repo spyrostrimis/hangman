@@ -5,7 +5,7 @@ function Hello() {
     const [data, setData] = useState("")
 
     async function helloserver() {
-        let response = await axios.get("http://localhost:8000/")
+        let response = await axios.get("https://engman.up.railway.app/");
         console.log(response);
         setData(response.data)
     }
