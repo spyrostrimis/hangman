@@ -1,10 +1,13 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 require("dotenv").config();
 const mongoose = require("mongoose");
 
 const port = 8000 || process.env.port;
 const URI = process.env.MONGODB_URI;
+
+app.use(cors());
 
 main()
     .then(() => console.log("Database connected!"))
