@@ -5,16 +5,12 @@ function Hello() {
     const [data, setData] = useState("")
 
     async function helloserver() {
-        let response = await axios.get(
-          "https://hangman-server-ten.vercel.app",
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods":
-                "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-            },
-          }
-        );
+        let response = await axios.get("https://engman.up.railway.app", {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          },
+        });
         console.log(response);
         setData(response.data)
     }
