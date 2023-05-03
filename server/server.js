@@ -9,6 +9,17 @@ const URI = process.env.MONGODB_URI;
 
 app.use(cors());
 
+app.use((req, res, next) => {
+  res.set({
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "*",
+    "Access-Control-Allow-Headers":
+      "'Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token'",
+  });
+
+  next();
+});
+
 main()
     .then(() => console.log("Database connected!"))
     .catch((err) => console.log(err));
