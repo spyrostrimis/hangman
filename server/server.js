@@ -4,10 +4,13 @@ const app = express();
 require("dotenv").config();
 const mongoose = require("mongoose");
 
+const userRouter = require("./Routers/userrouter");
+
 const port = 8000 || process.env.port;
 const URI = process.env.MONGODB_URI;
 
 app.use(cors());
+app.use(express.json());
 
 // app.use((req, res, next) => {
 //   res.set({
@@ -33,6 +36,8 @@ async function main() {
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+app.use("/", userRouter);
 
 app.listen(port, () => {
     console.log(`Hangman listening on port ${port}`);
