@@ -9,16 +9,16 @@ const URI = process.env.MONGODB_URI;
 
 app.use(cors());
 
-app.use((req, res, next) => {
-  res.set({
-    "Access-Control-Allow-Origin": "https://engman.up.railway.app",
-    "Access-Control-Allow-Methods": "*",
-    "Access-Control-Allow-Headers":
-      "Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token",
-  });
+// app.use((req, res, next) => {
+//   res.set({
+//     "Access-Control-Allow-Origin": "https://engman.up.railway.app",
+//     "Access-Control-Allow-Methods": "*",
+//     "Access-Control-Allow-Headers":
+//       "Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token",
+//   });
 
-  next();
-});
+//   next();
+// });
 
 
 
