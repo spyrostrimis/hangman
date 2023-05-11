@@ -1,3 +1,36 @@
 .App {
+  display: flex;
+  flex-direction: column;
   text-align: center;
+  /* gap: 2rem; */
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.keyboardbtn {
+  width: 100%;
+  /* border: 3px solid black; */
+  background: none;
+  /* aspect-ratio: 1 / 1; */
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  padding: .5rem;
+  /* font-weight: bold; */
+  cursor: pointer;
+  color: black;
+}
+
+.keyboardbtn.active {
+  background-color: hsl(200, 100%, 50%);
+  color: white;
+}
+
+.keyboardbtn.inactive {
+  opacity: .3;
+}
+
+.keyboardbtn:hover:not(:disabled),
+.keyboardbtn:focus:not(:disabled) {
+  background-color: hsl(200, 100%, 75%);
 }
