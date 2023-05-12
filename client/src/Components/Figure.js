@@ -2,6 +2,7 @@ import React from 'react'
 
 const HEAD = (
   <div
+    key="head"
     style={{
       height: "40px",
       width: "40px",
@@ -16,6 +17,7 @@ const HEAD = (
 
 const BODY = (
   <div
+    key="body"
     style={{
       height: "110px",
       width: "10px",
@@ -29,6 +31,7 @@ const BODY = (
 
 const LEFT_ARM = (
   <div
+    key="leftarm"
     style={{
       height: "10px",
       width: "100px",
@@ -44,6 +47,7 @@ const LEFT_ARM = (
 
 const RIGHT_ARM = (
   <div
+    key="rightarm"
     style={{
       height: "10px",
       width: "112px",
@@ -58,6 +62,7 @@ const RIGHT_ARM = (
 
 const LEFT_LEG = (
   <div
+    key="leftleg"
     style={{
       height: "120px",
       width: "10px",
@@ -73,6 +78,7 @@ const LEFT_LEG = (
 
 const RIGHT_LEG = (
   <div
+    key="rightleg"
     style={{
       height: "128px",
       width: "10px",

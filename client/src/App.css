@@ -10,7 +10,7 @@
 
 .keyboardbtn {
   width: 100%;
-  /* border: 3px solid black; */
+  border: 2px solid black;
   background: none;
   /* aspect-ratio: 1 / 1; */
   font-size: 1.5rem;
@@ -26,11 +26,24 @@
   color: white;
 }
 
+
+
 .keyboardbtn.inactive {
   opacity: .3;
 }
 
+.keyboardbtn:disabled {
+    cursor: not-allowed;
+    /* opacity: .8; */
+}
+
+.keyboardbtn.active:disabled {
+  background-color: hsl(200, 100%, 50%);
+  color: white;
+  opacity: .8;
+}
+
 .keyboardbtn:hover:not(:disabled),
 .keyboardbtn:focus:not(:disabled) {
-  background-color: hsl(200, 100%, 75%);
+  background-color: hsl(78, 100%, 75%);
 }

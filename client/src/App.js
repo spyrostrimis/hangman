@@ -7,7 +7,7 @@ import Word from "./Components/Word";
 import Keyboard from "./Components/Keyboard";
 import words from "./wordList.json"
 
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
 
 
 function App() {
@@ -15,11 +15,44 @@ function App() {
     return words[Math.floor(Math.random() * words.length)]
   })
   const [chosenLetters, setChosenLetters] = useState([])
-  const incorrectGuesses = chosenLetters.filter( letter => !wordToFind.includes(letter))
+  const incorrectGuesses = chosenLetters.filter(letter => !wordToFind.includes(letter))
+
+  const Loser = incorrectGuesses.length >= 6;
+  const Winner = wordToFind
+    .split("")
+    .every((letter) => chosenLetters.includes(letter));
+  
+  const addChosenLetter = useCallback(
+    (letter) => {
+      if (chosenLetters.includes(letter)) return;
+
+      setChosenLetters((currentLetters) => [...currentLetters, letter]);
+      console.log(chosenLetters);
+    },
+    [chosenLetters, Winner, Loser]
+  );
+
+  useEffect(() => {
+    // e: KeyboardEvent
+    const handler = (e) => {
+      const key = e.key;
+      if (!key.match(/^[a-zA-Z]$/)) return;
+
+      e.preventDefault();
+      addChosenLetter(key);
+    };
+
+    document.addEventListener("keypress", handler);
+
+    return () => {
+      document.removeEventListener("keypress", handler);
+    };
+  }, [chosenLetters]);
 
   return (
     <div className="App">
-      Brand New World
+      {Winner && "Winner! - Refresh to try again"}
+      {Loser && "Nice Try - Refresh to try again"}
       <br />
       <Hello />
       <br />
@@ -31,7 +64,11 @@ function App() {
       <br />
       <div>{wordToFind}</div>
       <br />
-      <Word wordToFind={wordToFind} chosenLetters={chosenLetters} />
+      <Word
+        reveal={Loser}
+        wordToFind={wordToFind}
+        chosenLetters={chosenLetters}
+      />
       <br />
       <div
         style={{
@@ -40,7 +77,14 @@ function App() {
           marginRight: "10px",
         }}
       >
-        <Keyboard />
+        <Keyboard
+          disabled={Winner || Loser}
+          activeLetters={chosenLetters.filter((letter) =>
+            wordToFind.includes(letter)
+          )}
+          inactiveLetters={incorrectGuesses}
+          addChosenLetter={addChosenLetter}
+        />
       </div>
     </div>
   );

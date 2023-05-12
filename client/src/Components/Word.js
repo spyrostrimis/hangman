@@ -2,7 +2,7 @@ import React from 'react'
 
 
 
-const Word = ({ wordToFind, chosenLetters }) => {
+const Word = ({ wordToFind, chosenLetters, reveal = false }) => {
   return (
     <div
       style={{
@@ -16,7 +16,10 @@ const Word = ({ wordToFind, chosenLetters }) => {
         <span style={{ borderBottom: "solid black" }} key={index}>
           <span
             style={{
-              visibility: chosenLetters.includes(letter) ? "visible" : "hidden",
+              visibility:
+                chosenLetters.includes(letter) || reveal ? "visible" : "hidden",
+              color:
+                !chosenLetters.includes(letter) && reveal ? "red" : "black",
             }}
           >
             {letter}
