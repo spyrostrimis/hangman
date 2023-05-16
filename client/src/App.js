@@ -10,7 +10,7 @@ import Figure from './Components/Figure';
 import Word from "./Components/Word";
 import Wordfacts from './Components/Wordfacts';
 import Keyboard from "./Components/Keyboard";
-import words from "./wordList.json"
+import Halloffame from "./Components/Halloffame";
 
 import { useCallback, useEffect, useState } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
@@ -45,9 +45,10 @@ function App() {
   );
 
   const Loser = incorrectGuesses.length >= 6;
-  const Winner = wordToFind
-    .split("")
-    .every((letter) => chosenLetters.includes(letter));
+  const Winner =
+    wordToFind &&
+    wordToFind.split("").every((letter) => chosenLetters.includes(letter));
+  console.log("Winner:", Winner);
 
   const addChosenLetter = useCallback(
     (letter) => {
@@ -113,7 +114,11 @@ function App() {
                 }}
               >
                 <Figure incorrectGuesses={incorrectGuesses.length} />
-                <Wordfacts Loser={Loser} Winner={Winner} wordToFindData={wordToFindData} />
+                <Wordfacts
+                  Loser={Loser}
+                  Winner={Winner}
+                  wordToFindData={wordToFindData}
+                />
               </div>
               <br />
               <div>{wordToFind}</div>
@@ -124,6 +129,7 @@ function App() {
                 chosenLetters={chosenLetters}
                 setWordToFindData={setWordToFindData}
                 setWordToFind={setWordToFind}
+                Winner={Winner}
               />
               <br />
               <div
@@ -148,6 +154,7 @@ function App() {
             </>
           }
         />
+        <Route path="/hall-of-fame" element={<Halloffame Winner={Winner} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<Navigate to="/" replace />} />

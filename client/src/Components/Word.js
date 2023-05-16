@@ -7,8 +7,12 @@ const Word = ({
   setWordToFindData,
   setWordToFind,
   chosenLetters,
+  Winner = false,
   reveal = false,
 }) => {
+
+  let token = localStorage.getItem("token");
+
   async function getWordData() {
     let response = await axios.get("http://localhost:8000/word/get-all-words");
     console.log("I fire once!");
@@ -29,9 +33,23 @@ const Word = ({
       .then((data) => setWordToFind(data.word));
   }, []);
 
+if (token) {
+  if (Winner) {
+    axios
+      .put("http://localhost:8000/user/add100")
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+}
+
   return (
     <div
       style={{
+        fontFamily: "monospace",
         fontSize: "2rem",
         textTransform: "uppercase",
         display: "flex",

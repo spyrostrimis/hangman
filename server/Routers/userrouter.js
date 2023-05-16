@@ -77,4 +77,42 @@ router.post("/user/login", async (req, res) => {
   }
 });
 
+// HALL OF FAME
+router.get("/user/get-best-scores", async (req, res) => {
+  try {
+    // const allusers = await User.find({ score: { $gte: 1 } }); -> at least score 1
+    const allusers = await User.find().sort({ score: -1 });
+    const sortedUsers = allusers.map((user) => ({
+      // Remove the password field from each user object
+      // _id: user._id,
+      username: user.username,
+      score: user.score,
+    }));
+    res.send(sortedUsers);
+  } catch (error) {
+    res.send(error);
+  }
+});
+
+// ADD 100 points to Winner
+router.put("/user/add100", async (req, res) => {
+  const userId = "6462e690ed214bf3f99fb03a";
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    const newScore = user.score + 100;
+
+    await User.findByIdAndUpdate(userId, { score: newScore });
+    res.send("Score updated successfully");
+  } catch (error) {
+    res.status(500).send("Error updating score");
+  }
+});
+
+
+
 module.exports = router;

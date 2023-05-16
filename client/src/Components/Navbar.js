@@ -29,14 +29,15 @@ const Navbar = () => {
       <nav>
         {token ? (
           <>
-            <Link to="#">{decoded ? decoded.username : null}</Link>
-            <Link to="/savedmovies">Saved Movies</Link>
+            {/* <Link to="#">{decoded ? decoded.username : null}</Link> */}
+            <Link to="/hall-of-fame">Hall of Fame</Link>
             <Link onClick={logout} to="/login">
               Logout
             </Link>
           </>
         ) : (
           <>
+            <Link to="/hall-of-fame">Hall of Fame</Link>
             <Link to="/login">Login</Link>
             <Link to="/signup">Signup</Link>
           </>

@@ -6,13 +6,13 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   name: { type: String },
   surname: { type: String },
-//   email: { type: mongoose.SchemaTypes.Email, unique: true },
+  //   email: { type: mongoose.SchemaTypes.Email, unique: true },
   role: { type: String },
-    score: { type: Number },
+  score: { type: Number, default: 0 },
   // default 0
   password: {
     type: String,
-    required: true
+    required: true,
     // match: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{6,}$/,
     // Explanation of the regex pattern:
     // ^                 - Start of the string
