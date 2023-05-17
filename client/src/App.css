@@ -28,6 +28,7 @@
     /* font-weight: 600; */
     font-family:'PT Sans Narrow', sans-serif;
     font-size: 22px;
+    color: #206EC7;
 }
 
 .formcontainer {
@@ -105,14 +106,14 @@ a#checkmark {
   /* aspect-ratio: 1 / 1; */
   font-size: 1.5rem;
   text-transform: uppercase;
-  padding: .5rem;
+  padding: .45rem .5rem;
   /* font-weight: bold; */
   cursor: pointer;
   color: black;
 }
 
 .keyboardbtn.active {
-  background-color: hsl(200, 100%, 50%);
+  background-color: rgb(22 142 27);
   color: white;
 }
 
@@ -128,7 +129,7 @@ a#checkmark {
 }
 
 .keyboardbtn.active:disabled {
-  background-color: hsl(200, 100%, 50%);
+  background-color: rgb(22 142 27);
   color: white;
   opacity: .8;
 }

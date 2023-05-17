@@ -1,10 +1,20 @@
 import React from 'react'
+import { useState } from "react";
 
 const Wordfacts = ({
   wordToFindData,
     Loser = false,
   Winner = false
 }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handlePlay = () => {
+    setIsPlaying(true);
+    const audio = new Audio(wordToFindData.sound);
+    audio.play();
+    audio.onended = () => setIsPlaying(false);
+  };
+
     return (
       <div
         style={{
@@ -14,6 +24,12 @@ const Wordfacts = ({
         <p>Definition: {wordToFindData.definition}</p>
         <p>{wordToFindData.example}</p>
         <p>{wordToFindData.explanation}</p>
+        <p>{wordToFindData.synonym}</p>
+        <p>{wordToFindData.shortdef}</p>
+        <p>{wordToFindData.ipa}</p>
+        <button disabled={isPlaying} onClick={handlePlay}>
+          {isPlaying ? "Playing..." : "Play Sound"}
+        </button>
       </div>
     );
     

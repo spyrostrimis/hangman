@@ -17,10 +17,10 @@ const Word = ({
     let response = await axios.get("http://localhost:8000/word/get-all-words");
     console.log("I fire once!");
     let allwords = response.data;
-    console.log(
-      "getWordData:",
-      allwords[Math.floor(Math.random() * allwords.length)]
-    );
+    // console.log(
+    //   "getWordData:",
+    //   allwords[Math.floor(Math.random() * allwords.length)]
+    // );
     return allwords[Math.floor(Math.random() * allwords.length)];
   }
 
@@ -35,8 +35,13 @@ const Word = ({
 
 if (token) {
   if (Winner) {
+    console.log("TokenWord:", token);
     axios
-      .put("http://localhost:8000/user/add100")
+      .put("http://localhost:8000/user/add100", null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         console.log(res.data);
       })

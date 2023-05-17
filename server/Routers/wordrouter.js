@@ -154,7 +154,7 @@ router.get("/word/get-all-words-create-random", async (req, res) => {
       ],
     });
     const word = resword.data.choices[0].message.content;
-    // console.log("Word:", word);
+    console.log("Word:", word);
     // console.log("Response:", response);
     // return res.json({ msg: "Responded successfully.", word });
 
@@ -173,7 +173,7 @@ router.get("/word/get-all-words-create-random", async (req, res) => {
       ],
     });
     const definition = resdefinition.data.choices[0].message.content;
-    // console.log(definition);
+    console.log("Def:", definition);
 
     const resexample = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -190,7 +190,7 @@ router.get("/word/get-all-words-create-random", async (req, res) => {
       ],
     });
     const example = resexample.data.choices[0].message.content;
-    // console.log(example);
+    console.log("example ok!");
 
     const resexplain = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -202,12 +202,45 @@ router.get("/word/get-all-words-create-random", async (req, res) => {
         },
         {
           role: "user",
-          content: `Explain this sentence ${example} and particularly what this word ${word} means inside that sentence`,
+          content: `Explain this sentence ${example} and particularly what this word ${word} means inside that sentence. If the ${example} is There is not an example for this word then return an empty string`,
         },
       ],
     });
     const explanation = resexplain.data.choices[0].message.content;
-    // console.log(explanation);
+    console.log("explanation ok!");
+    const ressynonym = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      temperature: 2,
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are an English Literature ProfessorGPT helpful assistant teacher of english language and culture",
+        },
+        {
+          role: "user",
+          content: `Give one synonym for the word ${word}. Respond only with 1 synonym and nothing else, no spaces no dots or full stops no symbols. Just one word. Please take into account that your answer will be saved as is to my Mongo Database, please make it lowercase with only a-z characters`,
+        },
+      ],
+    });
+    const synonym = ressynonym.data.choices[0].message.content;
+    console.log(synonym);
+
+    // MERRIAM-WEBSTER'S API
+
+    const resmw = await axios.get(
+      `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=${process.env.MW_KEY}`
+    );
+    // console.log(resmw.data);
+    const ipa = resmw.data[0].hwi.prs[0].mw;
+    console.log(ipa);
+    const soundtitle = resmw.data[0].hwi.prs[0].sound.audio;
+    const sound = `https://media.merriam-webster.com/audio/prons/en/us/mp3/${soundtitle[0]}/${soundtitle}.mp3`
+    console.log(sound);
+    const shortdef = resmw.data[0].shortdef[0];
+      console.log(shortdef);
+
+
     //image
     //   const image = await openai.createImage({
     //     prompt: `An abstract painting of: ${word}`,
@@ -234,8 +267,12 @@ router.get("/word/get-all-words-create-random", async (req, res) => {
       let newWord = await Word.create({
         word,
         definition,
+        shortdef,
         example,
         explanation,
+        synonym,
+        ipa,
+        sound,
       });
       // return res.send({ msg: "Word added successfully!", newWord });
       console.log("New word added successfully!", newWord.word);
@@ -263,9 +300,58 @@ router.get("/word/get-all-words", async (req, res) => {
 
 router.get("/word/get-mw-api", async (req, res) => {
   try {
-    const searchword = "epistemology";
+    // const allwords = await Word.find();
+    // let searchword = allwords[Math.floor(Math.random() * allwords.length)].word;
+    let searchword = "russet";
     const response = await axios.get(
       `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${searchword}?key=${process.env.MW_KEY}`
+    );
+    const searchData = response.data;
+    console.log(response.data[0].hwi);
+    console.log(response.data[0].hwi.prs[0].mw);
+    console.log(response.data[0].hwi.prs[0].sound.audio);
+    console.log(response.data[0].shortdef[0]);
+    // console.log(response.data[0].syns);
+    // if (response.data[0].syns) {
+    //     console.log(response.data[0].syns[0].pt[0][1]);
+    // }
+      res.send(searchData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+// MERRIAM-WEBSTER'S COLLEGIATE® THESAURUS
+router.get("/word/get-mw-thes", async (req, res) => {
+  try {
+    const allwords = await Word.find();
+    let searchword = allwords[Math.floor(Math.random() * allwords.length)].word;
+    const response = await axios.get(
+      `https://www.dictionaryapi.com/api/v3/references/thesaurus/json/${searchword}?key=${process.env.MW_KEY_THESAURUS}`
+    );
+    const searchData = response.data;
+    
+    console.log(response);
+    // console.log(response.data[0].hwi);
+    // console.log(response.data[0].hwi.prs[0].mw);
+    // console.log(response.data[0].hwi.prs[0].sound.audio);
+    console.log(searchword);
+    res.send(searchData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+router.get("/word/get-free-api", async (req, res) => {
+  try {
+    const allwords = await Word.find();
+    let searchword = allwords[Math.floor(Math.random() * allwords.length)].word;
+    const response = await axios.get(
+      `https://api.dictionaryapi.dev/api/v2/entries/en/${searchword}`
     );
     const searchData = response.data;
 

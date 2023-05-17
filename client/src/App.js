@@ -14,7 +14,7 @@ import Halloffame from "./Components/Halloffame";
 
 import { useCallback, useEffect, useState } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 
 
 
@@ -28,12 +28,12 @@ function App() {
   // }
 
   const location = useLocation();
-  // const isHomePage = location.pathname === "/";
+  const isHangPage = location.pathname === "/hangman";
 
   const [wordToFindData, setWordToFindData] = useState('');
   const [wordToFind, setWordToFind] = useState("");
-  console.log("wordToFindData.word", wordToFindData.word);
-  console.log("wordToFindData", wordToFindData);
+  // console.log("wordToFindData.word", wordToFindData.word);
+  // console.log("wordToFindData", wordToFindData);
   // setWordToFind(wordToFindData.word);
   // useEffect(() => {
   //   getWord().then((word) => setWordToFind(word));
@@ -61,10 +61,12 @@ function App() {
   );
 
   useEffect(() => {
-    // if (!isHomePage || Winner || Loser) {
-    //   // Skip the effect if not on the homepage - *or if the game is over - removed*
-    //   return;
-    // }
+    if (!isHangPage ) {
+      // || Winner || Loser
+      // Skip the effect if not on the homepage - *or if the game is over - removed*
+      setChosenLetters([]);
+      return;
+    }
     // e: KeyboardEvent
     const handler = (e) => {
       const key = e.key;
@@ -79,7 +81,7 @@ function App() {
     return () => {
       document.removeEventListener("keypress", handler);
     };
-  }, [chosenLetters]); // , isHomePage
+  }, [chosenLetters, isHangPage]); // , isHomePage
 
   // useEffect(() => {
   //   if (isHomePage && !Winner && !Loser) {
@@ -149,8 +151,8 @@ function App() {
                 />
               </div>
               <br />
-              {Winner && "Winner! - Refresh to try again"}
-              {Loser && "Nice Try - Refresh to try again"}
+              {Winner && "Winner! - Refresh and play again"}
+              {Loser && "Arghh... Refresh and play again"}
             </>
           }
         />

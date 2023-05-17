@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const User = require("../Models/usermodel")
-// const verifyToken = require("../Middleware/auth");
+const verifyToken = require("../Middleware/auth");
 
 let saltRounds = Number(process.env.SALTY_ROUNDS);
 
@@ -95,8 +95,9 @@ router.get("/user/get-best-scores", async (req, res) => {
 });
 
 // ADD 100 points to Winner
-router.put("/user/add100", async (req, res) => {
-  const userId = "6462e690ed214bf3f99fb03a";
+router.put("/user/add100", verifyToken, async (req, res) => {
+
+  let userId = req.user.userId;
 
   try {
     const user = await User.findById(userId);
