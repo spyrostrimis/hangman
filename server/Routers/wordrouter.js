@@ -232,23 +232,43 @@ router.get("/word/get-all-words-create-random", async (req, res) => {
       `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=${process.env.MW_KEY}`
     );
     // console.log(resmw.data);
-    const ipa = resmw.data[0].hwi.prs[0].mw;
+    let ipa = "";
+    let sound = "";
+    let shortdef = "";
+    if (resmw) {
+      if (resmw.data[0].hwi.prs[0].mw) {
+         ipa = resmw.data[0].hwi.prs[0].mw;
+      }
+      if (resmw.data[0].hwi.prs[0].sound.audio) {
+const soundtitle = resmw.data[0].hwi.prs[0].sound.audio;
+ sound = `https://media.merriam-webster.com/audio/prons/en/us/mp3/${soundtitle[0]}/${soundtitle}.mp3`;
+      }
+      if (resmw.data[0].shortdef[0]) {
+         shortdef = resmw.data[0].shortdef[0];
+      }
+      
+      
+    }
+    
     console.log(ipa);
-    const soundtitle = resmw.data[0].hwi.prs[0].sound.audio;
-    const sound = `https://media.merriam-webster.com/audio/prons/en/us/mp3/${soundtitle[0]}/${soundtitle}.mp3`
+    
     console.log(sound);
-    const shortdef = resmw.data[0].shortdef[0];
+    
       console.log(shortdef);
 
 
     //image
-    //   const image = await openai.createImage({
-    //     prompt: `An abstract painting of: ${word}`,
-    //     n: 1,
-    //     size: "1024x1024",
-    //   });
+      const resimage = await openai.createImage({
+        prompt: `An abstract painting of: ${word}`,
+        n: 1,
+        size: "1024x1024",
+      });
 
-    // console.log(image.data);
+    // console.log(resimage.data.data[0].url);
+    let image = "";
+    if (resimage) {
+      image = resimage.data.data[0].url;
+    }
 
     // const image2 = await openai.createImage({
     //   prompt: `An abstract oil painting of: ${example}`,
@@ -273,6 +293,7 @@ router.get("/word/get-all-words-create-random", async (req, res) => {
         synonym,
         ipa,
         sound,
+        image,
       });
       // return res.send({ msg: "Word added successfully!", newWord });
       console.log("New word added successfully!", newWord.word);

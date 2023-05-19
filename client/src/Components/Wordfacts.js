@@ -27,9 +27,18 @@ const Wordfacts = ({
         <p>{wordToFindData.synonym}</p>
         <p>{wordToFindData.shortdef}</p>
         <p>{wordToFindData.ipa}</p>
+
         <button disabled={isPlaying} onClick={handlePlay}>
           {isPlaying ? "Playing..." : "Play Sound"}
         </button>
+        <div>
+          <img
+            src={wordToFindData.image}
+            alt={`"${wordToFindData.word}" painting by ChatGPT`}
+            title={`"${wordToFindData.word}" by ChatGPT`}
+            width={300}
+          />
+        </div>
       </div>
     );
     

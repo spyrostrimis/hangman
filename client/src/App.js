@@ -11,6 +11,7 @@ import Word from "./Components/Word";
 import Wordfacts from './Components/Wordfacts';
 import Keyboard from "./Components/Keyboard";
 import Halloffame from "./Components/Halloffame";
+import Footer from './Components/Footer';
 
 import { useCallback, useEffect, useState } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
@@ -94,74 +95,80 @@ function App() {
   // }, []);
 
   return (
-    <div className="App">
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Intro />} />
-        <Route
-          path="/hangman"
-          element={
-            <>
-              <Header />
+    <>
+      <div className="App">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Intro />} />
+          <Route
+            path="/hangman"
+            element={
+              <>
+                <Header />
 
-              <br />
-              <br />
-              <div
-                id="figurefacts"
-                style={{
-                  width: "100%",
-                  display: "grid",
-                  gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
-                  justifyItems: "center",
-                }}
-              >
-                <Figure incorrectGuesses={incorrectGuesses.length} />
-                <Wordfacts
-                  Loser={Loser}
+                <br />
+                <br />
+                <div
+                  id="figurefacts"
+                  style={{
+                    width: "100%",
+                    display: "grid",
+                    gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+                    justifyItems: "center",
+                  }}
+                >
+                  <Figure incorrectGuesses={incorrectGuesses.length} />
+                  <Wordfacts
+                    Loser={Loser}
+                    Winner={Winner}
+                    wordToFindData={wordToFindData}
+                  />
+                </div>
+                <br />
+                <div>{wordToFind}</div>
+                <br />
+                <Word
+                  reveal={Loser}
+                  wordToFind={wordToFind}
+                  chosenLetters={chosenLetters}
+                  setWordToFindData={setWordToFindData}
+                  setWordToFind={setWordToFind}
                   Winner={Winner}
-                  wordToFindData={wordToFindData}
                 />
-              </div>
-              <br />
-              <div>{wordToFind}</div>
-              <br />
-              <Word
-                reveal={Loser}
-                wordToFind={wordToFind}
-                chosenLetters={chosenLetters}
-                setWordToFindData={setWordToFindData}
-                setWordToFind={setWordToFind}
-                Winner={Winner}
-              />
-              <br />
-              <div
-                style={{
-                  alignSelf: "stretch",
-                  marginLeft: "10px",
-                  marginRight: "10px",
-                }}
-              >
-                <Keyboard
-                  disabled={Winner || Loser}
-                  activeLetters={chosenLetters.filter((letter) =>
-                    wordToFind.includes(letter)
-                  )}
-                  inactiveLetters={incorrectGuesses}
-                  addChosenLetter={addChosenLetter}
-                />
-              </div>
-              <br />
-              {Winner && "Winner! - Refresh and play again"}
-              {Loser && "Arghh... Refresh and play again"}
-            </>
-          }
-        />
-        <Route path="/hall-of-fame" element={<Halloffame Winner={Winner} />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </div>
+                <br />
+                <div
+                  style={{
+                    alignSelf: "stretch",
+                    marginLeft: "10px",
+                    marginRight: "10px",
+                  }}
+                >
+                  <Keyboard
+                    disabled={Winner || Loser}
+                    activeLetters={chosenLetters.filter((letter) =>
+                      wordToFind.includes(letter)
+                    )}
+                    inactiveLetters={incorrectGuesses}
+                    addChosenLetter={addChosenLetter}
+                  />
+                </div>
+                <br />
+                {Winner && "Winner! - Refresh and play again"}
+                {Loser && "Arghh... Refresh and play again"}
+              </>
+            }
+          />
+          <Route
+            path="/hall-of-fame"
+            element={<Halloffame Winner={Winner} />}
+          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+      <Footer />
+    </>
   );
 }
 

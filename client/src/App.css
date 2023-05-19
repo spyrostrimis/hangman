@@ -1,3 +1,16 @@
+body, html {
+  margin: 0;
+  /* width: 100vw;
+  height: 100%; */
+  min-height: 100%;
+  box-sizing: border-box;
+  /* overflow-x: hidden;
+    overflow-y: hidden; */
+    background-color: #e6f5f7;
+    background-color: #BFC2BA;
+    
+}
+
 .App {
   display: flex;
   flex-direction: column;
@@ -13,13 +26,16 @@
     justify-content: space-between;
     align-items: flex-end;
     padding: 0px 10px 10px 10px;
-    margin: 20px;
+    margin: 10px 20px 20px 20px;
     /* background-color: #eee; */
-    max-width: 900px;
+    width: 1240px;
+    height: 80px;
     margin-left: auto;
     margin-right: auto;
     font-family:'PT Sans Narrow', sans-serif;
     font-size: 22px;
+    border-bottom: 4px solid #8dc540;
+    border-radius: 12px;
 }
 
 .navbar a {
@@ -29,6 +45,7 @@
     font-family:'PT Sans Narrow', sans-serif;
     font-size: 22px;
     color: #206EC7;
+    color: #262622;
 }
 
 .formcontainer {
@@ -132,9 +149,20 @@ a#checkmark {
   background-color: rgb(22 142 27);
   color: white;
   opacity: .8;
+  background-color: #FF585D;
 }
 
 .keyboardbtn:hover:not(:disabled),
 .keyboardbtn:focus:not(:disabled) {
   background-color: hsl(78, 100%, 75%);
+  background-color: #FFBB2F;
+}
+
+.footer {
+    background-color: #262622;
+    width: 100%;
+    height: 120px;
+    margin-top: 47px;
+    color: #F7FFF2;
+    font-weight: bold;
 }

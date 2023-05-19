@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+import logo from "../Images/logo.png";
 
 const Navbar = () => {
   let token = localStorage.getItem("token");
@@ -24,7 +25,9 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <nav>
-        <Link to="/hangman">Home</Link>
+        <Link to="/hangman">
+          <img src={logo} />
+        </Link>
       </nav>
       <nav>
         {token ? (
