@@ -31,7 +31,7 @@ function App() {
   const location = useLocation();
   const isHangPage = location.pathname === "/hangman";
 
-  const [wordToFindData, setWordToFindData] = useState('');
+  const [wordToFindData, setWordToFindData] = useState("");
   const [wordToFind, setWordToFind] = useState("");
   // console.log("wordToFindData.word", wordToFindData.word);
   // console.log("wordToFindData", wordToFindData);
@@ -62,7 +62,7 @@ function App() {
   );
 
   useEffect(() => {
-    if (!isHangPage ) {
+    if (!isHangPage) {
       // || Winner || Loser
       // Skip the effect if not on the homepage - *or if the game is over - removed*
       setChosenLetters([]);
@@ -82,7 +82,7 @@ function App() {
     return () => {
       document.removeEventListener("keypress", handler);
     };
-  }, [chosenLetters, isHangPage]); // , isHomePage
+  }, [isHangPage]); // removed chosenLetters,
 
   // useEffect(() => {
   //   if (isHomePage && !Winner && !Loser) {
