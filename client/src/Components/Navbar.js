@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import logo from "../Images/logo.png";
+import logoo from "../Images/logoo.png";
 
 const Navbar = () => {
   let token = localStorage.getItem("token");
@@ -26,14 +26,14 @@ const Navbar = () => {
     <div className="navbar">
       <nav>
         <Link to="/hangman">
-          <img src={logo} />
+          <img src={logoo} style={{ height: "36px"}} />
         </Link>
       </nav>
       <nav>
         {token ? (
           <>
             {/* <Link to="#">{decoded ? decoded.username : null}</Link> */}
-            <Link to="/hall-of-fame">Hall of Fame</Link>
+            <Link to="/hall-of-fame">HALL OF FAME</Link>
             <Link onClick={logout} to="/login">
               Logout
             </Link>

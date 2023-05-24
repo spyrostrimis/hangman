@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from "react-router-dom";
 import ronny from "../Images/ronny.png";
 import artsy from "../Images/artsy.png";
+import { Tooltip } from "react-tooltip";
 
 
 const Intro = () => {
@@ -9,7 +10,12 @@ const Intro = () => {
     <>
       <div className="introcontainer">
         {/* <h3>ABOUT THE GAME</h3> */}
-        <img src={ronny} style={{ float: "right", height: "160px" }} />
+        <img
+          src={ronny}
+          data-tooltip-id="my-tooltip"
+          data-tooltip-content="Han Fastolfe, Professor of English Literature."
+          style={{ float: "right", height: "160px" }}
+        />
         <p>Welcome to the Hangman Rescue Mission!</p>
 
         <p>
@@ -31,16 +37,16 @@ const Intro = () => {
           Choose your letters wisely and pay attention to any clues provided by
           Professor Fastolfe to guide you on this captivating quest.
         </p>
+        <div style={{ textAlign: "center" }}>
+          <img src={artsy} style={{ height: "123px" }} />
+        </div>
       </div>
-
-      <div>
-        <img src={artsy} style={{ float: "left", height: "123px" }} />
-      </div>
-      <div>
+      <div style={{marginTop: "50px"}}>
         <Link to="/hangman">
-          <button>Play Hangman</button>
+          <button id='introbtn'>Play Hangman</button>
         </Link>
       </div>
+      <Tooltip id="my-tooltip" place="bottom" />
     </>
   );
 }
