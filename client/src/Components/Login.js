@@ -34,9 +34,9 @@ function Login() {
 
   return (
     <div className="formcontainer">
-      <h1>LOGIN FORM</h1>
       <div className="form">
         <form onSubmit={login}>
+          <h1>Login form</h1>
           <label htmlFor="username"></label>
           <input
             id="username"

@@ -70,7 +70,7 @@ function Signup() {
           <br />
           <br />
           <span>
-            Already have an account with us? Please <a href="/login">log in</a>
+            Already have an account? Please <a href="/login">log in</a>
           </span>
         </form>
       </div>

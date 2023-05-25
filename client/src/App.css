@@ -34,6 +34,7 @@ body, html {
     background-size: cover;
     background-position: center center;
     background-blend-mode: multiply;
+    color: #d9d8db !important;
 }
 
 .App {
@@ -87,7 +88,7 @@ body, html {
   max-width: 540px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 17vh;
+    margin-top: 10vh;
     font-weight: 900;
     color: chartreuse;
     color: #d9d8db;
@@ -105,7 +106,7 @@ body, html {
 .formcontainer h1 {
   margin-bottom: 25px;
     font-family: 'technoboard';
-    margin-top: 10px;
+    /* margin-top: 10px; */
     /* filter: drop-shadow(0 0 15px yellow) drop-shadow(0 0 5px yellow) contrast(1) brightness(1); */
     color: #d9d8dbe0;
 }
@@ -131,7 +132,7 @@ body, html {
 
 
 .form h1 {
-  margin-bottom: 35px;
+  margin-bottom: 45px;
 }
 
 input {
@@ -175,7 +176,7 @@ a#checkmark {
     color: #db3eb1;
     /* border: 6px solid #db3eb1; */
     border-radius: 100px;
-    padding: 15px 25px;
+    padding: 12px 18px;
     font-size: 20px;
     font-family: tahoma;
     letter-spacing: 5px;
@@ -325,4 +326,210 @@ a#checkmark {
     margin-top: 47px;
     color: #F7FFF2;
     font-weight: bold;
+}
+
+
+main {
+  display: block;
+  box-sizing: border-box;
+  width: auto;
+  padding: 1em 2vw;
+  margin: 1em 2vw;
+  color: #000;
+  background-color: rgba(204, 204, 204, 0.7);
+  border: 0.07em solid rgba(0, 0, 0, 0.5);
+  border-radius: 0.5em;
+}
+
+table {
+  margin: 1em 0;
+  border-collapse: collapse;
+   width: 100%; 
+}
+
+caption {
+  text-align: left;
+  font-style: italic;
+  padding: 0.25em 0.5em 0.5em 0.5em;
+}
+
+th,
+td {
+  padding: 0.25em 0.5em 0.25em 1em;
+  vertical-align: text-top;
+  text-align: left;
+  text-indent: -0.5em;
+}
+
+th {
+  vertical-align: bottom;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-weight: bold;
+}
+
+td::before {
+  display: none;
+}
+
+tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+tr:nth-child(odd) {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+td:nth-of-type(1),
+td:nth-of-type(1) {
+  
+  text-align: right;
+  padding-left: 180px;
+}
+
+td:nth-of-type(2),
+td:nth-of-type(2) {
+  width: 480px;
+  text-align: center;
+}
+
+th:nth-of-type(3),
+td:nth-of-type(3) {
+  text-align: right;
+  text-align: left;
+    padding-right: 40px;
+}
+
+/* div {
+  overflow: auto;
+}
+
+@media screen and (max-width: 37em), print and (max-width: 5in) {
+  table,
+  tr,
+  td {
+    display: block;
+  }
+  tr {
+    padding: 0.7em 2vw;
+  }
+  th,
+  tr:first-of-type {
+    display: none;
+  }
+  td::before {
+    display: inline;
+    font-weight: bold;
+  }
+  td {
+    display: grid;
+    grid-template-columns: 4em auto;
+    grid-gap: 1em 0.5em;
+  }
+  caption {
+    font-style: normal;
+    background-color: rgba(0, 0, 0, 0.35);
+    color: #fff;
+    font-weight: bold;
+  }
+  td:nth-of-type(3) {
+    text-align: left;
+  }
+  td:nth-of-type(4), td:nth-of-type(5) {
+    text-align: right;
+    width: 12em;
+  }
+  td:nth-of-type(4)::before, td:nth-of-type(5)::before {
+    text-align: left;
+  }
+  td:nth-of-type(2)::before {
+    font-style: normal;
+  }
+}
+
+@media print {
+  body {
+    font-size: 6pt;
+    color: #000;
+    background-color: #fff;
+    background-image: none;
+  }
+  body,
+  main {
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    border: none;
+  }
+  table {
+    page-break-inside: avoid;
+  }
+  div {
+    overflow: visible;
+  }
+  th {
+    color: #000;
+    background-color: #fff;
+    border-bottom: 1pt solid #000;
+  }
+  tr {
+    border-top: 1pt solid #000;
+  }
+}
+
+@media print and (max-width: 5in) {
+  caption {
+    color: #000;
+    background-color: #fff;
+    border-bottom: 1pt solid #000;
+  }
+  table {
+    page-break-inside: auto;
+  }
+  tr {
+    page-break-inside: avoid;
+  }
+} */
+
+/* Additional styles for the Hall Of Fame page */
+.hall-of-fame-body {
+  background-image: url("./Images/hall-bg.jpg");
+  background-color: #999999 !important;
+    background-size: cover;
+    background-position: top center;
+    background-blend-mode: multiply;
+}
+
+.hallcontainer {
+  max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+    font-weight: 900;
+    color: #d9d8db;
+    padding: 20px;
+    font-family: 'bruno';
+}
+
+.hallcontainer h1 {
+  font-family: 'bruno';
+    filter: drop-shadow(0 0 15px yellow) drop-shadow(0 0 2px yellow) contrast(2) brightness(2);
+    font-size: 3rem;
+}
+
+thead, tbody, tfoot, tr, td, th {
+    background: none !important;
+}
+
+th {
+    color: #db3eb1;
+}
+
+tr:nth-child(even) {
+    color: #edee02;
+}
+
+tr:nth-child(odd) {
+    /* background: none; */
+    color: #10cfe6;
 }
