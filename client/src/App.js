@@ -104,9 +104,7 @@ function App() {
             path="/hangman"
             element={
               <>
-                <Header />
-
-                <br />
+                {/* <Header /> */}
                 <br />
                 <div
                   id="figurefacts"
@@ -115,6 +113,8 @@ function App() {
                     display: "grid",
                     gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
                     justifyItems: "center",
+                    gap: "20px",
+                    marginTop: "20px",
                   }}
                 >
                   <Figure incorrectGuesses={incorrectGuesses.length} />
@@ -141,6 +141,7 @@ function App() {
                     alignSelf: "stretch",
                     marginLeft: "10px",
                     marginRight: "10px",
+                    backgroundColor: "#9e9e9e94",
                   }}
                 >
                   <Keyboard
@@ -167,7 +168,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

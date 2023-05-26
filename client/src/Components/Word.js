@@ -59,16 +59,17 @@ if (token) {
         textTransform: "uppercase",
         display: "flex",
         gap: "1rem",
+        backgroundColor: "#9e9e9e94",
       }}
     >
       {wordToFind.split("").map((letter, index) => (
-        <span style={{ borderBottom: "solid black" }} key={index}>
+        <span style={{ borderBottom: "solid #cdcdcd" }} key={index}>
           <span
             style={{
               visibility:
                 chosenLetters.includes(letter) || reveal ? "visible" : "hidden",
               color:
-                !chosenLetters.includes(letter) && reveal ? "red" : "black",
+                !chosenLetters.includes(letter) && reveal ? "red" : "#cdcdcd",
             }}
           >
             {letter}

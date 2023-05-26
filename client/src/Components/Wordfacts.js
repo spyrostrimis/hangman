@@ -15,32 +15,36 @@ const Wordfacts = ({
     audio.onended = () => setIsPlaying(false);
   };
 
-    return (
-      <div
-        style={{
-          visibility: Winner || Loser ? "visible" : "hidden",
-        }}
-      >
-        <p>Definition: {wordToFindData.definition}</p>
-        <p>{wordToFindData.example}</p>
-        <p>{wordToFindData.explanation}</p>
-        <p>{wordToFindData.synonym}</p>
-        <p>{wordToFindData.shortdef}</p>
-        <p>{wordToFindData.ipa}</p>
+  return (
+    <div className="wordfactscontainer">
+      <div className="wordfactscontainerinner">
+        <div
+          style={{
+            visibility: Winner || Loser ? "visible" : "hidden",
+          }}
+        >
+          <p>Definition: {wordToFindData.definition}</p>
+          <p>{wordToFindData.example}</p>
+          {/* <p>{wordToFindData.explanation}</p> */}
+          <p>{wordToFindData.synonym}</p>
+          <p>{wordToFindData.shortdef}</p>
+          <p>{wordToFindData.ipa}</p>
 
-        <button disabled={isPlaying} onClick={handlePlay}>
-          {isPlaying ? "Playing..." : "Play Sound"}
-        </button>
-        <div>
-          <img
-            src={wordToFindData.image}
-            alt={`"${wordToFindData.word}" painting by ChatGPT`}
-            title={`"${wordToFindData.word}" by ChatGPT`}
-            width={300}
-          />
+          {/* <button disabled={isPlaying} onClick={handlePlay}>
+            {isPlaying ? "Playing..." : "Play Sound"}
+          </button>
+          <div>
+            <img
+              src={wordToFindData.image}
+              alt={`"${wordToFindData.word}" painting by ChatGPT`}
+              title={`"${wordToFindData.word}" by ChatGPT`}
+              width={300}
+            />
+          </div> */}
         </div>
       </div>
-    );
+    </div>
+  );
     
 };
 

@@ -1,4 +1,6 @@
 import React from 'react'
+import { useEffect } from "react";
+import artsy from "../Images/artsy.png";
 
 const HEAD = (
   <div
@@ -95,9 +97,22 @@ const RIGHT_LEG = (
 const BODY_PARTS = [HEAD,BODY,LEFT_ARM,RIGHT_ARM,LEFT_LEG,RIGHT_LEG];
 
 const Figure = ({ incorrectGuesses }) => {
+
+    useEffect(() => {
+      // Add a class to the body element when the component mounts
+      document.body.classList.add("figure-body");
+
+      // Remove the class from the body element when the component unmounts
+      return () => {
+        document.body.classList.remove("figure-body");
+      };
+    }, []);
+  
   return (
-    <div style={{ position: "relative" }}>
-      {/* <h1>Figure</h1> */}
+    <div className="figurecontainer">
+      <div className="figurescreen">
+        <div className="figurescreeninner">
+          {/* <div style={{ position: "relative" }}>
       {BODY_PARTS.slice(0, incorrectGuesses)}
       <div
         style={{
@@ -128,6 +143,17 @@ const Figure = ({ incorrectGuesses }) => {
       <div
         style={{ height: "10px", width: "250px", backgroundColor: "black" }}
       ></div>
+        </div> */}
+        </div>
+      </div>
+      <div className='figureartsy'>
+        <img
+          src={artsy}
+          alt={`painting by ChatGPT`}
+          title={`painting by ChatGPT`}
+          width={250}
+        />
+      </div>
     </div>
   );
 };

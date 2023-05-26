@@ -18,7 +18,8 @@
   src: url(./Fonts/BrunoAceSC-Regular.ttf);
 }
 
-body, html {
+body,
+html {
   margin: 0;
   /* width: 100vw;
   height: 100%; */
@@ -26,15 +27,15 @@ body, html {
   box-sizing: border-box;
   /* overflow-x: hidden;
     overflow-y: hidden; */
-    background-color: #e6f5f7;
-    background-color: #BFC2BA;
-    background-color: #999999 !important;
-    /* font-family: Roboto, Helvetica, Arial, sans-serif; */
-    background-image: url("./Images/bg-big.jpg");
-    background-size: cover;
-    background-position: center center;
-    background-blend-mode: multiply;
-    color: #d9d8db !important;
+  background-color: #e6f5f7;
+  background-color: #bfc2ba;
+  background-color: #999999 !important;
+  /* font-family: Roboto, Helvetica, Arial, sans-serif; */
+  background-image: url("./Images/bg-big.jpg");
+  background-size: cover;
+  background-position: center center;
+  background-blend-mode: multiply;
+  color: #d9d8db !important;
 }
 
 .App {
@@ -45,70 +46,71 @@ body, html {
   max-width: 1200px;
   margin: 0 auto;
   align-items: center;
-  min-height: calc(100vh - 127px);
+  /* min-height: calc(100vh - 127px); */
+  min-height: calc(100vh);
 }
 
 .navbar {
   display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding: 0px 10px 10px 10px;
-    margin: 10px 20px 20px 20px;
-    /* background-color: #eee; */
-    width: 1240px;
-    height: 65px;
-    margin-left: auto;
-    margin-right: auto;
-    font-family:'PT Sans Narrow', sans-serif;
-    font-family: technoboard;
-    font-size: 22px;
-    border-bottom: 4px solid yellow;
-    border-radius: 12px;
-    background-color: #c0c0c04f !important;
-    box-shadow: 0px 8px 30px -4px rgba(230,230,230,0.79) !important;
-    -webkit-box-shadow: 2px 6px 0px 3px rgba(230,230,230,0.79);
-    -moz-box-shadow: 2px 6px 0px 3px rgba(230,230,230,0.79);
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0px 10px 10px 10px;
+  margin: 10px 20px 20px 20px;
+  /* background-color: #eee; */
+  width: 1240px;
+  height: 65px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: "PT Sans Narrow", sans-serif;
+  font-family: technoboard;
+  font-size: 22px;
+  border-bottom: 4px solid yellow;
+  border-radius: 12px;
+  background-color: #c0c0c04f !important;
+  box-shadow: 0px 8px 30px -4px rgba(230, 230, 230, 0.79) !important;
+  -webkit-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
+  -moz-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
 }
 
 .navbar a {
   text-decoration: none;
-    padding: 10px;
-    /* font-weight: 600; */
-    font-family:'PT Sans Narrow', sans-serif;
-    font-size: 22px;
-    color: #206EC7;
-    color: #262622;
-    font-family: technoboard;
-    color: yellow;
-    /* text-transform: uppercase; */
-    font-family: bruno;
+  padding: 10px;
+  /* font-weight: 600; */
+  font-family: "PT Sans Narrow", sans-serif;
+  font-size: 22px;
+  color: #206ec7;
+  color: #262622;
+  font-family: technoboard;
+  color: yellow;
+  /* text-transform: uppercase; */
+  font-family: bruno;
 }
 
 .formcontainer {
   max-width: 540px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10vh;
-    font-weight: 900;
-    color: chartreuse;
-    color: #d9d8db;
-    padding: 20px;
-    border-bottom: 4px solid #caca02;
-    border-radius: 12px;
-    background-color: #00000063 !important;
-    box-shadow: 0px 8px 30px -4px rgba(230,230,230,0.79) !important;
-    -webkit-box-shadow: 2px 6px 0px 3px rgba(230,230,230,0.79);
-    -moz-box-shadow: 2px 6px 0px 3px rgba(230,230,230,0.79);
-    /* font-family: zenblack; */
-    /* font-size: 16px; */
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10vh;
+  font-weight: 900;
+  color: chartreuse;
+  color: #d9d8db;
+  padding: 20px;
+  border-bottom: 4px solid #caca02;
+  border-radius: 12px;
+  background-color: #00000063 !important;
+  box-shadow: 0px 8px 30px -4px rgba(230, 230, 230, 0.79) !important;
+  -webkit-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
+  -moz-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
+  /* font-family: zenblack; */
+  /* font-size: 16px; */
 }
 
 .formcontainer h1 {
   margin-bottom: 25px;
-    font-family: 'technoboard';
-    /* margin-top: 10px; */
-    /* filter: drop-shadow(0 0 15px yellow) drop-shadow(0 0 5px yellow) contrast(1) brightness(1); */
-    color: #d9d8dbe0;
+  font-family: "technoboard";
+  /* margin-top: 10px; */
+  /* filter: drop-shadow(0 0 15px yellow) drop-shadow(0 0 5px yellow) contrast(1) brightness(1); */
+  color: #d9d8dbe0;
 }
 
 .formcontainer a {
@@ -123,13 +125,11 @@ body, html {
   padding: 25px 40px;
   padding: 40px 50px;
   padding-top: 50px;
-    box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%);
-    -webkit-box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%);
-    -moz-box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%);
-    border-radius: 4px;
+  box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%);
+  -webkit-box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%);
+  -moz-box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%);
+  border-radius: 4px;
 }
-
-
 
 .form h1 {
   margin-bottom: 45px;
@@ -161,7 +161,7 @@ input[type="checkbox"] {
 input[type="text" i] {
   padding-left: 10px;
   background-color: #0b0b0b70;
-    color: #c9c9c9;
+  color: #c9c9c9;
 }
 
 a#checkmark {
@@ -173,23 +173,24 @@ a#checkmark {
   padding: 6px 5px;
   cursor: pointer;
   background: none;
-    color: #db3eb1;
-    /* border: 6px solid #db3eb1; */
-    border-radius: 100px;
-    padding: 12px 18px;
-    font-size: 20px;
-    font-family: tahoma;
-    letter-spacing: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    filter: drop-shadow(0 0 15px yellow) drop-shadow(0 0 2px yellow) contrast(2) brightness(2);
-    position: relative;
-    overflow: hidden;
-    /* border: 2px solid yellow; */
-    /* border-bottom: 4px solid yellow; */
-    font-family: 'bruno';
-    background-color: #00000080;
-    margin: 30px auto;
+  color: #db3eb1;
+  /* border: 6px solid #db3eb1; */
+  border-radius: 100px;
+  padding: 12px 18px;
+  font-size: 20px;
+  font-family: tahoma;
+  letter-spacing: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  filter: drop-shadow(0 0 15px yellow) drop-shadow(0 0 2px yellow) contrast(2)
+    brightness(2);
+  position: relative;
+  overflow: hidden;
+  /* border: 2px solid yellow; */
+  /* border-bottom: 4px solid yellow; */
+  font-family: "bruno";
+  background-color: #00000080;
+  margin: 30px auto;
 }
 
 .form button span {
@@ -202,26 +203,26 @@ a#checkmark {
 
 .introcontainer {
   max-width: 571px;
-    text-align: left;
-    margin-top: 40px;
-    font-weight: 900;
-    color: chartreuse;
-    color: #10cfe6;
-    padding: 20px;
-    border-bottom: 4px solid #10cfe6;
-    border-radius: 12px;
-    background-color: #c0c0c04f !important;
-    box-shadow: 0px 8px 30px -4px rgba(230,230,230,0.79) !important;
-    -webkit-box-shadow: 2px 6px 0px 3px rgba(230,230,230,0.79);
-    -moz-box-shadow: 2px 6px 0px 3px rgba(230,230,230,0.79);
-    font-family: zenblack;
-    font-size: 25px;
-    /* text-shadow: 0px 0px 9px #10cfe6; */
+  text-align: left;
+  margin-top: 40px;
+  font-weight: 900;
+  color: chartreuse;
+  color: #10cfe6;
+  padding: 20px;
+  border-bottom: 4px solid #10cfe6;
+  border-radius: 12px;
+  background-color: #c0c0c04f !important;
+  box-shadow: 0px 8px 30px -4px rgba(230, 230, 230, 0.79) !important;
+  -webkit-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
+  -moz-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
+  font-family: zenblack;
+  font-size: 25px;
+  /* text-shadow: 0px 0px 9px #10cfe6; */
 }
 
 #introbtn {
   background: none;
-    /* font-family: 'zenblack';
+  /* font-family: 'zenblack';
     text-transform: uppercase;
     color: deeppink;
     font-size: 25px;
@@ -233,21 +234,22 @@ a#checkmark {
     -webkit-box-shadow: 2px 6px 0px 3px rgba(230,230,230,0.79);
     -moz-box-shadow: 2px 6px 0px 3px rgba(230,230,230,0.79);
     border-bottom: 4px solid deeppink; */
-    color: #db3eb1;
+  color: #db3eb1;
   border: 6px solid #db3eb1;
-  border-radius:15px;
+  border-radius: 15px;
   padding: 15px 25px;
   font-size: 30px;
   font-family: tahoma;
-  letter-spacing:5px;
+  letter-spacing: 5px;
   cursor: pointer;
   font-weight: bold;
-  filter: drop-shadow(0 0 15px #db3eb1) drop-shadow(0 0 50px #db3eb1) contrast(2) brightness(2);
+  filter: drop-shadow(0 0 15px #db3eb1) drop-shadow(0 0 50px #db3eb1)
+    contrast(2) brightness(2);
   position: relative;
   overflow: hidden;
   border: 2px solid #db3eb1;
   border-bottom: 4px solid #db3eb1;
-  font-family: 'bruno';
+  font-family: "bruno";
 }
 
 /* #introbtn:hover {
@@ -257,17 +259,23 @@ a#checkmark {
 } */
 
 #introbtn::after {
-  content: '';
+  content: "";
   position: absolute;
   top: -50%;
   right: -50%;
   bottom: -50%;
   left: -50%;
-  background: linear-gradient(to bottom, rgba(230, 175, 145, 0), rgba(255,255,255,0.5) 50%, rgba(229, 172, 142, 0)); 
-  transform: rotateZ(60deg) translate(-5em, 7.5em);  
+  background: linear-gradient(
+    to bottom,
+    rgba(230, 175, 145, 0),
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(229, 172, 142, 0)
+  );
+  transform: rotateZ(60deg) translate(-5em, 7.5em);
 }
 
-#introbtn:hover::after, button:focus::after {
+#introbtn:hover::after,
+button:focus::after {
   animation: sheen 1.5s forwards;
 }
 
@@ -277,17 +285,112 @@ a#checkmark {
   }
 }
 
+/* HANGMAN PAGE */
+
+/* Additional styles for the Hall Of Fame page */
+.figure-body {
+  background-image: url("./Images/word-bg.jpg");
+  background-color: #999999 !important;
+  background-size: cover;
+  background-position: top center;
+  background-blend-mode: multiply;
+  background-blend-mode: overlay;
+  background-blend-mode: normal;
+  background-blend-mode: color-burn;
+}
+
+.figurecontainer {
+  width: 500px;
+    height: 500px;
+    background-color: rgb(138 139 141 / 0%);
+    position: relative;
+    border-bottom: 4px solid #d9d8dbbd;
+    border-radius: 90px;
+    /* box-shadow: inset 0 0 8px #434343, 0 1px 0 #383838, 0 4px 0 #171717, 0 10px 30px #111; */
+    /* box-shadow: 0 4px 12px 0 rgb(196 196 196 / 71%), 0 2px 4px rgb(147 147 147 / 89%); */
+    /* -webkit-box-shadow: inset 0px -4px 8px -2px #000000; */
+    box-shadow: inset 0px -80px 32px -34px #d9d8db91;
+}
+
+.figurescreen {
+  background-color: #dcdcdc47;
+  /* max-width: 540px; */
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-top: 10vh; */
+  /* font-weight: 900; */
+  color: #d9d8db;
+    padding: 8px;
+    border: 1px solid rgb(217 216 219 / 50%);
+    border-radius: 5px;
+    background-color: #00000063 !important;
+    box-shadow: 0px 0px 2px 2px rgb(217 216 219) !important;
+    -webkit-box-shadow: 0px 0px 2px 2px rgb(217 216 219);
+    -moz-box-shadow: 0px 0px 2px 2px rgb(217 216 219);
+  width: 418px;
+    height: 262px;
+}
+
+.figurescreeninner {
+  padding: 5px 5px;
+    box-shadow: 0px 0px 8px 0px #d9d8db;
+    -webkit-box-shadow: 0px 0px 8px 0px #d9d8db;
+    -moz-box-shadow: 0px 0px 8px 0px #d9d8db;
+    border-radius: 2px;
+    height: 242px;
+    background-color: #393939f0 !important;
+    /* font-family: Roboto, Helvetica, Arial, sans-serif; */
+    background-image: url("./Images/painting.webp");
+    background-size: cover;
+    background-position: center center;
+    color: #d9d8db !important;
+    background-size: 245px 245px;
+    background-repeat: no-repeat;
+}
+
+.figureartsy {
+  position: absolute;
+    bottom: 0px;
+    left: 8%;
+}
+
+.keyboardcontainer {
+  position: relative;
+    margin: 10px auto;
+    background: #2c2e34;
+    -moz-border-radius-topleft: 7px 21px;
+    -moz-border-radius-topright: 7px 21px;
+    -moz-border-radius-bottomright: 10px;
+    -moz-border-radius-bottomleft: 10px;
+    border-top-left-radius: 12px 21px;
+    border-top-right-radius: 12px 21px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    padding: 50px 10px 10px 20px;
+    box-shadow: inset 0 0 8px #434343, 0 1px 0 #383838, 0 4px 0 #171717, 0 10px 30px #111;
+    max-width: 900px;
+}
+
+.keyboardronny {
+  position: absolute;
+    bottom: 111px;
+    right: 5%;
+}
+
 .keyboardbtn {
-  width: 100%;
-  border: 2px solid black;
-  background: none;
-  /* aspect-ratio: 1 / 1; */
-  font-size: 1.5rem;
-  text-transform: uppercase;
-  padding: .45rem .5rem;
-  /* font-weight: bold; */
-  cursor: pointer;
-  color: black;
+  border: 1px solid #93939333;
+    background: none;
+    /* aspect-ratio: 1 / 1; */
+    font-size: 1rem;
+    text-transform: uppercase;
+    padding: 7px 0px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #c2c2c2;
+    width: 55px;
+    border-radius: 4px;
+    box-shadow: 0 0px 4px 0px;
+    font-family: 'bruno';
 }
 
 .keyboardbtn.active {
@@ -295,39 +398,36 @@ a#checkmark {
   color: white;
 }
 
-
-
 .keyboardbtn.inactive {
-  opacity: .3;
+  opacity: 0.3;
 }
 
 .keyboardbtn:disabled {
-    cursor: initial;
-    /* opacity: .8; */
+  cursor: initial;
+  /* opacity: .8; */
 }
 
 .keyboardbtn.active:disabled {
   background-color: rgb(22 142 27);
   color: white;
-  opacity: .8;
-  background-color: #FF585D;
+  opacity: 0.8;
+  background-color: #ff585d;
 }
 
 .keyboardbtn:hover:not(:disabled),
 .keyboardbtn:focus:not(:disabled) {
   background-color: hsl(78, 100%, 75%);
-  background-color: #FFBB2F;
+  background-color: #ffbb2f;
 }
 
 .footer {
-    /* background-color: #262622; */
-    width: 100%;
-    height: 80px;
-    margin-top: 47px;
-    color: #F7FFF2;
-    font-weight: bold;
+  /* background-color: #262622; */
+  width: 100%;
+  height: 80px;
+  margin-top: 47px;
+  color: #f7fff2;
+  font-weight: bold;
 }
-
 
 main {
   display: block;
@@ -344,7 +444,7 @@ main {
 table {
   margin: 1em 0;
   border-collapse: collapse;
-   width: 100%; 
+  width: 100%;
 }
 
 caption {
@@ -382,7 +482,6 @@ tr:nth-child(odd) {
 
 td:nth-of-type(1),
 td:nth-of-type(1) {
-  
   text-align: right;
   padding-left: 180px;
 }
@@ -397,7 +496,7 @@ th:nth-of-type(3),
 td:nth-of-type(3) {
   text-align: right;
   text-align: left;
-    padding-right: 40px;
+  padding-right: 40px;
 }
 
 /* div {
@@ -491,45 +590,81 @@ td:nth-of-type(3) {
   }
 } */
 
+.wordfactscontainer {
+  background-color: #dcdcdc47;
+  /* max-width: 540px; */
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-top: 10vh; */
+  /* font-weight: 900; */
+  color: chartreuse;
+  color: #d9d8db;
+  padding: 8px;
+  border: 1px solid rgb(16 207 230 / 50%);
+  border-radius: 5px;
+  background-color: #00000063 !important;
+  box-shadow: 0px 0px 2px 2px rgb(16 207 230) !important;
+  -webkit-box-shadow: 0px 0px 2px 2px rgb(16 207 230);
+  -moz-box-shadow: 0px 0px 2px 2px rgb(16 207 230);
+  min-height: 500px;
+    max-width: 500px;
+}
+
+.wordfactscontainerinner {
+  padding: 5px 5px;
+  box-shadow: 0px 0px 8px 0px rgb(16 207 230 / 99%);
+  -webkit-box-shadow: 0px 0px 8px 0px rgb(16 207 230);
+  -moz-box-shadow: 0px 0px 8px 0px rgb(16 207 230 / 99%);
+  border-radius: 2px;
+  min-height: 490px;
+}
+
 /* Additional styles for the Hall Of Fame page */
 .hall-of-fame-body {
   background-image: url("./Images/hall-bg.jpg");
   background-color: #999999 !important;
-    background-size: cover;
-    background-position: top center;
-    background-blend-mode: multiply;
+  background-size: cover;
+  background-position: top center;
+  background-blend-mode: multiply;
 }
 
 .hallcontainer {
   max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 40px;
-    font-weight: 900;
-    color: #d9d8db;
-    padding: 20px;
-    font-family: 'bruno';
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 40px;
+  font-weight: 900;
+  color: #d9d8db;
+  padding: 20px;
+  font-family: "bruno";
 }
 
 .hallcontainer h1 {
-  font-family: 'bruno';
-    filter: drop-shadow(0 0 15px yellow) drop-shadow(0 0 2px yellow) contrast(2) brightness(2);
-    font-size: 3rem;
+  font-family: "bruno";
+  filter: drop-shadow(0 0 15px yellow) drop-shadow(0 0 2px yellow) contrast(2)
+    brightness(2);
+  font-size: 3rem;
 }
 
-thead, tbody, tfoot, tr, td, th {
-    background: none !important;
+thead,
+tbody,
+tfoot,
+tr,
+td,
+th {
+  background: none !important;
 }
 
 th {
-    color: #db3eb1;
+  color: #db3eb1;
 }
 
 tr:nth-child(even) {
-    color: #edee02;
+  color: #edee02;
 }
 
 tr:nth-child(odd) {
-    /* background: none; */
-    color: #10cfe6;
+  /* background: none; */
+  color: #10cfe6;
 }
+
