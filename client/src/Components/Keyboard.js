@@ -41,6 +41,11 @@ const Keyboard = ({
     
   return (
     <div className="keyboardcontainer">
+      <div className="keyboardhints">
+        <button id="hint1">Hint 1</button>
+        <button id="hint2">Hint 2</button>
+        <button id="tips">INSTRUCTIONS & TIPS</button>
+      </div>
       <div className="keyboardronny">
         <img
           src={ronny}

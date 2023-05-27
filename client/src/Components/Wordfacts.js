@@ -16,21 +16,22 @@ const Wordfacts = ({
   };
 
   return (
-    <div className="wordfactscontainer">
-      <div className="wordfactscontainerinner">
-        <div
-          style={{
-            visibility: Winner || Loser ? "visible" : "hidden",
-          }}
-        >
-          <p>Definition: {wordToFindData.definition}</p>
-          <p>{wordToFindData.example}</p>
-          {/* <p>{wordToFindData.explanation}</p> */}
-          <p>{wordToFindData.synonym}</p>
-          <p>{wordToFindData.shortdef}</p>
-          <p>{wordToFindData.ipa}</p>
+      <div className="wordfactscontainer">
+        {/* <h1>Han's Corner</h1> */}
+        <div className="wordfactscontainerinner">
+          <div
+            style={{
+              visibility: Winner || Loser ? "visible" : "hidden",
+            }}
+          >
+            <p>Definition: {wordToFindData.definition}</p>
+            <p>{wordToFindData.example}</p>
+            {/* <p>{wordToFindData.explanation}</p> */}
+            <p>{wordToFindData.synonym}</p>
+            <p>{wordToFindData.shortdef}</p>
+            <p>{wordToFindData.ipa}</p>
 
-          {/* <button disabled={isPlaying} onClick={handlePlay}>
+            {/* <button disabled={isPlaying} onClick={handlePlay}>
             {isPlaying ? "Playing..." : "Play Sound"}
           </button>
           <div>
@@ -41,9 +42,9 @@ const Wordfacts = ({
               width={300}
             />
           </div> */}
+          </div>
         </div>
       </div>
-    </div>
   );
     
 };

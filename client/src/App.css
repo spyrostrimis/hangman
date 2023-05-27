@@ -366,15 +366,46 @@ button:focus::after {
     border-top-right-radius: 12px 21px;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
-    padding: 50px 10px 10px 20px;
+    padding: 12px 10px 10px 20px;
     box-shadow: inset 0 0 8px #434343, 0 1px 0 #383838, 0 4px 0 #171717, 0 10px 30px #111;
     max-width: 900px;
 }
 
 .keyboardronny {
   position: absolute;
-    bottom: 111px;
-    right: 5%;
+    bottom: 140px;
+    right: -5%;
+}
+
+.keyboardhints {
+padding-bottom: 12px;
+    text-align: left;
+}
+
+.keyboardhints button {
+  border: 1px solid #93939333;
+    background: none;
+    font-size: 13px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #d0d2d5;
+    border-radius: 4px;
+    box-shadow: 0 0px 5px 0px #edee02ab;
+    box-shadow: 0 0px 5px 0px #00ffea;
+    font-family: 'bruno';
+    letter-spacing: 2px;
+}
+
+#hint1 {
+margin-left: 88px;
+    margin-right: 10px;
+}
+
+#hint2 {
+  margin-left: 5px;
+    margin-right: 290px;
 }
 
 .keyboardbtn {
