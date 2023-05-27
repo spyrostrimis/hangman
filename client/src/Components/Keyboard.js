@@ -1,11 +1,15 @@
 import React from 'react'
+import { useState } from "react";
 import ronny from "../Images/ronny.png";
 
 const Keyboard = ({
   activeLetters,
   inactiveLetters,
-    addChosenLetter,
-    disabled = false
+  addChosenLetter,
+  disabled = false,
+  setInstrunctions,
+  setHint1,
+  setHint2,
 }) => {
   const KEYS = [
     "a",
@@ -34,17 +38,23 @@ const Keyboard = ({
     "x",
     "y",
     "z",
-    ];
+  ];
 
-    console.log("activeLetters", activeLetters);
-    console.log("inactiveLetters", inactiveLetters);
-    
+  console.log("activeLetters", activeLetters);
+  console.log("inactiveLetters", inactiveLetters);
+
   return (
     <div className="keyboardcontainer">
       <div className="keyboardhints">
-        <button id="hint1">Hint 1</button>
-        <button id="hint2">Hint 2</button>
-        <button id="tips">INSTRUCTIONS & TIPS</button>
+        <button id="hint1" onClick={setHint1}>
+          Hint 1
+        </button>
+        <button id="hint2" onClick={setHint2}>
+          Hint 2
+        </button>
+        <button id="tips" onClick={setInstrunctions}>
+          INSTRUCTIONS & TIPS
+        </button>
       </div>
       <div className="keyboardronny">
         <img

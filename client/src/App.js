@@ -40,6 +40,104 @@ function App() {
   //   getWord().then((word) => setWordToFind(word));
   // }, []);
 
+  const [innertext, setInnertext] = useState();
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  function setInstrunctions() {
+    const instructions = (
+      <>
+        <p>Your goal is to find the hidden word.</p>
+        <p>
+          You will be presented with a number of blank spaces representing the
+          missing letters you need to find.
+        </p>
+        <p>
+          Use your keyboard to guess a letter or just click it. To help you on
+          your journey, here are a few tips:
+        </p>
+      </>
+    );
+    setInnertext(instructions);
+    document.getElementById("tips").disabled = true;
+  }
+
+  function setWordfacts() {
+
+    const handlePlay = () => {
+      setIsPlaying(true);
+      const audio = new Audio(wordToFindData.sound);
+      audio.play();
+      audio.onended = () => setIsPlaying(false);
+    };
+
+    const wordfacts = (
+      <div
+        style={{
+          visibility: Winner || Loser ? "visible" : "hidden",
+        }}
+      >
+        <p>Definition: {wordToFindData.definition}</p>
+        <p>{wordToFindData.example}</p>
+        {/* <p>{wordToFindData.explanation}</p> */}
+        <p>{wordToFindData.synonym}</p>
+        <p>{wordToFindData.shortdef}</p>
+        <p>{wordToFindData.ipa}</p>
+
+        <button disabled={isPlaying} onClick={handlePlay}>
+            {isPlaying ? "Playing..." : "Play Sound"}
+          </button>
+          {/* <div>
+            <img
+              src={wordToFindData.image}
+              alt={`"${wordToFindData.word}" painting by ChatGPT`}
+              title={`"${wordToFindData.word}" by ChatGPT`}
+              width={300}
+            />
+          </div> */}
+      </div>
+    );
+    setInnertext(wordfacts);
+    document.getElementById("tips").disabled = false;
+    document.getElementById("hint1").disabled = true;
+    document.getElementById("hint2").disabled = true;
+  }
+
+  function setHint1() {
+    const instructions = (
+      <>
+        <p>{wordToFindData.synonym}</p>
+        <p>
+          You will be presented with a number of blank spaces representing the
+          missing letters you need to find.
+        </p>
+        <p>
+          Use your keyboard to guess a letter or just click it. To help you on
+          your journey, here are a few tips:
+        </p>
+      </>
+    );
+    setInnertext(instructions);
+    document.getElementById("hint1").disabled = true;
+  }
+
+  function setHint2() {
+    const instructions = (
+      <>
+        <p>{wordToFindData.shortdef}</p>
+        <p>
+          You will be presented with a number of blank spaces representing the
+          missing letters you need to find.
+        </p>
+        <p>
+          Use your keyboard to guess a letter or just click it. To help you on
+          your journey, here are a few tips:
+        </p>
+      </>
+    );
+    setInnertext(instructions);
+    document.getElementById("hint2").disabled = true;
+  }
+
   const [chosenLetters, setChosenLetters] = useState([]);
   const incorrectGuesses = chosenLetters.filter(
     (letter) => !wordToFind.includes(letter)
@@ -66,6 +164,7 @@ function App() {
       // || Winner || Loser
       // Skip the effect if not on the homepage - *or if the game is over - removed*
       setChosenLetters([]);
+      setInnertext();
       return;
     }
     // e: KeyboardEvent
@@ -122,6 +221,8 @@ function App() {
                     Loser={Loser}
                     Winner={Winner}
                     wordToFindData={wordToFindData}
+                    innertext={innertext}
+                    setWordfacts={setWordfacts}
                   />
                 </div>
                 <br />
@@ -151,6 +252,9 @@ function App() {
                     )}
                     inactiveLetters={incorrectGuesses}
                     addChosenLetter={addChosenLetter}
+                    setInstrunctions={setInstrunctions}
+                    setHint1={setHint1}
+                    setHint2={setHint2}
                   />
                 </div>
                 <br />

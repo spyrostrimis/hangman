@@ -1,52 +1,42 @@
 import React from 'react'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Wordfacts = ({
   wordToFindData,
-    Loser = false,
-  Winner = false
+  Loser = false,
+  Winner = false,
+  innertext,
+  setWordfacts,
 }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  // const instructions = (
+  //   <>
+  //     <p>Your goal is to find the hidden word.</p>
+  //     <p>
+  //       You will be presented with a number of blank spaces representing the
+  //       missing letters you need to find.
+  //     </p>
+  //     <p>
+  //       Use your keyboard to guess a letter or just click it. To help you on
+  //       your journey, here are a few tips:
+  //     </p>
+  //   </>
+  // );
 
-  const handlePlay = () => {
-    setIsPlaying(true);
-    const audio = new Audio(wordToFindData.sound);
-    audio.play();
-    audio.onended = () => setIsPlaying(false);
-  };
+  // const [innertext, setInnertext] = useState();
+
+  useEffect(() => {
+    if (Winner || Loser) {
+      setWordfacts();
+    }
+  }, [Loser, Winner]);
 
   return (
-      <div className="wordfactscontainer">
-        {/* <h1>Han's Corner</h1> */}
-        <div className="wordfactscontainerinner">
-          <div
-            style={{
-              visibility: Winner || Loser ? "visible" : "hidden",
-            }}
-          >
-            <p>Definition: {wordToFindData.definition}</p>
-            <p>{wordToFindData.example}</p>
-            {/* <p>{wordToFindData.explanation}</p> */}
-            <p>{wordToFindData.synonym}</p>
-            <p>{wordToFindData.shortdef}</p>
-            <p>{wordToFindData.ipa}</p>
-
-            {/* <button disabled={isPlaying} onClick={handlePlay}>
-            {isPlaying ? "Playing..." : "Play Sound"}
-          </button>
-          <div>
-            <img
-              src={wordToFindData.image}
-              alt={`"${wordToFindData.word}" painting by ChatGPT`}
-              title={`"${wordToFindData.word}" by ChatGPT`}
-              width={300}
-            />
-          </div> */}
-          </div>
-        </div>
+    <div className="wordfactscontainer">
+      <div className="wordfactscontainerinner">
+        <div>{innertext}</div>
       </div>
+    </div>
   );
-    
 };
 
 export default Wordfacts
