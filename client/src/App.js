@@ -42,27 +42,126 @@ function App() {
 
   const [innertext, setInnertext] = useState();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [remainingTries, setRemainingTries] = useState(6);
 
   function setInstrunctions() {
+    function showMore() {
+      document.getElementById("moretips").style.display = "block";
+      document.getElementById("showless").style.display = "none";
+    }
     const instructions = (
       <>
-        <p>Your goal is to find the hidden word.</p>
+        <h4>Instructions</h4>
+        <p>Your goal is to revive Artsy by discovering the hidden word.</p>
         <p>
-          You will be presented with a number of blank spaces representing the
+          You are presented with a number of blank spaces representing the
           missing letters you need to find.
         </p>
+        <p>You can also use your own keyboard to guess a letter.</p>
         <p>
-          Use your keyboard to guess a letter or just click it. To help you on
-          your journey, here are a few tips:
+          <strong>You only have six attempts.</strong>
         </p>
+        <h4>Tips</h4>
+        <p>To help you on your journey, here are a few tips:</p>
+        <p>
+          ♦ Vowel First Strategy: It's often beneficial to begin by guessing
+          vowels, such as 'A', 'E,' 'I,' 'O' or 'U'. <span
+            id="showless"
+            onClick={showMore}
+            style={{ color: "yellowgreen", cursor: "pointer" }}
+          > 
+            Read more...
+          </span>{" "}
+        </p>
+        <div id="moretips" style={{ display: "none" }}>
+          <p>
+            ♦ Mind the Clues: Pay close attention to any hints or clues provided
+            along the way. Professor Han Fastolfe may offer insights or guide
+            you towards the correct path.
+          </p>
+          <p>
+            ♦ Stay Persistent: Don't be discouraged by setbacks. Keep your
+            determination intact and continue your pursuit of the Hangman word.
+            Remember, every guess brings you one step closer to awakening Artsy.
+          </p>
+          <p style={{ textTransform: "uppercase" }}>
+            Begin your journey now and let the power of language and your
+            strategic thinking save the day!
+          </p>
+        </div>
       </>
     );
     setInnertext(instructions);
     document.getElementById("tips").disabled = true;
   }
 
-  function setWordfacts() {
+  // function setInstrunctions() {
+  //   const [showMore, setShowMore] = useState(false);
+  //   console.log("showMore", showMore);
 
+  //   const toggleShowMore = () => {
+  //     setShowMore(true);
+  //     console.log("showMore2", showMore);
+  //     // setInnertext(instructions);
+  //   };
+
+  //   const instructions = (
+  //     <>
+  //       <h4>Instructions</h4>
+  //       <p>Your goal is to revive Artsy by discovering the hidden word.</p>
+  //       <p>
+  //         You are presented with a number of blank spaces representing the
+  //         missing letters you need to find.
+  //       </p>
+  //       <p>You can also use your own keyboard to guess a letter.</p>
+  //       <h4>Tips</h4>
+  //       <p>To help you on your journey, here are a few tips:</p>
+  //       {console.log("showMore3", showMore)}
+  //       {showMore ? (
+  //         <>
+  //           <p>
+  //             ♦ Guess Wisely: <strong>You have six attempts</strong> to guess
+  //             the letters that form the Hangman word. Choose your letters
+  //             carefully to maximize your chances of success.
+  //           </p>
+  //           <p>
+  //             ♦ Vowel First Strategy: It's often beneficial to begin by guessing
+  //             vowels, such as 'A,' 'E,' 'I,' 'O,' or 'U.' These frequently
+  //             occurring letters might provide valuable clues to unlock the
+  //             mystery word.
+  //           </p>
+  //           <p>
+  //             ♦ Mind the Clues: Pay close attention to any hints or clues
+  //             provided along the way. Professor Han Fastolfe may offer insights
+  //             or guide you towards the correct path.
+  //           </p>
+  //           <p>
+  //             ♦ Stay Persistent: Don't be discouraged by setbacks. Keep your
+  //             determination intact and continue your pursuit of the Hangman
+  //             word. Remember, every guess brings you one step closer to
+  //             awakening Artsy.
+  //           </p>
+  //           <p>
+  //             Begin your journey now and let the power of language and your
+  //             strategic thinking save the day!
+  //           </p>
+  //         </>
+  //       ) : (
+  //         <p>
+  //           ♦ Guess Wisely: <strong>You have six attempts</strong> to guess the
+  //           letters that form the Hangman word. Choose your letters carefully to
+  //           maximize your chances of success.
+  //           <button onClick={toggleShowMore}>Read More</button>
+  //         </p>
+  //       )}
+  //     </>
+  //   );
+
+  //   setInnertext(instructions);
+  //   document.getElementById("tips").disabled = true;
+  // }
+
+  function setWordfacts() {
     const handlePlay = () => {
       setIsPlaying(true);
       const audio = new Audio(wordToFindData.sound);
@@ -84,9 +183,9 @@ function App() {
         <p>{wordToFindData.ipa}</p>
 
         <button disabled={isPlaying} onClick={handlePlay}>
-            {isPlaying ? "Playing..." : "Play Sound"}
-          </button>
-          {/* <div>
+          {isPlaying ? "Playing..." : "Play Sound"}
+        </button>
+        {/* <div>
             <img
               src={wordToFindData.image}
               alt={`"${wordToFindData.word}" painting by ChatGPT`}
@@ -103,38 +202,22 @@ function App() {
   }
 
   function setHint1() {
-    const instructions = (
+    const hint1 = (
       <>
-        <p>{wordToFindData.synonym}</p>
-        <p>
-          You will be presented with a number of blank spaces representing the
-          missing letters you need to find.
-        </p>
-        <p>
-          Use your keyboard to guess a letter or just click it. To help you on
-          your journey, here are a few tips:
-        </p>
+        <p>Synonym: {wordToFindData.synonym}</p>
       </>
     );
-    setInnertext(instructions);
+    setInnertext(hint1);
     document.getElementById("hint1").disabled = true;
   }
 
   function setHint2() {
-    const instructions = (
+    const hint2 = (
       <>
-        <p>{wordToFindData.shortdef}</p>
-        <p>
-          You will be presented with a number of blank spaces representing the
-          missing letters you need to find.
-        </p>
-        <p>
-          Use your keyboard to guess a letter or just click it. To help you on
-          your journey, here are a few tips:
-        </p>
+        <p>A short definition: {wordToFindData.shortdef}</p>
       </>
     );
-    setInnertext(instructions);
+    setInnertext(hint2);
     document.getElementById("hint2").disabled = true;
   }
 
@@ -151,20 +234,27 @@ function App() {
 
   const addChosenLetter = useCallback(
     (letter) => {
-      if (chosenLetters.includes(letter)) return;
+      if (chosenLetters.includes(letter) || Winner || Loser) return;
 
       setChosenLetters((currentLetters) => [...currentLetters, letter]);
       console.log(chosenLetters);
+      if (!wordToFind.includes(letter)) {
+        setRemainingTries((prevTries) => prevTries - 1);
+        setInnertext(
+          <>
+            <h5>You have {remainingTries - 1} tries remaining...</h5>
+          </>
+        );
+      }
     },
-    [chosenLetters, Winner, Loser]
+    [chosenLetters, wordToFind, remainingTries, Winner, Loser]
   );
 
   useEffect(() => {
     if (!isHangPage) {
       // || Winner || Loser
       // Skip the effect if not on the homepage - *or if the game is over - removed*
-      setChosenLetters([]);
-      setInnertext();
+      // setChosenLetters([]);
       return;
     }
     // e: KeyboardEvent
@@ -181,7 +271,7 @@ function App() {
     return () => {
       document.removeEventListener("keypress", handler);
     };
-  }, [isHangPage]); // removed chosenLetters,
+  }, [chosenLetters, isHangPage]); // removed chosenLetters,
 
   // useEffect(() => {
   //   if (isHomePage && !Winner && !Loser) {
@@ -192,6 +282,19 @@ function App() {
 
   //   // Rest of the code...
   // }, []);
+
+  useEffect(() => {
+    if (!isHangPage) {
+      // || Winner || Loser
+      // Skip the effect if not on the homepage - *or if the game is over - removed*
+      setChosenLetters([]);
+      setRemainingTries(6);
+      setInnertext("")
+      return;
+    }
+
+    // Rest of the code...
+  }, [isHangPage]);
 
   return (
     <>
@@ -223,9 +326,11 @@ function App() {
                     wordToFindData={wordToFindData}
                     innertext={innertext}
                     setWordfacts={setWordfacts}
+                    incorrectGuesses={incorrectGuesses.length}
                   />
                 </div>
                 <br />
+                <div>{incorrectGuesses.length}</div>
                 <div>{wordToFind}</div>
                 <br />
                 <Word
@@ -257,7 +362,6 @@ function App() {
                     setHint2={setHint2}
                   />
                 </div>
-                <br />
                 {Winner && "Winner! - Refresh and play again"}
                 {Loser && "Arghh... Refresh and play again"}
               </>

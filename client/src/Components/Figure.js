@@ -97,17 +97,20 @@ const RIGHT_LEG = (
 const BODY_PARTS = [HEAD,BODY,LEFT_ARM,RIGHT_ARM,LEFT_LEG,RIGHT_LEG];
 
 const Figure = ({ incorrectGuesses }) => {
+  useEffect(() => {
+    // Add a class to the body element when the component mounts
+    document.body.classList.add("figure-body");
 
-    useEffect(() => {
-      // Add a class to the body element when the component mounts
-      document.body.classList.add("figure-body");
+    // Remove the class from the body element when the component unmounts
+    return () => {
+      document.body.classList.remove("figure-body");
+    };
+  }, []);
 
-      // Remove the class from the body element when the component unmounts
-      return () => {
-        document.body.classList.remove("figure-body");
-      };
-    }, []);
-  
+  // useEffect(() => {
+  //   setRemaining();
+  // }, [incorrectGuesses]);
+
   return (
     <div className="figurecontainer">
       <div className="figurescreen">
@@ -146,7 +149,7 @@ const Figure = ({ incorrectGuesses }) => {
         </div> */}
         </div>
       </div>
-      <div className='figureartsy'>
+      <div className="figureartsy">
         <img
           src={artsy}
           alt={`painting by ChatGPT`}
@@ -154,6 +157,7 @@ const Figure = ({ incorrectGuesses }) => {
           width={250}
         />
       </div>
+      <div>{incorrectGuesses}</div>
     </div>
   );
 };

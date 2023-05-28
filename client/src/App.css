@@ -301,15 +301,15 @@ button:focus::after {
 
 .figurecontainer {
   width: 500px;
-    height: 500px;
-    background-color: rgb(138 139 141 / 0%);
-    position: relative;
-    border-bottom: 4px solid #d9d8dbbd;
-    border-radius: 90px;
-    /* box-shadow: inset 0 0 8px #434343, 0 1px 0 #383838, 0 4px 0 #171717, 0 10px 30px #111; */
-    /* box-shadow: 0 4px 12px 0 rgb(196 196 196 / 71%), 0 2px 4px rgb(147 147 147 / 89%); */
-    /* -webkit-box-shadow: inset 0px -4px 8px -2px #000000; */
-    box-shadow: inset 0px -80px 32px -34px #d9d8db91;
+  height: 500px;
+  background-color: rgb(138 139 141 / 0%);
+  position: relative;
+  border-bottom: 4px solid #d9d8dbbd;
+  border-radius: 90px;
+  /* box-shadow: inset 0 0 8px #434343, 0 1px 0 #383838, 0 4px 0 #171717, 0 10px 30px #111; */
+  /* box-shadow: 0 4px 12px 0 rgb(196 196 196 / 71%), 0 2px 4px rgb(147 147 147 / 89%); */
+  /* -webkit-box-shadow: inset 0px -4px 8px -2px #000000; */
+  box-shadow: inset 0px -80px 32px -34px #d9d8db91;
 }
 
 .figurescreen {
@@ -320,108 +320,109 @@ button:focus::after {
   /* margin-top: 10vh; */
   /* font-weight: 900; */
   color: #d9d8db;
-    padding: 8px;
-    border: 1px solid rgb(217 216 219 / 50%);
-    border-radius: 5px;
-    background-color: #00000063 !important;
-    box-shadow: 0px 0px 2px 2px rgb(217 216 219) !important;
-    -webkit-box-shadow: 0px 0px 2px 2px rgb(217 216 219);
-    -moz-box-shadow: 0px 0px 2px 2px rgb(217 216 219);
+  padding: 8px;
+  border: 1px solid rgb(217 216 219 / 50%);
+  border-radius: 5px;
+  background-color: #00000063 !important;
+  box-shadow: 0px 0px 2px 2px rgb(217 216 219) !important;
+  -webkit-box-shadow: 0px 0px 2px 2px rgb(217 216 219);
+  -moz-box-shadow: 0px 0px 2px 2px rgb(217 216 219);
   width: 418px;
-    height: 262px;
+  height: 262px;
 }
 
 .figurescreeninner {
   padding: 5px 5px;
-    box-shadow: 0px 0px 8px 0px #d9d8db;
-    -webkit-box-shadow: 0px 0px 8px 0px #d9d8db;
-    -moz-box-shadow: 0px 0px 8px 0px #d9d8db;
-    border-radius: 2px;
-    height: 242px;
-    background-color: #393939f0 !important;
-    /* font-family: Roboto, Helvetica, Arial, sans-serif; */
-    background-image: url("./Images/painting.webp");
-    background-size: cover;
-    background-position: center center;
-    color: #d9d8db !important;
-    background-size: 245px 245px;
-    background-repeat: no-repeat;
+  box-shadow: 0px 0px 8px 0px #d9d8db;
+  -webkit-box-shadow: 0px 0px 8px 0px #d9d8db;
+  -moz-box-shadow: 0px 0px 8px 0px #d9d8db;
+  border-radius: 2px;
+  height: 242px;
+  background-color: #393939f0 !important;
+  /* font-family: Roboto, Helvetica, Arial, sans-serif; */
+  background-image: url("./Images/painting.webp");
+  background-size: cover;
+  background-position: center center;
+  color: #d9d8db !important;
+  background-size: 245px 245px;
+  background-repeat: no-repeat;
 }
 
 .figureartsy {
   position: absolute;
-    bottom: 0px;
-    left: 8%;
+  bottom: 0px;
+  left: 8%;
 }
 
 .keyboardcontainer {
   position: relative;
-    margin: 10px auto;
-    background: #2c2e34;
-    -moz-border-radius-topleft: 7px 21px;
-    -moz-border-radius-topright: 7px 21px;
-    -moz-border-radius-bottomright: 10px;
-    -moz-border-radius-bottomleft: 10px;
-    border-top-left-radius: 12px 21px;
-    border-top-right-radius: 12px 21px;
-    border-bottom-right-radius: 10px;
-    border-bottom-left-radius: 10px;
-    padding: 12px 10px 10px 20px;
-    box-shadow: inset 0 0 8px #434343, 0 1px 0 #383838, 0 4px 0 #171717, 0 10px 30px #111;
-    max-width: 900px;
+  margin: 10px auto;
+  background: #2c2e34;
+  -moz-border-radius-topleft: 7px 21px;
+  -moz-border-radius-topright: 7px 21px;
+  -moz-border-radius-bottomright: 10px;
+  -moz-border-radius-bottomleft: 10px;
+  border-top-left-radius: 12px 21px;
+  border-top-right-radius: 12px 21px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  padding: 12px 10px 10px 20px;
+  box-shadow: inset 0 0 8px #434343, 0 1px 0 #383838, 0 4px 0 #171717,
+    0 10px 30px #111;
+  max-width: 900px;
 }
 
 .keyboardronny {
   position: absolute;
-    bottom: 140px;
-    right: -5%;
+  bottom: 140px;
+  right: -5%;
 }
 
 .keyboardhints {
-padding-bottom: 12px;
-    text-align: left;
+  padding-bottom: 12px;
+  text-align: left;
 }
 
 .keyboardhints button {
   border: 1px solid #93939333;
-    background: none;
-    font-size: 13px;
-    text-transform: uppercase;
-    padding: 4px 12px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #d0d2d5;
-    border-radius: 4px;
-    box-shadow: 0 0px 5px 0px #edee02ab;
-    box-shadow: 0 0px 5px 0px #00ffea;
-    font-family: 'bruno';
-    letter-spacing: 2px;
+  background: none;
+  font-size: 13px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #d0d2d5;
+  border-radius: 4px;
+  box-shadow: 0 0px 5px 0px #edee02ab;
+  box-shadow: 0 0px 5px 0px #00ffea;
+  font-family: "bruno";
+  letter-spacing: 2px;
 }
 
 #hint1 {
-margin-left: 88px;
-    margin-right: 10px;
+  margin-left: 88px;
+  margin-right: 10px;
 }
 
 #hint2 {
   margin-left: 5px;
-    margin-right: 290px;
+  margin-right: 290px;
 }
 
 .keyboardbtn {
   border: 1px solid #93939333;
-    background: none;
-    /* aspect-ratio: 1 / 1; */
-    font-size: 1rem;
-    text-transform: uppercase;
-    padding: 7px 0px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #c2c2c2;
-    width: 55px;
-    border-radius: 4px;
-    box-shadow: 0 0px 4px 0px;
-    font-family: 'bruno';
+  background: none;
+  /* aspect-ratio: 1 / 1; */
+  font-size: 1rem;
+  text-transform: uppercase;
+  padding: 7px 0px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #c2c2c2;
+  width: 55px;
+  border-radius: 4px;
+  box-shadow: 0 0px 4px 0px;
+  font-family: "bruno";
 }
 
 .keyboardbtn.active {
@@ -638,19 +639,35 @@ td:nth-of-type(3) {
   -webkit-box-shadow: 0px 0px 2px 2px rgb(16 207 230);
   -moz-box-shadow: 0px 0px 2px 2px rgb(16 207 230);
   /* min-height: 500px; */
-    max-width: 500px;
-    height: 500px;
+  /* max-width: 500px; */
+  width: 500px;
+  height: 500px;
 }
 
 .wordfactscontainerinner {
-  padding: 5px 5px;
-  box-shadow: 0px 0px 8px 0px rgb(16 207 230 / 99%), inset 0px 0px 119px 41px #d9d8db2e;
-  -webkit-box-shadow: 0px 0px 8px 0px rgb(16 207 230), inset 0px 0px 119px 41px #d9d8db2e;
-  -moz-box-shadow: 0px 0px 8px 0px rgb(16 207 230 / 99%), inset 0px 0px 119px 41px #d9d8db2e;
+  padding: 11px 12px 5px 15px;
+  box-shadow: 0px 0px 8px 0px rgb(16 207 230 / 99%),
+    inset 0px 0px 119px 41px #d9d8db2e;
+  -webkit-box-shadow: 0px 0px 8px 0px rgb(16 207 230),
+    inset 0px 0px 119px 41px #d9d8db2e;
+  -moz-box-shadow: 0px 0px 8px 0px rgb(16 207 230 / 99%),
+    inset 0px 0px 119px 41px #d9d8db2e;
   border-radius: 2px;
   /* min-height: 490px; */
   height: 480px;
   overflow: auto;
+  text-align: left;
+  font-family: monospace;
+  line-height: 23px;
+}
+
+.wordfactscontainerinner h4 {
+  font-family: "technoboard";
+  text-align: center;
+}
+
+.wordfactscontainerinner p {
+  margin-bottom: 0.85rem;
 }
 
 /* Additional styles for the Hall Of Fame page */
@@ -707,7 +724,7 @@ tr:nth-child(odd) {
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #397524 #DFE9EB;
+  scrollbar-color: #397524 #dfe9eb;
 }
 
 /* Chrome, Edge and Safari */
@@ -717,15 +734,15 @@ tr:nth-child(odd) {
 }
 *::-webkit-scrollbar-track {
   border-radius: 5px;
-  background-color: #DFE9EB;
+  background-color: #dfe9eb;
 }
 
 *::-webkit-scrollbar-track:hover {
-  background-color: #B8C0C2;
+  background-color: #b8c0c2;
 }
 
 *::-webkit-scrollbar-track:active {
-  background-color: #B8C0C2;
+  background-color: #b8c0c2;
 }
 
 *::-webkit-scrollbar-thumb {
@@ -734,9 +751,9 @@ tr:nth-child(odd) {
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: #62A34B;
+  background-color: #62a34b;
 }
 
 *::-webkit-scrollbar-thumb:active {
-  background-color: #62A34B;
+  background-color: #62a34b;
 }

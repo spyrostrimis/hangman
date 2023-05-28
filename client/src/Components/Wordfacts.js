@@ -33,6 +33,7 @@ const Wordfacts = ({
   return (
     <div className="wordfactscontainer">
       <div className="wordfactscontainerinner">
+        
         <div>{innertext}</div>
       </div>
     </div>
