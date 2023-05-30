@@ -391,11 +391,11 @@ router.get("/word/get-free-api", async (req, res) => {
 router.get("/word/get-one-word", async (req, res) => {
   // const oneword = await Word.aggregate([{ $sample: { size: 1 } }]);
   // Get the count of all users
-  let count = await Word.countDocuments({});
-  console.log("count", count);
-  let random = Math.floor(Math.random() * count);
+  const count = await Word.countDocuments({});
+  // console.log("count", count);
+  const random = Math.floor(Math.random() * count);
 
-  let oneword = await Word.findOne().skip(random)
+  const oneword = await Word.findOne().skip(random)
   res.send(oneword)
 });
 

@@ -35,10 +35,10 @@ function App() {
 
   const [wordToFindData, setWordToFindData] = useState("");
   const [wordToFind, setWordToFind] = useState("");
-  console.log("wordToFindData.word", wordToFindData.word);
-  console.log("wordToFindData", wordToFindData);
-  console.log("wordToFind", wordToFind);
-  console.log("wordToFindData.image", wordToFindData.image);
+  // console.log("wordToFindData.word", wordToFindData.word);
+  // console.log("wordToFindData", wordToFindData);
+  console.log("wordToFind1", wordToFind);
+  // console.log("wordToFindData.image", wordToFindData.image);
   // setWordToFind(wordToFindData.word);
   // useEffect(() => {
   //   getWord().then((word) => setWordToFind(word));
@@ -196,6 +196,8 @@ function App() {
   const addChosenLetter = useCallback(
     (letter) => {
       console.log("remainingTries2", remainingTries);
+      console.log("wordToFind2", wordToFind);
+      console.log("wordToFindData2", wordToFindData.word);
       if (chosenLetters.includes(letter) || Winner || Loser) return;
 
       setChosenLetters((currentLetters) => [...currentLetters, letter]);
@@ -203,6 +205,7 @@ function App() {
       console.log("remainingTries3", remainingTries);
       if (!wordToFind.includes(letter)) {
         console.log("remainingTries4", remainingTries);
+        console.log("wordToFind4", wordToFind);
         setRemainingTries(remainingTries - 1);
         console.log("remainingTries5", remainingTries);
         if (remainingTries > 1) {
@@ -219,10 +222,9 @@ function App() {
             </>
           );
         }
-        
       }
     },
-    [chosenLetters, wordToFind, remainingTries, Winner, Loser]
+    [chosenLetters, wordToFind, remainingTries, Winner, Loser, wordToFindData]
   );
 
   useEffect(() => {
@@ -265,6 +267,8 @@ function App() {
       setChosenLetters([]);
       setRemainingTries(5);
       setInnertext("")
+      setWordToFind("")
+      setWordToFindData("")
       return;
     }
 
@@ -315,7 +319,6 @@ function App() {
                   <Wordfacts
                     Loser={Loser}
                     Winner={Winner}
-                    wordToFindData={wordToFindData}
                     innertext={innertext}
                     setWordfacts={setWordfacts}
                     incorrectGuesses={incorrectGuesses.length}

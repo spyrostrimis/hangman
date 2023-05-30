@@ -2,7 +2,6 @@ import React from 'react'
 import { useState, useEffect } from "react";
 
 const Wordfacts = ({
-  wordToFindData,
   Loser = false,
   Winner = false,
   innertext,
