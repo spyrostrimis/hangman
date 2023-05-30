@@ -79,12 +79,11 @@ function App() {
         {/* <div id="moretips" style={{ display: "none" }}></div> */}
         <p>
           ♦ Mind the Clues: Pay close attention to any hints or clues provided
-          along the way. Professor Han Fastolfe may offer insights or guide you
-          towards the correct path.
+          along the way by Professor Han Fastolfe.
         </p>
         <p>
           ♦ Stay Persistent: Don't be discouraged by setbacks. Keep your
-          determination intact and continue your pursuit of the Hangman word.
+          determination intact and continue your pursuit of the hidden word.
           Remember, every guess brings you one step closer to awakening Artsy.
         </p>
         <p style={{ textTransform: "uppercase" }}>
@@ -214,7 +213,7 @@ function App() {
         if (remainingTries == 1) {
           setInnertext(
             <>
-              <h5>You have only {remainingTries} try left, make it count...</h5>
+              <h5>You have only {remainingTries} try left... make it count!</h5>
             </>
           );
         }
