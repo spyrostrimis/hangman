@@ -36,6 +36,15 @@ html {
   background-position: center center;
   background-blend-mode: multiply;
   color: #d9d8db !important;
+  /* font-family: monospace; */
+}
+
+a:hover {
+  color: #bfc001;
+  color: #27ff00;
+  color: #ff9800 !important;
+  color: #b300f0 !important;
+  color: #9200dd !important;
 }
 
 .App {
@@ -50,40 +59,59 @@ html {
   min-height: calc(100vh);
 }
 
-.navbar {
+.navbarcustom {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  padding: 0px 10px 10px 10px;
-  margin: 10px 20px 20px 20px;
+  padding: 0px 15px 0px 12px;
+  margin: 15px 20px 20px 20px;
   /* background-color: #eee; */
-  width: 1240px;
-  height: 65px;
+  max-width: 1200px;
+  height: 53px;
   margin-left: auto;
   margin-right: auto;
   font-family: "PT Sans Narrow", sans-serif;
   font-family: technoboard;
-  font-size: 22px;
-  border-bottom: 4px solid yellow;
-  border-radius: 12px;
-  background-color: #c0c0c04f !important;
-  box-shadow: 0px 8px 30px -4px rgba(230, 230, 230, 0.79) !important;
-  -webkit-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
+  /* font-size: 19px !important; */
+  /* border-bottom: 4px solid yellow; */
+  /* border-radius: 12px; */
+  /* background-color: #c0c0c021 !important; */
+  /* box-shadow: 0px 8px 30px -4px rgba(230, 230, 230, 0.79) !important; */
+  /* -webkit-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79); */
   -moz-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
+  border-bottom: 3px solid #d8de0d;
+  border-radius: 12px;
+  /* background-color: #1c230f30 !important; */
+  /* box-shadow: 0px 8px 30px -4px rgba(230, 230, 230, 0.79) !important; */
+  /* -webkit-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79); */
+  -moz-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
+  box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%),
+    0px 1px 30px -1px rgba(230, 230, 230, 0.79),
+    inset 0px -4px 15px 2px rgba(230, 230, 230, 0.25);
+  -webkit-box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%),
+    0px 1px 30px -1px rgba(230, 230, 230, 0.79),
+    inset 0px -4px 15px 2px rgba(230, 230, 230, 0.25);
+  -moz-box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%),
+    0px 1px 30px -1px rgba(230, 230, 230, 0.79),
+    inset 0px -4px 15px 2px rgba(230, 230, 230, 0.25);
+  align-items: center;
+  width: 1240px;
+  border-top-left-radius: 10px 60px;
+  border-top-right-radius: 10px 60px;
 }
 
-.navbar a {
+.navbarcustom a {
   text-decoration: none;
-  padding: 10px;
+  padding: 20px;
   /* font-weight: 600; */
   font-family: "PT Sans Narrow", sans-serif;
-  font-size: 22px;
+  font-size: 20px;
   color: #206ec7;
   color: #262622;
   font-family: technoboard;
-  color: yellow;
+  color: #f3f400;
   /* text-transform: uppercase; */
   font-family: bruno;
+  font-weight: 600;
 }
 
 .formcontainer {
@@ -202,22 +230,22 @@ a#checkmark {
 }
 
 .introcontainer {
-  max-width: 571px;
+  max-width: 615px;
   text-align: left;
-  margin-top: 40px;
+  margin-top: 20px;
   font-weight: 900;
-  color: chartreuse;
   color: #10cfe6;
   padding: 20px;
   border-bottom: 4px solid #10cfe6;
   border-radius: 12px;
-  background-color: #c0c0c04f !important;
+  background-color: #48484830 !important;
   box-shadow: 0px 8px 30px -4px rgba(230, 230, 230, 0.79) !important;
   -webkit-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
   -moz-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
   font-family: zenblack;
-  font-size: 25px;
-  /* text-shadow: 0px 0px 9px #10cfe6; */
+  font-size: 20px;
+  text-shadow: 0px 0px 15px #10cfe6;
+  font-family: monospace;
 }
 
 #introbtn {
@@ -340,7 +368,7 @@ button:focus::after {
   height: 242px;
   background-color: #393939f0 !important;
   /* font-family: Roboto, Helvetica, Arial, sans-serif; */
-  background-image: url("./Images/painting.webp");
+  /* background-image: url("./Images/painting.webp"); */
   background-size: cover;
   background-position: center center;
   color: #d9d8db !important;
@@ -399,6 +427,11 @@ button:focus::after {
   letter-spacing: 2px;
 }
 
+.keyboardhints button:hover,
+.keyboardhints button:focus {
+  color: #11b4ad;
+}
+
 #hint1 {
   margin-left: 88px;
   margin-right: 10px;
@@ -441,15 +474,14 @@ button:focus::after {
 
 .keyboardbtn.active:disabled {
   background-color: rgb(22 142 27);
-  color: white;
+  color: #dce0e4;
   opacity: 0.8;
-  background-color: #ff585d;
+  background-color: #bd1b6d;
 }
 
 .keyboardbtn:hover:not(:disabled),
 .keyboardbtn:focus:not(:disabled) {
-  background-color: hsl(78, 100%, 75%);
-  background-color: #ffbb2f;
+  background-color: #0e9088;
 }
 
 .footer {

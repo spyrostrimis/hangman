@@ -63,7 +63,7 @@ function Login() {
           <br />
 
           <span>
-            New user? <a href="/signup">create account</a>
+            New player? <a href="/signup">create account</a>
           </span>
         </form>
       </div>

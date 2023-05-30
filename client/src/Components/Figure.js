@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect } from "react";
 import artsy from "../Images/artsy.png";
+import defaultpainting from "../Images/painting.webp"
 
 const HEAD = (
   <div
@@ -96,7 +97,8 @@ const RIGHT_LEG = (
 
 const BODY_PARTS = [HEAD,BODY,LEFT_ARM,RIGHT_ARM,LEFT_LEG,RIGHT_LEG];
 
-const Figure = ({ incorrectGuesses }) => {
+const Figure = ({ painting, Winner = false }) => {
+  // console.log(painting);
   useEffect(() => {
     // Add a class to the body element when the component mounts
     document.body.classList.add("figure-body");
@@ -114,7 +116,16 @@ const Figure = ({ incorrectGuesses }) => {
   return (
     <div className="figurecontainer">
       <div className="figurescreen">
-        <div className="figurescreeninner">
+        <div
+          className="figurescreeninner"
+          style={
+            Winner
+              ? painting
+                ? { backgroundImage: `url(${painting})` }
+                : { backgroundImage: `url(${defaultpainting})` }
+              : null
+          }
+        >
           {/* <div style={{ position: "relative" }}>
       {BODY_PARTS.slice(0, incorrectGuesses)}
       <div
@@ -157,7 +168,6 @@ const Figure = ({ incorrectGuesses }) => {
           width={250}
         />
       </div>
-      <div>{incorrectGuesses}</div>
     </div>
   );
 };

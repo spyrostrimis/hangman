@@ -12,10 +12,12 @@ import Wordfacts from './Components/Wordfacts';
 import Keyboard from "./Components/Keyboard";
 import Halloffame from "./Components/Halloffame";
 import Footer from './Components/Footer';
+import soundbtn from "./Images/soundbtn.png";
 
 import { useCallback, useEffect, useState } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 // import axios from "axios";
+import { Buffer } from "buffer";
 
 
 
@@ -41,8 +43,8 @@ function App() {
   // }, []);
 
   const [innertext, setInnertext] = useState();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [remainingTries, setRemainingTries] = useState(6);
+  const [remainingTries, setRemainingTries] = useState(5);
+  console.log("remainingTries1", remainingTries);
 
   function setInstrunctions() {
     function showMore() {
@@ -65,108 +67,46 @@ function App() {
         <p>To help you on your journey, here are a few tips:</p>
         <p>
           ♦ Vowel First Strategy: It's often beneficial to begin by guessing
-          vowels, such as 'A', 'E,' 'I,' 'O' or 'U'. <span
+          vowels, such as 'A', 'E,' 'I,' 'O' or 'U'.{" "}
+          {/* <span
             id="showless"
             onClick={showMore}
-            style={{ color: "yellowgreen", cursor: "pointer" }}
-          > 
+            style={{ color: "#a54ed7", cursor: "pointer" }}
+          >
             Read more...
-          </span>{" "}
+          </span>{" "} */}
         </p>
-        <div id="moretips" style={{ display: "none" }}>
-          <p>
-            ♦ Mind the Clues: Pay close attention to any hints or clues provided
-            along the way. Professor Han Fastolfe may offer insights or guide
-            you towards the correct path.
-          </p>
-          <p>
-            ♦ Stay Persistent: Don't be discouraged by setbacks. Keep your
-            determination intact and continue your pursuit of the Hangman word.
-            Remember, every guess brings you one step closer to awakening Artsy.
-          </p>
-          <p style={{ textTransform: "uppercase" }}>
-            Begin your journey now and let the power of language and your
-            strategic thinking save the day!
-          </p>
-        </div>
+        {/* <div id="moretips" style={{ display: "none" }}></div> */}
+        <p>
+          ♦ Mind the Clues: Pay close attention to any hints or clues provided
+          along the way. Professor Han Fastolfe may offer insights or guide you
+          towards the correct path.
+        </p>
+        <p>
+          ♦ Stay Persistent: Don't be discouraged by setbacks. Keep your
+          determination intact and continue your pursuit of the Hangman word.
+          Remember, every guess brings you one step closer to awakening Artsy.
+        </p>
+        <p style={{ textTransform: "uppercase" }}>
+          Begin your journey now and let the power of language and your
+          strategic thinking save the day!
+        </p>
       </>
     );
     setInnertext(instructions);
     document.getElementById("tips").disabled = true;
   }
 
-  // function setInstrunctions() {
-  //   const [showMore, setShowMore] = useState(false);
-  //   console.log("showMore", showMore);
-
-  //   const toggleShowMore = () => {
-  //     setShowMore(true);
-  //     console.log("showMore2", showMore);
-  //     // setInnertext(instructions);
-  //   };
-
-  //   const instructions = (
-  //     <>
-  //       <h4>Instructions</h4>
-  //       <p>Your goal is to revive Artsy by discovering the hidden word.</p>
-  //       <p>
-  //         You are presented with a number of blank spaces representing the
-  //         missing letters you need to find.
-  //       </p>
-  //       <p>You can also use your own keyboard to guess a letter.</p>
-  //       <h4>Tips</h4>
-  //       <p>To help you on your journey, here are a few tips:</p>
-  //       {console.log("showMore3", showMore)}
-  //       {showMore ? (
-  //         <>
-  //           <p>
-  //             ♦ Guess Wisely: <strong>You have six attempts</strong> to guess
-  //             the letters that form the Hangman word. Choose your letters
-  //             carefully to maximize your chances of success.
-  //           </p>
-  //           <p>
-  //             ♦ Vowel First Strategy: It's often beneficial to begin by guessing
-  //             vowels, such as 'A,' 'E,' 'I,' 'O,' or 'U.' These frequently
-  //             occurring letters might provide valuable clues to unlock the
-  //             mystery word.
-  //           </p>
-  //           <p>
-  //             ♦ Mind the Clues: Pay close attention to any hints or clues
-  //             provided along the way. Professor Han Fastolfe may offer insights
-  //             or guide you towards the correct path.
-  //           </p>
-  //           <p>
-  //             ♦ Stay Persistent: Don't be discouraged by setbacks. Keep your
-  //             determination intact and continue your pursuit of the Hangman
-  //             word. Remember, every guess brings you one step closer to
-  //             awakening Artsy.
-  //           </p>
-  //           <p>
-  //             Begin your journey now and let the power of language and your
-  //             strategic thinking save the day!
-  //           </p>
-  //         </>
-  //       ) : (
-  //         <p>
-  //           ♦ Guess Wisely: <strong>You have six attempts</strong> to guess the
-  //           letters that form the Hangman word. Choose your letters carefully to
-  //           maximize your chances of success.
-  //           <button onClick={toggleShowMore}>Read More</button>
-  //         </p>
-  //       )}
-  //     </>
-  //   );
-
-  //   setInnertext(instructions);
-  //   document.getElementById("tips").disabled = true;
-  // }
-
   function setWordfacts() {
+
+    function showMore() {
+      document.getElementById("explainmore").style.display = "block";
+      document.getElementById("showlessfacts").style.display = "none";
+    }
+
     const handlePlay = () => {
-      setIsPlaying(true);
       const audio = new Audio(wordToFindData.sound);
       audio.play();
-      audio.onended = () => setIsPlaying(false);
     };
 
     const wordfacts = (
@@ -175,16 +115,36 @@ function App() {
           visibility: Winner || Loser ? "visible" : "hidden",
         }}
       >
-        <p>Definition: {wordToFindData.definition}</p>
-        <p>{wordToFindData.example}</p>
-        {/* <p>{wordToFindData.explanation}</p> */}
-        <p>{wordToFindData.synonym}</p>
-        <p>{wordToFindData.shortdef}</p>
-        <p>{wordToFindData.ipa}</p>
+        <h3 style={{ marginBottom: "15px" }}>{wordToFindData.word}</h3>
+        <p>
+          <b>Definition:</b> {wordToFindData.definition}
+        </p>
+        <p>
+          <b>IPA: {wordToFindData.ipa}</b> <span> </span>
+          <img
+            src={soundbtn}
+            alt={`sound button image`}
+            title={`Listen to the word`}
+            width={36}
+            onClick={handlePlay}
+            style={{ cursor: "pointer" }}
+          />
+        </p>
 
-        <button disabled={isPlaying} onClick={handlePlay}>
-          {isPlaying ? "Playing..." : "Play Sound"}
-        </button>
+        <p>
+          <b>An example:</b> {wordToFindData.example}
+        </p>
+        <p
+          id="showlessfacts"
+          onClick={showMore}
+          style={{ color: "#a54ed7", cursor: "pointer" }}
+        >
+          How is the word used in this example?
+        </p>
+        <p id="explainmore" style={{ display: "none" }}>
+          <b>Explanation:</b> {wordToFindData.explanation}
+        </p>
+
         {/* <div>
             <img
               src={wordToFindData.image}
@@ -204,7 +164,7 @@ function App() {
   function setHint1() {
     const hint1 = (
       <>
-        <p>Synonym: {wordToFindData.synonym}</p>
+        <h5>Synonym: {wordToFindData.synonym}</h5>
       </>
     );
     setInnertext(hint1);
@@ -214,7 +174,7 @@ function App() {
   function setHint2() {
     const hint2 = (
       <>
-        <p>A short definition: {wordToFindData.shortdef}</p>
+        <h5>A clue: {wordToFindData.shortdef}</h5>
       </>
     );
     setInnertext(hint2);
@@ -234,17 +194,31 @@ function App() {
 
   const addChosenLetter = useCallback(
     (letter) => {
+      console.log("remainingTries2", remainingTries);
       if (chosenLetters.includes(letter) || Winner || Loser) return;
 
       setChosenLetters((currentLetters) => [...currentLetters, letter]);
-      console.log(chosenLetters);
+      console.log("chosenLetters", chosenLetters);
+      console.log("remainingTries3", remainingTries);
       if (!wordToFind.includes(letter)) {
-        setRemainingTries((prevTries) => prevTries - 1);
-        setInnertext(
-          <>
-            <h5>You have {remainingTries - 1} tries remaining...</h5>
-          </>
-        );
+        console.log("remainingTries4", remainingTries);
+        setRemainingTries(remainingTries - 1);
+        console.log("remainingTries5", remainingTries);
+        if (remainingTries > 1) {
+          setInnertext(
+            <>
+              <h5>You have {remainingTries} tries remaining...</h5>
+            </>
+          );
+        }
+        if (remainingTries == 1) {
+          setInnertext(
+            <>
+              <h5>You have only {remainingTries} try left, make it count...</h5>
+            </>
+          );
+        }
+        
       }
     },
     [chosenLetters, wordToFind, remainingTries, Winner, Loser]
@@ -296,6 +270,19 @@ function App() {
     // Rest of the code...
   }, [isHangPage]);
 
+  let paintingBase64;
+  if (wordToFindData.image) {
+    const imageData = wordToFindData.image.data;
+    const imageBuffer = Buffer.from(imageData);
+    const mimeType = "image/png";
+    // console.log("wordToFindData.image", wordToFindData.image);
+    paintingBase64 = `data:${mimeType};base64,${imageBuffer.toString(
+      "base64"
+    )}`;
+    // console.log("paintingBase64", paintingBase64);
+  }
+  
+
   return (
     <>
       <div className="App">
@@ -316,10 +303,14 @@ function App() {
                     gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
                     justifyItems: "center",
                     gap: "20px",
-                    marginTop: "20px",
+                    marginTop: "10px",
                   }}
                 >
-                  <Figure incorrectGuesses={incorrectGuesses.length} />
+                  <Figure
+                    incorrectGuesses={incorrectGuesses.length}
+                    Winner={Winner}
+                    painting={paintingBase64 ? paintingBase64 : null}
+                  />
                   <Wordfacts
                     Loser={Loser}
                     Winner={Winner}
@@ -330,9 +321,7 @@ function App() {
                   />
                 </div>
                 <br />
-                <div>{incorrectGuesses.length}</div>
-                <div>{wordToFind}</div>
-                <br />
+                <div style={{ color: "transparent"}}>{wordToFind}</div>
                 <Word
                   reveal={Loser}
                   wordToFind={wordToFind}
@@ -347,7 +336,6 @@ function App() {
                     alignSelf: "stretch",
                     marginLeft: "10px",
                     marginRight: "10px",
-                    backgroundColor: "#9e9e9e94",
                   }}
                 >
                   <Keyboard
@@ -362,8 +350,8 @@ function App() {
                     setHint2={setHint2}
                   />
                 </div>
-                {Winner && "Winner! - Refresh and play again"}
-                {Loser && "Arghh... Refresh and play again"}
+                {/* {Winner && "Winner! - Refresh and play again"}
+                {Loser && "Arghh... Refresh and play again"} */}
               </>
             }
           />

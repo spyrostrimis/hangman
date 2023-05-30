@@ -23,7 +23,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className="navbar">
+    <div className="navbarcustom">
       {/* <nav>
         <Link to="/hangman">
           <img src={logoo} style={{ height: "36px" }} />
@@ -36,18 +36,18 @@ const Navbar = () => {
         {token ? (
           <>
             {/* <Link to="#">{decoded ? decoded.username : null}</Link> */}
-            <Link to="/hangman">Hangman</Link>
-            <Link to="/hall-of-fame">HALL OF FAME</Link>
+            <Link to="/hangman">Play Hangman</Link>
+            <Link to="/hall-of-fame">Hall of Fame</Link>
             <Link onClick={logout} to="/login">
               Logout
             </Link>
           </>
         ) : (
           <>
-            <Link to="/hangman">Hangman</Link>
+            <Link to="/hangman">Play Hangman</Link>
             <Link to="/hall-of-fame">Hall of Fame</Link>
-            <Link to="/login">Login</Link>
-            <Link to="/signup">Signup</Link>
+            <Link to="/login">Sign In</Link>
+            {/* <Link to="/signup">Signup</Link> */}
           </>
         )}
       </nav>

@@ -58,8 +58,9 @@ if (token) {
         fontSize: "2rem",
         textTransform: "uppercase",
         display: "flex",
-        gap: "1rem",
-        backgroundColor: "#9e9e9e94",
+        gap: "19px",
+        fontWeight: "600",
+        marginTop: "15px"
       }}
     >
       {wordToFind.split("").map((letter, index) => (
@@ -69,7 +70,9 @@ if (token) {
               visibility:
                 chosenLetters.includes(letter) || reveal ? "visible" : "hidden",
               color:
-                !chosenLetters.includes(letter) && reveal ? "red" : "#cdcdcd",
+                !chosenLetters.includes(letter) && reveal
+                  ? "#b20074"
+                  : "#cdcdcd",
             }}
           >
             {letter}

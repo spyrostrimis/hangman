@@ -10,7 +10,7 @@ const wordSchema = new mongoose.Schema({
   synonym: { type: String, lowercase: true, trim: true },
   ipa: String,
   sound: String,
-  image: String,
+  image: Buffer,
 });
 
 // Pre-save middleware to remove dot from the end of the word

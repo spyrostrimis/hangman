@@ -6,6 +6,7 @@ const Word = require("../Models/wordmodel")
 const { Configuration, OpenAIApi } = require("openai");
 // import { Configuration, OpenAIApi } from "openai";
 const axios = require("axios");
+const fs = require("fs");
 
 const openai = new OpenAIApi(
   new Configuration({
@@ -202,7 +203,7 @@ router.get("/word/get-all-words-create-random", async (req, res) => {
         },
         {
           role: "user",
-          content: `Explain this sentence ${example} and particularly what this word ${word} means inside that sentence. If the ${example} is There is not an example for this word then return an empty string`,
+          content: `Explain this sentence ${example} and particularly what this word ${word} means inside that sentence. If there is no ${example} for this word then return an empty string`,
         },
       ],
     });
@@ -261,13 +262,17 @@ const soundtitle = resmw.data[0].hwi.prs[0].sound.audio;
       const resimage = await openai.createImage({
         prompt: `An abstract painting of: ${word}`,
         n: 1,
-        size: "1024x1024",
+        size: "512x512",
       });
 
     // console.log(resimage.data.data[0].url);
-    let image = "";
+    let imageBuffer = "";
     if (resimage) {
-      image = resimage.data.data[0].url;
+      const imageUrl = resimage.data.data[0].url;
+      const imageResponse = await axios.get(imageUrl, {
+        responseType: "arraybuffer",
+      });
+      imageBuffer = Buffer.from(imageResponse.data, "binary");
     }
 
     // const image2 = await openai.createImage({
@@ -293,7 +298,7 @@ const soundtitle = resmw.data[0].hwi.prs[0].sound.audio;
         synonym,
         ipa,
         sound,
-        image,
+        image: imageBuffer,
       });
       // return res.send({ msg: "Word added successfully!", newWord });
       console.log("New word added successfully!", newWord.word);
