@@ -35,8 +35,10 @@ function App() {
 
   const [wordToFindData, setWordToFindData] = useState("");
   const [wordToFind, setWordToFind] = useState("");
-  // console.log("wordToFindData.word", wordToFindData.word);
-  // console.log("wordToFindData", wordToFindData);
+  console.log("wordToFindData.word", wordToFindData.word);
+  console.log("wordToFindData", wordToFindData);
+  console.log("wordToFind", wordToFind);
+  console.log("wordToFindData.image", wordToFindData.image);
   // setWordToFind(wordToFindData.word);
   // useEffect(() => {
   //   getWord().then((word) => setWordToFind(word));
@@ -47,10 +49,10 @@ function App() {
   console.log("remainingTries1", remainingTries);
 
   function setInstrunctions() {
-    function showMore() {
-      document.getElementById("moretips").style.display = "block";
-      document.getElementById("showless").style.display = "none";
-    }
+    // function showMore() {
+    //   document.getElementById("moretips").style.display = "block";
+    //   document.getElementById("showless").style.display = "none";
+    // }
     const instructions = (
       <>
         <h4>Instructions</h4>
@@ -261,7 +263,7 @@ function App() {
       // || Winner || Loser
       // Skip the effect if not on the homepage - *or if the game is over - removed*
       setChosenLetters([]);
-      setRemainingTries(6);
+      setRemainingTries(5);
       setInnertext("")
       return;
     }

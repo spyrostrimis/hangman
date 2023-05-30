@@ -13,16 +13,28 @@ const Word = ({
 
   let token = localStorage.getItem("token");
 
-  async function getWordData() {
-    let response = await axios.get("http://localhost:8000/word/get-all-words");
-    console.log("I fire once!");
-    let allwords = response.data;
-    // console.log(
-    //   "getWordData:",
-    //   allwords[Math.floor(Math.random() * allwords.length)]
-    // );
-    return allwords[Math.floor(Math.random() * allwords.length)];
-  }
+  // async function getWordData() {
+  //   let response = await axios.get("http://localhost:8000/word/get-all-words");
+  //   console.log("I fire once!");
+  //   let allwords = response.data;
+  //   // console.log(
+  //   //   "getWordData:",
+  //   //   allwords[Math.floor(Math.random() * allwords.length)]
+  //   // );
+  //   return allwords[Math.floor(Math.random() * allwords.length)];
+  // }
+
+    async function getWordData() {
+      let response = await axios.get("http://localhost:8000/word/get-one-word");
+      console.log(response.data);
+      console.log("I fire once!");
+      let oneword = response.data;
+      // console.log(
+      //   "getWordData:",
+      //   allwords[Math.floor(Math.random() * allwords.length)]
+      // );
+      return oneword;
+    }
 
   useEffect(() => {
     getWordData()
