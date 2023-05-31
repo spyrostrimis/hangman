@@ -2,6 +2,8 @@
 
 Hangman is a web-based game built using the MERN stack (MongoDB, Express, React, Node.js). It is designed to provide an interactive and educational experience for learning English vocabulary and pronunciation while having fun.
 
+![hangman gameplay page](hangame.png)
+
 ## Features
 
 - Randomly selects a word for the player to guess.
