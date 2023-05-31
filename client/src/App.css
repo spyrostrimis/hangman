@@ -221,6 +221,11 @@ a#checkmark {
   margin: 30px auto;
 }
 
+.form button:hover {
+    filter: drop-shadow(0 0 15px yellow) drop-shadow(0 0 2px yellow) contrast(2.3) brightness(2.3);
+    border: 2px solid #d8de0d;
+}
+
 .form button span {
   text-decoration: none;
   padding: 10px;
