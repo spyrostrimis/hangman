@@ -1,4 +1,4 @@
-# Hangman Game
+# Hangman Rescue Mission
 
 Hangman is a web-based game built using the MERN stack (MongoDB, Express, React, Node.js). It is designed to provide an interactive and educational experience for learning English vocabulary and pronunciation while having fun.
 
