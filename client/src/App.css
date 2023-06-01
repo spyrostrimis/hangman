@@ -36,7 +36,7 @@ html {
   background-position: center center;
   background-blend-mode: multiply;
   color: #d9d8db !important;
-  /* font-family: monospace; */
+  /* font-family: monospace !important; */
 }
 
 a:hover {
@@ -46,6 +46,43 @@ a:hover {
   color: #b300f0 !important;
   color: #9200dd !important;
 }
+
+/* SCROLLBAR */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #01515b94 #908f90;
+}
+/* Chrome, Edge and Safari */
+*::-webkit-scrollbar {
+  width: 8px;
+}
+*::-webkit-scrollbar-track {
+  border-radius: 2px;
+  background-color: #bab9bc;
+}
+
+*::-webkit-scrollbar-track:hover {
+  background-color: #cacaca;
+}
+
+*::-webkit-scrollbar-track:active {
+  background-color: #b8c0c2;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+    background-color: #908f90;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #01515b94;
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: #01515b94;
+}
+/* end scrollbar */
 
 .App {
   display: flex;
@@ -187,6 +224,12 @@ input[type="checkbox"] {
 }
 
 input[type="text" i] {
+  padding-left: 10px;
+  background-color: #0b0b0b70;
+  color: #c9c9c9;
+}
+
+input[type="password" i] {
   padding-left: 10px;
   background-color: #0b0b0b70;
   color: #c9c9c9;
@@ -387,6 +430,24 @@ button:focus::after {
   left: 8%;
 }
 
+/* .keyboardcontainer {
+  position: relative;
+  margin: 10px auto;
+  background: #2c2e34;
+  -moz-border-radius-topleft: 7px 21px;
+  -moz-border-radius-topright: 7px 21px;
+  -moz-border-radius-bottomright: 10px;
+  -moz-border-radius-bottomleft: 10px;
+  border-top-left-radius: 12px 21px;
+  border-top-right-radius: 12px 21px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  padding: 12px 10px 10px 20px;
+  box-shadow: inset 0 0 8px #434343, 0 1px 0 #383838, 0 4px 0 #171717,
+    0 10px 30px #111;
+  max-width: 900px;
+} */
+
 .keyboardcontainer {
   position: relative;
   margin: 10px auto;
@@ -403,6 +464,59 @@ button:focus::after {
   box-shadow: inset 0 0 8px #434343, 0 1px 0 #383838, 0 4px 0 #171717,
     0 10px 30px #111;
   max-width: 900px;
+  height: 158px;
+  perspective: 1000px;
+}
+
+.keyboardcontainer-inner {
+  position: relative;
+  /* width: 100%;
+  height: 100%; */
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+  margin: 67px auto;
+}
+
+.keyboard-front,
+.keyboard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.keyboard-front {
+  background-color: #2c2e34;
+  border-radius: 12px 21px 10px 10px;
+  box-shadow: inset 0 0 8px #434343, 0 1px 0 #383838, 0 4px 0 #171717, 0 10px 30px #111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.keyboard-back {
+  background-color: #2c2e34;
+    border-radius: 12px 21px 10px 10px;
+    box-shadow: inset 0 0 8px #434343, 0 1px 0 #383838, 0 4px 0 #171717, 0 10px 30px #111;
+    transform: rotateY(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.keyboardcontainer.flipped {
+height: 120px;
+    /* background: #2c2e3466; */
+    width: 75%;
+    background: none;
+    box-shadow: none;
+}
+
+
+.keyboardcontainer.flipped .keyboardcontainer-inner {
+  transform: rotateY(180deg);
+  
 }
 
 .keyboardronny {
@@ -445,6 +559,59 @@ button:focus::after {
 #hint2 {
   margin-left: 5px;
   margin-right: 290px;
+}
+
+.keyboardreplay {
+  text-align: left;
+    margin-bottom: 34px;
+}
+
+.keyboardreplay button {
+  border: 1px solid #93939333;
+    background: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+    color: #d0d2d5;
+    font-family: "bruno";
+    letter-spacing: 2px;
+    font-size: 14px;
+    border-top-left-radius: 12px 80px;
+    border-top-right-radius: 12px 80px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    box-shadow: 0px 0px 10px 0px rgb(16 207 230 / 99%), inset 0px 0px 33px 10px #d9d8db24;
+    -webkit-box-shadow: 0px 0px 10px 0px rgb(16 207 230 / 99%), inset 0px 0px 33px 10px #d9d8db24;
+    -moz-box-shadow: 0px 0px 8px 0px rgb(16 207 230 / 99%), inset 0px 0px 119px 41px #d9d8db24;
+}
+
+.keyboardreplay button:hover,
+.keyboardreplay button:focus {
+  color: #95DEE9;
+  box-shadow: 0px 0px 10px 0px #10cfe6fc, inset 0px 0px 14px 27px #d9d8db1a;
+    
+    -webkit-box-shadow: 0px 0px 10px 0px #10cfe6fc, inset 0px 0px 14px 27px #d9d8db1a;
+    -moz-box-shadow: 0px 0px 10px 0px #10cfe6fc, inset 0px 0px 14px 27px #d9d8db1a;
+}
+
+#playagain {
+  padding: 19px 69px;
+    margin: 50px;
+    font-size: 14px;
+    border-top-left-radius: 12px 80px;
+    border-top-right-radius: 12px 80px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#checkscore {
+  padding: 19px 18px;
+    margin: 50px;
+    font-size: 14px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 12px 80px;
+    border-bottom-left-radius: 12px 80px;
 }
 
 .keyboardbtn {
@@ -756,41 +923,4 @@ tr:nth-child(odd) {
   color: #10cfe6;
 }
 
-/* SCROLLBAR */
 
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #397524 #dfe9eb;
-}
-
-/* Chrome, Edge and Safari */
-*::-webkit-scrollbar {
-  width: 10px;
-  width: 10px;
-}
-*::-webkit-scrollbar-track {
-  border-radius: 5px;
-  background-color: #dfe9eb;
-}
-
-*::-webkit-scrollbar-track:hover {
-  background-color: #b8c0c2;
-}
-
-*::-webkit-scrollbar-track:active {
-  background-color: #b8c0c2;
-}
-
-*::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  background-color: #397524;
-}
-
-*::-webkit-scrollbar-thumb:hover {
-  background-color: #62a34b;
-}
-
-*::-webkit-scrollbar-thumb:active {
-  background-color: #62a34b;
-}

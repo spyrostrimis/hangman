@@ -35,7 +35,7 @@ function Login() {
   return (
     <div className="formcontainer">
       <div className="form">
-        <form onSubmit={login}>
+        <form autocomplete="off" onSubmit={login}>
           <h1>Login form</h1>
           <label htmlFor="username"></label>
           <input
@@ -44,15 +44,17 @@ function Login() {
             ref={usernameRef}
             placeholder="Username"
             autoFocus
+            autocomplete="off"
           />
           <br></br>
           <br></br>
           <label htmlFor="password"></label>
           <input
             id="password"
-            type="text"
+            type="password"
             ref={passwordRef}
             placeholder="Password"
+            autocomplete="off"
           />
           <br />
           <br />

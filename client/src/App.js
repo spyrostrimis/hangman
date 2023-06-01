@@ -48,7 +48,7 @@ function App() {
   const [remainingTries, setRemainingTries] = useState(5);
   console.log("remainingTries1", remainingTries);
 
-  function setInstrunctions() {
+  function setInstructions() {
     // function showMore() {
     //   document.getElementById("moretips").style.display = "block";
     //   document.getElementById("showless").style.display = "none";
@@ -68,8 +68,9 @@ function App() {
         <h4>Tips</h4>
         <p>To help you on your journey, here are a few tips:</p>
         <p>
-          ♦ Vowel First Strategy: It's often beneficial to begin by guessing
-          vowels, such as 'A', 'E,' 'I,' 'O' or 'U'.{" "}
+          <span style={{ color: "#b40075" }}>♦</span> Vowel First Strategy: It's
+          often beneficial to begin by guessing vowels, such as 'A', 'E,' 'I,'
+          'O' or 'U'.{" "}
           {/* <span
             id="showless"
             onClick={showMore}
@@ -80,13 +81,15 @@ function App() {
         </p>
         {/* <div id="moretips" style={{ display: "none" }}></div> */}
         <p>
-          ♦ Mind the Clues: Pay close attention to any hints or clues provided
-          along the way by Professor Han Fastolfe.
+          <span style={{ color: "#b40075" }}>♦</span> Mind the Clues: Pay close
+          attention to any hints or clues provided along the way by Professor
+          Han Fastolfe.
         </p>
         <p>
-          ♦ Stay Persistent: Don't be discouraged by setbacks. Keep your
-          determination intact and continue your pursuit of the hidden word.
-          Remember, every guess brings you one step closer to awakening Artsy.
+          <span style={{ color: "#b40075" }}>♦</span> Stay Persistent: Don't be
+          discouraged by setbacks. Keep your determination intact and continue
+          your pursuit of the hidden word. Remember, every guess brings you one
+          step closer to awakening Artsy.
         </p>
         <p style={{ textTransform: "uppercase" }}>
           Begin your journey now and let the power of language and your
@@ -325,7 +328,7 @@ function App() {
                   />
                 </div>
                 <br />
-                <div style={{ color: "transparent"}}>{wordToFind}</div>
+                <div style={{ color: "transparent" }}>{wordToFind}</div>
                 <Word
                   reveal={Loser}
                   wordToFind={wordToFind}
@@ -349,9 +352,11 @@ function App() {
                     )}
                     inactiveLetters={incorrectGuesses}
                     addChosenLetter={addChosenLetter}
-                    setInstrunctions={setInstrunctions}
+                    setInstructions={setInstructions}
                     setHint1={setHint1}
                     setHint2={setHint2}
+                    Loser={Loser}
+                    Winner={Winner}
                   />
                 </div>
                 {/* {Winner && "Winner! - Refresh and play again"}
