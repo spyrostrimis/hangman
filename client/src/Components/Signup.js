@@ -35,7 +35,7 @@ function Signup() {
   return (
     <div className="formcontainer">
       <div className="form">
-        <form autocomplete="off" onSubmit={createNewUser}>
+        <form autoComplete="off" onSubmit={createNewUser}>
           <h1>Create account</h1>
           <label htmlFor="username"></label>
           <input
@@ -47,8 +47,8 @@ function Signup() {
             maxLength="35"
             autoFocus
             pattern="[A-Za-z\d]{3,}"
-            title="Username must be at least three characters, including numbers"
-            autocomplete="off"
+            title="Username must be at least three characters. Symbols are not allowed."
+            autoComplete="off"
           />
           <br></br>
           <br></br>
@@ -62,7 +62,7 @@ function Signup() {
             maxLength="35"
             pattern=".{3,}"
             title="Password must be at least three characters"
-            autocomplete="off"
+            autoComplete="off"
           />
           <br />
           <br />

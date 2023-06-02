@@ -1,5 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from "react";
+import { Typewriter } from "react-simple-typewriter";
+import jwt_decode from "jwt-decode";
 
 const Wordfacts = ({
   Loser = false,
@@ -23,6 +25,17 @@ const Wordfacts = ({
 
   // const [innertext, setInnertext] = useState();
 
+  const token = localStorage.getItem("token");
+  let decoded;
+
+  if (token) {
+    try {
+      decoded = jwt_decode(token);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     if (Winner || Loser) {
       setWordfacts();
@@ -32,8 +45,26 @@ const Wordfacts = ({
   return (
     <div className="wordfactscontainer">
       <div className="wordfactscontainerinner">
-        
-        <div>{innertext}</div>
+        <div>
+          {innertext ? (
+            innertext
+          ) : (
+            <h5>
+              {/* Style will be inherited from the parent element */}
+              <Typewriter
+                words={[
+                  `Artsy has shut down! Can you bring him back to life ${
+                    decoded ? decoded.username : ""
+                  }?`,
+                  `You only have 6 attempts...`,
+                ]}
+                typeSpeed={35}
+                deleteSpeed={0}
+                delaySpeed={1200}
+              />
+            </h5>
+          )}
+        </div>
       </div>
     </div>
   );

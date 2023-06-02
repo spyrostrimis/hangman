@@ -46,6 +46,8 @@ function App() {
 
   const [innertext, setInnertext] = useState();
   const [remainingTries, setRemainingTries] = useState(5);
+  const [disablehint1, setDisablehint1] = useState(false);
+  const [disablehint2, setDisablehint2] = useState(false);
   console.log("remainingTries1", remainingTries);
 
   function setInstructions() {
@@ -171,6 +173,7 @@ function App() {
         <h5>Synonym: {wordToFindData.synonym}</h5>
       </>
     );
+    setDisablehint1(true);
     setInnertext(hint1);
     document.getElementById("hint1").disabled = true;
   }
@@ -181,6 +184,7 @@ function App() {
         <h5>A clue: {wordToFindData.shortdef}</h5>
       </>
     );
+    setDisablehint2(true);
     setInnertext(hint2);
     document.getElementById("hint2").disabled = true;
   }
@@ -272,6 +276,8 @@ function App() {
       setInnertext("")
       setWordToFind("")
       setWordToFindData("")
+      setDisablehint1(false);
+      setDisablehint2(false);
       return;
     }
 
@@ -357,6 +363,8 @@ function App() {
                     setHint2={setHint2}
                     Loser={Loser}
                     Winner={Winner}
+                    disablehint1={disablehint1}
+                    disablehint2={disablehint2}
                   />
                 </div>
                 {/* {Winner && "Winner! - Refresh and play again"}

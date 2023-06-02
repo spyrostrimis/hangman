@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import ronny from "../Images/ronny.png";
+import ronnyai from "../Images/ronnyai.png";
 
 const Keyboard = ({
   activeLetters,
@@ -13,6 +14,8 @@ const Keyboard = ({
   setHint2,
   Winner,
   Loser,
+  disablehint1 = false,
+  disablehint2 = false,
 }) => {
   const KEYS = [
     "a",
@@ -125,19 +128,31 @@ const Keyboard = ({
       <div className="keyboardcontainer-inner">
         <div className="keyboard-front">
           <div className="keyboardhints">
-            <button id="hint1" onClick={setHint1}>
+            <button
+              id="hint1"
+              onClick={setHint1}
+              disabled={disablehint1 || disabled}
+            >
               Hint 1
             </button>
-            <button id="hint2" onClick={setHint2}>
+            <button
+              id="hint2"
+              onClick={setHint2}
+              disabled={disablehint2 || disabled}
+            >
               Hint 2
             </button>
-            <button id="tips" onClick={setInstructions}>
+            <button
+              id="tips"
+              onClick={setInstructions}
+              disabled={false}
+            >
               INSTRUCTIONS & TIPS
             </button>
           </div>
           <div className="keyboardronny">
             <img
-              src={ronny}
+              src={ronnyai}
               alt="painting by ChatGPT"
               title="painting by ChatGPT"
               width={200}

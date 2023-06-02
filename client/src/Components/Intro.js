@@ -1,8 +1,10 @@
 import React from 'react'
 import { Link } from "react-router-dom";
-import ronny from "../Images/ronny.png";
+import hanai from "../Images/hanai.png";
 import artsy from "../Images/artsy.png";
 import { Tooltip } from "react-tooltip";
+import ronny from "../Images/ronny.png";
+import ronnyai from "../Images/ronnyai.png";
 
 
 const Intro = () => {
@@ -14,7 +16,7 @@ const Intro = () => {
       <div className="introcontainer">
         {/* <h3>ABOUT THE GAME</h3> */}
         <img
-          src={ronny}
+          src={ronnyai}
           data-tooltip-id="my-tooltip"
           data-tooltip-content="Han Fastolfe, Professor of English Literature."
           style={{ float: "right", height: "160px" }}

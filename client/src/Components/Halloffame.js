@@ -2,10 +2,15 @@ import React from 'react'
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
+import { Link } from "react-router-dom";
+import { Typewriter } from 'react-simple-typewriter'
 
 const Halloffame = ({ Winner = false}) => {
   const [allusers, setAllusers] = useState([]);
-
+  const token = localStorage.getItem("token");
+  // if (token) {
+  //   return <Navigate to="/" />;
+  // }
     useEffect(() => {
       // Add a class to the body element when the component mounts
       document.body.classList.add("hall-of-fame-body");
@@ -31,6 +36,16 @@ const Halloffame = ({ Winner = false}) => {
 
   return (
     <div className="hallcontainer hall-of-fame">
+      {!token && (
+        <div style={{ marginTop: "-40px", marginBottom: "40px" }}>
+          <h4>Let's get competitive!</h4>
+          <h4>
+            <Link to="/login">Login</Link> or <Link to="/signup">Signup</Link>{" "}
+            to earn points with each win, and claim your place into the Hall Of
+            Fame.
+          </h4>
+        </div>
+      )}
       <h1>HALL OF FAME</h1>
       <div style={{ fontSize: "2rem" }}>
         <table id="highscores">

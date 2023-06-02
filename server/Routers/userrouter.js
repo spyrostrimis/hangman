@@ -13,12 +13,12 @@ let saltRounds = Number(process.env.SALTY_ROUNDS);
 router.post("/user/signup", async (req, res) => {
   try {
       let { username, password } = req.body;
-      console.log(username, password);
+      // console.log(username, password);
     if (!username || !password) {
       return res.send({ msg: "Both username and password are required" });
     }
       let userFound = await User.findOne({ username });
-      console.log("userFound", userFound);
+      // console.log("userFound", userFound);
     if (userFound) {
       return res.send({ msg: "Username already exists" });
     } else {

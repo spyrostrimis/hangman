@@ -296,6 +296,32 @@ a#checkmark {
   font-family: monospace;
 }
 
+#introhanai {
+  float: right;
+    height: 131px;
+    /* width: 110px; */
+    margin: 18px;
+    margin-right: 3px;
+    margin-top: 3px;
+    /* border-bottom: 2px solid #f5f600b8; */
+    border-radius: 8px;
+    padding: 10px 16px 1px 21px;
+    /* padding-bottom: 1px; */
+    /* box-shadow: 1px 1px 1px 1px blueviolet; */
+    /* box-shadow: inset 0px -5px 3px 5px blueviolet; */
+    /* background-color: hsla(220,1%,55%,0); */
+    /* border: 1px solid #d9d8db00; */
+    /* border-bottom: 2px solid #d9d8dbbd; */
+    border-radius: 50px;
+    /* box-shadow: inset 0 -56px 19px -44px #d9d8dbc2; */
+    /* border-bottom: 27px solid #10cfe6; */
+    border-radius: 58px;
+    /* background-color: #48484829 !important; */
+    box-shadow: -2px 4px 30px -4px rgb(230 230 230 / 46%) !important;
+    -webkit-box-shadow: -2px 4px 30px -4px rgb(230 230 230 / 46%) !important;
+    -moz-box-shadow: -2px 4px 30px -4px rgb(230 230 230 / 46%) !important;
+}
+
 #introbtn {
   background: none;
   /* font-family: 'zenblack';
@@ -521,7 +547,7 @@ height: 120px;
 
 .keyboardronny {
   position: absolute;
-  bottom: 140px;
+  bottom: 62px;
   right: -5%;
 }
 
@@ -535,7 +561,7 @@ height: 120px;
   background: none;
   font-size: 13px;
   text-transform: uppercase;
-  padding: 4px 12px;
+  padding: 5px 12px 4px 12px;
   font-weight: bold;
   cursor: pointer;
   color: #d0d2d5;
@@ -560,6 +586,17 @@ height: 120px;
   margin-left: 5px;
   margin-right: 290px;
 }
+
+#hint1:disabled, #hint2:disabled {
+  cursor: default;
+  opacity: 0.6;
+  color: #d0d2d5;
+}
+
+/* .keyboardhints button:hover:disabled {
+  color: #d0d2d5;
+  opacity: 0.6;
+} */
 
 .keyboardreplay {
   text-align: left;
