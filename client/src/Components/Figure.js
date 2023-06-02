@@ -2,6 +2,7 @@ import React from 'react'
 import { useEffect } from "react";
 import artsy from "../Images/artsy.png";
 import defaultpainting from "../Images/painting.webp"
+import gameover from "../Images/gameover.png";
 
 const HEAD = (
   <div
@@ -97,7 +98,7 @@ const RIGHT_LEG = (
 
 const BODY_PARTS = [HEAD,BODY,LEFT_ARM,RIGHT_ARM,LEFT_LEG,RIGHT_LEG];
 
-const Figure = ({ painting, Winner = false }) => {
+const Figure = ({ painting, Winner = false, Loser = false }) => {
   // console.log(painting);
   useEffect(() => {
     // Add a class to the body element when the component mounts
@@ -123,6 +124,8 @@ const Figure = ({ painting, Winner = false }) => {
               ? painting
                 ? { backgroundImage: `url(${painting})` }
                 : { backgroundImage: `url(${defaultpainting})` }
+              : Loser
+              ? { backgroundImage: `url(${gameover})` }
               : null
           }
         >
@@ -160,7 +163,7 @@ const Figure = ({ painting, Winner = false }) => {
         </div> */}
         </div>
       </div>
-      <div className="figureartsy">
+      <div className={`figureartsy ${Winner ? "winner" : ""}`}>
         <img
           src={artsy}
           alt={`painting by ChatGPT`}

@@ -323,6 +323,7 @@ function App() {
                   <Figure
                     incorrectGuesses={incorrectGuesses.length}
                     Winner={Winner}
+                    Loser={Loser}
                     painting={paintingBase64 ? paintingBase64 : null}
                   />
                   <Wordfacts

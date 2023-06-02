@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from "react-router-dom";
 import hanai from "../Images/hanai.png";
 import artsy from "../Images/artsy.png";
-import { Tooltip } from "react-tooltip";
+// import { Tooltip } from "react-tooltip";
 import ronny from "../Images/ronny.png";
 import ronnyai from "../Images/ronnyai.png";
 
@@ -17,9 +17,11 @@ const Intro = () => {
         {/* <h3>ABOUT THE GAME</h3> */}
         <img
           src={ronnyai}
-          data-tooltip-id="my-tooltip"
-          data-tooltip-content="Han Fastolfe, Professor of English Literature."
+          // data-tooltip-id="my-tooltip"
+          // data-tooltip-content="Han Fastolfe, Professor of English Literature."
           style={{ float: "right", height: "160px" }}
+          alt="The robot Professor Han Fastolfe"
+          title="Professor Han Fastolfe"
         />
         <p>
           Welcome to the{" "}
@@ -63,7 +65,12 @@ const Intro = () => {
           </span>
         </p>
         <div style={{ textAlign: "center" }}>
-          <img src={artsy} style={{ height: "123px" }} />
+          <img
+            src={artsy}
+            style={{ height: "123px" }}
+            title="Artsy"
+            alt="The robot Artsy"
+          />
         </div>
       </div>
       <div style={{ marginTop: "43px" }}>
@@ -71,7 +78,7 @@ const Intro = () => {
           <button id="introbtn">Play Hangman</button>
         </Link>
       </div>
-      <Tooltip id="my-tooltip" place="bottom" />
+      {/* <Tooltip id="my-tooltip" place="bottom" /> */}
     </>
   );
 }

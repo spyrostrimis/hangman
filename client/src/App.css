@@ -452,8 +452,44 @@ button:focus::after {
 
 .figureartsy {
   position: absolute;
-  bottom: 0px;
-  left: 8%;
+  bottom: 5px;
+  left: 15%;
+  filter: saturate(1.0);
+    animation-name: artsy;
+  animation-duration: 3s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes artsy {
+  0% {
+    filter: saturate(1.0);
+  }
+  100% {
+    filter: saturate(0.4);
+  }
+}
+
+.figureartsy.winner {
+  position: absolute;
+  bottom: 5px;
+  left: 15%;
+  filter: saturate(0.4);
+    animation-name: artsywinner;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+}
+
+@keyframes artsywinner {
+  0% {
+    filter: saturate(0.4);
+  }
+  100% {
+    filter: saturate(1.1);
+  }
 }
 
 /* .keyboardcontainer {
@@ -549,6 +585,27 @@ height: 120px;
   position: absolute;
   bottom: 62px;
   right: -5%;
+  filter: hue-rotate(0deg);
+  animation-name: ronny;
+  animation-duration: 7s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease;
+  animation-delay: 1s;
+}
+
+@keyframes ronny {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  20% {
+    filter: hue-rotate(160deg);
+  }
+  80% {
+    filter: hue-rotate(160deg);
+  }
+  100% {
+    filter: hue-rotate(0deg);
+  }
 }
 
 .keyboardhints {
