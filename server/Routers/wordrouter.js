@@ -399,6 +399,190 @@ router.get("/word/get-one-word", async (req, res) => {
   res.send(oneword)
 });
 
+router.get("/word/get-one-word-create-random", async (req, res) => {
+  const count = await Word.countDocuments({});
+  const random = Math.floor(Math.random() * count);
+
+  const oneword = await Word.findOne().skip(random);
+  res.send(oneword);
+  //create new word with gpt
+  try {
+    const resword = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      temperature: 2,
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a High School teacher of English Literature and Language",
+        },
+        {
+          role: "user",
+          content:
+            "You are a High School teacher of English Literature and Language. You play a hangman game with your students in class. Give 1 word of average difficulty, so that your high school students will learn english vocabulary and spelling. Respond only with 1 word and nothing else, no spaces no dots or full stops no symbols. Just one word. Please take into account that your answer will be saved as is to my Mongo Database, please make it lowercase with only a-z characters",
+        },
+      ],
+    });
+    const word = resword.data.choices[0].message.content;
+    console.log("Word:", word);
+    // console.log("Response:", response);
+    // return res.json({ msg: "Responded successfully.", word });
+
+    const resdefinition = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are English Literature ProfessorGPT helpful assistant teacher of english language and culture",
+        },
+        {
+          role: "user",
+          content: `Give the definition of the word ${word}. Respond immediately with the definition and nothing else, without repeating the word`,
+        },
+      ],
+    });
+    const definition = resdefinition.data.choices[0].message.content;
+    console.log("Def:", definition);
+
+    const resexample = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are English Literature ProfessorGPT helpful assistant teacher of english language and culture",
+        },
+        {
+          role: "user",
+          content: `Provide one sentence that includes this specific word ${word} from English or American literature, poetry, philosophy, politics, or culture , clearly mentioning the word ${word} itself. Then where it was used (optional), from whom (optional) and when (optional). If you can't find such a sentence return There is not an example for this word.`,
+        },
+      ],
+    });
+    const example = resexample.data.choices[0].message.content;
+    console.log("example ok!");
+
+    const resexplain = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are English Literature ProfessorGPT helpful assistant teacher of english language and culture",
+        },
+        {
+          role: "user",
+          content: `Explain this sentence ${example} and particularly what this word ${word} means inside that sentence. If there is no ${example} for this word then return an empty string`,
+        },
+      ],
+    });
+    const explanation = resexplain.data.choices[0].message.content;
+    console.log("explanation ok!");
+    const ressynonym = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      temperature: 2,
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are an English Literature ProfessorGPT helpful assistant teacher of english language and culture",
+        },
+        {
+          role: "user",
+          content: `Give one synonym for the word ${word}. Respond only with 1 synonym and nothing else, no spaces no dots or full stops no symbols. Just one word. Please take into account that your answer will be saved as is to my Mongo Database, please make it lowercase with only a-z characters`,
+        },
+      ],
+    });
+    const synonym = ressynonym.data.choices[0].message.content;
+    console.log(synonym);
+
+    // MERRIAM-WEBSTER'S API
+
+    const resmw = await axios.get(
+      `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=${process.env.MW_KEY}`
+    );
+    // console.log(resmw.data);
+    let ipa = "";
+    let sound = "";
+    let shortdef = "";
+    if (resmw) {
+      if (resmw.data[0].hwi.prs[0].mw) {
+        ipa = resmw.data[0].hwi.prs[0].mw;
+      }
+      if (resmw.data[0].hwi.prs[0].sound.audio) {
+        const soundtitle = resmw.data[0].hwi.prs[0].sound.audio;
+        sound = `https://media.merriam-webster.com/audio/prons/en/us/mp3/${soundtitle[0]}/${soundtitle}.mp3`;
+      }
+      if (resmw.data[0].shortdef[0]) {
+        shortdef = resmw.data[0].shortdef[0];
+      }
+    }
+
+    console.log(ipa);
+
+    console.log(sound);
+
+    console.log(shortdef);
+
+    //image
+    const resimage = await openai.createImage({
+      prompt: `An abstract painting of: ${word}`,
+      n: 1,
+      size: "512x512",
+    });
+
+    // console.log(resimage.data.data[0].url);
+    let imageBuffer = "";
+    if (resimage) {
+      const imageUrl = resimage.data.data[0].url;
+      const imageResponse = await axios.get(imageUrl, {
+        responseType: "arraybuffer",
+      });
+      imageBuffer = Buffer.from(imageResponse.data, "binary");
+    }
+
+    // const image2 = await openai.createImage({
+    //   prompt: `An abstract oil painting of: ${example}`,
+    //   n: 1,
+    //   size: "1024x1024",
+    // });
+
+    // console.log(image2.data);
+    //
+    let wordFound = await Word.findOne({ word });
+    // console.log(wordFound);
+    if (wordFound) {
+      // return res.send({ msg: "Word already exists", wordFound });
+      console.log("Word already exists:", wordFound.word);
+    } else {
+      let newWord = await Word.create({
+        word,
+        definition,
+        shortdef,
+        example,
+        explanation,
+        synonym,
+        ipa,
+        sound,
+        image: imageBuffer,
+      });
+      // return res.send({ msg: "Word added successfully!", newWord });
+      console.log("New word added successfully!", newWord.word);
+    }
+    // return res.json({
+    //   msg: "Responded successfully.",
+    //   word,
+    //   definition,
+    //   example,
+    //   explanation,
+
+    // });
+  } catch (error) {
+    res.status(500).json({ msg: "No response", error });
+  }
+  //
+});
+
 module.exports = router;
 
   //   openai

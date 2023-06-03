@@ -25,7 +25,9 @@ const Word = ({
   // }
 
     async function getWordData() {
-      let response = await axios.get("http://localhost:8000/word/get-one-word");
+      let response = await axios.get(
+        "https://hangman-lsq2.onrender.com/word/get-one-word-create-random"
+      );
       // console.log(response.data);
       console.log("I fire once!");
       let oneword = response.data;
@@ -37,6 +39,7 @@ const Word = ({
     }
 
   useEffect(() => {
+    console.log("But Do I Fire Once???");
     getWordData()
       .then((data) => {
         setWordToFindData(data);
@@ -48,6 +51,7 @@ const Word = ({
 if (token) {
   if (Winner) {
     console.log("TokenWord:", token);
+    console.log("But Do I Fire Once???");
     axios
       .put("http://localhost:8000/user/add100", null, {
         headers: {

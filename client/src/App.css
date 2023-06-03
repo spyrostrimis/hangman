@@ -452,8 +452,8 @@ button:focus::after {
 
 .figureartsy {
   position: absolute;
-  bottom: 5px;
-  left: 15%;
+  bottom: 0px;
+  left: 12%;
   filter: saturate(1.0);
     animation-name: artsy;
   animation-duration: 3s;
@@ -473,8 +473,8 @@ button:focus::after {
 
 .figureartsy.winner {
   position: absolute;
-  bottom: 5px;
-  left: 15%;
+  bottom: 0px;
+  left: 12%;
   filter: saturate(0.4);
     animation-name: artsywinner;
   animation-duration: 1s;

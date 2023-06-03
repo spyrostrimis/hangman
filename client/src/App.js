@@ -37,7 +37,7 @@ function App() {
   const [wordToFind, setWordToFind] = useState("");
   // console.log("wordToFindData.word", wordToFindData.word);
   // console.log("wordToFindData", wordToFindData);
-  console.log("wordToFind1", wordToFind);
+  // console.log("wordToFind1", wordToFind);
   // console.log("wordToFindData.image", wordToFindData.image);
   // setWordToFind(wordToFindData.word);
   // useEffect(() => {
@@ -48,7 +48,7 @@ function App() {
   const [remainingTries, setRemainingTries] = useState(5);
   const [disablehint1, setDisablehint1] = useState(false);
   const [disablehint2, setDisablehint2] = useState(false);
-  console.log("remainingTries1", remainingTries);
+  // console.log("remainingTries1", remainingTries);
 
   function setInstructions() {
     // function showMore() {
@@ -198,23 +198,23 @@ function App() {
   const Winner =
     wordToFind &&
     wordToFind.split("").every((letter) => chosenLetters.includes(letter));
-  console.log("Winner:", Winner);
+  // console.log("Winner:", Winner);
 
   const addChosenLetter = useCallback(
     (letter) => {
-      console.log("remainingTries2", remainingTries);
-      console.log("wordToFind2", wordToFind);
-      console.log("wordToFindData2", wordToFindData.word);
+      // console.log("remainingTries2", remainingTries);
+      // console.log("wordToFind2", wordToFind);
+      // console.log("wordToFindData2", wordToFindData.word);
       if (chosenLetters.includes(letter) || Winner || Loser) return;
 
       setChosenLetters((currentLetters) => [...currentLetters, letter]);
-      console.log("chosenLetters", chosenLetters);
-      console.log("remainingTries3", remainingTries);
+      // console.log("chosenLetters", chosenLetters);
+      // console.log("remainingTries3", remainingTries);
       if (!wordToFind.includes(letter)) {
-        console.log("remainingTries4", remainingTries);
-        console.log("wordToFind4", wordToFind);
+        // console.log("remainingTries4", remainingTries);
+        // console.log("wordToFind4", wordToFind);
         setRemainingTries(remainingTries - 1);
-        console.log("remainingTries5", remainingTries);
+        // console.log("remainingTries5", remainingTries);
         if (remainingTries > 1) {
           setInnertext(
             <>

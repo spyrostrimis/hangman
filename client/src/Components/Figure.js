@@ -164,12 +164,7 @@ const Figure = ({ painting, Winner = false, Loser = false }) => {
         </div>
       </div>
       <div className={`figureartsy ${Winner ? "winner" : ""}`}>
-        <img
-          src={artsy}
-          alt={`painting by ChatGPT`}
-          title={`painting by ChatGPT`}
-          width={250}
-        />
+        <img src={artsy} alt={`The robot Artsy`} width={250} />
       </div>
     </div>
   );

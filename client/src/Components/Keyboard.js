@@ -46,8 +46,8 @@ const Keyboard = ({
     "z",
   ];
 
-  console.log("activeLetters", activeLetters);
-  console.log("inactiveLetters", inactiveLetters);
+  // console.log("activeLetters", activeLetters);
+  // console.log("inactiveLetters", inactiveLetters);
 
   const [isFlipped, setIsFlipped] = useState(false);
   const navigate = useNavigate();
