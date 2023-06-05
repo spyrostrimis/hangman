@@ -25,9 +25,7 @@ const Word = ({
   // }
 
     async function getWordData() {
-      let response = await axios.get(
-        "https://hangman-lsq2.onrender.com/word/get-one-word-create-random"
-      );
+      let response = await axios.get("http://localhost:8000/word/get-one-word");
       // console.log(response.data);
       console.log("I fire once!");
       let oneword = response.data;
