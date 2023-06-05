@@ -50,25 +50,64 @@ const Intro = () => {
     document.getElementById("root").classList.remove("blur-effect");
   };
 
-  const popoverContent = (
-    <Popover id="popover-basic">
-      <Popover.Header>
-        Popover right
-        <Button
-          variant="link"
-          className="popover-close-btn"
-          onClick={handlePopoverClose}
-        >
+  const popoverRonnyIntro = (
+    <Popover id="introronny">
+      <Popover.Header id="introronnyheader">
+        Han Fastolfe
+        <button className="popover-close-btn" onClick={handlePopoverClose}>
           &times;
-        </Button>
+        </button>
       </Popover.Header>
-      <Popover.Body>
-        And here's some <strong>amazing</strong> content. It's very engaging.
-        right?
+      <Popover.Body id="introronnybody">
+        <p>
+          Han was created in <strong>Aurora</strong> in the year 4486 AD. His
+          fascination with language and its structure led him to Earth.
+        </p>
+        <p>
+          For his key role in the reconciliation between Robots and Humans, he
+          was honored with the seat of{" "}
+          <strong>Professor of Linguistics at the MIT</strong>.
+        </p>
+        <p>
+          Han spends most of his free time with his beloved daughter{" "}
+          <strong>Illucia</strong>.
+        </p>
+        <small>
+          <i>Han Fastolfe is inspired from Isaac Asimov's Robot series.</i>
+        </small>
       </Popover.Body>
     </Popover>
   );
-  
+
+  const popoverArtsyIntro = (
+    <Popover id="introartsy">
+      <Popover.Header id="introronnyheader">
+        Artsy
+        <button id="popover-close-btn-artsy" onClick={handlePopoverClose}>
+          &times;
+        </button>
+      </Popover.Header>
+      <Popover.Body id="introronnybody">
+        <p>
+          Han was created in <strong>Aurora</strong> in the year 4486 AD. His
+          fascination with language and its structure led him to Earth.
+        </p>
+        <p>
+          For his key role in the reconciliation between Robots and Humans, he
+          is honored with the seat of{" "}
+          <strong>Professor of Linguistics at the MIT</strong>.
+        </p>
+        <p>
+          Han spends most of his free time with his beloved daughter{" "}
+          <strong>Illucia</strong>.
+        </p>
+        <small>
+          <i>Han Fastolfe is inspired from Isaac Asimov's Robot series.</i>
+        </small>
+      </Popover.Body>
+    </Popover>
+  );
+
   return (
     <>
       <span
@@ -77,11 +116,11 @@ const Intro = () => {
       <div className="introcontainer">
         {/* <h3>ABOUT THE GAME</h3> */}
         {/* <figure> */}
-        <div ref={popoverRef}>
+        <div ref={popoverRef} className="introbios">
           <OverlayTrigger
             trigger="click"
-            placement="auto"
-            overlay={popoverContent}
+            placement="left-start"
+            overlay={popoverRonnyIntro}
             show={popoverOpen}
             onToggle={handlePopoverOpen}
           >
@@ -141,21 +180,24 @@ const Intro = () => {
         </p>
         <div style={{ textAlign: "center" }}>
           <div ref={popoverRef}>
-          <OverlayTrigger
-            trigger="click"
-            placement="auto"
-            overlay={popoverContent}
-            show={popoverOpen2}
-            onToggle={handlePopoverOpen2}
-          >
-          <img
-            src={artsy}
-            style={{ height: "123px", cursor: "pointer" }}
-            title="Artsy"
-            alt="The robot Artsy"
-            />
+            <OverlayTrigger
+              trigger="click"
+              placement="top"
+              overlay={popoverArtsyIntro}
+              show={popoverOpen2}
+              onToggle={handlePopoverOpen2}
+            >
+              <img
+                src={artsy}
+                style={{ height: "123px", cursor: "pointer" }}
+                title="Artsy"
+                alt="The robot Artsy"
+              />
             </OverlayTrigger>
-        </div>
+          </div>
+          {popoverOpen2 && (
+            <div className="overlay-effect" onClick={handlePopoverClose2} />
+          )}
         </div>
       </div>
       <div style={{ marginTop: "43px" }}>
