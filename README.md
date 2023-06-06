@@ -20,8 +20,8 @@
 ## Demo
 
 <ul dir="auto">
-<li>Live Site : <a href="https://hengman.netlify.app" target=”_blank” rel="nofollow">Hangman: Rescue Mission</a></li>
-<li>Watch <a href="https://hengman.netlify.app" target=”_blank” rel="nofollow">Video</a></li>
+<li>Live Site : <a href="https://hengman.netlify.app" target="_blank" rel="nofollow">Hangman: Rescue Mission</a></li>
+<li>Watch <a href="https://vimeo.com/833806691" target="_blank" rel="nofollow">Video</a></li>
 </ul>
 
 <h2>Contributing</h2>
