@@ -3,7 +3,7 @@
   src: url(./Fonts/TechnoBoard-519Ej.ttf);
 }
 
-@font-face {
+/* @font-face {
   font-family: zenbold;
   src: url(./Fonts/ZenKakuGothicNew-Bold.ttf);
 }
@@ -11,7 +11,7 @@
 @font-face {
   font-family: zenblack;
   src: url(./Fonts/ZenKakuGothicNew-Black.ttf);
-}
+} */
 
 @font-face {
   font-family: bruno;

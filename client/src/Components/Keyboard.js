@@ -124,79 +124,75 @@ const Keyboard = ({
   //   </div>
   // );
   return (
-    <div className={`keyboardcontainer ${isFlipped ? "flipped" : ""}`}>
-      <div className="keyboardcontainer-inner">
-        <div className="keyboard-front">
-          <div className="keyboardhints">
-            <button
-              id="hint1"
-              onClick={setHint1}
-              disabled={disablehint1 || disabled}
+      <div className={`keyboardcontainer ${isFlipped ? "flipped" : ""}`}>
+        <div className="keyboardcontainer-inner">
+          <div className="keyboard-front">
+            <div className="keyboardhints">
+              <button
+                id="hint1"
+                onClick={setHint1}
+                disabled={disablehint1 || disabled}
+              >
+                Hint 1
+              </button>
+              <button
+                id="hint2"
+                onClick={setHint2}
+                disabled={disablehint2 || disabled}
+              >
+                Hint 2
+              </button>
+              <button id="tips" onClick={setInstructions} disabled={false}>
+                INSTRUCTIONS & TIPS
+              </button>
+            </div>
+            <div className="keyboardronny">
+              <img
+                src={ronnyai}
+                alt="painting by ChatGPT"
+                title="painting by ChatGPT"
+                width={200}
+              />
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(60px, 1fr))",
+                gap: "7px",
+                maxWidth: "900px",
+              }}
             >
-              Hint 1
-            </button>
-            <button
-              id="hint2"
-              onClick={setHint2}
-              disabled={disablehint2 || disabled}
-            >
-              Hint 2
-            </button>
-            <button
-              id="tips"
-              onClick={setInstructions}
-              disabled={false}
-            >
-              INSTRUCTIONS & TIPS
-            </button>
+              {KEYS.map((key) => {
+                const isActive = activeLetters.includes(key);
+                const isInactive = inactiveLetters.includes(key);
+                return (
+                  <button
+                    onClick={() => addChosenLetter(key)}
+                    // className="keyboardbtn"
+                    className={`keyboardbtn ${isActive ? "active" : ""} ${
+                      isInactive ? "inactive" : ""
+                    }`}
+                    disabled={isInactive || isActive || disabled}
+                    key={key}
+                  >
+                    {key}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <div className="keyboardronny">
-            <img
-              src={ronnyai}
-              alt="painting by ChatGPT"
-              title="painting by ChatGPT"
-              width={200}
-            />
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(60px, 1fr))",
-              gap: "7px",
-              maxWidth: "900px",
-            }}
-          >
-            {KEYS.map((key) => {
-              const isActive = activeLetters.includes(key);
-              const isInactive = inactiveLetters.includes(key);
-              return (
-                <button
-                  onClick={() => addChosenLetter(key)}
-                  // className="keyboardbtn"
-                  className={`keyboardbtn ${isActive ? "active" : ""} ${
-                    isInactive ? "inactive" : ""
-                  }`}
-                  disabled={isInactive || isActive || disabled}
-                  key={key}
-                >
-                  {key}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-        <div className="keyboard-back">
-          <div className="keyboardreplay">
-            <button id="playagain" onClick={handleRefresh}>
-              Play Again!
-            </button>
-            <button id="checkscore" onClick={handleNavigate}>
-              What's your score?
-            </button>
+          <div className="keyboard-back">
+            <div className="keyboardreplay">
+              <button id="playagain" onClick={handleRefresh}>
+                Play Again!
+              </button>
+              <button id="checkscore" onClick={handleNavigate}>
+                What's your score?
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
