@@ -1091,6 +1091,20 @@ tr:nth-child(odd) {
   max-width: 460px;
   max-height: 440px;
   overflow: hidden;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fade-in-intro 3.5s forwards;
+}
+
+@keyframes fade-in-intro {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .popover-close-btn {

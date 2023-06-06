@@ -27,7 +27,7 @@ const Word = ({
     async function getWordData() {
       let response = await axios.get("http://localhost:8000/word/get-one-word");
       // console.log(response.data);
-      console.log("I fire once!");
+      // console.log("I fire once!");
       let oneword = response.data;
       // console.log(
       //   "getWordData:",
@@ -37,7 +37,7 @@ const Word = ({
     }
 
   useEffect(() => {
-    console.log("But Do I Fire Once???");
+    // console.log("But Do I Fire Once???");
     getWordData()
       .then((data) => {
         setWordToFindData(data);
@@ -46,24 +46,28 @@ const Word = ({
       .then((data) => setWordToFind(data.word));
   }, []);
 
-if (token) {
-  if (Winner) {
-    console.log("TokenWord:", token);
-    console.log("But Do I Fire Once???");
-    axios
-      .put("http://localhost:8000/user/add100", null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-}
+  useEffect(() => {
+    if (token) {
+      if (Winner) {
+        // console.log("TokenWord:", token);
+        // console.log("But Do I Fire Once???");
+        axios
+          .put("http://localhost:8000/user/add100", null, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+  }, [Winner]);
+
+
 
   return (
     <div

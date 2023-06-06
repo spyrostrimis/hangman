@@ -89,20 +89,22 @@ const Intro = () => {
       </Popover.Header>
       <Popover.Body id="introronnybody">
         <p>
-          Han was created in <strong>Aurora</strong> in the year 4486 AD. His
-          fascination with language and its structure led him to Earth.
+          Artsy originates from the planet <strong>Solaria</strong>. Unlike most
+          robots, he cannot speak. So he{" "}
+          <strong>communicates through painting</strong>.
         </p>
         <p>
-          For his key role in the reconciliation between Robots and Humans, he
-          is honored with the seat of{" "}
-          <strong>Professor of Linguistics at the MIT</strong>.
+          His passion for creativity and artistic expression{" "}
+          <strong>led him to Earth</strong> to explore different forms of art.
         </p>
         <p>
-          Han spends most of his free time with his beloved daughter{" "}
-          <strong>Illucia</strong>.
+          One fated day, while Artsy was drawing a beautiful lake scene at
+          Massachusetts, he met his <strong>best friend Han</strong>.
         </p>
         <small>
-          <i>Han Fastolfe is inspired from Isaac Asimov's Robot series.</i>
+          <i>
+            Artsy is an original creation, embodying the fusion of art and AI.
+          </i>
         </small>
       </Popover.Body>
     </Popover>
@@ -133,9 +135,9 @@ const Intro = () => {
             />
           </OverlayTrigger>
         </div>
-        {popoverOpen && (
+        {/* {popoverOpen && (
           <div className="overlay-effect" onClick={handlePopoverClose} />
-        )}
+        )} */}
         {/* </figure> */}
         <p>
           Welcome to the{" "}
@@ -189,15 +191,15 @@ const Intro = () => {
             >
               <img
                 src={artsy}
-                style={{ height: "123px", cursor: "pointer" }}
+                style={{ height: "123px", cursor: "help" }}
                 title="Artsy"
                 alt="The robot Artsy"
               />
             </OverlayTrigger>
           </div>
-          {popoverOpen2 && (
+          {/* {popoverOpen2 && (
             <div className="overlay-effect" onClick={handlePopoverClose2} />
-          )}
+          )} */}
         </div>
       </div>
       <div style={{ marginTop: "43px" }}>
