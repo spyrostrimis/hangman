@@ -1,7 +1,7 @@
-import React from 'react'
+import React from "react";
 import { useEffect } from "react";
 import artsy from "../Images/artsy.png";
-import defaultpainting from "../Images/painting.webp"
+import defaultpainting from "../Images/painting.webp";
 import gameover from "../Images/gameover.png";
 
 const HEAD = (
@@ -96,7 +96,7 @@ const RIGHT_LEG = (
   ></div>
 );
 
-const BODY_PARTS = [HEAD,BODY,LEFT_ARM,RIGHT_ARM,LEFT_LEG,RIGHT_LEG];
+const BODY_PARTS = [HEAD, BODY, LEFT_ARM, RIGHT_ARM, LEFT_LEG, RIGHT_LEG];
 
 const Figure = ({ painting, Winner = false, Loser = false }) => {
   // console.log(painting);
@@ -164,10 +164,15 @@ const Figure = ({ painting, Winner = false, Loser = false }) => {
         </div>
       </div>
       <div className={`figureartsy ${Winner ? "winner" : ""}`}>
-        <img src={artsy} alt={`The robot Artsy`} width={250} />
+        <img
+          id="wordartsyimg"
+          src={artsy}
+          alt={`The robot Artsy`}
+          // width={250}
+        />
       </div>
     </div>
   );
 };
 
-export default Figure
+export default Figure;

@@ -148,7 +148,8 @@ function App() {
           How is the word used in this example?
         </p>
         <p id="explainmore" style={{ display: "none" }}>
-          <b>Explanation:</b> {wordToFindData.explanation}
+          <b style={{ color: "#a54ed7" }}>Explanation:</b>{" "}
+          {wordToFindData.explanation}
         </p>
 
         {/* <div>
@@ -298,18 +299,7 @@ function App() {
             element={
               <>
                 {/* <Header /> */}
-                <br />
-                <div
-                  id="figurefacts"
-                  style={{
-                    width: "100%",
-                    display: "grid",
-                    gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
-                    justifyItems: "center",
-                    gap: "20px",
-                    marginTop: "10px",
-                  }}
-                >
+                <div className='figurefacts'>
                   <Figure
                     incorrectGuesses={incorrectGuesses.length}
                     Winner={Winner}
@@ -324,7 +314,6 @@ function App() {
                     incorrectGuesses={incorrectGuesses.length}
                   />
                 </div>
-                <br />
                 <div style={{ color: "transparent" }}>{wordToFind}</div>
                 <Word
                   reveal={Loser}
@@ -334,7 +323,6 @@ function App() {
                   setWordToFind={setWordToFind}
                   Winner={Winner}
                 />
-                <br />
                 <div
                   style={{
                     alignSelf: "stretch",

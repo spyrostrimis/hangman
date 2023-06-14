@@ -127,8 +127,9 @@ const Intro = () => {
             onToggle={handlePopoverOpen}
           >
             <img
+              id="introronnyimg"
               src={ronnyai}
-              style={{ float: "right", height: "160px", cursor: "help" }}
+              // style={{ float: "right", height: "160px", cursor: "help" }}
               alt="The robot Professor Han Fastolfe"
               title="Professor Han Fastolfe"
               onClick={() => setPopoverOpen(!popoverOpen)}
@@ -180,7 +181,7 @@ const Intro = () => {
             captivating quest.
           </span>
         </p>
-        <div style={{ textAlign: "center" }}>
+        <div className="introartsyimg">
           <div ref={popoverRef}>
             <OverlayTrigger
               trigger="click"
@@ -190,8 +191,9 @@ const Intro = () => {
               onToggle={handlePopoverOpen2}
             >
               <img
+                id="introartsyimg"
                 src={artsy}
-                style={{ height: "123px", cursor: "help" }}
+                // style={{ height: "123px", cursor: "help" }}
                 title="Artsy"
                 alt="The robot Artsy"
               />
