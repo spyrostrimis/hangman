@@ -29,14 +29,15 @@ const Navbar = () => {
           <img src={logoo} style={{ height: "36px" }} />
         </Link>
       </nav> */}
-      <nav>
+      {/* <nav>
         <Link to="/">HOMEWORLD</Link>
       </nav>
       <nav>
         {token ? (
           <>
-            {/* <Link to="#">{decoded ? decoded.username : null}</Link> */}
+            <Link to="#">{decoded ? decoded.username : null}</Link>
             <Link to="/hangman">Play Hangman</Link>
+            <Link to="/hangman">Play vs AI</Link>
             <Link to="/hall-of-fame">Hall of Fame</Link>
             <Link onClick={logout} to="/login">
               Logout
@@ -45,9 +46,31 @@ const Navbar = () => {
         ) : (
           <>
             <Link to="/hangman">Play Hangman</Link>
+            <Link to="/hangman">Play vs AI</Link>
             <Link to="/hall-of-fame">Hall of Fame</Link>
             <Link to="/login">Sign In</Link>
-            {/* <Link to="/signup">Signup</Link> */}
+            <Link to="/signup">Signup</Link>
+          </>
+        )}
+      </nav> */}
+      <nav>
+        {token ? (
+          <>
+            <Link to="/">HOMEWORLD</Link>
+            <Link to="/hangman">Play Hangman</Link>
+            <Link to="/hangman">Play vs AI</Link>
+            <Link to="/hall-of-fame">Hall of Fame</Link>
+            <Link onClick={logout} to="/login">
+              Logout
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link to="/">HOMEWORLD</Link>
+            <Link to="/hangman">Play Hangman</Link>
+            <Link to="/hangman">Play vs AI</Link>
+            <Link to="/hall-of-fame">Hall of Fame</Link>
+            <Link to="/login">Sign In</Link>
           </>
         )}
       </nav>

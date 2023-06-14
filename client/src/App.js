@@ -257,16 +257,6 @@ function App() {
     };
   }, [chosenLetters, isHangPage]); // removed chosenLetters,
 
-  // useEffect(() => {
-  //   if (isHomePage && !Winner && !Loser) {
-  //     // Simulate a click event to initialize the game
-  //     const clickEvent = new MouseEvent("click");
-  //     document.dispatchEvent(clickEvent);
-  //   }
-
-  //   // Rest of the code...
-  // }, []);
-
   useEffect(() => {
     if (!isHangPage) {
       // || Winner || Loser

@@ -83,7 +83,7 @@ const Intro = () => {
     <Popover id="introartsy">
       <Popover.Header id="introronnyheader">
         Artsy
-        <button id="popover-close-btn-artsy" onClick={handlePopoverClose}>
+        <button id="popover-close-btn-artsy" onClick={handlePopoverClose2}>
           &times;
         </button>
       </Popover.Header>
@@ -202,7 +202,7 @@ const Intro = () => {
           )} */}
         </div>
       </div>
-      <div style={{ marginTop: "43px" }}>
+      <div className="introbtn">
         <Link to="/hangman">
           <button id="introbtn">Play Hangman</button>
         </Link>
