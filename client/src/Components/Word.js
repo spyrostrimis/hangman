@@ -69,7 +69,7 @@ const Word = ({
   }, [Winner]);
 
   return (
-    <div className="word">
+    <div className={`word ${Winner || reveal ? "revealed" : ""}`}>
       {wordToFind.split("").map((letter, index) => (
         <span style={{ borderBottom: "solid #cdcdcd" }} key={index}>
           <span

@@ -1268,6 +1268,9 @@ button.popover-close-btn:hover {
   #introartsyimg {
     height: 107px;
   }
+  #introartsy {
+    margin-bottom: -111px;
+}
   .introbtn {
     margin-top: 21px;
     margin-bottom: 20px;
@@ -1297,15 +1300,19 @@ button.popover-close-btn:hover {
     background-size: 182px 182px;
   }
   #wordartsyimg {
-    width: 175px;
+    width: 152px;
   }
+  .figureartsy {
+  bottom: 5px;
+  left: 17%;
+}
   .wordfactscontainer {
     width: 375px;
     height: 375px;
-    padding: 6px;
+    padding: 5px;
   }
   .wordfactscontainerinner {
-    height: 360px;
+    height: 362px;
     line-height: 21px;
     padding: 8px 11px 5px 11px;
   }
@@ -1317,7 +1324,7 @@ button.popover-close-btn:hover {
     font-size: 1.1rem;
   }
   .wordfactscontainerinner h5 {
-    font-size: 1rem;
+    font-size: 16px;
   }
   .wordfactscontainerinner p {
     font-size: 15px;
@@ -1335,8 +1342,35 @@ button.popover-close-btn:hover {
     margin-top: 20px;
     margin-bottom: 10px;
   }
+  .word.revealed {
+    font-size: 1.5rem;
+    gap: 13px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    animation-duration: 5s;
+    animation-fill-mode: forwards;
+    animation-name: wordrevealed;
+    /* animation-timing-function: ease-out; */
+    animation-delay: 3s;
+  }
+  @keyframes wordrevealed {
+            0% {
+              height: 43px;
+               opacity: 1;
+               transform: translateX(0);
+            }
+            50% {
+              height: 43px;
+               opacity: 0;
+               transform: translateX(-20px);
+            }
+            100% {
+              opacity: 0;
+               height: 0px;
+            }
+         }
   #wordroonyimg {
-    width: 150px;
+    width: 124px;
   }
   .keyboardcontainer {
     margin: 8px auto;
@@ -1344,6 +1378,10 @@ button.popover-close-btn:hover {
     max-width: 675px;
     height: 119px;
   }
+  .keyboardronny {
+  bottom: 47px;
+  right: -2%;
+}
   .keyboardcontainer-inner {
     margin: 50px auto;
   }
