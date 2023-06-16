@@ -481,7 +481,7 @@ button:focus::after {
 }
 
 #wordartsyimg {
-  width: 250px;
+  width: 224px;
 }
 
 .figureartsy {
@@ -1054,6 +1054,12 @@ td:nth-of-type(3) {
   color: #d9d8db;
   padding: 20px;
   font-family: "bruno";
+  font-size: 2rem;
+}
+
+.hallheader {
+  margin-top: -40px;
+  margin-bottom: 40px;
 }
 
 .hallcontainer h1 {
@@ -1271,7 +1277,7 @@ button.popover-close-btn:hover {
     font-size: 16px;
     letter-spacing: 4px;
   }
-  /* HANGMAN PAGE MEDIA 1280*/
+  /* HANGMAN PAGE MEDIA 1280 */
   .figurefacts {
     max-width: 900px;
     gap: 20px;
@@ -1384,6 +1390,65 @@ button.popover-close-btn:hover {
     padding: 14px 13px;
     margin: 38px;
     font-size: 11px;
+}
+/* HALL OF FAME PAGE MEDIA 1280 */
+.hallcontainer {
+  max-width: 675px;
+  margin-top: 40px;
+  padding: 15px;
+  font-size: 1.4rem;
+}
+.hallheader {
+  margin-top: -25px;
+  margin-bottom: 30px;
+}
+.hallheader h4 {
+  font-size: 1.05rem;
+}
+.hallcontainer h1 {
+  font-size: 2.3rem;
+}
+.halltable {
+  margin-left: -25px;
+  margin-right: -10px;
+}
+/* LOGIN SIGNUP PAGES MEDIA 1280 */
+.formcontainer {
+  max-width: 480px;
+  margin-top: 6vh;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 22px;
+}
+
+.formcontainer h1 {
+  margin-bottom: 30px;
+  font-size: 2.1rem;
+}
+
+.form {
+  margin-top: 15px;
+  padding: 40px 60px;
+  padding-top: 40px;
+}
+
+.form h1 {
+  margin-bottom: 30px;
+  font-size: 2.1rem;
+}
+
+input {
+  min-width: 240px !important;
+  min-height: 40px !important;
+}
+
+.form button {
+  font-size: 16px;
+  margin: 22px auto;
+}
+
+.form button span {
+  padding: 8px;
 }
 }
 

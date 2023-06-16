@@ -494,7 +494,7 @@ router.get("/word/get-one-word-create-random", async (req, res) => {
       ],
     });
     const synonym = ressynonym.data.choices[0].message.content;
-    console.log(synonym);
+    console.log("synonym ok!");
 
     // MERRIAM-WEBSTER'S API
 

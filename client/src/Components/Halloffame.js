@@ -37,7 +37,7 @@ const Halloffame = ({ Winner = false}) => {
   return (
     <div className="hallcontainer hall-of-fame">
       {!token && (
-        <div style={{ marginTop: "-40px", marginBottom: "40px" }}>
+        <div className='hallheader'>
           <h4>Let's get competitive!</h4>
           <h4>
             <Link to="/login">Login</Link> or <Link to="/signup">Signup</Link>{" "}
@@ -47,7 +47,7 @@ const Halloffame = ({ Winner = false}) => {
         </div>
       )}
       <h1>HALL OF FAME</h1>
-      <div style={{ fontSize: "2rem" }}>
+      <div className='halltable'>
         <table id="highscores">
           <thead>
             <tr>

@@ -24,7 +24,9 @@ const Word = ({
   // }
 
   async function getWordData() {
-    let response = await axios.get("http://localhost:8000/word/get-one-word");
+    let response = await axios.get(
+      "http://localhost:8000/word/get-one-word"
+    );
     // console.log(response.data);
     // console.log("I fire once!");
     let oneword = response.data;
