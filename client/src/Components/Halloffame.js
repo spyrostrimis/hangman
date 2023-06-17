@@ -23,7 +23,7 @@ const Halloffame = ({ Winner = false}) => {
 
   async function getAllUsers() {
     let response = await axios.get(
-      "http://localhost:8000/user/get-best-scores"
+      "https://hangman-lsq2.onrender.com/user/get-best-scores"
     );
     setAllusers(response.data);
   }

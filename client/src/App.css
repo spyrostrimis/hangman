@@ -1355,12 +1355,12 @@ button.popover-close-btn:hover {
   }
   @keyframes wordrevealed {
             0% {
-              height: 43px;
+              height: 44px;
                opacity: 1;
                transform: translateX(0);
             }
             50% {
-              height: 43px;
+              height: 44px;
                opacity: 0;
                transform: translateX(-20px);
             }

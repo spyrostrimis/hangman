@@ -20,7 +20,10 @@ function Login() {
       username: usernameRef.current.value,
       password: passwordRef.current.value,
     };
-    let response = await axios.post("http://localhost:8000/user/login", user);
+    let response = await axios.post(
+      "https://hangman-lsq2.onrender.com/user/login",
+      user
+    );
 
     if (response.data.msg) {
       return alert(response.data.msg);
