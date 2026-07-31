@@ -58,7 +58,7 @@ const Navbar = () => {
           <>
             <Link to="/">HOMEWORLD</Link>
             <Link to="/hangman">Play Hangman</Link>
-            <Link to="/hangman">Play vs AI</Link>
+            <Link to="/illucia">Play vs AI</Link>
             <Link to="/hall-of-fame">Hall of Fame</Link>
             <Link onClick={logout} to="/login">
               Logout
@@ -68,7 +68,7 @@ const Navbar = () => {
           <>
             <Link to="/">HOMEWORLD</Link>
             <Link to="/hangman">Play Hangman</Link>
-            <Link to="/hangman">Play vs AI</Link>
+            <Link to="/illucia">Play vs AI</Link>
             <Link to="/hall-of-fame">Hall of Fame</Link>
             <Link to="/login">Sign In</Link>
           </>

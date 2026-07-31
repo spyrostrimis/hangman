@@ -10,6 +10,7 @@ import Figure from './Components/Figure';
 import Word from "./Components/Word";
 import Wordfacts from './Components/Wordfacts';
 import Keyboard from "./Components/Keyboard";
+import Illucia from './Components/Illucia';
 import Halloffame from "./Components/Halloffame";
 import Footer from './Components/Footer';
 import soundbtn from "./Images/soundbtn.png";
@@ -299,7 +300,7 @@ function App() {
             element={
               <>
                 {/* <Header /> */}
-                <div className='figurefacts'>
+                <div className="figurefacts">
                   <Figure
                     incorrectGuesses={incorrectGuesses.length}
                     Winner={Winner}
@@ -350,6 +351,10 @@ function App() {
                 {Loser && "Arghh... Refresh and play again"} */}
               </>
             }
+          />
+          <Route
+            path="/illucia"
+            element={<Illucia />}
           />
           <Route
             path="/hall-of-fame"

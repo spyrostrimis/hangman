@@ -25,7 +25,7 @@ const Word = ({
 
   async function getWordData() {
     let response = await axios.get(
-      "https://hangman-lsq2.onrender.com/word/get-one-word"
+      "http://localhost:8000/word/get-one-word-create-random"
     );
     // console.log(response.data);
     // console.log("I fire once!");
@@ -53,7 +53,7 @@ const Word = ({
         // console.log("TokenWord:", token);
         // console.log("But Do I Fire Once???");
         axios
-          .put("https://hangman-lsq2.onrender.com/user/add100", null, {
+          .put("http://localhost:8000/user/add100", null, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

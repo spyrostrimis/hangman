@@ -1036,6 +1036,32 @@ td:nth-of-type(3) {
   cursor: pointer;
 }
 
+/* Additional styles for the Illucia page */
+.illucia-body {
+  background-image: url("./Images/illucia-bg.jpg");
+  background-color: #999999 !important;
+  background-size: cover;
+  background-position: top center;
+  background-blend-mode: multiply;
+}
+
+.illucontainer {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 40px;
+  font-weight: 900;
+  color: #d9d8db;
+  padding: 20px;
+  font-family: "bruno";
+  font-size: 2rem;
+}
+
+.illuheader {
+  margin-top: -40px;
+  margin-bottom: 40px;
+}
+
 /* Additional styles for the Hall Of Fame page */
 .hall-of-fame-body {
   background-image: url("./Images/hall-bg.jpg");
@@ -1306,6 +1332,10 @@ button.popover-close-btn:hover {
   bottom: 5px;
   left: 17%;
 }
+.figureartsy.winner {
+  bottom: 5px;
+  left: 17%;
+}
   .wordfactscontainer {
     width: 375px;
     height: 375px;
@@ -1338,6 +1368,7 @@ button.popover-close-btn:hover {
   }
   .word {
     font-size: 1.5rem;
+    height: 2.577rem;
     gap: 13px;
     margin-top: 20px;
     margin-bottom: 10px;
@@ -1355,12 +1386,12 @@ button.popover-close-btn:hover {
   }
   @keyframes wordrevealed {
             0% {
-              height: 44px;
+              height: 2.577rem;
                opacity: 1;
                transform: translateX(0);
             }
             50% {
-              height: 44px;
+              height: 2.577rem;
                opacity: 0;
                transform: translateX(-20px);
             }
@@ -1449,6 +1480,23 @@ button.popover-close-btn:hover {
 .halltable {
   margin-left: -25px;
   margin-right: -10px;
+}
+/* ILLUCIA PAGE MEDIA 1280 */
+.illucontainer {
+  max-width: 675px;
+  margin-top: 40px;
+  padding: 15px;
+  font-size: 1.4rem;
+}
+.illuheader {
+  margin-top: -25px;
+  margin-bottom: 30px;
+}
+.illuheader h4 {
+  font-size: 1.05rem;
+}
+.illucontainer h1 {
+  font-size: 2.3rem;
 }
 /* LOGIN SIGNUP PAGES MEDIA 1280 */
 .formcontainer {

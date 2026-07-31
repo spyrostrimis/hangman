@@ -19,10 +19,7 @@ function Signup() {
       username: usernameRef.current.value,
       password: passwordRef.current.value,
     };
-    let response = await axios.post(
-      "https://hangman-lsq2.onrender.com/user/signup",
-      newUser
-    );
+    let response = await axios.post("http://localhost:8000/user/signup", newUser);
     console.log(response);
     // catch an error from database
     if (response.data.msg) {
