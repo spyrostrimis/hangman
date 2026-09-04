@@ -22,13 +22,13 @@ REBUILD, NOT MIGRATION. Most 2023 code is being replaced. Do not preserve or wor
 
 ## TARGET STACK
 
-- Client: React 18 + Vite (CRA is being removed). React 19 is a later, separate upgrade.
+- Client: React 18 + Vite. CRA has been removed. React 19 is a later, separate upgrade.
 - API: Hono on Cloudflare Workers.
 - Data: D1 (users, scores) · static JSON manifest (words) · R2 (paintings).
 - Auth: `jose` (JWT), `bcryptjs`, httpOnly cookies, tokens MUST expire.
 - Generation pipeline: `tools/`, Node, local-only. `gpt-image-2` at 1024×1024 SQUARE for paintings — square is LOCKED, because the 116 surviving 2023 DALL·E 2 paintings are 512×512 and new images must sit beside them in the same frame. Do not "upgrade" this to landscape. MW Collegiate + Thesaurus for definition/IPA/audio/example; an LLM for the example explanation.
 
-BEING REMOVED: MongoDB, Mongoose, Express, `bcrypt` (native), `jsonwebtoken`, `axios`, OpenAI SDK v3, `react-scripts`, `body-parser`, `mongoose-type-email`, `read-more-react`, `web-vitals`, `mdb-react-ui-kit`.
+BEING REMOVED: MongoDB, Mongoose, Express, `bcrypt` (native), `jsonwebtoken`, `axios`, OpenAI SDK v3, `body-parser`, `mongoose-type-email`, `read-more-react`, `web-vitals`, `mdb-react-ui-kit`.
 
 ## GIT
 
@@ -36,12 +36,25 @@ BEING REMOVED: MongoDB, Mongoose, Express, `bcrypt` (native), `jsonwebtoken`, `a
 - `github.com/spyrostrimis/hangman` is the ONLY repo. No other remote exists, and no other copy of the 2023 history exists. Three 2023 merge-commit MESSAGES still name a retired repo; that is deliberate — rewriting them would rewrite all 63 hashes and destroy the preserved 2023 dates. Never offer to clean them.
 - `main` only. No feature branches.
 - `push.autoSetupRemote` is unset locally and globally on this machine. Any new branch starts with no upstream and `git status` then stays SILENT about unpushed commits on it. (Moot while we stay on `main`, but know it.)
-- `core.autocrlf` is on. A `.gitattributes` containing exactly `* text=auto eol=lf` is planned — until it lands, watch for phantom whole-file diffs caused by line-ending churn.
+- `core.autocrlf` is on. `.gitattributes` exists and contains exactly `* text=auto eol=lf`; watch for unexpected line-ending churn.
 - `../hangman-export/` is a SIBLING folder outside this repo — 203 MB of rescued 2023 data plus its own `node_modules`. It is not part of the repo and must never be moved into it or staged.
 
 ## RUN / TEST
 
 From `client/`, run `npm run dev` for the Vite development server, `npm run build` for a production build, and `npm run preview` to serve the production build locally.
+
+## DEPLOYMENT
+
+- Cloudflare Pages project: `hangman`
+- GitHub repo: `spyrostrimis/hangman`
+- Production branch: `main`
+- Root directory: `client`
+- Build command: `npm run build`
+- Build output directory: `dist`
+- Pages URL: `https://hangman-caq.pages.dev`
+- Production URL: `https://hangman.spyrostrimis.com`
+- Git integration is active: pushes to `main` trigger production builds and deployments.
+- SPA fallback was manually verified with a direct nested route.
 
 <!-- ┌─ SYNC v1 · CHANGE DISCIPLINE · mirrored in CLAUDE.md + project instructions -->
 <!-- │  Edit one → edit the other → bump BOTH version numbers. -->
