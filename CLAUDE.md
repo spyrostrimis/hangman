@@ -39,6 +39,10 @@ BEING REMOVED: MongoDB, Mongoose, Express, `bcrypt` (native), `jsonwebtoken`, `a
 - `core.autocrlf` is on. A `.gitattributes` containing exactly `* text=auto eol=lf` is planned — until it lands, watch for phantom whole-file diffs caused by line-ending churn.
 - `../hangman-export/` is a SIBLING folder outside this repo — 203 MB of rescued 2023 data plus its own `node_modules`. It is not part of the repo and must never be moved into it or staged.
 
+## RUN / TEST
+
+From `client/`, run `npm run dev` for the Vite development server, `npm run build` for a production build, and `npm run preview` to serve the production build locally.
+
 <!-- ┌─ SYNC v1 · CHANGE DISCIPLINE · mirrored in CLAUDE.md + project instructions -->
 <!-- │  Edit one → edit the other → bump BOTH version numbers. -->
 
