@@ -4,6 +4,9 @@ PROJECT: Web-based Hangman word game for learning English vocabulary and pronunc
 
 REBUILD, NOT MIGRATION. Most 2023 code is being replaced. Do not preserve or work around code that should simply go. What survives: the game rules, the React components and visual design, the Hall of Fame, and the shape of the four auth routes.
 
+<!-- ┌─ SYNC v1 · HARD RULES · mirrored in CLAUDE.md + project instructions -->
+<!-- │  Edit one → edit the other → bump BOTH version numbers. -->
+
 ## HARD RULES
 
 - App UI language = English. All in-game text stays English.
@@ -15,23 +18,29 @@ REBUILD, NOT MIGRATION. Most 2023 code is being replaced. Do not preserve or wor
 - Example sentences must be REAL and sourced from MW with attribution. Never generate quotations attributed to real authors, works, or dates.
 - Scoring is client-authoritative and forgeable BY DESIGN. Documented, not fixed. Do not propose server-authoritative gameplay — it was considered and rejected.
 
+<!-- └─ /SYNC v1 · HARD RULES -->
+
 ## TARGET STACK
 
 - Client: React 18 + Vite (CRA is being removed). React 19 is a later, separate upgrade.
 - API: Hono on Cloudflare Workers.
 - Data: D1 (users, scores) · static JSON manifest (words) · R2 (paintings).
 - Auth: `jose` (JWT), `bcryptjs`, httpOnly cookies, tokens MUST expire.
-- Generation pipeline: `tools/`, Node, local-only. `gpt-image-2` at 1536×1024 landscape for paintings; MW Collegiate + Thesaurus for definition/IPA/audio/example; an LLM for the example explanation.
+- Generation pipeline: `tools/`, Node, local-only. `gpt-image-2` at 1024×1024 SQUARE for paintings — square is LOCKED, because the 116 surviving 2023 DALL·E 2 paintings are 512×512 and new images must sit beside them in the same frame. Do not "upgrade" this to landscape. MW Collegiate + Thesaurus for definition/IPA/audio/example; an LLM for the example explanation.
 
 BEING REMOVED: MongoDB, Mongoose, Express, `bcrypt` (native), `jsonwebtoken`, `axios`, OpenAI SDK v3, `react-scripts`, `body-parser`, `mongoose-type-email`, `read-more-react`, `web-vitals`, `mdb-react-ui-kit`.
 
 ## GIT
 
 - Remote is `git@github.com:spyrostrimis/hangman.git` over SSH. Verify with `git remote -v` before any push — this repo has already had a stale remote once.
+- `github.com/spyrostrimis/hangman` is the ONLY repo. No other remote exists, and no other copy of the 2023 history exists. Three 2023 merge-commit MESSAGES still name a retired repo; that is deliberate — rewriting them would rewrite all 63 hashes and destroy the preserved 2023 dates. Never offer to clean them.
 - `main` only. No feature branches.
 - `push.autoSetupRemote` is unset locally and globally on this machine. Any new branch starts with no upstream and `git status` then stays SILENT about unpushed commits on it. (Moot while we stay on `main`, but know it.)
-- `core.autocrlf` is on. A `.gitattributes` with `* text=auto eol=lf` is planned — until it lands, watch for phantom whole-file diffs caused by line-ending churn.
-- `github.com/trickywisdom/hangman` is the private, dormant original. Reference only. Never push there.
+- `core.autocrlf` is on. A `.gitattributes` containing exactly `* text=auto eol=lf` is planned — until it lands, watch for phantom whole-file diffs caused by line-ending churn.
+- `../hangman-export/` is a SIBLING folder outside this repo — 203 MB of rescued 2023 data plus its own `node_modules`. It is not part of the repo and must never be moved into it or staged.
+
+<!-- ┌─ SYNC v1 · CHANGE DISCIPLINE · mirrored in CLAUDE.md + project instructions -->
+<!-- │  Edit one → edit the other → bump BOTH version numbers. -->
 
 ## CHANGE DISCIPLINE
 
@@ -40,9 +49,11 @@ BEING REMOVED: MongoDB, Mongoose, Express, `bcrypt` (native), `jsonwebtoken`, `a
 - Multi-file or bug work: trace data flow directly across methods and files. No shape pattern-matching. Prefer direct file reads over subagent summaries that drop cross-method context.
 - Before claiming done: show the real diff, run the tests and show real output, and call out anything still needing manual browser testing. Never assert "passes" without evidence.
 - Tests must be proven non-vacuous: break the fix, confirm the test fails, restore. Every negative assertion needs a positive control on the same fixture in the same run.
-- Characterization tests apply to the PRESERVED game core only. Do not write them for code slated for deletion.
+- Characterization tests apply to the PRESERVED game core only. Do not write them for code slated for deletion. New behaviour gets new tests written against the new behaviour.
 - One commit per change; manual verification BEFORE the commit.
 - CARVE-OUT: config removal and dead-code deletion can't be "seen working." The verification is the real diff plus a grep proving nothing references the removed thing. Say so in the commit message.
+
+<!-- └─ /SYNC v1 · CHANGE DISCIPLINE -->
 
 ## KNOWN LANDMINES
 
