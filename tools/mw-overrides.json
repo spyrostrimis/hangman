@@ -1,18 +1,78 @@
 {
+  "acquaint": {
+    "entry_id": "acquaint",
+    "unit": "2"
+  },
+  "activity": {
+    "entry_id": "activity",
+    "unit": "2"
+  },
+  "admonish": {
+    "entry_id": "admonish",
+    "unit": "1b"
+  },
   "adventure": {
     "entry_id": "adventure:1",
     "unit": "2"
+  },
+  "ambitious": {
+    "entry_id": "ambitious",
+    "unit": "1a"
+  },
+  "architect": {
+    "entry_id": "architect",
+    "unit": "1"
+  },
+  "available": {
+    "entry_id": "available",
+    "unit": "2a"
+  },
+  "awkward": {
+    "entry_id": "awkward",
+    "unit": "1"
   },
   "backstage": {
     "entry_id": "backstage:1",
     "unit": "1"
   },
+  "bellwether": {
+    "entry_id": "bellwether",
+    "unit": "1:sd"
+  },
   "bituminous": {
     "entry_id": "bituminous",
     "unit": "1"
   },
+  "cardiovascular": {
+    "entry_id": "cardiovascular",
+    "unit": "1"
+  },
   "challenge": {
     "entry_id": "challenge:2",
+    "unit": "1a"
+  },
+  "chancellor": {
+    "entry_id": "chancellor",
+    "unit": "4"
+  },
+  "chemistry": {
+    "entry_id": "chemistry",
+    "unit": "1"
+  },
+  "colloquy": {
+    "entry_id": "colloquy",
+    "unit": "1"
+  },
+  "comfortable": {
+    "entry_id": "comfortable",
+    "unit": "1a"
+  },
+  "commitment": {
+    "entry_id": "commitment",
+    "unit": "1a"
+  },
+  "consistent": {
+    "entry_id": "consistent",
     "unit": "1a"
   },
   "contest": {
