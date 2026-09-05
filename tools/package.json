@@ -2,6 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "collect:mw": "node --env-file=.env collect-mw.js",
     "test": "node --test"
   }
 }
