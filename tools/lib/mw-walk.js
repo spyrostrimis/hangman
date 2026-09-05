@@ -152,7 +152,7 @@ function readDt(dt, unitId, options) {
     rejectStructure("Expected dt to be an array", dt, options.onUnknownStructure);
   }
 
-  let dtText = null;
+  const textFragments = [];
   const vis = [];
 
   for (const element of dt) {
@@ -166,10 +166,7 @@ function readDt(dt, unitId, options) {
       if (typeof value !== "string") {
         rejectStructure("Expected defining text to be a string", element, options.onUnknownStructure);
       }
-      if (dtText !== null) {
-        rejectStructure("Multiple defining text elements are ambiguous", dt, options.onUnknownStructure);
-      }
-      dtText = value;
+      textFragments.push(value);
       continue;
     }
 
@@ -184,7 +181,10 @@ function readDt(dt, unitId, options) {
     options.onDtType?.({ type, value, unitId, known: REPORTED_DT_TYPES.has(type) });
   }
 
-  return { dtText, vis };
+  return {
+    dtText: textFragments.length > 0 ? textFragments.join("") : null,
+    vis,
+  };
 }
 
 function emitSense(sense, id, inheritedSls, units, options) {

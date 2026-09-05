@@ -235,6 +235,89 @@ test("reports ignored dt types without corrupting text and vis pairing", () => {
   );
 });
 
+test("adjacent defining text fragments concatenate in source order", () => {
+  const units = walkMwSseq([[sense("1", undefined, {
+    dt: [["text", "synthetic alpha "], ["text", "synthetic beta"]],
+  })]]);
+
+  assert.equal(units[0].dtText, "synthetic alpha synthetic beta");
+});
+
+test("text around vis is assembled while the vis stays on the same unit", () => {
+  const ownVis = [{ t: "synthetic example" }];
+  const units = walkMwSseq([[sense("1", undefined, {
+    dt: [
+      ["text", "synthetic alpha "],
+      ["vis", ownVis],
+      ["text", "synthetic beta"],
+    ],
+  })]]);
+
+  assert.equal(units.length, 1);
+  assert.equal(units[0].dtText, "synthetic alpha synthetic beta");
+  assert.deepEqual(units[0].vis, ownVis);
+});
+
+test("text around uns is assembled while uns remains separately reported", () => {
+  const encountered = [];
+  const units = walkMwSseq([[sense("1", undefined, {
+    dt: [
+      ["text", "synthetic alpha "],
+      ["uns", [["text", "nested text must stay nested"]]],
+      ["text", "synthetic beta"],
+    ],
+  })]], { onDtType: (event) => encountered.push(event) });
+
+  assert.equal(units[0].dtText, "synthetic alpha synthetic beta");
+  assert.deepEqual(units[0].vis, []);
+  assert.deepEqual(
+    encountered.map(({ type, unitId, known }) => ({ type, unitId, known })),
+    [{ type: "uns", unitId: "1", known: true }],
+  );
+});
+
+test("several text and vis groups remain one semantic unit", () => {
+  const firstVis = [{ t: "first synthetic example" }];
+  const secondVis = [{ t: "second synthetic example" }];
+  const units = walkMwSseq([[sense("1", undefined, {
+    dt: [
+      ["text", "first"],
+      ["vis", firstVis],
+      ["text", "second"],
+      ["vis", secondVis],
+      ["text", "third"],
+    ],
+  })]]);
+
+  assert.equal(units.length, 1);
+  assert.equal(units[0].dtText, "firstsecondthird");
+  assert.deepEqual(units[0].vis, [...firstVis, ...secondVis]);
+});
+
+test("defining text assembly never invents a separator", () => {
+  const withSourceSpace = walkMwSseq([[sense("1", undefined, {
+    dt: [["text", "alpha "], ["text", "beta"]],
+  })]]);
+  const withoutSourceSpace = walkMwSseq([[sense("1", undefined, {
+    dt: [["text", "alpha"], ["text", "beta"]],
+  })]]);
+
+  assert.equal(withSourceSpace[0].dtText, "alpha beta");
+  assert.equal(withoutSourceSpace[0].dtText, "alphabeta");
+});
+
+test("non-string defining text still rejects structurally", () => {
+  const valid = walkMwSseq([[sense("1", undefined, { dt: [["text", "synthetic"]] })]]);
+  assert.equal(valid[0].dtText, "synthetic");
+
+  assert.throws(
+    () => walkMwSseq([[sense("1", undefined, { dt: [["text", 42]] })]]),
+    (error) => error instanceof MwStructureError
+      && /Expected defining text to be a string/.test(error.message)
+      && error.raw[1] === 42,
+  );
+});
+
 test("preserves a null dtText when a selectable sense has no definition", () => {
   assert.deepEqual(walkMwSseq([[sense("1", undefined, { dt: [["snote", {}]] })]]), [
     { id: "1", sls: [], eligible: true, dtText: null, vis: [] },
