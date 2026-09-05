@@ -228,7 +228,6 @@ test("does not invent or write an override", async () => {
     assert.equal(report.words[0].status, "needs_curation");
     assert.equal(report.words[0].error.code, PIPELINE_CODES.AMBIGUOUS_UNIT);
     assert.equal(after, before);
-    assert.equal(after.trim(), "{}");
   });
 });
 

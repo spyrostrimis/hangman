@@ -1,1 +1,10 @@
-{}
+{
+  "bituminous": {
+    "entry_id": "bituminous",
+    "unit": "1"
+  },
+  "melancholy": {
+    "entry_id": "melancholy:1",
+    "unit": "1a"
+  }
+}
