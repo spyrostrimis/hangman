@@ -79,9 +79,69 @@
     "entry_id": "contest:2",
     "unit": "1"
   },
+  "conversation": {
+    "entry_id": "conversation",
+    "unit": "1a(1)"
+  },
+  "correspondence": {
+    "entry_id": "correspondence",
+    "unit": "1a"
+  },
+  "criticize": {
+    "entry_id": "criticize",
+    "unit": "2"
+  },
+  "deception": {
+    "entry_id": "deception",
+    "unit": "1a"
+  },
+  "dictionary": {
+    "entry_id": "dictionary",
+    "unit": "1"
+  },
+  "disparage": {
+    "entry_id": "disparage",
+    "unit": "1"
+  },
+  "effervescent": {
+    "entry_id": "effervescent",
+    "unit": "2"
+  },
+  "eschatology": {
+    "entry_id": "eschatology",
+    "unit": "1"
+  },
+  "ethereal": {
+    "entry_id": "ethereal",
+    "unit": "1a"
+  },
+  "expertise": {
+    "entry_id": "expertise",
+    "unit": "1"
+  },
   "exquisite": {
     "entry_id": "exquisite:1",
     "unit": "2a"
+  },
+  "fallacy": {
+    "entry_id": "fallacy",
+    "unit": "1a"
+  },
+  "fluorescent": {
+    "entry_id": "fluorescent",
+    "unit": "2"
+  },
+  "gnarled": {
+    "entry_id": "gnarled:1",
+    "unit": "1"
+  },
+  "hermeneutics": {
+    "entry_id": "hermeneutic:1",
+    "unit": "1"
+  },
+  "illuminate": {
+    "entry_id": "illuminate:1",
+    "unit": "1a(1)"
   },
   "laminate": {
     "entry_id": "laminate:1",
