@@ -178,7 +178,7 @@ function validateHints(hints, word, path, errors, warnings) {
     return;
   }
 
-  validateHint(hints.synonym, `${path}.synonym`, "mw-thesaurus", errors);
+  validateHint(hints.synonym, `${path}.synonym`, "llm-generated", errors);
   validateHint(hints.clue, `${path}.clue`, "llm-generated", errors);
   checkMarkup(hints.synonym?.text, `${path}.synonym.text`, errors);
 

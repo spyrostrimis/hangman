@@ -21,7 +21,7 @@ function makeRecord(word) {
     hints: {
       synonym: {
         text: "similar",
-        source: "mw-thesaurus",
+        source: "llm-generated",
       },
       clue: {
         text: "A fabricated hint with indirect wording.",
@@ -70,6 +70,8 @@ test("schema artifact is valid JSON Schema describing v1 and 105 records", () =>
   assert.equal(schema.properties.words.minItems, 105);
   assert.equal(schema.properties.words.maxItems, 105);
   assert.equal(schema.$defs.example.properties.kind.const, "vis");
+  assert.equal(schema.$defs.synonymHint.properties.source.const, "llm-generated");
+  assert.equal(schema.$defs.clueHint.properties.source.const, "llm-generated");
   assert.deepEqual(schema.$defs.nullableString.oneOf, [
     { type: "null" },
     { $ref: "#/$defs/nonEmptyString" },
@@ -145,6 +147,26 @@ test("clean manifest passes when every example is null", () => {
     errors: [],
     warnings: [],
   });
+});
+
+test("synonym and clue provenance is LLM-generated only", () => {
+  const oldThesaurus = makeManifest();
+  oldThesaurus.words[0].hints.synonym.source = "mw-thesaurus";
+  const oldThesaurusResult = validateManifest(oldThesaurus);
+  assert.equal(oldThesaurusResult.valid, false);
+  assert.ok(oldThesaurusResult.errors.some(
+    (error) => error.code === VALIDATION_CODES.SCHEMA_INVALID
+      && error.path === "$.words[0].hints.synonym.source",
+  ));
+
+  const wrongClueSource = makeManifest();
+  wrongClueSource.words[0].hints.clue.source = "mw-collegiate";
+  const wrongClueResult = validateManifest(wrongClueSource);
+  assert.equal(wrongClueResult.valid, false);
+  assert.ok(wrongClueResult.errors.some(
+    (error) => error.code === VALIDATION_CODES.SCHEMA_INVALID
+      && error.path === "$.words[0].hints.clue.source",
+  ));
 });
 
 test("example without author or source fails exactly EXAMPLE_MISSING_ATTRIBUTION", () => {

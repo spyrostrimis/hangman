@@ -123,7 +123,7 @@
           "$ref": "#/$defs/nonEmptyString"
         },
         "source": {
-          "const": "mw-thesaurus"
+          "const": "llm-generated"
         }
       }
     },

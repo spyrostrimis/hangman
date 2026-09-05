@@ -4,7 +4,7 @@ PROJECT: Web-based Hangman word game for learning English vocabulary and pronunc
 
 REBUILD, NOT MIGRATION. Most 2023 code is being replaced. Do not preserve or work around code that should simply go. What survives: the game rules, the React components and visual design, the Hall of Fame, and the shape of the four auth routes.
 
-<!-- ┌─ SYNC v1 · HARD RULES · mirrored in CLAUDE.md + project instructions -->
+<!-- ┌─ SYNC v2 · HARD RULES · mirrored in CLAUDE.md + project instructions -->
 <!-- │  Edit one → edit the other → bump BOTH version numbers. -->
 
 ## HARD RULES
@@ -14,11 +14,11 @@ REBUILD, NOT MIGRATION. Most 2023 code is being replaced. Do not preserve or wor
 - $0 running cost. Cloudflare free tier only. Flag anything that needs a paid plan; never implement it silently.
 - Secrets NEVER committed and never literal in source. `tools/` reads a gitignored `.env`. Production secrets via `wrangler secret` only. Never stage `*.zip`, `node_modules`, or build output.
 - `main` is the only branch, and pushing to it PUBLISHES to hangman.spyrostrimis.com. There is no staging. Every push is a live deploy.
-- Merriam-Webster: non-commercial only, max two reference APIs (Collegiate + Thesaurus, both in use — no room for a third), 1000 queries/day/key. Attribution required in UI and README.
+- Merriam-Webster: use the Collegiate Dictionary API only. Non-commercial only, 1000 queries/day/key. Attribution required in UI and README.
 - Example sentences must be REAL and sourced from MW with attribution. Never generate quotations attributed to real authors, works, or dates.
 - Scoring is client-authoritative and forgeable BY DESIGN. Documented, not fixed. Do not propose server-authoritative gameplay — it was considered and rejected.
 
-<!-- └─ /SYNC v1 · HARD RULES -->
+<!-- └─ /SYNC v2 · HARD RULES -->
 
 ## TARGET STACK
 
@@ -26,7 +26,7 @@ REBUILD, NOT MIGRATION. Most 2023 code is being replaced. Do not preserve or wor
 - API: Hono on Cloudflare Workers.
 - Data: D1 (users, scores) · static JSON manifest (words) · R2 (paintings).
 - Auth: `jose` (JWT), `bcryptjs`, httpOnly cookies, tokens MUST expire.
-- Generation pipeline: `tools/`, Node, local-only. `gpt-image-2` at 1024×1024 SQUARE for paintings — square is LOCKED, because the 116 surviving 2023 DALL·E 2 paintings are 512×512 and new images must sit beside them in the same frame. Do not "upgrade" this to landscape. MW Collegiate + Thesaurus for definition/IPA/audio/example; an LLM for the example explanation.
+- Generation pipeline: `tools/`, Node, local-only. `gpt-image-2` at 1024×1024 SQUARE for paintings — square is LOCKED, because the 116 surviving 2023 DALL·E 2 paintings are 512×512 and new images must sit beside them in the same frame. Do not "upgrade" this to landscape. MW Collegiate only for definition, pronunciation, audio, and an optional attributed example; an LLM generates the synonym hint, clue, and explanation locally. There is no Merriam-Webster Thesaurus API in this project.
 
 BEING REMOVED: MongoDB, Mongoose, Express, `bcrypt` (native), `jsonwebtoken`, `axios`, OpenAI SDK v3, `body-parser`, `mongoose-type-email`, `read-more-react`, `web-vitals`, `mdb-react-ui-kit`.
 
@@ -56,7 +56,7 @@ From `client/`, run `npm run dev` for the Vite development server, `npm run buil
 - Git integration is active: pushes to `main` trigger production builds and deployments.
 - SPA fallback was manually verified with a direct nested route.
 
-<!-- ┌─ SYNC v1 · CHANGE DISCIPLINE · mirrored in CLAUDE.md + project instructions -->
+<!-- ┌─ SYNC v2 · CHANGE DISCIPLINE · mirrored in CLAUDE.md + project instructions -->
 <!-- │  Edit one → edit the other → bump BOTH version numbers. -->
 
 ## CHANGE DISCIPLINE
@@ -70,7 +70,7 @@ From `client/`, run `npm run dev` for the Vite development server, `npm run buil
 - One commit per change; manual verification BEFORE the commit.
 - CARVE-OUT: config removal and dead-code deletion can't be "seen working." The verification is the real diff plus a grep proving nothing references the removed thing. Say so in the commit message.
 
-<!-- └─ /SYNC v1 · CHANGE DISCIPLINE -->
+<!-- └─ /SYNC v2 · CHANGE DISCIPLINE -->
 
 ## KNOWN LANDMINES
 
