@@ -69,7 +69,33 @@ test("schema artifact is valid JSON Schema describing v1 and 105 records", () =>
   assert.equal(schema.properties.schema_version.const, 1);
   assert.equal(schema.properties.words.minItems, 105);
   assert.equal(schema.properties.words.maxItems, 105);
-  assert.deepEqual(schema.$defs.example.properties.kind.enum, ["vis", "quote"]);
+  assert.equal(schema.$defs.example.properties.kind.const, "vis");
+  assert.deepEqual(schema.$defs.nullableString.oneOf, [
+    { type: "null" },
+    { $ref: "#/$defs/nonEmptyString" },
+  ]);
+});
+
+test("schema nullable attribution strings exclude empty and whitespace-only strings", () => {
+  const schema = JSON.parse(
+    readFileSync(new URL("./schema/manifest.schema.json", import.meta.url), "utf8"),
+  );
+  const nullable = schema.$defs.nullableString;
+  const nonEmpty = schema.$defs.nonEmptyString;
+
+  assert.deepEqual(nullable.oneOf, [
+    { type: "null" },
+    { $ref: "#/$defs/nonEmptyString" },
+  ]);
+  assert.equal(new RegExp(nonEmpty.pattern).test("Synthetic Author"), true);
+  assert.equal(new RegExp(nonEmpty.pattern).test(""), false);
+  assert.equal(new RegExp(nonEmpty.pattern).test("   "), false);
+  for (const field of ["author", "source", "date"]) {
+    assert.equal(
+      schema.$defs.attribution.properties[field].$ref,
+      "#/$defs/nullableString",
+    );
+  }
 });
 
 test("clean manifest passes with an attributed synthetic example", () => {
@@ -90,6 +116,27 @@ test("clean manifest passes with an attributed synthetic example", () => {
     errors: [],
     warnings: [],
   });
+});
+
+test("v1 rejects quote examples instead of treating them as unit-level vis", () => {
+  const manifest = makeManifest();
+  manifest.words[0].example = {
+    text: "The acquaint appears in this synthetic quotation.",
+    kind: "quote",
+    form_matched: "acquaint",
+    attribution: {
+      author: "Synthetic Author",
+      source: null,
+      date: null,
+    },
+  };
+
+  const result = validateManifest(manifest);
+  assert.equal(result.valid, false);
+  assert.ok(result.errors.some(
+    (error) => error.code === VALIDATION_CODES.SCHEMA_INVALID
+      && error.path === "$.words[0].example.kind",
+  ));
 });
 
 test("clean manifest passes when every example is null", () => {

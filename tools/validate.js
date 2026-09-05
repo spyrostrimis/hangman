@@ -298,12 +298,12 @@ function validateExample(example, path, errors) {
 
   requireString(example.text, `${path}.text`, errors);
   requireString(example.form_matched, `${path}.form_matched`, errors);
-  if (example.kind !== "vis" && example.kind !== "quote") {
+  if (example.kind !== "vis") {
     addIssue(
       errors,
       VALIDATION_CODES.SCHEMA_INVALID,
       `${path}.kind`,
-      "Expected example kind to be vis or quote",
+      "Expected example kind to be vis",
     );
   }
   validateAttribution(example.attribution, `${path}.attribution`, errors);

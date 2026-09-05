@@ -32,7 +32,10 @@
       "pattern": "\\S"
     },
     "nullableString": {
-      "type": ["string", "null"]
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/nonEmptyString" }
+      ]
     },
     "word": {
       "type": "object",
@@ -164,7 +167,7 @@
           "$ref": "#/$defs/nonEmptyString"
         },
         "kind": {
-          "enum": ["vis", "quote"]
+          "const": "vis"
         },
         "form_matched": {
           "$ref": "#/$defs/nonEmptyString"
