@@ -3,21 +3,21 @@ import assert from "node:assert/strict";
 
 import { MW_MARKUP_REMAINS, renderMwMarkup } from "./mw-render.js";
 
-test("renders the dejection definition oracle", () => {
+test("renders synthetic colon and cross-reference markup", () => {
   assert.equal(
     renderMwMarkup(
-      "{bc}a state of sadness {bc}depression of spirits {bc}{sx|dejection||}",
+      "{bc}synthetic alpha {bc}synthetic beta {bc}{sx|synthetic gamma||}",
     ),
-    "a state of sadness : depression of spirits : dejection",
+    "synthetic alpha : synthetic beta : synthetic gamma",
   );
 });
 
-test("renders the volume definition oracle without losing link text", () => {
+test("preserves synthetic escaped link display text", () => {
   assert.equal(
     renderMwMarkup(
-      "{bc}having or marked by great {a\\_link|volume} or bulk {bc}{sx|large||}",
+      "{bc}synthetic object with {a\\_link|synthetic-link} {bc}{sx|synthetic-reference||}",
     ),
-    "having or marked by great volume or bulk : large",
+    "synthetic object with synthetic-link : synthetic-reference",
   );
 });
 
