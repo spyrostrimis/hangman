@@ -34,6 +34,20 @@ test("normalizes ordinary numbered senses with elided parent numbers", () => {
   );
 });
 
+test("normalizes full and contextual hierarchical ordinary sense numbers", () => {
+  const units = walkMwSseq([[
+    sense("1 a", "parent"),
+    sense("b (1)", "contextual child"),
+    sense("1 c (1)", "full child"),
+  ]]);
+
+  assert.deepEqual(units.map(({ id }) => id), ["1a", "1b(1)", "1c(1)"]);
+  assert.throws(
+    () => walkMwSseq([[sense("b (1)", "missing major")]]),
+    (error) => error instanceof MwStructureError && error.raw[1].sn === "b (1)",
+  );
+});
+
 test("assigns id 1 to an unnumbered independently selectable sense", () => {
   assert.deepEqual(walkMwSseq([[sense(undefined, "only meaning")]]), [
     { id: "1", sls: [], eligible: true, dtText: "only meaning", vis: [] },
@@ -112,6 +126,66 @@ test("pseq and bs retain the binding parent in canonical ids", () => {
       { id: "1c(1)", dtText: "child one" },
       { id: "1c(2)", dtText: "child two" },
     ],
+  );
+});
+
+test("pseq accepts a full hierarchical number without a binding substitute", () => {
+  const units = walkMwSseq([[["pseq", [
+    sense("1 a (1)", "child one"),
+  ]]]]);
+
+  assert.deepEqual(units.map(({ id }) => id), ["1a(1)"]);
+});
+
+test("pseq resolves a contextual hierarchical number from the current major", () => {
+  const units = walkMwSseq([[
+    sense("1 a", "first"),
+    ["pseq", [sense("b (1)", "child one")]],
+  ]]);
+
+  assert.deepEqual(units.map(({ id }) => id), ["1a", "1b(1)"]);
+});
+
+test("pseq full hierarchy establishes the base for a bare sibling", () => {
+  const units = walkMwSseq([[["pseq", [
+    sense("1 a (1)", "child one"),
+    sense("(2)", "child two"),
+  ]]]]);
+
+  assert.deepEqual(units.map(({ id }) => id), ["1a(1)", "1a(2)"]);
+});
+
+test("pseq permits an ordinary full number used by a real structural wrapper", () => {
+  const units = walkMwSseq([[["pseq", [sense("1 a", "wrapped ordinary sense")]]]]);
+  assert.deepEqual(units.map(({ id }) => id), ["1a"]);
+});
+
+test("bare parenthesized number requires a base in the same structural group", () => {
+  const related = [[
+    sense("1 a", "parent"),
+    ["pseq", [sense("(1)", "related child")]],
+  ]];
+  const unrelated = [
+    [sense("1 a", "different group")],
+    [["pseq", [sense("(1)", "unbound child")]]],
+  ];
+  const unrelatedDefinitions = [
+    { sseq: [[sense("1 a", "different definition")]] },
+    { sseq: [[["pseq", [sense("(1)", "unbound child")]]]] },
+  ];
+
+  assert.deepEqual(walkMwSseq(related).map(({ id }) => id), ["1a", "1a(1)"]);
+  assert.throws(
+    () => walkMwSseq(unrelated),
+    (error) => error instanceof MwStructureError
+      && /no binding parent/.test(error.message)
+      && error.raw[1].sn === "(1)",
+  );
+  assert.throws(
+    () => walkMwDefinitions(unrelatedDefinitions),
+    (error) => error instanceof MwStructureError
+      && /no binding parent/.test(error.message)
+      && error.raw[1].sn === "(1)",
   );
 });
 

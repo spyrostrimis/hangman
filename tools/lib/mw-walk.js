@@ -84,16 +84,22 @@ function normalizeOrdinaryId(sn, context, raw, onUnknownStructure) {
     return id;
   }
 
+  const contextualParenthesized = compact.match(/^([a-z])\((\d+)\)$/i);
+  if (contextualParenthesized && context.major) {
+    const id = `${context.major}${contextualParenthesized[1]}(${contextualParenthesized[2]})`;
+    context.lastOrdinaryId = id;
+    return id;
+  }
+
   rejectStructure(`Cannot normalize sense number ${safeStringify(sn)}`, raw, onUnknownStructure);
 }
 
-function normalizeParenthesizedId(sn, baseId, position, raw, onUnknownStructure) {
-  if (!baseId) {
-    rejectStructure("Parenthesized sense has no binding parent", raw, onUnknownStructure);
-  }
-
+function normalizePseqId(sn, baseId, position, context, raw, onUnknownStructure) {
   if (sn === undefined || sn === null || sn === "") {
-    return `${baseId}(${position})`;
+    if (!baseId) {
+      rejectStructure("Parenthesized sense has no binding parent", raw, onUnknownStructure);
+    }
+    return { id: `${baseId}(${position})`, baseId };
   }
 
   if (typeof sn !== "string") {
@@ -101,13 +107,40 @@ function normalizeParenthesizedId(sn, baseId, position, raw, onUnknownStructure)
   }
 
   const compact = compactSenseNumber(sn);
-  const match = compact.match(/^\((\d+)\)$/);
-
-  if (!match) {
-    rejectStructure(`Expected a parenthesized sense number, received ${safeStringify(sn)}`, raw, onUnknownStructure);
+  const parentOnly = compact.match(/^\((\d+)\)$/);
+  if (parentOnly) {
+    if (!baseId) {
+      rejectStructure("Parenthesized sense has no binding parent", raw, onUnknownStructure);
+    }
+    return { id: `${baseId}(${parentOnly[1]})`, baseId };
   }
 
-  return `${baseId}(${match[1]})`;
+  const full = compact.match(/^(\d+[a-z]?)\((\d+)\)$/i);
+  if (full) {
+    const nextBase = full[1];
+    context.major = nextBase.match(/^\d+/)[0];
+    context.lastOrdinaryId = compact;
+    return { id: compact, baseId: nextBase };
+  }
+
+  const contextual = compact.match(/^([a-z])\((\d+)\)$/i);
+  if (contextual && context.major) {
+    const nextBase = `${context.major}${contextual[1]}`;
+    const id = `${nextBase}(${contextual[2]})`;
+    context.lastOrdinaryId = id;
+    return { id, baseId: nextBase };
+  }
+
+  if (/^\d+[a-z]?$/i.test(compact)) {
+    const id = normalizeOrdinaryId(sn, context, raw, onUnknownStructure);
+    return { id, baseId: id };
+  }
+
+  rejectStructure(
+    `Cannot normalize pseq sense number ${safeStringify(sn)}`,
+    raw,
+    onUnknownStructure,
+  );
 }
 
 function readDt(dt, unitId, options) {
@@ -196,9 +229,18 @@ function validateTuple(element, options) {
   }
 }
 
-function walkElements(elements, inheritedSls, context, units, options, inPseq = false) {
+function walkElements(
+  elements,
+  inheritedSls,
+  context,
+  units,
+  options,
+  inPseq = false,
+  initialParenthesizedBase = null,
+) {
   let structuralSls = inheritedSls;
-  let parenthesizedBase = inPseq ? context.lastOrdinaryId : null;
+  let currentBase = null;
+  let parenthesizedBase = inPseq ? initialParenthesizedBase : null;
   let parenthesizedPosition = 0;
 
   for (const element of elements) {
@@ -211,7 +253,12 @@ function walkElements(elements, inheritedSls, context, units, options, inPseq = 
       }
 
       if (payload.sn !== undefined) {
-        normalizeOrdinaryId(payload.sn, context, element, options.onUnknownStructure);
+        currentBase = normalizeOrdinaryId(
+          payload.sn,
+          context,
+          element,
+          options.onUnknownStructure,
+        );
       }
       structuralSls = mergeLabels(
         inheritedSls,
@@ -248,6 +295,8 @@ function walkElements(elements, inheritedSls, context, units, options, inPseq = 
       structuralSls = bindingSls;
       if (inPseq) {
         parenthesizedBase = bindingId;
+      } else {
+        currentBase = bindingId;
       }
       continue;
     }
@@ -257,7 +306,7 @@ function walkElements(elements, inheritedSls, context, units, options, inPseq = 
         rejectStructure("Invalid or nested pseq", element, options.onUnknownStructure);
       }
 
-      walkElements(payload, structuralSls, context, units, options, true);
+      walkElements(payload, structuralSls, context, units, options, true, currentBase);
       continue;
     }
 
@@ -269,15 +318,19 @@ function walkElements(elements, inheritedSls, context, units, options, inPseq = 
       let id;
       if (inPseq) {
         parenthesizedPosition += 1;
-        id = normalizeParenthesizedId(
+        const normalized = normalizePseqId(
           payload.sn,
           parenthesizedBase,
           parenthesizedPosition,
+          context,
           element,
           options.onUnknownStructure,
         );
+        id = normalized.id;
+        parenthesizedBase = normalized.baseId;
       } else {
         id = normalizeOrdinaryId(payload.sn, context, element, options.onUnknownStructure);
+        currentBase = id;
       }
 
       emitSense(payload, id, structuralSls, units, options);
@@ -305,6 +358,8 @@ export function walkMwSseq(sseq, options = {}) {
     if (!Array.isArray(group)) {
       rejectStructure("Expected each sseq group to be an array", group, options.onUnknownStructure);
     }
+    context.major = null;
+    context.lastOrdinaryId = null;
     walkElements(group, inheritedSls, context, units, options);
   }
 
