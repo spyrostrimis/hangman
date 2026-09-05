@@ -143,6 +143,18 @@
     "entry_id": "illuminate:1",
     "unit": "1a(1)"
   },
+  "insistent": {
+    "entry_id": "insistent",
+    "unit": "1"
+  },
+  "instruction": {
+    "entry_id": "instruction",
+    "unit": "1a"
+  },
+  "knowledge": {
+    "entry_id": "knowledge",
+    "unit": "1a(1)"
+  },
   "laminate": {
     "entry_id": "laminate:1",
     "unit": "3b"
@@ -151,9 +163,57 @@
     "entry_id": "lavender:1",
     "unit": "1a"
   },
+  "language": {
+    "entry_id": "language",
+    "unit": "1a(1)"
+  },
+  "legend": {
+    "entry_id": "legend",
+    "unit": "1a"
+  },
+  "library": {
+    "entry_id": "library",
+    "unit": "1a"
+  },
+  "literature": {
+    "entry_id": "literature",
+    "unit": "1a(1)"
+  },
+  "locomotion": {
+    "entry_id": "locomotion",
+    "unit": "1"
+  },
+  "loquacious": {
+    "entry_id": "loquacious",
+    "unit": "1"
+  },
+  "manipulate": {
+    "entry_id": "manipulate",
+    "unit": "2b"
+  },
   "melancholy": {
     "entry_id": "melancholy:1",
     "unit": "1a"
+  },
+  "mountain": {
+    "entry_id": "mountain",
+    "unit": "1a"
+  },
+  "myopia": {
+    "entry_id": "myopia",
+    "unit": "1"
+  },
+  "mystery": {
+    "entry_id": "mystery:1",
+    "unit": "1a"
+  },
+  "onomatopoeia": {
+    "entry_id": "onomatopoeia",
+    "unit": "1"
+  },
+  "ornithology": {
+    "entry_id": "ornithology",
+    "unit": "1"
   },
   "peacock": {
     "entry_id": "peacock:1",
