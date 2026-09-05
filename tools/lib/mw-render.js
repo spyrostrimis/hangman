@@ -79,6 +79,14 @@ function renderToken(rawToken, renderedSoFar, onUnknown) {
     return closing ? "]" : "[";
   }
 
+  if (name === "dx") {
+    return closing ? "" : " — ";
+  }
+
+  if (name === "dx_def") {
+    return closing ? ")" : "(";
+  }
+
   if (!closing && name === "bc") {
     return renderedSoFar.trim() === "" ? "" : COLON;
   }

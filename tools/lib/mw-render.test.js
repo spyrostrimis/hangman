@@ -55,6 +55,24 @@ test("renders link, directional-reference, and more-at families", () => {
   );
 });
 
+test("renders a synthetic directional cross-reference with an em dash", () => {
+  assert.equal(
+    renderMwMarkup(
+      "synthetic {dx}see {dxt|synthetic-target:1||2}{/dx}",
+    ),
+    "synthetic — see synthetic-target 2",
+  );
+});
+
+test("renders a synthetic definition cross-reference in parentheses", () => {
+  assert.equal(
+    renderMwMarkup(
+      "synthetic {dx_def}see {dxt|synthetic-target:1||2}{/dx_def}",
+    ),
+    "synthetic (see synthetic-target 2)",
+  );
+});
+
 test("renders date-sense tokens and omits an empty date sense", () => {
   assert.equal(
     renderMwMarkup("before 12th century{ds|t|1|a|1}"),
