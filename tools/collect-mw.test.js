@@ -126,6 +126,8 @@ test("AMBIGUOUS_ENTRY report contains concise candidate entries and units", asyn
     ]);
     assert.deepEqual(result.candidates[0].units.map(({ id }) => id), ["1"]);
     assert.equal(result.candidates[0].units[0].rendered_definition, "a synthetic definition");
+    assert.equal(result.candidates[0].diagnostic_error, null);
+    assert.equal(result.candidates[1].diagnostic_error, null);
     assert.equal("rawResponse" in result, false);
   });
 });
@@ -144,7 +146,9 @@ test("AMBIGUOUS_UNIT report includes ids, rendered definitions, labels, and vis 
     }));
     const result = report.words[0];
 
+    assert.equal(result.status, "needs_curation");
     assert.equal(result.error.code, PIPELINE_CODES.AMBIGUOUS_UNIT);
+    assert.equal(result.candidates[0].diagnostic_error, null);
     assert.deepEqual(result.candidates[0].units, [
       {
         id: "1",
@@ -163,6 +167,74 @@ test("AMBIGUOUS_UNIT report includes ids, rendered definitions, labels, and vis 
         total_vis_count: 0,
       },
     ]);
+  });
+});
+
+test("candidate diagnostic failure stays secondary and does not stop later words", async () => {
+  await withTempReport(async (reportPath) => {
+    const previous = process.env.MW_KEY;
+    const secret = ["diagnostic", "secret"].join("-");
+    const rawMarker = "SYNTHETIC_RAW_RESPONSE_MARKER";
+    const structuralType = `unknown?key=${secret}`;
+    process.env.MW_KEY = secret;
+
+    try {
+      const failingCandidate = entry({ id: "gemstone:1" });
+      let definitionReads = 0;
+      Object.defineProperty(failingCandidate, "def", {
+        enumerable: true,
+        get() {
+          definitionReads += 1;
+          if (definitionReads === 1) {
+            return [{ sseq: [[sense("1", "{bc}synthetic first candidate")] ] }];
+          }
+          return [{ sseq: [[
+            [structuralType, { rawMarker }],
+          ]] }];
+        },
+      });
+
+      const report = await runMwProbe(
+        ["gemstone", "melancholy"],
+        quietOptions(reportPath, {
+          fetchCollegiateImpl: async (word) => (
+            word === "gemstone"
+              ? [failingCandidate, entry({ id: "gemstone:2" })]
+              : [entry({ word: "melancholy", id: "melancholy:1" })]
+          ),
+          verifyAudioImpl: async () => ({ ok: true, status: 200 }),
+        }),
+      );
+      const [ambiguous, laterSuccess] = report.words;
+      const [failedDiagnostic, normalDiagnostic] = ambiguous.candidates;
+      const serialized = JSON.stringify(report);
+
+      assert.deepEqual(report.words.map(({ word, status }) => ({ word, status })), [
+        { word: "gemstone", status: "needs_curation" },
+        { word: "melancholy", status: "success" },
+      ]);
+      assert.equal(ambiguous.error.code, PIPELINE_CODES.AMBIGUOUS_ENTRY);
+      assert.deepEqual(failedDiagnostic.units, []);
+      assert.equal(failedDiagnostic.diagnostic_error.type, "structural");
+      assert.equal(failedDiagnostic.diagnostic_error.code, "WALKER_STRUCTURAL_ERROR");
+      assert.match(failedDiagnostic.diagnostic_error.message, /\?key=\[REDACTED\]/);
+      assert.deepEqual(normalDiagnostic.units.map(({ id }) => id), ["1"]);
+      assert.equal(normalDiagnostic.diagnostic_error, null);
+      assert.equal(laterSuccess.record.word, "melancholy");
+
+      assert.equal(structuralType.includes(secret), true);
+      assert.equal(serialized.includes(secret), false);
+      assert.equal(rawMarker.length > 0, true);
+      assert.equal(serialized.includes(rawMarker), false);
+      assert.equal(Object.hasOwn(ambiguous, "candidates"), true);
+      assert.equal("raw_response" in ambiguous, false);
+    } finally {
+      if (previous === undefined) {
+        delete process.env.MW_KEY;
+      } else {
+        process.env.MW_KEY = previous;
+      }
+    }
   });
 });
 

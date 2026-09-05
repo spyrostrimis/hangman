@@ -8,7 +8,7 @@ import { fetchCollegiate } from "./lib/mw-client.js";
 import { MwPipelineError, PIPELINE_CODES } from "./lib/mw-errors.js";
 import { MW_MARKUP_REMAINS, renderMwMarkup } from "./lib/mw-render.js";
 import { findExactMwEntries, selectMwRecord } from "./lib/mw-select.js";
-import { walkMwEntry } from "./lib/mw-walk.js";
+import { MwStructureError, walkMwEntry } from "./lib/mw-walk.js";
 
 const DEFAULT_REPORT_PATH = fileURLToPath(new URL("./output/mw-probe.json", import.meta.url));
 const LOCKED_WORDS_PATH = new URL("./words.locked.json", import.meta.url);
@@ -58,25 +58,63 @@ function attributedVisCount(vis) {
   ).length;
 }
 
+function diagnosticError(error) {
+  const structural = error instanceof MwStructureError;
+  const message = structural
+    ? String(error.message).replace(/; raw structural shape:.*$/s, "")
+    : error;
+
+  if (error instanceof MwPipelineError) {
+    return { type: "pipeline", code: error.code, message: sanitizedMessage(message) };
+  }
+  if (structural) {
+    return {
+      type: "structural",
+      code: "WALKER_STRUCTURAL_ERROR",
+      message: sanitizedMessage(message),
+    };
+  }
+  return {
+    type: "technical",
+    code: "TECHNICAL_ERROR",
+    message: sanitizedMessage(message),
+  };
+}
+
 export function buildAmbiguityCandidates(word, rawResponse) {
-  return findExactMwEntries(word, rawResponse).map((entry) => ({
-    entry_id: entry.meta?.id ?? null,
-    part_of_speech: entry.fl ?? null,
-    units: walkMwEntry(entry).map((unit) => {
-      const renderedDefinition = nonEmpty(unit.dtText) ? renderMwMarkup(unit.dtText) : null;
+  return findExactMwEntries(word, rawResponse).map((entry) => {
+    const candidate = {
+      entry_id: entry.meta?.id ?? null,
+      part_of_speech: entry.fl ?? null,
+    };
+
+    try {
       return {
-        id: unit.id,
-        eligible: unit.eligible,
-        sls: unit.sls,
-        rendered_definition: renderedDefinition,
-        attributed_vis_count: attributedVisCount(unit.vis),
-        total_vis_count: unit.vis.length,
-        ...(renderedDefinition && MW_MARKUP_REMAINS.test(renderedDefinition)
-          ? { unresolved_markup: true }
-          : {}),
+        ...candidate,
+        units: walkMwEntry(entry).map((unit) => {
+          const renderedDefinition = nonEmpty(unit.dtText) ? renderMwMarkup(unit.dtText) : null;
+          return {
+            id: unit.id,
+            eligible: unit.eligible,
+            sls: unit.sls,
+            rendered_definition: renderedDefinition,
+            attributed_vis_count: attributedVisCount(unit.vis),
+            total_vis_count: unit.vis.length,
+            ...(renderedDefinition && MW_MARKUP_REMAINS.test(renderedDefinition)
+              ? { unresolved_markup: true }
+              : {}),
+          };
+        }),
+        diagnostic_error: null,
       };
-    }),
-  }));
+    } catch (error) {
+      return {
+        ...candidate,
+        units: [],
+        diagnostic_error: diagnosticError(error),
+      };
+    }
+  });
 }
 
 function pipelineFailure(word, error, rawResponse) {
@@ -137,6 +175,10 @@ function printWordResult(result, log) {
 
   for (const candidate of result.candidates) {
     log(`  candidate entry: ${candidate.entry_id} (${candidate.part_of_speech ?? "unknown"})`);
+    if (candidate.diagnostic_error) {
+      const error = candidate.diagnostic_error;
+      log(`    ${error.type} diagnostic error: ${error.code} — ${error.message}`);
+    }
     for (const unit of candidate.units) {
       log(`    unit ${unit.id}; eligible=${unit.eligible}; sls=${JSON.stringify(unit.sls)}`);
       log(`      definition: ${unit.rendered_definition ?? "null"}`);
