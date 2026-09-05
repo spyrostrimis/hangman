@@ -55,6 +55,14 @@ function isDirectHeadwordEntry(word, candidate) {
     && normalized(headword.replaceAll("*", "").trim()) === normalized(word.trim());
 }
 
+export function findDirectMwEntries(word, response) {
+  if (!Array.isArray(response)) {
+    throw new TypeError("Merriam-Webster Collegiate response must be an array");
+  }
+
+  return response.filter((candidate) => isDirectHeadwordEntry(word, candidate));
+}
+
 function isStemEntry(word, candidate) {
   if (!nonEmpty(word) || !candidate || typeof candidate !== "object" || Array.isArray(candidate)) {
     return false;
@@ -74,10 +82,40 @@ export function findExactMwEntries(word, response) {
     throw new TypeError("Merriam-Webster Collegiate response must be an array");
   }
 
-  const directEntries = response.filter((candidate) => isDirectHeadwordEntry(word, candidate));
+  const directEntries = findDirectMwEntries(word, response);
   return directEntries.length > 0
     ? directEntries
     : response.filter((candidate) => isStemEntry(word, candidate));
+}
+
+function hasFirstPronunciation(entry) {
+  return entry?.hwi?.prs?.[0] !== undefined;
+}
+
+function hasUsableFirstPronunciation(entry) {
+  const first = entry?.hwi?.prs?.[0];
+  return first !== undefined && nonEmpty(first?.mw) && nonEmpty(first?.sound?.audio);
+}
+
+function resolvePronunciationSource(word, response, selectedEntry) {
+  if (hasFirstPronunciation(selectedEntry)) {
+    return selectedEntry;
+  }
+
+  const sources = findDirectMwEntries(word, response).filter(
+    (candidate) => candidate !== selectedEntry && hasUsableFirstPronunciation(candidate),
+  );
+  if (sources.length === 1) {
+    return sources[0];
+  }
+  if (sources.length > 1) {
+    throw pipelineError(
+      PIPELINE_CODES.MISSING_PRONUNCIATION,
+      `No unique shared Merriam-Webster homograph pronunciation source exists for ${word}`,
+    );
+  }
+
+  return selectedEntry;
 }
 
 function validateOverride(override) {
@@ -279,6 +317,7 @@ export function selectMwRecord(word, response, options = {}) {
       "Selected Merriam-Webster entry has no part of speech",
     );
   }
+  const pronunciationSource = resolvePronunciationSource(word, response, entry);
 
   return {
     word,
@@ -289,7 +328,7 @@ export function selectMwRecord(word, response, options = {}) {
       part_of_speech: entry.fl,
       source: "mw-collegiate",
     },
-    pronunciation: extractFirstPronunciation(entry),
+    pronunciation: extractFirstPronunciation(pronunciationSource),
     example: extractExample(word, entry, unit),
   };
 }

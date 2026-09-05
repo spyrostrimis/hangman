@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { MwPipelineError, PIPELINE_CODES } from "./mw-errors.js";
 import { MwStructureError } from "./mw-walk.js";
 import {
+  findDirectMwEntries,
   findExactMwEntries,
   selectMwEntryAndUnit,
   selectMwRecord,
@@ -109,6 +110,152 @@ test("direct headword match excludes a different entry with only a matching stem
 
   assert.deepEqual(findExactMwEntries("scared", [stemOnly, direct]), [direct]);
   assert.equal(selectMwRecord("scared", [stemOnly, direct]).mw_entry_id, "scared:1");
+});
+
+test("direct entry discovery excludes stem-only candidates", () => {
+  const direct = entry({ word: "volume", id: "volume:2" });
+  const stemOnly = entry({ word: "voluminous", hw: "voluminous", stems: ["volume"] });
+
+  assert.deepEqual(findDirectMwEntries("volume", [stemOnly, direct]), [direct]);
+});
+
+test("selected entry's own first pronunciation remains authoritative", () => {
+  const sibling = entry({
+    id: "volume:1",
+    prs: [{ mw: "sibling-pronunciation", sound: { audio: "sibling001" } }],
+  });
+  const selected = entry({
+    id: "volume:2",
+    prs: [{ mw: "selected-pronunciation", sound: { audio: "selected001" } }],
+  });
+
+  const record = selectMwRecord("volume", [sibling, selected], {
+    override: { entry_id: "volume:2", unit: "1" },
+  });
+  assert.equal(record.pronunciation.mw, "selected-pronunciation");
+  assert.equal(record.pronunciation.audio_file, "selected001");
+});
+
+test("inherits the paired first pronunciation from one usable direct homograph", () => {
+  const sibling = entry({
+    id: "volume:1",
+    prs: [
+      { mw: "shared-pronunciation", sound: { audio: "shared001" } },
+      { mw: "second-pronunciation", sound: { audio: "second001" } },
+    ],
+  });
+  const selected = entry({ id: "volume:2" });
+  delete selected.hwi.prs;
+
+  const record = selectMwRecord("volume", [sibling, selected], {
+    override: { entry_id: "volume:2", unit: "1" },
+  });
+  assert.equal(record.pronunciation.mw, "shared-pronunciation");
+  assert.equal(record.pronunciation.audio_file, "shared001");
+  assert.equal(Object.hasOwn(record, "pronunciation_source"), false);
+});
+
+test("does not inherit when selected prs[0] lacks written pronunciation", () => {
+  const sibling = entry({
+    id: "volume:1",
+    prs: [{ mw: "sibling-pronunciation", sound: { audio: "sibling001" } }],
+  });
+  const selected = entry({
+    id: "volume:2",
+    prs: [{ sound: { audio: "selected001" } }],
+  });
+
+  assert.throws(
+    () => selectMwRecord("volume", [sibling, selected], {
+      override: { entry_id: "volume:2", unit: "1" },
+    }),
+    expectCode(PIPELINE_CODES.MISSING_PRONUNCIATION),
+  );
+});
+
+test("does not inherit when selected prs[0] lacks audio", () => {
+  const sibling = entry({
+    id: "volume:1",
+    prs: [{ mw: "sibling-pronunciation", sound: { audio: "sibling001" } }],
+  });
+  const selected = entry({ id: "volume:2", prs: [{ mw: "selected-pronunciation" }] });
+
+  assert.throws(
+    () => selectMwRecord("volume", [sibling, selected], {
+      override: { entry_id: "volume:2", unit: "1" },
+    }),
+    expectCode(PIPELINE_CODES.MISSING_AUDIO),
+  );
+});
+
+test("never skips an incomplete prs[0] to use prs[1]", () => {
+  const selected = entry({
+    id: "volume:2",
+    prs: [
+      {},
+      { mw: "second-pronunciation", sound: { audio: "second001" } },
+    ],
+  });
+
+  assert.throws(
+    () => selectMwRecord("volume", [selected]),
+    expectCode(PIPELINE_CODES.MISSING_PRONUNCIATION),
+  );
+});
+
+test("never inherits pronunciation from a stem-only entry", () => {
+  const selected = entry({ id: "volume:2" });
+  delete selected.hwi.prs;
+  const stemOnly = entry({
+    word: "voluminous",
+    id: "voluminous:1",
+    hw: "voluminous",
+    stems: ["volume"],
+    prs: [{ mw: "stem-pronunciation", sound: { audio: "stem001" } }],
+  });
+
+  assert.throws(
+    () => selectMwRecord("volume", [stemOnly, selected]),
+    expectCode(PIPELINE_CODES.MISSING_PRONUNCIATION),
+  );
+});
+
+test("rejects multiple usable direct pronunciation sources regardless of order", () => {
+  const sourceA = entry({
+    id: "volume:1",
+    prs: [{ mw: "source-a", sound: { audio: "sourcea001" } }],
+  });
+  const selected = entry({ id: "volume:2" });
+  delete selected.hwi.prs;
+  const sourceB = entry({
+    id: "volume:3",
+    prs: [{ mw: "source-b", sound: { audio: "sourceb001" } }],
+  });
+  const options = { override: { entry_id: "volume:2", unit: "1" } };
+  const messages = [];
+
+  for (const response of [[sourceA, selected, sourceB], [sourceB, selected, sourceA]]) {
+    assert.throws(
+      () => selectMwRecord("volume", response, options),
+      (error) => {
+        assert.equal(error.code, PIPELINE_CODES.MISSING_PRONUNCIATION);
+        assert.match(error.message, /no unique shared/i);
+        messages.push(error.message);
+        return true;
+      },
+    );
+  }
+  assert.equal(messages[0], messages[1]);
+});
+
+test("reports missing pronunciation when no usable direct sibling exists", () => {
+  const selected = entry({ id: "volume:2" });
+  delete selected.hwi.prs;
+
+  assert.throws(
+    () => selectMwRecord("volume", [selected]),
+    expectCode(PIPELINE_CODES.MISSING_PRONUNCIATION),
+  );
 });
 
 test("exact complete stem is a fallback when no direct headword exists", () => {
