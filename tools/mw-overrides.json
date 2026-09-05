@@ -1,10 +1,62 @@
 {
+  "adventure": {
+    "entry_id": "adventure:1",
+    "unit": "2"
+  },
+  "backstage": {
+    "entry_id": "backstage:1",
+    "unit": "1"
+  },
   "bituminous": {
     "entry_id": "bituminous",
     "unit": "1"
   },
+  "challenge": {
+    "entry_id": "challenge:2",
+    "unit": "1a"
+  },
+  "contest": {
+    "entry_id": "contest:2",
+    "unit": "1"
+  },
+  "exquisite": {
+    "entry_id": "exquisite:1",
+    "unit": "2a"
+  },
+  "laminate": {
+    "entry_id": "laminate:1",
+    "unit": "3b"
+  },
+  "lavender": {
+    "entry_id": "lavender:1",
+    "unit": "1a"
+  },
   "melancholy": {
     "entry_id": "melancholy:1",
+    "unit": "1a"
+  },
+  "peacock": {
+    "entry_id": "peacock:1",
+    "unit": "1"
+  },
+  "pickle": {
+    "entry_id": "pickle:1",
+    "unit": "3:sd"
+  },
+  "puzzle": {
+    "entry_id": "puzzle:2",
+    "unit": "2b"
+  },
+  "quintessential": {
+    "entry_id": "quintessential:1",
+    "unit": "1"
+  },
+  "regenerate": {
+    "entry_id": "regenerate:1",
+    "unit": "1"
+  },
+  "variant": {
+    "entry_id": "variant:2",
     "unit": "1a"
   }
 }
