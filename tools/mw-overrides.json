@@ -215,6 +215,26 @@
     "entry_id": "ornithology",
     "unit": "1"
   },
+  "oxygen": {
+    "entry_id": "oxygen",
+    "unit": "1"
+  },
+  "oxymoron": {
+    "entry_id": "oxymoron",
+    "unit": "1"
+  },
+  "panoply": {
+    "entry_id": "panoply",
+    "unit": "1a"
+  },
+  "parenthesis": {
+    "entry_id": "parenthesis",
+    "unit": "3"
+  },
+  "patricide": {
+    "entry_id": "patricide",
+    "unit": "1"
+  },
   "peacock": {
     "entry_id": "peacock:1",
     "unit": "1"
@@ -222,6 +242,22 @@
   "pickle": {
     "entry_id": "pickle:1",
     "unit": "3:sd"
+  },
+  "pineapple": {
+    "entry_id": "pineapple",
+    "unit": "1b"
+  },
+  "playful": {
+    "entry_id": "playful",
+    "unit": "2"
+  },
+  "possessed": {
+    "entry_id": "possessed:1",
+    "unit": "1a"
+  },
+  "punishment": {
+    "entry_id": "punishment",
+    "unit": "2a"
   },
   "puzzle": {
     "entry_id": "puzzle:2",
@@ -235,8 +271,36 @@
     "entry_id": "regenerate:1",
     "unit": "1"
   },
+  "rhythmic": {
+    "entry_id": "rhythmic",
+    "unit": "1"
+  },
+  "solitude": {
+    "entry_id": "solitude",
+    "unit": "1"
+  },
+  "student": {
+    "entry_id": "student",
+    "unit": "1:sd"
+  },
+  "supersede": {
+    "entry_id": "supersede",
+    "unit": "2"
+  },
   "variant": {
     "entry_id": "variant:2",
     "unit": "1a"
+  },
+  "victorious": {
+    "entry_id": "victorious",
+    "unit": "1a"
+  },
+  "vocabulary": {
+    "entry_id": "vocabulary",
+    "unit": "2a"
+  },
+  "zygote": {
+    "entry_id": "zygote",
+    "unit": "1"
   }
 }
