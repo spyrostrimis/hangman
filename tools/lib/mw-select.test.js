@@ -1,12 +1,18 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 import { MwPipelineError, PIPELINE_CODES } from "./mw-errors.js";
+import { MwStructureError } from "./mw-walk.js";
 import {
   findExactMwEntries,
   selectMwEntryAndUnit,
   selectMwRecord,
 } from "./mw-select.js";
+
+const COMMITTED_OVERRIDES = JSON.parse(
+  readFileSync(new URL("../mw-overrides.json", import.meta.url), "utf8"),
+);
 
 function sense(sn, text, { sls, vis } = {}) {
   return [
@@ -81,11 +87,60 @@ test("hwi.hw exact fallback removes MW syllable separators", () => {
   assert.deepEqual(findExactMwEntries("volume", [candidate]), [candidate]);
 });
 
+test("direct headword match excludes a different entry with only a matching stem", () => {
+  const direct = entry({ word: "scared", id: "scared:1", hw: "scared" });
+  const stemOnly = entry({
+    word: "scare",
+    id: "scare:1",
+    hw: "scare",
+    stems: ["scare", "scared"],
+  });
+
+  assert.deepEqual(findExactMwEntries("scared", [stemOnly, direct]), [direct]);
+  assert.equal(selectMwRecord("scared", [stemOnly, direct]).mw_entry_id, "scared:1");
+});
+
+test("exact complete stem is a fallback when no direct headword exists", () => {
+  const fallback = entry({ word: "scare", id: "scare:1", hw: "scare", stems: ["scared"] });
+  const substring = entry({
+    word: "scaredy-cat",
+    id: "scaredy-cat:1",
+    hw: "scaredy-cat",
+    stems: ["scaredy-cat"],
+  });
+
+  assert.deepEqual(findExactMwEntries("scared", [substring, fallback]), [fallback]);
+  assert.equal(selectMwRecord("scared", [substring, fallback]).mw_entry_id, "scare:1");
+});
+
 test("two exact homograph entries are ambiguous without override", () => {
   const response = [entry({ id: "volume:1" }), entry({ id: "volume:2" })];
   assert.throws(
     () => selectMwRecord("volume", response),
     expectCode(PIPELINE_CODES.AMBIGUOUS_ENTRY),
+  );
+});
+
+test("direct entry without a usable definition does not compete with a usable entry", () => {
+  const usable = entry({ id: "volume:1" });
+  const crossReferenceOnly = entry({ id: "volume:2", def: [] });
+
+  const selected = selectMwEntryAndUnit("volume", [crossReferenceOnly, usable]);
+  assert.strictEqual(selected.entry, usable);
+  assert.equal(selected.unit.id, "1");
+});
+
+test("structural failure in a direct candidate is surfaced instead of discarded", () => {
+  const usable = entry({ id: "volume:1" });
+  const structurallyInvalid = entry({
+    id: "volume:2",
+    sseq: [[['unknown-structure', {}]]],
+  });
+
+  assert.equal(selectMwRecord("volume", [usable]).mw_entry_id, "volume:1");
+  assert.throws(
+    () => selectMwEntryAndUnit("volume", [usable, structurallyInvalid]),
+    (error) => error instanceof MwStructureError && /unknown-structure/.test(error.message),
   );
 });
 
@@ -114,6 +169,34 @@ test("full entry and unit override resolves ambiguity", () => {
   assert.equal(record.mw_entry_id, "volume:2");
   assert.equal(record.mw_unit_id, "2");
   assert.equal(record.definition.text, "chosen definition");
+});
+
+test("committed melancholy and bituminous overrides still resolve", () => {
+  const melancholyResponse = [
+    entry({
+      word: "melancholy",
+      id: "melancholy:1",
+      fl: "noun",
+      sseq: [[sense("1 a", "chosen noun definition"), sense("b", "other noun definition")]],
+    }),
+    entry({ word: "melancholy", id: "melancholy:2", fl: "adjective" }),
+  ];
+  const bituminousResponse = [entry({
+    word: "bituminous",
+    id: "bituminous",
+    fl: "adjective",
+    sseq: [[sense("1", "chosen adjective definition"), sense("2", "other definition")]],
+  })];
+
+  const melancholy = selectMwRecord("melancholy", melancholyResponse, {
+    override: COMMITTED_OVERRIDES.melancholy,
+  });
+  const bituminous = selectMwRecord("bituminous", bituminousResponse, {
+    override: COMMITTED_OVERRIDES.bituminous,
+  });
+
+  assert.deepEqual([melancholy.mw_entry_id, melancholy.mw_unit_id], ["melancholy:1", "1a"]);
+  assert.deepEqual([bituminous.mw_entry_id, bituminous.mw_unit_id], ["bituminous", "1"]);
 });
 
 test("partial or unresolved override fails without repair", () => {

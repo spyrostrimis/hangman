@@ -41,26 +41,43 @@ function entryId(entry) {
   return entry?.meta?.id;
 }
 
-export function isExactMwEntry(word, candidate) {
+function candidateObject(candidate) {
+  return candidate && typeof candidate === "object" && !Array.isArray(candidate);
+}
+
+function isDirectHeadwordEntry(word, candidate) {
+  if (!nonEmpty(word) || !candidateObject(candidate)) {
+    return false;
+  }
+
+  const headword = candidate.hwi?.hw;
+  return nonEmpty(headword)
+    && normalized(headword.replaceAll("*", "").trim()) === normalized(word.trim());
+}
+
+function isStemEntry(word, candidate) {
   if (!nonEmpty(word) || !candidate || typeof candidate !== "object" || Array.isArray(candidate)) {
     return false;
   }
 
   const requested = normalized(word.trim());
   const stems = Array.isArray(candidate.meta?.stems) ? candidate.meta.stems : [];
-  if (stems.some((stem) => nonEmpty(stem) && normalized(stem.trim()) === requested)) {
-    return true;
-  }
+  return stems.some((stem) => nonEmpty(stem) && normalized(stem.trim()) === requested);
+}
 
-  const headword = candidate.hwi?.hw;
-  return nonEmpty(headword) && normalized(headword.replaceAll("*", "").trim()) === requested;
+export function isExactMwEntry(word, candidate) {
+  return isDirectHeadwordEntry(word, candidate) || isStemEntry(word, candidate);
 }
 
 export function findExactMwEntries(word, response) {
   if (!Array.isArray(response)) {
     throw new TypeError("Merriam-Webster Collegiate response must be an array");
   }
-  return response.filter((candidate) => isExactMwEntry(word, candidate));
+
+  const directEntries = response.filter((candidate) => isDirectHeadwordEntry(word, candidate));
+  return directEntries.length > 0
+    ? directEntries
+    : response.filter((candidate) => isStemEntry(word, candidate));
 }
 
 function validateOverride(override) {
@@ -116,22 +133,26 @@ export function selectMwEntryAndUnit(word, response, { override } = {}) {
     return { entry, unit: matchingUnits[0] };
   }
 
-  if (entries.length > 1) {
-    throw pipelineError(
-      PIPELINE_CODES.AMBIGUOUS_ENTRY,
-      `Multiple exact Merriam-Webster Collegiate entries found for ${word}`,
-      { entry_ids: entries.map(entryId) },
-    );
-  }
+  const viableEntries = entries
+    .map((entry) => ({ entry, units: walkMwEntry(entry).filter(selectable) }))
+    .filter(({ units }) => units.length > 0);
 
-  const entry = entries[0];
-  const units = walkMwEntry(entry).filter(selectable);
-  if (units.length === 0) {
+  if (viableEntries.length === 0) {
     throw pipelineError(
       PIPELINE_CODES.NO_DEFINING_TEXT,
       `Exact Merriam-Webster entry has no eligible defining unit for ${word}`,
     );
   }
+
+  if (viableEntries.length > 1) {
+    throw pipelineError(
+      PIPELINE_CODES.AMBIGUOUS_ENTRY,
+      `Multiple exact Merriam-Webster Collegiate entries found for ${word}`,
+      { entry_ids: viableEntries.map(({ entry }) => entryId(entry)) },
+    );
+  }
+
+  const [{ entry, units }] = viableEntries;
   if (units.length > 1) {
     throw pipelineError(
       PIPELINE_CODES.AMBIGUOUS_UNIT,
