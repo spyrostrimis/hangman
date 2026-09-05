@@ -1,5 +1,5 @@
 import { extractFirstPronunciation } from "./mw-audio.js";
-import { PIPELINE_CODES, pipelineError } from "./mw-errors.js";
+import { MwPipelineError, PIPELINE_CODES, pipelineError } from "./mw-errors.js";
 import { MW_MARKUP_REMAINS, renderMwMarkup } from "./mw-render.js";
 import { walkMwEntry } from "./mw-walk.js";
 
@@ -164,6 +164,37 @@ export function selectMwEntryAndUnit(word, response, { override } = {}) {
   return { entry, unit: units[0] };
 }
 
+function selectDefinition(word, response, options) {
+  try {
+    const selected = selectMwEntryAndUnit(word, response, options);
+    return { ...selected, definitionText: selected.unit.dtText };
+  } catch (error) {
+    if (!(error instanceof MwPipelineError) || error.code !== PIPELINE_CODES.NO_DEFINING_TEXT) {
+      throw error;
+    }
+
+    const entries = findExactMwEntries(word, response);
+    if (entries.length !== 1) {
+      throw error;
+    }
+
+    const [entry] = entries;
+    const eligibleUnits = walkMwEntry(entry).filter((unit) => unit.eligible === true);
+    const shortdefs = entry.shortdef;
+    if (
+      eligibleUnits.length !== 1
+      || nonEmpty(eligibleUnits[0].dtText)
+      || !Array.isArray(shortdefs)
+      || shortdefs.length !== 1
+      || !nonEmpty(shortdefs[0])
+    ) {
+      throw error;
+    }
+
+    return { entry, unit: eligibleUnits[0], definitionText: shortdefs[0] };
+  }
+}
+
 function renderNullableAttribution(value, field) {
   if (!nonEmpty(value)) {
     return null;
@@ -222,7 +253,11 @@ function extractExample(word, entry, unit) {
 }
 
 export function selectMwRecord(word, response, options = {}) {
-  const { entry, unit } = selectMwEntryAndUnit(word, response, options);
+  const { entry, unit, definitionText: rawDefinitionText } = selectDefinition(
+    word,
+    response,
+    options,
+  );
   const mwEntryId = entryId(entry);
   if (!nonEmpty(mwEntryId)) {
     throw pipelineError(
@@ -231,7 +266,7 @@ export function selectMwRecord(word, response, options = {}) {
     );
   }
 
-  const definitionText = renderDisplay(unit.dtText, "definition text");
+  const definitionText = renderDisplay(rawDefinitionText, "definition text");
   if (!nonEmpty(definitionText)) {
     throw pipelineError(
       PIPELINE_CODES.NO_DEFINING_TEXT,

@@ -28,6 +28,17 @@ function sense(sn, text, { sls, vis } = {}) {
   ];
 }
 
+function senseWithoutDefinition(sn, { sls } = {}) {
+  return [
+    "sense",
+    {
+      sn,
+      ...(sls ? { sls } : {}),
+      dt: [["uns", []]],
+    },
+  ];
+}
+
 function entry({
   word = "volume",
   id = `${word}:1`,
@@ -245,6 +256,119 @@ test("definition uses the selected unit and existing MW renderer", () => {
     source: "mw-collegiate",
   });
   assert.equal("shortdef" in record.definition, false);
+});
+
+test("uses one shortdef only for one eligible unit without dt text", () => {
+  const candidate = entry({
+    fl: "trademark",
+    sseq: [[senseWithoutDefinition("1")]],
+    shortdef: ["synthetic fallback definition"],
+  });
+  const record = selectMwRecord("volume", [candidate]);
+
+  assert.equal(record.mw_entry_id, "volume:1");
+  assert.equal(record.mw_unit_id, "1");
+  assert.deepEqual(record.definition, {
+    text: "synthetic fallback definition",
+    part_of_speech: "trademark",
+    source: "mw-collegiate",
+  });
+});
+
+test("normal dt definition wins when shortdef is also present", () => {
+  const candidate = entry({
+    sseq: [[sense("1", "{bc}synthetic normal definition")]],
+    shortdef: ["synthetic fallback definition"],
+  });
+
+  assert.equal(
+    selectMwRecord("volume", [candidate]).definition.text,
+    "synthetic normal definition",
+  );
+});
+
+test("shortdef cannot choose among multiple eligible units", () => {
+  const candidate = entry({
+    sseq: [[senseWithoutDefinition("1"), senseWithoutDefinition("2")]],
+    shortdef: ["synthetic fallback definition"],
+  });
+
+  assert.throws(
+    () => selectMwRecord("volume", [candidate]),
+    expectCode(PIPELINE_CODES.NO_DEFINING_TEXT),
+  );
+});
+
+test("shortdef cannot choose among multiple exact entries", () => {
+  const response = [
+    entry({
+      id: "volume:1",
+      sseq: [[senseWithoutDefinition("1")]],
+      shortdef: ["synthetic first entry fallback"],
+    }),
+    entry({
+      id: "volume:2",
+      sseq: [[senseWithoutDefinition("1")]],
+      shortdef: ["synthetic second entry fallback"],
+    }),
+  ];
+
+  assert.throws(
+    () => selectMwRecord("volume", response),
+    expectCode(PIPELINE_CODES.NO_DEFINING_TEXT),
+  );
+});
+
+test("multiple shortdefs block fallback", () => {
+  const candidate = entry({
+    sseq: [[senseWithoutDefinition("1")]],
+    shortdef: ["synthetic first", "synthetic second"],
+  });
+
+  assert.throws(
+    () => selectMwRecord("volume", [candidate]),
+    expectCode(PIPELINE_CODES.NO_DEFINING_TEXT),
+  );
+});
+
+test("absent and empty shortdef values block fallback", () => {
+  const candidates = [
+    entry({ sseq: [[senseWithoutDefinition("1")]] }),
+    entry({ sseq: [[senseWithoutDefinition("1")]], shortdef: [] }),
+    entry({ sseq: [[senseWithoutDefinition("1")]], shortdef: [""] }),
+    entry({ sseq: [[senseWithoutDefinition("1")]], shortdef: ["   "] }),
+  ];
+
+  for (const candidate of candidates) {
+    assert.throws(
+      () => selectMwRecord("volume", [candidate]),
+      expectCode(PIPELINE_CODES.NO_DEFINING_TEXT),
+    );
+  }
+});
+
+test("shortdef fallback uses the existing MW renderer", () => {
+  const candidate = entry({
+    sseq: [[senseWithoutDefinition("1")]],
+    shortdef: ["{bc}synthetic {it}fallback{/it} {bc}{sx|reference||}"],
+  });
+
+  assert.equal(
+    selectMwRecord("volume", [candidate]).definition.text,
+    "synthetic fallback : reference",
+  );
+});
+
+test("unresolved markup in shortdef fallback remains an error", () => {
+  const candidate = entry({
+    sseq: [[senseWithoutDefinition("1")]],
+    shortdef: ["{bc}synthetic {mystery} fallback"],
+  });
+
+  assert.throws(
+    () => selectMwRecord("volume", [candidate]),
+    expectCode(PIPELINE_CODES.MW_MARKUP_REMAINS),
+  );
 });
 
 test("unresolved markup in selected definition fails", () => {
