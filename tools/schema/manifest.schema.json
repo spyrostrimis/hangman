@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hangman.example/schema/manifest.schema.json",
+  "title": "Hangman static word manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "generated_at", "word_count", "words"],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "word_count": {
+      "const": 105
+    },
+    "words": {
+      "type": "array",
+      "minItems": 105,
+      "maxItems": 105,
+      "items": {
+        "$ref": "#/$defs/word"
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "nullableString": {
+      "type": ["string", "null"]
+    },
+    "word": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "word",
+        "mw_entry_id",
+        "mw_unit_id",
+        "definition",
+        "hints",
+        "pronunciation",
+        "example",
+        "explanation",
+        "image"
+      ],
+      "properties": {
+        "word": {
+          "type": "string",
+          "pattern": "^[a-z]+$"
+        },
+        "mw_entry_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "mw_unit_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "definition": {
+          "$ref": "#/$defs/definition"
+        },
+        "hints": {
+          "$ref": "#/$defs/hints"
+        },
+        "pronunciation": {
+          "$ref": "#/$defs/pronunciation"
+        },
+        "example": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/example" }
+          ]
+        },
+        "explanation": {
+          "$ref": "#/$defs/explanation"
+        },
+        "image": {
+          "$ref": "#/$defs/image"
+        }
+      }
+    },
+    "definition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "part_of_speech", "source"],
+      "properties": {
+        "text": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "part_of_speech": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source": {
+          "const": "mw-collegiate"
+        }
+      }
+    },
+    "hints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["synonym", "clue"],
+      "properties": {
+        "synonym": {
+          "$ref": "#/$defs/synonymHint"
+        },
+        "clue": {
+          "$ref": "#/$defs/clueHint"
+        }
+      }
+    },
+    "synonymHint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "source"],
+      "properties": {
+        "text": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source": {
+          "const": "mw-thesaurus"
+        }
+      }
+    },
+    "clueHint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "source"],
+      "properties": {
+        "text": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source": {
+          "const": "llm-generated"
+        }
+      }
+    },
+    "pronunciation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mw", "audio_file", "audio_url"],
+      "properties": {
+        "mw": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "audio_file": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "audio_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        }
+      }
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "kind", "form_matched", "attribution"],
+      "properties": {
+        "text": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "kind": {
+          "enum": ["vis", "quote"]
+        },
+        "form_matched": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "attribution": {
+          "$ref": "#/$defs/attribution"
+        }
+      }
+    },
+    "attribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["author", "source", "date"],
+      "properties": {
+        "author": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "source": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "date": {
+          "$ref": "#/$defs/nullableString"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "author": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        },
+        {
+          "properties": {
+            "source": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        }
+      ]
+    },
+    "explanation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "provenance"],
+      "properties": {
+        "text": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "provenance": {
+          "const": "llm-generated"
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "origin", "provenance", "generation"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?![A-Za-z][A-Za-z0-9+.-]*://)\\S+$"
+        },
+        "origin": {
+          "const": "2023-dalle2"
+        },
+        "provenance": {
+          "const": "recovered"
+        },
+        "generation": {
+          "type": "null"
+        }
+      }
+    }
+  }
+}
