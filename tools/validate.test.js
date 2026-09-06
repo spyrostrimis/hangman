@@ -225,17 +225,108 @@ test("word_count cannot conceal a corpus mismatch", () => {
   assert.ok(codes(result).includes(VALIDATION_CODES.CORPUS_MISSING_WORD));
 });
 
-test("clue containing the exact headword as a whole word fails", () => {
+test("synonym equal to the NFKC-normalized headword fails", () => {
   const manifest = makeManifest();
-  manifest.words[0].hints.clue.text = "You might acquaint two new colleagues.";
+  assert.equal(validateManifest(manifest).valid, true);
+
+  manifest.words[0].hints.synonym.text = "ＡＣＱＵＡＩＮＴ";
 
   const result = validateManifest(manifest);
+  assert.equal(result.valid, false);
+  assert.deepEqual(codes(result), [VALIDATION_CODES.SYNONYM_EQUALS_HEADWORD]);
+});
+
+test("synonym containing the complete headword substring fails", async (t) => {
+  const cases = {
+    student: "students",
+    contest: "contestant",
+    playful: "playfully",
+    legend: "legendary",
+  };
+
+  for (const [word, synonym] of Object.entries(cases)) {
+    await t.test(`${word} -> ${synonym}`, () => {
+      const manifest = makeManifest();
+      assert.equal(validateManifest(manifest).valid, true);
+
+      const record = manifest.words.find((candidate) => candidate.word === word);
+      record.hints.synonym.text = synonym;
+
+      const result = validateManifest(manifest);
+      assert.equal(result.valid, false);
+      assert.ok(codes(result).includes(VALIDATION_CODES.SYNONYM_CONTAINS_HEADWORD));
+      assert.ok(!codes(result).includes(VALIDATION_CODES.SYNONYM_EQUALS_HEADWORD));
+    });
+  }
+});
+
+test("synonym spelling disclosure fails", () => {
+  const manifest = makeManifest();
+  assert.equal(validateManifest(manifest).valid, true);
+
+  manifest.words[0].hints.synonym.text = "Starts with A";
+
+  const result = validateManifest(manifest);
+  assert.equal(result.valid, false);
+  assert.ok(codes(result).includes(VALIDATION_CODES.SYNONYM_REVEALS_SPELLING));
+});
+
+test("clue containing the NFKC-normalized headword substring fails", () => {
+  const manifest = makeManifest();
+  assert.equal(validateManifest(manifest).valid, true);
+
+  manifest.words[0].hints.clue.text = "This person became ＡＣＱＵＡＩＮＴＥＤ with the process.";
+
+  const result = validateManifest(manifest);
+  assert.equal(result.valid, false);
   assert.ok(codes(result).includes(VALIDATION_CODES.CLUE_CONTAINS_HEADWORD));
+});
+
+test("clue spelling-disclosure patterns fail", async (t) => {
+  const numberWords = [
+    "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+    "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen",
+    "eighteen", "nineteen", "twenty",
+  ];
+  const patterns = [
+    "This starts with A.",
+    "This BEGINS WITH A.",
+    "This ends with T.",
+    "Its first letter is A.",
+    "Its last letter is T.",
+    "It is spelled using a hidden sequence.",
+    "Its spelling is the main hint.",
+    "It has 8 letters.",
+    ...numberWords.map((number) => `It has ${number} letters.`),
+    "It has eight syllables.",
+    "It has 12 syllables.",
+  ];
+
+  for (const clue of patterns) {
+    await t.test(clue, () => {
+      const manifest = makeManifest();
+      assert.equal(validateManifest(manifest).valid, true);
+
+      manifest.words[0].hints.clue.text = clue;
+
+      const result = validateManifest(manifest);
+      assert.equal(result.valid, false);
+      assert.ok(codes(result).includes(VALIDATION_CODES.CLUE_REVEALS_SPELLING));
+    });
+  }
+});
+
+test("a nineteen-word clue remains valid", () => {
+  const manifest = makeManifest();
+  manifest.words[0].hints.clue.text =
+    "A deliberately extended synthetic hint can remain valid even when an editor chooses to use nineteen ordinary descriptive words.";
+
+  assert.equal(validateManifest(manifest).valid, true);
 });
 
 test("five-character clue prefix produces only a warning", () => {
   const manifest = makeManifest();
-  manifest.words[0].hints.clue.text = "Someone acquainted with an unusual custom.";
+  manifest.words[1].hints.clue.text = "Someone actively involved in an unusual custom.";
 
   const result = validateManifest(manifest);
   assert.equal(result.valid, true);
@@ -311,7 +402,11 @@ test("exports the complete validator and future pipeline code contract", () => {
     "SENSE_IS_ARCHAIC",
     "EXAMPLE_HEADWORD_MISMATCH",
     "EXAMPLE_MISSING_ATTRIBUTION",
+    "SYNONYM_EQUALS_HEADWORD",
+    "SYNONYM_CONTAINS_HEADWORD",
+    "SYNONYM_REVEALS_SPELLING",
     "CLUE_CONTAINS_HEADWORD",
+    "CLUE_REVEALS_SPELLING",
     "MW_MARKUP_REMAINS",
     "MISSING_AUDIO",
     "AUDIO_404",

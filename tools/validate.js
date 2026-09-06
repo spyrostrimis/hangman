@@ -11,7 +11,11 @@ export const VALIDATION_CODES = Object.freeze({
   SENSE_IS_ARCHAIC: "SENSE_IS_ARCHAIC",
   EXAMPLE_HEADWORD_MISMATCH: "EXAMPLE_HEADWORD_MISMATCH",
   EXAMPLE_MISSING_ATTRIBUTION: "EXAMPLE_MISSING_ATTRIBUTION",
+  SYNONYM_EQUALS_HEADWORD: "SYNONYM_EQUALS_HEADWORD",
+  SYNONYM_CONTAINS_HEADWORD: "SYNONYM_CONTAINS_HEADWORD",
+  SYNONYM_REVEALS_SPELLING: "SYNONYM_REVEALS_SPELLING",
   CLUE_CONTAINS_HEADWORD: "CLUE_CONTAINS_HEADWORD",
+  CLUE_REVEALS_SPELLING: "CLUE_REVEALS_SPELLING",
   MW_MARKUP_REMAINS: "MW_MARKUP_REMAINS",
   MISSING_AUDIO: "MISSING_AUDIO",
   AUDIO_404: "AUDIO_404",
@@ -123,6 +127,49 @@ function containsWholeWord(text, word) {
   return new RegExp(`(?<![A-Za-z0-9_])${escaped}(?![A-Za-z0-9_])`, "i").test(text);
 }
 
+function normalizeForComparison(value) {
+  return value.normalize("NFKC").toLocaleLowerCase("en-US");
+}
+
+function containsHeadword(text, word) {
+  if (!isNonEmptyString(text) || !isNonEmptyString(word)) {
+    return false;
+  }
+  return normalizeForComparison(text).includes(normalizeForComparison(word));
+}
+
+const ENGLISH_NUMBER_WORD_RE = [
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+  "eleven",
+  "twelve",
+  "thirteen",
+  "fourteen",
+  "fifteen",
+  "sixteen",
+  "seventeen",
+  "eighteen",
+  "nineteen",
+  "twenty",
+].join("|");
+
+const SPELLING_DISCLOSURE_RE = new RegExp(
+  String.raw`\b(?:starts\s+with|begins\s+with|ends\s+with|first\s+letter|last\s+letter|spelled|spelling|(?:\d+|${ENGLISH_NUMBER_WORD_RE})\s+(?:letters|syllables))\b`,
+  "i",
+);
+
+function revealsSpelling(value) {
+  return SPELLING_DISCLOSURE_RE.test(value);
+}
+
 function checkMarkup(value, path, errors) {
   if (typeof value === "string" && MW_MARKUP_REMAINS.test(value)) {
     addIssue(
@@ -182,17 +229,57 @@ function validateHints(hints, word, path, errors, warnings) {
   validateHint(hints.clue, `${path}.clue`, "llm-generated", errors);
   checkMarkup(hints.synonym?.text, `${path}.synonym.text`, errors);
 
+  const synonym = hints.synonym?.text;
+  if (isNonEmptyString(synonym) && isNonEmptyString(word)) {
+    const normalizedSynonym = normalizeForComparison(synonym);
+    const normalizedWord = normalizeForComparison(word);
+
+    if (normalizedSynonym === normalizedWord) {
+      addIssue(
+        errors,
+        VALIDATION_CODES.SYNONYM_EQUALS_HEADWORD,
+        `${path}.synonym.text`,
+        "Synonym equals the exact headword",
+      );
+    } else if (containsHeadword(synonym, word)) {
+      addIssue(
+        errors,
+        VALIDATION_CODES.SYNONYM_CONTAINS_HEADWORD,
+        `${path}.synonym.text`,
+        "Synonym contains the complete headword",
+      );
+    }
+  }
+
+  if (isNonEmptyString(synonym) && revealsSpelling(synonym)) {
+    addIssue(
+      errors,
+      VALIDATION_CODES.SYNONYM_REVEALS_SPELLING,
+      `${path}.synonym.text`,
+      "Synonym explicitly reveals spelling information",
+    );
+  }
+
   const clue = hints.clue?.text;
   if (!isNonEmptyString(clue) || !isNonEmptyString(word)) {
     return;
   }
 
-  if (containsWholeWord(clue, word)) {
+  if (containsHeadword(clue, word)) {
     addIssue(
       errors,
       VALIDATION_CODES.CLUE_CONTAINS_HEADWORD,
       `${path}.clue.text`,
-      "Clue contains the exact headword as a whole word",
+      "Clue contains the complete headword",
+    );
+  }
+
+  if (revealsSpelling(clue)) {
+    addIssue(
+      errors,
+      VALIDATION_CODES.CLUE_REVEALS_SPELLING,
+      `${path}.clue.text`,
+      "Clue explicitly reveals spelling information",
     );
   }
 
