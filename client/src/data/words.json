@@ -1,0 +1,3994 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-06T08:17:32.773Z",
+  "word_count": 105,
+  "words": [
+    {
+      "word": "acquaint",
+      "mw_entry_id": "acquaint",
+      "mw_unit_id": "2",
+      "definition": {
+        "text": "to make familiar : to cause to know firsthand",
+        "part_of_speech": "verb",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "familiarize",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "To introduce someone to a subject so they know it firsthand.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ə-ˈkwānt",
+        "audio_file": "acquai01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/a/acquai01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This verb means giving someone their first direct knowledge of something. You might do it with a new city, a new job, or an unfamiliar set of rules.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/acquaint.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "activity",
+      "mw_entry_id": "activity",
+      "mw_unit_id": "2",
+      "definition": {
+        "text": "vigorous or energetic action : liveliness",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "liveliness",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The busy, energetic motion of a place that is far from still.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ak-ˈti-və-tē",
+        "audio_file": "activi04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/a/activi04.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "In this sense the word means vigorous movement or bustle rather than one particular task. A crowded market at midday is full of it.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/activity.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "admonish",
+      "mw_entry_id": "admonish",
+      "mw_unit_id": "1b",
+      "definition": {
+        "text": "to express warning or disapproval to (someone) about a fault or oversight especially in a gentle but serious way",
+        "part_of_speech": "verb",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "reprove",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "To warn someone gently but seriously about a fault or oversight.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ad-ˈmä-nish",
+        "audio_file": "admoni01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/a/admoni01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is a mild but earnest correction, not an angry telling-off. A teacher might do this to a pupil who keeps forgetting homework.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/admonish.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "adventure",
+      "mw_entry_id": "adventure:1",
+      "mw_unit_id": "2",
+      "definition": {
+        "text": "an exciting or remarkable experience",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "escapade",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "An exciting or remarkable experience, often involving travel and risk.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "əd-ˈven-chər",
+        "audio_file": "advent08",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/a/advent08.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word names an experience worth retelling because it was thrilling or unusual. It suggests something out of the ordinary rather than everyday routine.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/adventure.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "ambitious",
+      "mw_entry_id": "ambitious",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "having or controlled by ambition : having a desire to be successful, powerful, or famous",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "aspiring",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Driven by a strong wish to succeed, gain power, or become famous.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "am-ˈbi-shəs",
+        "audio_file": "ambiti03",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/a/ambiti03.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This describes a person shaped by a hunger for achievement. It can be admiring or slightly critical, depending on how far the hunger goes.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/ambitious.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "ambivalent",
+      "mw_entry_id": "ambivalent",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "having or showing simultaneous and contradictory attitudes or feelings toward something or someone : characterized by ambivalence",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "of two minds",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Holding two opposite feelings about the same thing at once.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "am-ˈbi-və-lənt",
+        "audio_file": "ambiva02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/a/ambiva02.mp3"
+      },
+      "example": {
+        "text": "… people whose relationship to their job is ambivalent, conflicted.",
+        "kind": "vis",
+        "form_matched": "ambivalent",
+        "attribution": {
+          "author": "Terrence Rafferty",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "The word describes genuinely mixed feelings, not simple indifference. In the dictionary example it pairs with \"conflicted\" to describe how someone feels about their job.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/ambivalent.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "architect",
+      "mw_entry_id": "architect",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a person who designs buildings and advises in their construction",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "designer",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The professional who plans a building and advises on its construction.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈär-kə-ˌtekt",
+        "audio_file": "archit01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/a/archit01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This person designs structures and guides how they get built. The word is also used figuratively for whoever devised a plan or system.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/architect.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "atlantis",
+      "mw_entry_id": "Atlantis",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a fabled island in the Atlantic that according to legend sank beneath the sea",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "sunken realm",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A legendary island said to have vanished beneath the waves long ago.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ət-ˈlan-təs",
+        "audio_file": "atlant06",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/a/atlant06.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is a fabled island from ancient legend, believed to have sunk into the ocean. It has become a byword for any lost civilisation.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/atlantis.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "available",
+      "mw_entry_id": "available",
+      "mw_unit_id": "2a",
+      "definition": {
+        "text": "accessible, obtainable",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "obtainable",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Ready to be had or used, because nothing is blocking access.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ə-ˈvā-lə-bəl",
+        "audio_file": "availa02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/a/availa02.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word means something can be reached, obtained, or used right now. It applies equally to a free seat, a product in stock, or a person with spare time.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/available.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "awkward",
+      "mw_entry_id": "awkward",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "having or showing a lack of grace, skill, or ease (as in a movement or activity)",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "ungainly",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Lacking grace or ease, the way a stumble looks when someone lands badly.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈȯ-kwərd",
+        "audio_file": "awkwar01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/a/awkwar01.mp3"
+      },
+      "example": {
+        "text": "… escaped a knee injury after an awkward landing …",
+        "kind": "vis",
+        "form_matched": "awkward",
+        "attribution": {
+          "author": "Cam Inman",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "In this sense the word describes clumsy movement rather than social discomfort. The dictionary example uses it for a bad landing that nearly caused injury.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/awkward.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "backstage",
+      "mw_entry_id": "backstage:1",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "of, relating to, or occurring in the area behind the stage and especially in the dressing rooms",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "behind the scenes",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Relating to the hidden area of a theatre where performers prepare.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈbak-ˌstāj",
+        "audio_file": "backst04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/b/backst04.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "As an adjective this describes the part of a theatre the audience never sees, including the dressing rooms. It is also used for anything happening out of public view.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/backstage.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "bellwether",
+      "mw_entry_id": "bellwether",
+      "mw_unit_id": "1:sd",
+      "definition": {
+        "text": "an indicator of trends",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "barometer",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Something watched closely because it signals which way a trend is heading.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈbel-ˈwe-t͟hər",
+        "audio_file": "bellwe01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/b/bellwe01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word names an early indicator of change. Analysts often call one company or one district by this name when its results predict a wider pattern.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/bellwether.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "bituminous",
+      "mw_entry_id": "bituminous",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "containing or impregnated with bitumen",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "tarry",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Describing a substance containing or soaked with natural pitch.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "bə-ˈtyü-mə-nəs",
+        "audio_file": "bitumi01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/b/bitumi01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This adjective describes material that contains a thick black petroleum residue. It is most often heard describing a soft, high-carbon type of coal.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/bituminous.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "bookshelf",
+      "mw_entry_id": "bookshelf",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "an open shelf for holding books",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "reading rack",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "An open ledge in a room where volumes stand side by side.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈbu̇k-ˌshelf",
+        "audio_file": "booksh01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/b/booksh01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is a single open shelf made for holding reading material. Unlike a cupboard it has no doors, so everything on it stays visible.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/bookshelf.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "caffeine",
+      "mw_entry_id": "caffeine",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a bitter alkaloid C8H10N4O2 found especially in coffee, tea, cacao, and kola nuts and used medicinally as a stimulant and diuretic",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "stimulant",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The bitter compound in coffee and tea that keeps you awake.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ka-ˈfēn",
+        "audio_file": "caffei01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/c/caffei01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is a naturally occurring bitter substance found in coffee, tea, cacao and kola nuts. It is used medically as a stimulant and a diuretic.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/caffeine.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "cardiovascular",
+      "mw_entry_id": "cardiovascular",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "of, relating to, or involving the heart and blood vessels",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "circulatory",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Relating to the heart together with the vessels that carry blood.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌkär-dē-ō-ˈva-skyə-lər",
+        "audio_file": "cardio16",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/c/cardio16.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The adjective covers the heart and the whole network of vessels serving it. You will meet it most often in medicine and in fitness training.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/cardiovascular.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "challenge",
+      "mw_entry_id": "challenge:2",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "a difficult task or problem",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "hurdle",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A task hard enough to test whoever decides to take it on.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈcha-lənj",
+        "audio_file": "challe01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/c/challe01.mp3"
+      },
+      "example": {
+        "text": "Trying to find a venue that fit all of their criteria, however, proved to be a challenge.",
+        "kind": "vis",
+        "form_matched": "challenge",
+        "attribution": {
+          "author": "Alex Ross",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "Used as a noun, the word names a difficult task or problem. In the dictionary example, finding a venue that met every requirement turned out to be one.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/challenge.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "chancellor",
+      "mw_entry_id": "chancellor",
+      "mw_unit_id": "4",
+      "definition": {
+        "text": "the chief minister of state in some European countries",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "head of government",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The chief minister leading the government in several European nations.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈchan(t)-s(ə-)lər",
+        "audio_file": "chance05",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/c/chance05.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "In this sense the word names the highest minister of state in certain European countries. Germany and Austria both use the title for their head of government.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/chancellor.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "chemistry",
+      "mw_entry_id": "chemistry",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a science that deals with the composition, structure, and properties of substances and with the transformations that they undergo",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "molecular science",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The science of what substances are made of and how they change.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈke-mə-strē",
+        "audio_file": "chemis07",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/c/chemis07.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This field studies the composition and structure of substances, and the transformations they undergo. It sits between physics and biology in the sciences.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/chemistry.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "chimpanzee",
+      "mw_entry_id": "chimpanzee",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a great ape (Pan troglodytes) of equatorial Africa that is smaller and more arboreal than the gorilla — compare bonobo",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "great ape",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A clever African ape, smaller than a gorilla and more at home in trees.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "(ˌ)chim-ˌpan-ˈzē",
+        "audio_file": "chimpa02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/c/chimpa02.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is a great ape native to equatorial Africa. It is smaller than a gorilla and spends far more of its time up in the branches.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/chimpanzee.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "colloquy",
+      "mw_entry_id": "colloquy",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "conversation, dialogue",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "dialogue",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A formal conversation or exchange of views between people.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈkä-lə-kwē",
+        "audio_file": "colloq08",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/c/colloq08.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word means a talk or discussion, usually a fairly formal one. It is more literary than the everyday words for the same thing.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/colloquy.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "comfortable",
+      "mw_entry_id": "comfortable",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "affording or enjoying contentment and security",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "at ease",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Feeling settled and secure, with nothing pressing to worry about.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈkəm(p)(f)-tər-bəl",
+        "audio_file": "comfor04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/c/comfor04.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word covers both giving and enjoying a sense of contentment and security. A chair can be described this way, and so can the person sitting in it.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/comfortable.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "commitment",
+      "mw_entry_id": "commitment",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "an agreement or pledge to do something in the future",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "pledge",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A promise given now to do something at a later time.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "kə-ˈmit-mənt",
+        "audio_file": "commit03",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/c/commit03.mp3"
+      },
+      "example": {
+        "text": "Beasley gave a verbal commitment to the 49ers.",
+        "kind": "vis",
+        "form_matched": "commitment",
+        "attribution": {
+          "author": "Grant Wahl",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "This sense of the word means an agreement or promise about future action. The dictionary example describes an athlete giving a spoken one to a team.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/commitment.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "consistent",
+      "mw_entry_id": "consistent",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "marked by harmony, regularity, or steady continuity : free from variation or contradiction",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "unvarying",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Staying the same from one time to the next, without contradiction.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "kən-ˈsi-stənt",
+        "audio_file": "consis05",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/c/consis05.mp3"
+      },
+      "example": {
+        "text": "Prior to World War I, many Americans didn't maintain consistent spellings of their first and last names.",
+        "kind": "vis",
+        "form_matched": "consistent",
+        "attribution": {
+          "author": "Michael Waters",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "This describes something marked by regularity and free from variation. The dictionary example notes that many Americans once wrote their own names differently from one document to the next.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/consistent.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "contest",
+      "mw_entry_id": "contest:2",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a struggle for superiority or victory : competition",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "competition",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A struggle between rivals to see which one comes out on top.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈkän-ˌtest",
+        "audio_file": "contes04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/c/contes04.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "As a noun the word names a struggle for victory or superiority. Note that the verb form, meaning to dispute something, is a separate use.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/contest.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "conversation",
+      "mw_entry_id": "conversation",
+      "mw_unit_id": "1a(1)",
+      "definition": {
+        "text": "oral exchange of sentiments, observations, opinions, or ideas",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "discourse",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A spoken exchange in which people share ideas and opinions.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌkän-vər-ˈsā-shən",
+        "audio_file": "conver09",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/c/conver09.mp3"
+      },
+      "example": {
+        "text": "… we had talk enough but no conversation; there was nothing discussed.",
+        "kind": "vis",
+        "form_matched": "conversation",
+        "attribution": {
+          "author": "Samuel Johnson",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "The word means talk in which observations and ideas actually pass between people. One dictionary example draws a sharp line between mere talk and this.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/conversation.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "correspondence",
+      "mw_entry_id": "correspondence",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "communication by letters or email",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "letter writing",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Communication carried on by written messages sent back and forth.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌkȯr-ə-ˈspän-dən(t)s",
+        "audio_file": "corres02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/c/corres02.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "In this sense the word means communication by letters or email. It can name the activity itself or the collected messages that resulted.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/correspondence.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "criticize",
+      "mw_entry_id": "criticize",
+      "mw_unit_id": "2",
+      "definition": {
+        "text": "to find fault with : point out the faults of",
+        "part_of_speech": "verb",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "censure",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "To point out what is wrong with someone or something.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈkri-tə-ˌsīz",
+        "audio_file": "critic08",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/c/critic08.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This verb means finding fault and saying so. It does not have to be unfair, though it usually carries a negative tone.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/criticize.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "deception",
+      "mw_entry_id": "deception",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "the act of causing someone to accept as true or valid what is false or invalid : the act of deceiving",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "trickery",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The act of making someone believe something that is not true.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "di-ˈsep-shən",
+        "audio_file": "decept01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/d/decept01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word names the act of causing another person to accept something false as though it were true. It implies intent rather than honest error.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/deception.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "definitely",
+      "mw_entry_id": "definitely",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "in a definite way : in a way free of all ambiguity, uncertainty, or obscurity",
+        "part_of_speech": "adverb",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "unquestionably",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "In a way that leaves no room for doubt or ambiguity.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈde-fə-nit-lē",
+        "audio_file": "defin01ld",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/d/defin01ld.mp3"
+      },
+      "example": {
+        "text": "He's very smart and very funny and is definitely a practical actor. He comes to work to get his job done and to make the best movie possible …",
+        "kind": "vis",
+        "form_matched": "definitely",
+        "attribution": {
+          "author": "Anna Kendrick",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "This adverb signals certainty and the absence of any vagueness. In the dictionary example it emphasises how firmly the speaker holds their view of an actor.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/definitely.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "dictionary",
+      "mw_entry_id": "dictionary",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a reference source in print or electronic form containing words usually alphabetically arranged along with information about their forms, pronunciations, functions, etymologies, meanings, and syntactic and idiomatic uses",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "lexicon",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A reference source listing words with meanings and pronunciations.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈdik-shə-ˌner-ē",
+        "audio_file": "dictio04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/d/dictio04.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is a reference work, printed or electronic, that lists words alphabetically. Each entry adds information such as pronunciation, origin and meaning.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/dictionary.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "disparage",
+      "mw_entry_id": "disparage",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "to speak slightingly about (someone or something) : to belittle the importance or value of (someone or something)",
+        "part_of_speech": "verb",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "belittle",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "To speak of someone or something as if it had little worth.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "di-ˈsper-ij",
+        "audio_file": "dispar01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/d/dispar01.mp3"
+      },
+      "example": {
+        "text": "… disparaged the novels as “propaganda” …",
+        "kind": "vis",
+        "form_matched": "disparaged",
+        "attribution": {
+          "author": "Roxy Simons",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "The verb means talking about something slightingly, lowering its apparent value. The dictionary example shows novels being dismissed with a contemptuous label.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/disparage.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "divulge",
+      "mw_entry_id": "divulge",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "to make known (something, such as a confidence or secret)",
+        "part_of_speech": "verb",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "let slip",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "To make known a secret you were expected to keep.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "də-ˈvəlj",
+        "audio_file": "divulg01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/d/divulg01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This verb means revealing information that was private or confidential. It carries a sense that the information was not yours to share.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/divulge.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "effervescent",
+      "mw_entry_id": "effervescent",
+      "mw_unit_id": "2",
+      "definition": {
+        "text": "marked by or expressing an appealingly lively quality",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "bubbly",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Lively and sparkling in personality, like a drink full of bubbles.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌe-fər-ˈve-sᵊnt",
+        "audio_file": "efferv03",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/e/efferv03.mp3"
+      },
+      "example": {
+        "text": "She was a marvel with the press: fresh, direct, effervescent.",
+        "kind": "vis",
+        "form_matched": "effervescent",
+        "attribution": {
+          "author": "Bruce Anderson",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "Beyond fizzing liquids, the word describes an appealingly lively manner. The dictionary example applies it to someone who handled the press with fresh, direct energy.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/effervescent.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "encyclopedia",
+      "mw_entry_id": "encyclopedia",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a work that contains information on all branches of knowledge or treats comprehensively a particular branch of knowledge usually in articles arranged alphabetically often by subject",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "reference work",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A large reference set with articles on every branch of learning.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "in-ˌsī-klə-ˈpē-dē-ə",
+        "audio_file": "encycl02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/e/encycl02.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is a work covering all branches of knowledge, or treating one branch thoroughly. Articles are usually arranged alphabetically by subject.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/encyclopedia.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "epistemology",
+      "mw_entry_id": "epistemology",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "the study or a theory of the nature and grounds of knowledge especially with reference to its limits and validity",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "theory of knowledge",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The branch of philosophy asking how we know what we claim to know.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "i-ˌpi-stə-ˈmä-lə-jē",
+        "audio_file": "episte03",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/e/episte03.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This field studies the nature and grounds of knowledge, especially its limits and how far it can be trusted. It is one of the central areas of philosophy.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/epistemology.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "eschatology",
+      "mw_entry_id": "eschatology",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a branch of theology concerned with the final events in the history of the world or of humankind",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "doctrine of last things",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The branch of theology dealing with the end of the world.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌe-skə-ˈtä-lə-jē",
+        "audio_file": "eschat03",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/e/eschat03.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This part of theology concerns final events in the history of the world or of humankind. Different faiths give it very different content.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/eschatology.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "ethereal",
+      "mw_entry_id": "ethereal",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "seeming to belong to or come from another world : otherworldly",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "otherworldly",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Delicate and light in a way that seems to come from another world.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "i-ˈthir-ē-əl",
+        "audio_file": "ethere01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/e/ethere01.mp3"
+      },
+      "example": {
+        "text": "… the rise of a peaking full moon, which bathed the wild shore in an ethereal glow.",
+        "kind": "vis",
+        "form_matched": "ethereal",
+        "attribution": {
+          "author": "Simon Peter Groebner",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "The word suggests something too fine or unearthly to belong here. The dictionary example uses it for the glow a rising full moon casts on a wild shore.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/ethereal.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "euphoria",
+      "mw_entry_id": "euphoria",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a feeling of well-being or elation — compare dysphoria",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "elation",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "An intense feeling of happiness and well-being that lifts you up.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "yü-ˈfȯr-ē-ə",
+        "audio_file": "euphor02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/e/euphor02.mp3"
+      },
+      "example": {
+        "text": "They [scientists] think that euphoria unrelated to any ingested substance is good for the body … and that joyful people outlive their bilious, whining counterparts.",
+        "kind": "vis",
+        "form_matched": "euphoria",
+        "attribution": {
+          "author": "Natalie Angier",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "This names a strong sense of well-being or joy. Its opposite, a state of unease and dissatisfaction, has its own separate name.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/euphoria.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "existentialism",
+      "mw_entry_id": "existentialism",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a chiefly 20th century philosophical movement embracing diverse doctrines but centering on analysis of individual existence in an unfathomable universe and the plight of the individual who must assume ultimate responsibility for acts of free will without any certain knowledge of what is right or wrong or good or bad",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "philosophy of free choice",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A philosophy centred on individual freedom and responsibility in an uncertain universe.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌeg-(ˌ)zi-ˈsten(t)-shə-ˌli-zəm",
+        "audio_file": "existe04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/e/existe04.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This mainly twentieth-century movement gathers several different doctrines. What they share is a focus on the individual who must take responsibility for free choices without certain moral knowledge.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/existentialism.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "expertise",
+      "mw_entry_id": "expertise",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "the skill of an expert",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "mastery",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The deep skill someone has after long practice in one field.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌek-(ˌ)spər-ˈtēz",
+        "audio_file": "expert06",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/e/expert06.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word names the specialised skill of someone highly trained in a subject. It refers to the ability itself, not the person who holds it.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/expertise.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "exquisite",
+      "mw_entry_id": "exquisite:1",
+      "mw_unit_id": "2a",
+      "definition": {
+        "text": "pleasing through beauty, fitness, or perfection",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "flawless",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "So finely made or beautiful that it seems close to perfect.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ek-ˈskwi-zət",
+        "audio_file": "exquis02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/e/exquis02.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This describes something that pleases through its beauty or its perfect fitness for purpose. It suggests fine detail rather than sheer scale.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/exquisite.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "fallacy",
+      "mw_entry_id": "fallacy",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "a false or mistaken idea",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "misconception",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A mistaken belief, especially one built on faulty reasoning.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈfa-lə-sē",
+        "audio_file": "fallac02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/f/fallac02.mp3"
+      },
+      "example": {
+        "text": "prone to perpetrate the fallacy of equating threat with capability",
+        "kind": "vis",
+        "form_matched": "fallacy",
+        "attribution": {
+          "author": "C. S. Gray",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "The word names a false or mistaken idea. The dictionary example points to the error of treating a threat and a capability as the same thing.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/fallacy.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "fluorescent",
+      "mw_entry_id": "fluorescent",
+      "mw_unit_id": "2",
+      "definition": {
+        "text": "bright and glowing as a result of fluorescence",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "glowing",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Giving off a bright glow when light strikes it.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "flu̇-ˈre-sᵊnt",
+        "audio_file": "fluore04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/f/fluore04.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This adjective describes something bright and glowing because it re-emits the light it absorbs. Safety vests and tube lighting are everyday examples.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/fluorescent.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "gemstone",
+      "mw_entry_id": "gemstone",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a mineral or petrified material that when cut and polished can be used in jewelry",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "jewel",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A mineral cut and polished so it can be set into jewellery.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈjem-ˌstōn",
+        "audio_file": "gemsto01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/g/gemsto01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is a mineral or petrified material valuable enough to cut and polish for ornament. Cutting is what turns the raw material into one.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/gemstone.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "gnarled",
+      "mw_entry_id": "gnarled:1",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "full of knots or gnarls : knotty",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "knotty",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Twisted and full of knots, the way an ancient tree trunk looks.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈnär(-ə)ld",
+        "audio_file": "gnarle01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/g/gnarle01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word describes a rough, twisted surface covered in hard lumps. It suits old trees and weathered hands equally well.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/gnarled.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "hermeneutics",
+      "mw_entry_id": "hermeneutic:1",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "the study of the methodological principles of interpretation (as of the Bible)",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "interpretive theory",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The study of how texts, especially scripture, should be interpreted.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌhər-mə-ˈnü-tik",
+        "audio_file": "hermen02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/h/hermen02.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This field examines the principles behind interpretation itself. It began with biblical study and now reaches into law, literature and philosophy.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/hermeneutics.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "homesick",
+      "mw_entry_id": "homesick",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "longing for home and family while absent from them",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "nostalgic",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Sad and longing for your own house and family while far away.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈhōm-ˌsik",
+        "audio_file": "homesi01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/h/homesi01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word describes the ache of missing your familiar surroundings during an absence. Students and travellers meet it often in their first weeks away.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/homesick.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "illuminate",
+      "mw_entry_id": "illuminate:1",
+      "mw_unit_id": "1a(1)",
+      "definition": {
+        "text": "to supply or brighten with light",
+        "part_of_speech": "verb",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "light up",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "To fill a dark place with light so things become visible.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "i-ˈlü-mə-ˌnāt",
+        "audio_file": "illumi04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/i/illumi04.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "In this sense the verb means supplying or brightening something with light. A related figurative use means making an idea clearer.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/illuminate.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "insistent",
+      "mw_entry_id": "insistent",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "disposed to insist : persistent",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "persistent",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Repeating a demand firmly and refusing to be brushed aside.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "in-ˈsi-stənt",
+        "audio_file": "insist04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/i/insist04.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This describes someone or something that keeps pressing a point. It can apply to a person, a knock at the door, or a repeating musical phrase.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/insistent.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "instagram",
+      "mw_entry_id": "Instagram",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "to post (a picture) to the Instagram photo-sharing service",
+        "part_of_speech": "verb",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "upload",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "To share a photograph on a well-known picture-based social network.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈin(t)-stə-ˌgram",
+        "audio_file": "instagram_1",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/i/instagram_1.mp3"
+      },
+      "example": {
+        "text": "The couple … were spotted strolling along the Tidal Basin to take part in one of the District's time-honored springtime activities: Instagramming cherry blossoms.",
+        "kind": "vis",
+        "form_matched": "Instagramming",
+        "attribution": {
+          "author": null,
+          "source": "The Washington Post",
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "Used as a verb, this means posting a picture to a particular photo-sharing service. The dictionary example describes people doing it with cherry blossoms in spring.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/instagram.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "instruction",
+      "mw_entry_id": "instruction",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "an outline or manual of technical procedure : directions",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "directions",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A written outline telling you the steps for doing something.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "in-ˈstrək-shən",
+        "audio_file": "instru02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/i/instru02.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "In this sense the word names an outline or manual of technical procedure. It usually appears in the plural on the leaflet inside a box.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/instruction.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "irrevocable",
+      "mw_entry_id": "irrevocable",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "not possible to revoke : unalterable",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "unalterable",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Impossible to undo or take back once it has been done.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "i-ˈre-və-kə-bəl",
+        "audio_file": "irrevo01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/i/irrevo01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This describes a decision or action that cannot be reversed. Legal documents use it to make clear that no one may change their mind later.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/irrevocable.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "jacuzzi",
+      "mw_entry_id": "Jacuzzi",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "—used for a whirlpool bath and a recreational bathing tub or pool",
+        "part_of_speech": "trademark",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "whirlpool bath",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A heated tub with jets of swirling water for relaxing in.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "jə-ˈkü-zē",
+        "audio_file": "jacuzz01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/j/jacuzz01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is a trademark used for a bath or small pool with powerful water jets. Like several brand names, it is often used loosely for any similar tub.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/jacuzzi.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "jerusalem",
+      "mw_entry_id": "Jerusalem:g",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "city in southwestern Asia northwest of the Dead Sea; divided 1948–67 between Jordan (old city) and Israel (new city); capital of Israel since 1950 and formerly the capital of the ancient kingdoms of Israel and Judah; old city under Israeli control since 1967",
+        "part_of_speech": "geographical name",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "holy city",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "An ancient Middle Eastern city sacred to three major religions.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "jə-ˈrü-s(ə-)ləm",
+        "audio_file": "ggjeru01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/gg/ggjeru01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This city in south-western Asia lies north-west of the Dead Sea. It has been a capital since ancient times and is holy to Jews, Christians and Muslims.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/jerusalem.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "jocund",
+      "mw_entry_id": "jocund",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "marked by or suggestive of high spirits and lively mirthfulness",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "merry",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Cheerful and full of light-hearted high spirits.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈjä-kənd",
+        "audio_file": "jocund01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/j/jocund01.mp3"
+      },
+      "example": {
+        "text": "… a poet could not but be gay, in such a jocund company …",
+        "kind": "vis",
+        "form_matched": "jocund",
+        "attribution": {
+          "author": "William Wordsworth",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "The word suggests brightness of mood and lively good humour. It is old-fashioned now and turns up mostly in poetry.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/jocund.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "knowledge",
+      "mw_entry_id": "knowledge",
+      "mw_unit_id": "1a(1)",
+      "definition": {
+        "text": "information, understanding, or skill that you get from experience or education",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "understanding",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "What you have gained through learning and experience over time.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈnä-lij",
+        "audio_file": "knowle01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/k/knowle01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word covers information, understanding and skill, however they were acquired. Both schooling and lived experience produce it.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/knowledge.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "laminate",
+      "mw_entry_id": "laminate:1",
+      "mw_unit_id": "3b",
+      "definition": {
+        "text": "to unite (layers of material) by an adhesive or other means",
+        "part_of_speech": "verb",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "bond in layers",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "To join thin sheets together into one stronger material.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈla-mə-ˌnāt",
+        "audio_file": "lamina10",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/l/lamina10.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "As a verb this means uniting layers with adhesive or another method. Plywood and identity cards are both made this way.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/laminate.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "language",
+      "mw_entry_id": "language",
+      "mw_unit_id": "1a(1)",
+      "definition": {
+        "text": "the words, their pronunciation, their written representation, and the methods of combining them as used and understood by a community",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "tongue",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The system of words a community uses to speak and write.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈlaŋ-gwij",
+        "audio_file": "langua01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/l/langua01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word covers words, how they sound, how they are written and how they combine. What makes it work is that a whole community shares the system.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/language.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "lavender",
+      "mw_entry_id": "lavender:1",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "a Mediterranean mint (Lavandula angustifolia synonym L. officinalis) widely cultivated for its narrow aromatic leaves and spikes of lilac-purple flowers which are dried and used in sachets and from which is extracted an aromatic oil used chiefly in perfumery",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "aromatic herb",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A fragrant purple-flowered plant grown for its scent and oil.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈla-vən-dər",
+        "audio_file": "lavend01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/l/lavend01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This Mediterranean plant of the mint family has narrow leaves and lilac-purple spikes. It is dried for sachets and pressed for oil used in perfume.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/lavender.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "legend",
+      "mw_entry_id": "legend",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "a story coming down from the past",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "folk tale",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A story handed down from long ago, perhaps true, perhaps not.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈle-jənd",
+        "audio_file": "legend01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/l/legend01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word names a story that has come down from the past. Whether the events really happened is usually beyond proving.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/legend.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "library",
+      "mw_entry_id": "library",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "a place in which literary, musical, artistic, or reference materials (such as books, manuscripts, recordings, or films) are kept for use but not for sale",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "reading collection",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A place holding volumes and recordings for borrowing rather than buying.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈlī-ˌbrer-ē",
+        "audio_file": "librar04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/l/librar04.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is a place keeping written, musical and reference material for people to use. The key point is that the material is lent out, not sold.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/library.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "literature",
+      "mw_entry_id": "literature",
+      "mw_unit_id": "1a(1)",
+      "definition": {
+        "text": "writings in prose or verse",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "written works",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Writing in prose or verse, valued as an art form.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈli-tə-rə-ˌchu̇r",
+        "audio_file": "litera21",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/l/litera21.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word covers writing in either prose or verse. In a narrower use it means only the writing considered to have lasting artistic worth.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/literature.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "locomotion",
+      "mw_entry_id": "locomotion",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "an act or the power of moving from place to place",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "movement",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The power or act of moving from one place to another.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌlō-kə-ˈmō-shən",
+        "audio_file": "locomo02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/l/locomo02.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word names both the ability to move about and the act itself. Biologists use it for how animals travel, whether by walking, swimming or flight.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/locomotion.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "loquacious",
+      "mw_entry_id": "loquacious",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "given to fluent or excessive talk : garrulous",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "garrulous",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Fond of talking at great length, often more than needed.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "lō-ˈkwā-shəs",
+        "audio_file": "loquac01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/l/loquac01.mp3"
+      },
+      "example": {
+        "text": "… not often the most loquacious man when it comes to talking to the media …",
+        "kind": "vis",
+        "form_matched": "loquacious",
+        "attribution": {
+          "author": "Bill Reiter",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "This describes someone given to fluent or excessive talk. The dictionary example uses it, with understatement, of a man who says little to reporters.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/loquacious.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "manipulate",
+      "mw_entry_id": "manipulate",
+      "mw_unit_id": "2b",
+      "definition": {
+        "text": "to control or play upon by artful, unfair, or insidious means especially to one's own advantage",
+        "part_of_speech": "verb",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "exploit",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "To control someone by unfair or sneaky means for your own gain.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "mə-ˈni-pyə-ˌlāt",
+        "audio_file": "manipu04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/m/manipu04.mp3"
+      },
+      "example": {
+        "text": "… being used and manipulated by the knowing men around him.",
+        "kind": "vis",
+        "form_matched": "manipulated",
+        "attribution": {
+          "author": null,
+          "source": "New Republic",
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "In this sense the verb means controlling a person through artful or underhand methods. The dictionary example describes someone used this way by those around him.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/manipulate.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "melancholy",
+      "mw_entry_id": "melancholy:1",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "a state of sadness : depression of spirits : dejection",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "dejection",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A settled, thoughtful sadness that hangs over someone's mood.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈme-lən-ˌkä-lē",
+        "audio_file": "melanc04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/m/melanc04.mp3"
+      },
+      "example": {
+        "text": "Mitchell sounds utterly alone in her melancholy, turning the sadness into tender art.",
+        "kind": "vis",
+        "form_matched": "melancholy",
+        "attribution": {
+          "author": null,
+          "source": "Rolling Stone",
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "As a noun this names a state of low spirits and sadness. The dictionary example describes a singer turning that feeling into tender art.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/melancholy.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "misanthrope",
+      "mw_entry_id": "misanthrope",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a person who hates or distrusts humankind",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "curmudgeon",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Someone with a deep distrust and dislike of people in general.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈmi-sᵊn-ˌthrōp",
+        "audio_file": "misant01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/m/misant01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This names a person who hates or mistrusts humankind as a whole. The dislike is general rather than aimed at any particular individual.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/misanthrope.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "mountain",
+      "mw_entry_id": "mountain",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "a landmass that projects conspicuously above its surroundings and is higher than a hill",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "summit",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A great mass of rock rising far above the land around it.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈmau̇n-tᵊn",
+        "audio_file": "mounta01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/m/mounta01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is a landmass standing conspicuously above its surroundings and taller than a hill. Where exactly the line falls between the two varies by country.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/mountain.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "myopia",
+      "mw_entry_id": "myopia",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a condition in which the visual images come to a focus (see focus 4) in front of the retina of the eye resulting especially in defective vision of distant objects : nearsightedness",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "nearsightedness",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The eye condition that makes distant objects look blurred.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "mī-ˈō-pē-ə",
+        "audio_file": "myopia01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/m/myopia01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "In this condition images focus in front of the retina rather than on it, so far-off things look unclear. The word is also used for short-term thinking.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/myopia.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "mystery",
+      "mw_entry_id": "mystery:1",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "something not understood or beyond understanding : enigma",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "enigma",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Something that stays unexplained no matter how hard you think.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈmi-st(ə-)rē",
+        "audio_file": "myster02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/m/myster02.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word names something not understood, or perhaps beyond understanding altogether. It can describe a puzzle awaiting a solution or one that admits none.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/mystery.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "nefarious",
+      "mw_entry_id": "nefarious",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "flagrantly wicked or corrupt : evil",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "villainous",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Openly wicked, in the way a storybook schemer plots harm.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ni-ˈfer-ē-əs",
+        "audio_file": "nefari01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/n/nefari01.mp3"
+      },
+      "example": {
+        "text": "The more nefarious of these supervillains hide in plain sight.",
+        "kind": "vis",
+        "form_matched": "nefarious",
+        "attribution": {
+          "author": "Amelia Tait",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "The word means flagrantly evil or corrupt, with no attempt at concealment. The dictionary example applies it to the worst supervillains, who hide in plain sight.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/nefarious.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "novelist",
+      "mw_entry_id": "novelist",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a writer of novels",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "fiction writer",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A writer whose work takes the form of long invented stories.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈnä-və-list",
+        "audio_file": "noveli01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/n/noveli01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This names someone who writes book-length works of fiction. A writer of short stories or poetry is described by a different word.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/novelist.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "onomatopoeia",
+      "mw_entry_id": "onomatopoeia",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "the naming of a thing or action by a vocal imitation of the sound associated with it : the creation of words that imitate natural sounds (such as buzz, hiss)",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "sound imitation",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The way certain words copy the very sound they describe.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌä-nə-ˌmä-tə-ˈpē-ə",
+        "audio_file": "onomat03",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/o/onomat03.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is the naming of a thing or action by imitating the sound it makes. Buzz and hiss are standard examples.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/onomatopoeia.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "ornithology",
+      "mw_entry_id": "ornithology",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a branch of zoology dealing with birds",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "bird study",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The scientific study of birds and their behaviour.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌȯr-nə-ˈthä-lə-jē",
+        "audio_file": "ornith04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/o/ornith04.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is the branch of zoology devoted to birds. It covers their classification, habits, migration and song.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/ornithology.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "oxygen",
+      "mw_entry_id": "oxygen",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a chemical element with atomic number 8 that constitutes 21 percent of the Earth's atmosphere, that is capable of combining with all elements except some noble gases, that is active in physiological processes of almost all known organisms, and that is involved especially in combustion — see Chemical Elements Table",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "breathable gas",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The gas making up a fifth of the air, which keeps us alive.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈäk-si-jən",
+        "audio_file": "oxygen01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/o/oxygen01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This chemical element has atomic number eight and forms twenty-one percent of the atmosphere. Almost every known organism depends on it, and it drives combustion.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/oxygen.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "oxymoron",
+      "mw_entry_id": "oxymoron",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a combination of contradictory or incongruous words (such as cruel kindness)",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "contradiction in terms",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A phrase that pairs two words which contradict each other.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌäk-si-ˈmȯr-ˌän",
+        "audio_file": "oxymor01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/o/oxymor01.mp3"
+      },
+      "example": {
+        "text": "More than recognizing oxymorons or simply thinking these examples are clever, students need to understand that they represent moments in which the speaker feels contradictory sentiments.",
+        "kind": "vis",
+        "form_matched": "oxymorons",
+        "attribution": {
+          "author": "Kenneth J. Smith",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "This is a combination of incongruous words, such as cruel kindness. The dictionary example notes that the point is the contradictory feeling behind it, not just the wordplay.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/oxymoron.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "panoply",
+      "mw_entry_id": "panoply",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "a magnificent or impressive array",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "splendid array",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A full and impressive display of everything on show at once.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈpa-nə-plē",
+        "audio_file": "panopl02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/p/panopl02.mp3"
+      },
+      "example": {
+        "text": "woods … in their full panoply of autumn foliage",
+        "kind": "vis",
+        "form_matched": "panoply",
+        "attribution": {
+          "author": "S. P. B. Mais",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "The word names a magnificent or striking array. The dictionary example uses it for woods showing their whole spread of autumn foliage.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/panoply.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "parenthesis",
+      "mw_entry_id": "parenthesis",
+      "mw_unit_id": "3",
+      "definition": {
+        "text": "one or both of the curved marks ( ) used in writing and printing to enclose a parenthetical expression or to group a symbolic unit in a logical or mathematical expression",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "curved bracket",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "One of the pair of curved marks that enclose an aside.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "pə-ˈren(t)-thə-səs",
+        "audio_file": "parent08",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/p/parent08.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This names one or both of the curved marks used to enclose an inserted remark. Mathematics uses the same marks to group symbols together.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/parenthesis.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "patricide",
+      "mw_entry_id": "patricide",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "murder or killing of a father by his child",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "father-killing",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The killing of one's own father.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈpa-trə-ˌsīd",
+        "audio_file": "patric03",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/p/patric03.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word names the murder of a father by his own child. Related words describe the killing of a mother or a brother.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/patricide.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "peacock",
+      "mw_entry_id": "peacock:1",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a male peafowl distinguished by a crest of upright feathers and by greatly elongated loosely webbed upper tail coverts which are mostly tipped with iridescent spots and are erected and spread in a shimmering fan usually as a courtship display",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "male peafowl",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A bird famous for spreading a shimmering fan of tail feathers.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈpē-ˌkäk",
+        "audio_file": "peacoc01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/p/peacoc01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is the male of a bird known for its crest and its long, loosely webbed tail coverts. The fan is spread mainly to attract a mate.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/peacock.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "pickle",
+      "mw_entry_id": "pickle:1",
+      "mw_unit_id": "3:sd",
+      "definition": {
+        "text": "a cucumber that has been so preserved",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "gherkin",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A cucumber kept in brine or vinegar so it lasts.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈpi-kəl",
+        "audio_file": "pickle01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/p/pickle01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "In this sense the word names a preserved cucumber. The same word can describe the preserving liquid, and informally a difficult situation.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/pickle.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "pineapple",
+      "mw_entry_id": "pineapple",
+      "mw_unit_id": "1b",
+      "definition": {
+        "text": "the large edible multiple fruit of the pineapple that consists of the sweet succulent fleshy inflorescence",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "tropical fruit",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A spiky tropical fruit with sweet yellow flesh inside.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈpī-ˌna-pəl",
+        "audio_file": "pineap01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/p/pineap01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is the large edible fruit of a tropical plant, formed from many flowers fused together. That fusion is why the skin looks so distinctly patterned.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/pineapple.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "playful",
+      "mw_entry_id": "playful",
+      "mw_unit_id": "2",
+      "definition": {
+        "text": "humorous, jocular",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "jocular",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Light-hearted and full of fun rather than serious.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈplā-fəl",
+        "audio_file": "playfu01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/p/playfu01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word describes a humorous, teasing manner. It suits a joke made in good spirit or a kitten batting at a piece of string.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/playful.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "poltergeist",
+      "mw_entry_id": "poltergeist",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a noisy usually mischievous ghost held to be responsible for unexplained noises (such as rappings)",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "noisy spirit",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A ghost blamed for banging sounds and objects that move themselves.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈpōl-tər-ˌgīst",
+        "audio_file": "polter01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/p/polter01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This names a mischievous spirit said to cause unexplained noises such as rapping. The name comes from German words for a knocking ghost.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/poltergeist.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "possessed",
+      "mw_entry_id": "possessed:1",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "controlled or overwhelmingly influenced by something (such as an evil spirit, a passion, or an idea)",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "under a spell",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Completely controlled by a spirit, a passion, or a fixed idea.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "pə-ˈzest",
+        "audio_file": "possessed_1",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/p/possessed_1.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The adjective describes someone overwhelmingly ruled by an outside force. That force might be supernatural, but it can equally be an obsession.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/possessed.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "prestigious",
+      "mw_entry_id": "prestigious",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "having prestige : honored",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "esteemed",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Highly respected and carrying great standing in its field.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "pre-ˈsti-jəs",
+        "audio_file": "presti06",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/p/presti06.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This describes something honoured and widely admired. Universities, awards and journals are often described this way.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/prestigious.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "probably",
+      "mw_entry_id": "probably",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "insofar as seems reasonably true, factual, or to be expected : without much doubt",
+        "part_of_speech": "adverb",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "most likely",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "In all likelihood, though without complete certainty.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈprä-bə-blē",
+        "audio_file": "probab06",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/p/probab06.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This adverb marks something as reasonably expected to be true, but not guaranteed. It leaves a little room for being wrong.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/probably.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "punishment",
+      "mw_entry_id": "punishment",
+      "mw_unit_id": "2a",
+      "definition": {
+        "text": "suffering, pain, or loss that serves as retribution",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "penalty",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Suffering or loss imposed on someone as payment for wrongdoing.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈpə-nish-mənt",
+        "audio_file": "punish04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/p/punish04.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word names suffering, pain or loss that serves as retribution. The idea of deserved payment is what separates it from mere misfortune.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/punishment.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "puzzle",
+      "mw_entry_id": "puzzle:2",
+      "mw_unit_id": "2b",
+      "definition": {
+        "text": "something (such as a game or test) that is designed to be challenging to answer or solve — see also jigsaw puzzle",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "brainteaser",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A game or problem made deliberately hard to work out.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈpə-zəl",
+        "audio_file": "puzzle01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/p/puzzle01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This names something designed to be challenging to answer or solve. Crosswords and jigsaws are familiar kinds.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/puzzle.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "quintessential",
+      "mw_entry_id": "quintessential:1",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "perfectly typical or representative of a particular kind of person or thing : being a quintessence",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "archetypal",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Being the purest and most typical example of its kind.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌkwin-tə-ˈsen(t)-shəl",
+        "audio_file": "quinte02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/q/quinte02.mp3"
+      },
+      "example": {
+        "text": "Jerry's your quintessential streetwise New Yorker …",
+        "kind": "vis",
+        "form_matched": "quintessential",
+        "attribution": {
+          "author": "Kai Wright",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "The word describes something perfectly representative of a type. The dictionary example applies it to a streetwise New Yorker.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/quintessential.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "regenerate",
+      "mw_entry_id": "regenerate:1",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "formed or created again",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "renewed",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Formed once more, as though made new a second time.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ri-ˈje-nə-rət",
+        "audio_file": "regene02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/r/regene02.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "Used as an adjective, this describes something formed or created again. Note that the verb, meaning to grow back, is a separate use.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/regenerate.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "rhythmic",
+      "mw_entry_id": "rhythmic",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "marked by or moving in pronounced rhythm",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "pulsing",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Moving with a strong, regular beat you can feel.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈrit͟h-mik",
+        "audio_file": "rhythm02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/r/rhythm02.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The adjective describes something marked by a pronounced repeating pattern in time. Drums, waves and breathing can all be described this way.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/rhythmic.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "scared",
+      "mw_entry_id": "scared:1",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "thrown into or being in a state of fear, fright, or panic",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "frightened",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Filled with fear, the way a sudden noise leaves you.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈskerd",
+        "audio_file": "scared_1",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/s/scared_1.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word describes being thrown into a state of fear or panic. It covers everything from mild alarm to genuine terror.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/scared.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "schadenfreude",
+      "mw_entry_id": "schadenfreude",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "enjoyment obtained from seeing or hearing about the troubles of others",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "malicious glee",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The guilty pleasure of enjoying someone else's misfortune.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈshä-dᵊn-ˌfrȯi-də",
+        "audio_file": "schade01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/s/schade01.mp3"
+      },
+      "example": {
+        "text": "His arrest … brought out ugly schadenfreude on social media from those who view the incident in which no one was hurt as some sort of … karmic retribution.",
+        "kind": "vis",
+        "form_matched": "schadenfreude",
+        "attribution": {
+          "author": "Lisa Respers France",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "Borrowed from German, this names the enjoyment taken in hearing about others' troubles. The dictionary example describes it spreading unpleasantly across social media.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/schadenfreude.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "solitude",
+      "mw_entry_id": "solitude",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "the quality or state of being alone or remote from society : seclusion",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "seclusion",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The state of being entirely alone, away from other people.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈsä-lə-ˌtüd",
+        "audio_file": "solitu01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/s/solitu01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word names being alone or remote from society. Unlike loneliness it need not be unhappy, and is often chosen deliberately.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/solitude.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "student",
+      "mw_entry_id": "student",
+      "mw_unit_id": "1:sd",
+      "definition": {
+        "text": "one who attends a school",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "pupil",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Someone who attends a school in order to learn.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈstü-dᵊnt",
+        "audio_file": "studen01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/s/studen01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This names a person enrolled at a school. In wider use it can mean anyone making a careful study of a subject.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/student.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "supersede",
+      "mw_entry_id": "supersede",
+      "mw_unit_id": "2",
+      "definition": {
+        "text": "to take the place or position of",
+        "part_of_speech": "verb",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "replace",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "To take over the place of something older and set it aside.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌsü-pər-ˈsēd",
+        "audio_file": "supers06",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/s/supers06.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The verb means taking the position of something that came before. A new edition does this to the one it follows.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/supersede.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "variant",
+      "mw_entry_id": "variant:2",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "someone or something that exhibits variation from a type or norm",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "version",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A form that differs a little from the standard type.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈver-ē-ənt",
+        "audio_file": "varian02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/v/varian02.mp3"
+      },
+      "example": {
+        "text": "Scientists now find that a variant of a specific gene may contribute to the disorder …",
+        "kind": "vis",
+        "form_matched": "variant",
+        "attribution": {
+          "author": "Bruce Bower",
+          "source": null,
+          "date": null
+        }
+      },
+      "explanation": {
+        "text": "As a noun this names something showing variation from a norm. The dictionary example refers to a differing form of a particular gene.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/variant.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "victorious",
+      "mw_entry_id": "victorious",
+      "mw_unit_id": "1a",
+      "definition": {
+        "text": "having won a victory",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "triumphant",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "Having come out the winner in a contest or battle.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "vik-ˈtȯr-ē-əs",
+        "audio_file": "victor07",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/v/victor07.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The adjective describes whoever has won. It applies to teams, armies and arguments alike.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/victorious.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "vocabulary",
+      "mw_entry_id": "vocabulary",
+      "mw_unit_id": "2a",
+      "definition": {
+        "text": "a sum or stock of words employed by a language, group, individual, or work or in a field of knowledge",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "word stock",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The whole store of words a person or language uses.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "vō-ˈka-byə-ˌler-ē",
+        "audio_file": "vocabu02",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/v/vocabu02.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word names the sum of words used by a language, a group, an individual or a field. Yours grows every time you learn a new one.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/vocabulary.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "wondrous",
+      "mw_entry_id": "wondrous",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "that is to be marveled at : extraordinary",
+        "part_of_speech": "adjective",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "marvellous",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "So extraordinary that it fills you with amazement.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈwən-drəs",
+        "audio_file": "wondro01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/w/wondro01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This describes something to be marvelled at. It is a slightly poetic word, more at home in stories than in conversation.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/wondrous.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "xenophobia",
+      "mw_entry_id": "xenophobia",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "fear and hatred of strangers or foreigners or of anything that is strange or foreign",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "fear of foreigners",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "A deep fear and hatred of people from other countries.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˌze-nə-ˈfō-bē-ə",
+        "audio_file": "xenoph08",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/x/xenoph08.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "The word names fear and hatred of strangers or foreigners, or of anything foreign. It comes from Greek roots meaning stranger and fear.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/xenophobia.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "zeitgeist",
+      "mw_entry_id": "zeitgeist",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "the general intellectual, moral, and cultural climate of an era",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "spirit of the age",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The mood and outlook that defines a particular period in history.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈtsīt-ˌgīst",
+        "audio_file": "zeitge04",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/z/zeitge04.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "Borrowed from German, this names the general intellectual, moral and cultural climate of an era. Each decade is often said to have its own.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/zeitgeist.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    },
+    {
+      "word": "zygote",
+      "mw_entry_id": "zygote",
+      "mw_unit_id": "1",
+      "definition": {
+        "text": "a cell formed by the union of two gametes",
+        "part_of_speech": "noun",
+        "source": "mw-collegiate"
+      },
+      "hints": {
+        "synonym": {
+          "text": "fertilized egg",
+          "source": "llm-generated"
+        },
+        "clue": {
+          "text": "The single cell formed when two reproductive cells join.",
+          "source": "llm-generated"
+        }
+      },
+      "pronunciation": {
+        "mw": "ˈzī-ˌgōt",
+        "audio_file": "zygote01",
+        "audio_url": "https://media.merriam-webster.com/audio/prons/en/us/mp3/z/zygote01.mp3"
+      },
+      "example": null,
+      "explanation": {
+        "text": "This is the cell produced by the union of two gametes. Every animal that reproduces sexually begins as one.",
+        "provenance": "llm-generated"
+      },
+      "image": {
+        "key": "paintings/zygote.webp",
+        "origin": "2023-dalle2",
+        "provenance": "recovered",
+        "generation": null
+      }
+    }
+  ]
+}
