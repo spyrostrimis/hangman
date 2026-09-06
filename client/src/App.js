@@ -14,36 +14,19 @@ import Illucia from './Components/Illucia';
 import Halloffame from "./Components/Halloffame";
 import Footer from './Components/Footer';
 import soundbtn from "./Images/soundbtn.png";
+import mwLogo from "./Images/mw-logo-dark-background.png";
+import manifest from "./data/words.json";
+import { buildAssetUrl, selectRandomWord } from "./lib/word-data.js";
 
 import { useCallback, useEffect, useState } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
-// import axios from "axios";
-import { Buffer } from "buffer";
-
-
 
 function App() {
-  // async function getWord() {
-  //   let response = await axios.get("http://localhost:8000/word/get-all-words");
-  //   console.log("I fire once!");
-  //   let allwords = response.data;
-  //   console.log(allwords[Math.floor(Math.random() * allwords.length)].word);
-  //   return allwords[Math.floor(Math.random() * allwords.length)].word;
-  // }
-
   const location = useLocation();
   const isHangPage = location.pathname === "/hangman";
 
-  const [wordToFindData, setWordToFindData] = useState("");
-  const [wordToFind, setWordToFind] = useState("");
-  // console.log("wordToFindData.word", wordToFindData.word);
-  // console.log("wordToFindData", wordToFindData);
-  // console.log("wordToFind1", wordToFind);
-  // console.log("wordToFindData.image", wordToFindData.image);
-  // setWordToFind(wordToFindData.word);
-  // useEffect(() => {
-  //   getWord().then((word) => setWordToFind(word));
-  // }, []);
+  const [selectedWord, setSelectedWord] = useState(null);
+  const wordToFind = selectedWord?.word ?? "";
 
   const [innertext, setInnertext] = useState();
   const [remainingTries, setRemainingTries] = useState(5);
@@ -105,6 +88,7 @@ function App() {
   }
 
   function setWordfacts() {
+    if (!selectedWord) return;
 
     function showMore() {
       document.getElementById("explainmore").style.display = "block";
@@ -112,9 +96,11 @@ function App() {
     }
 
     const handlePlay = () => {
-      const audio = new Audio(wordToFindData.sound);
+      const audio = new Audio(selectedWord.pronunciation.audio_url);
       audio.play();
     };
+
+    const exampleAttribution = selectedWord.example?.attribution;
 
     const wordfacts = (
       <div
@@ -122,45 +108,74 @@ function App() {
           visibility: Winner || Loser ? "visible" : "hidden",
         }}
       >
-        <h3 style={{ marginBottom: "15px" }}>{wordToFindData.word}</h3>
+        <h3 style={{ marginBottom: "15px" }}>{selectedWord.word}</h3>
         <p>
-          <b>Definition:</b> {wordToFindData.definition}
+          <b>Definition:</b> {selectedWord.definition.text}
         </p>
+        {selectedWord.definition.part_of_speech && (
+          <p>
+            <b>Part of speech:</b> {selectedWord.definition.part_of_speech}
+          </p>
+        )}
         <p>
-          <b>IPA: {wordToFindData.ipa}</b> <span> </span>
+          <b>Merriam-Webster pronunciation:</b>{" "}
+          {selectedWord.pronunciation.mw} <span> </span>
           <img
             src={soundbtn}
-            alt={`sound button image`}
-            title={`Listen to the word`}
+            alt="Play pronunciation"
+            title="Listen to the word"
             width={36}
             onClick={handlePlay}
             style={{ cursor: "pointer" }}
           />
         </p>
 
-        <p>
-          <b>An example:</b> {wordToFindData.example}
-        </p>
+        {selectedWord.example && (
+          <div className="word-example">
+            <p>
+              <b>Example:</b> {selectedWord.example.text}
+            </p>
+            {exampleAttribution &&
+              (exampleAttribution.author ||
+                exampleAttribution.source ||
+                exampleAttribution.date) && (
+                <p className="example-attribution">
+                  {exampleAttribution.author && (
+                    <span>Author: {exampleAttribution.author}</span>
+                  )}
+                  {exampleAttribution.source && (
+                    <span>Source: {exampleAttribution.source}</span>
+                  )}
+                  {exampleAttribution.date && (
+                    <span>Date: {exampleAttribution.date}</span>
+                  )}
+                </p>
+              )}
+          </div>
+        )}
         <p
           id="showlessfacts"
           onClick={showMore}
           style={{ color: "#a54ed7", cursor: "pointer" }}
         >
-          How is the word used in this example?
+          More about this word
         </p>
         <p id="explainmore" style={{ display: "none" }}>
           <b style={{ color: "#a54ed7" }}>Explanation:</b>{" "}
-          {wordToFindData.explanation}
+          {selectedWord.explanation.text}
         </p>
-
-        {/* <div>
-            <img
-              src={wordToFindData.image}
-              alt={`"${wordToFindData.word}" painting by ChatGPT`}
-              title={`"${wordToFindData.word}" by ChatGPT`}
-              width={300}
-            />
-          </div> */}
+        <div className="mw-attribution">
+          <img
+            className="mw-attribution-logo"
+            src={mwLogo}
+            alt="Merriam-Webster logo"
+            width={50}
+            height={50}
+          />
+          <span>
+            Merriam-Webster&apos;s Collegiate<sup>®</sup> Dictionary with Audio
+          </span>
+        </div>
       </div>
     );
     setInnertext(wordfacts);
@@ -170,9 +185,11 @@ function App() {
   }
 
   function setHint1() {
+    if (!selectedWord) return;
+
     const hint1 = (
       <>
-        <h5>Synonym: {wordToFindData.synonym}</h5>
+        <h5>Synonym: {selectedWord.hints.synonym.text}</h5>
       </>
     );
     setDisablehint1(true);
@@ -181,9 +198,11 @@ function App() {
   }
 
   function setHint2() {
+    if (!selectedWord) return;
+
     const hint2 = (
       <>
-        <h5>A clue: {wordToFindData.shortdef}</h5>
+        <h5>A clue: {selectedWord.hints.clue.text}</h5>
       </>
     );
     setDisablehint2(true);
@@ -206,7 +225,6 @@ function App() {
     (letter) => {
       // console.log("remainingTries2", remainingTries);
       // console.log("wordToFind2", wordToFind);
-      // console.log("wordToFindData2", wordToFindData.word);
       if (chosenLetters.includes(letter) || Winner || Loser) return;
 
       setChosenLetters((currentLetters) => [...currentLetters, letter]);
@@ -233,7 +251,7 @@ function App() {
         }
       }
     },
-    [chosenLetters, wordToFind, remainingTries, Winner, Loser, wordToFindData]
+    [chosenLetters, wordToFind, remainingTries, Winner, Loser]
   );
 
   useEffect(() => {
@@ -265,29 +283,22 @@ function App() {
       // Skip the effect if not on the homepage - *or if the game is over - removed*
       setChosenLetters([]);
       setRemainingTries(5);
-      setInnertext("")
-      setWordToFind("")
-      setWordToFindData("")
+      setInnertext("");
+      setSelectedWord(null);
       setDisablehint1(false);
       setDisablehint2(false);
       return;
     }
 
-    // Rest of the code...
+    setSelectedWord(selectRandomWord(manifest.words));
   }, [isHangPage]);
 
-  let paintingBase64;
-  if (wordToFindData.image) {
-    const imageData = wordToFindData.image.data;
-    const imageBuffer = Buffer.from(imageData);
-    const mimeType = "image/png";
-    // console.log("wordToFindData.image", wordToFindData.image);
-    paintingBase64 = `data:${mimeType};base64,${imageBuffer.toString(
-      "base64"
-    )}`;
-    // console.log("paintingBase64", paintingBase64);
-  }
-  
+  const paintingUrl = selectedWord
+    ? buildAssetUrl(
+        selectedWord.image.key,
+        import.meta.env.VITE_ASSET_BASE_URL || undefined
+      )
+    : null;
 
   return (
     <>
@@ -305,7 +316,7 @@ function App() {
                     incorrectGuesses={incorrectGuesses.length}
                     Winner={Winner}
                     Loser={Loser}
-                    painting={paintingBase64 ? paintingBase64 : null}
+                    painting={paintingUrl}
                   />
                   <Wordfacts
                     Loser={Loser}
@@ -320,8 +331,6 @@ function App() {
                   reveal={Loser}
                   wordToFind={wordToFind}
                   chosenLetters={chosenLetters}
-                  setWordToFindData={setWordToFindData}
-                  setWordToFind={setWordToFind}
                   Winner={Winner}
                 />
                 <div

@@ -1036,6 +1036,27 @@ td:nth-of-type(3) {
   cursor: pointer;
 }
 
+.example-attribution {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  font-size: 0.9em;
+}
+
+.mw-attribution {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.wordfactscontainerinner .mw-attribution-logo {
+  width: 50px;
+  height: 50px;
+  flex: 0 0 50px;
+  cursor: default;
+}
+
 /* Additional styles for the Illucia page */
 .illucia-body {
   background-image: url("./Images/illucia-bg.jpg");
