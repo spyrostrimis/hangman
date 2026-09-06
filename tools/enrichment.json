@@ -1,0 +1,527 @@
+{
+  "acquaint": {
+    "synonym": "familiarize",
+    "clue": "To introduce someone to a subject so they know it firsthand.",
+    "explanation": "This verb means giving someone their first direct knowledge of something. You might do it with a new city, a new job, or an unfamiliar set of rules."
+  },
+  "activity": {
+    "synonym": "liveliness",
+    "clue": "The busy, energetic motion of a place that is far from still.",
+    "explanation": "In this sense the word means vigorous movement or bustle rather than one particular task. A crowded market at midday is full of it."
+  },
+  "admonish": {
+    "synonym": "reprove",
+    "clue": "To warn someone gently but seriously about a fault or oversight.",
+    "explanation": "This is a mild but earnest correction, not an angry telling-off. A teacher might do this to a pupil who keeps forgetting homework."
+  },
+  "adventure": {
+    "synonym": "escapade",
+    "clue": "An exciting or remarkable experience, often involving travel and risk.",
+    "explanation": "The word names an experience worth retelling because it was thrilling or unusual. It suggests something out of the ordinary rather than everyday routine."
+  },
+  "ambitious": {
+    "synonym": "aspiring",
+    "clue": "Driven by a strong wish to succeed, gain power, or become famous.",
+    "explanation": "This describes a person shaped by a hunger for achievement. It can be admiring or slightly critical, depending on how far the hunger goes."
+  },
+  "ambivalent": {
+    "synonym": "of two minds",
+    "clue": "Holding two opposite feelings about the same thing at once.",
+    "explanation": "The word describes genuinely mixed feelings, not simple indifference. In the dictionary example it pairs with \"conflicted\" to describe how someone feels about their job."
+  },
+  "architect": {
+    "synonym": "designer",
+    "clue": "The professional who plans a building and advises on its construction.",
+    "explanation": "This person designs structures and guides how they get built. The word is also used figuratively for whoever devised a plan or system."
+  },
+  "atlantis": {
+    "synonym": "sunken realm",
+    "clue": "A legendary island said to have vanished beneath the waves long ago.",
+    "explanation": "This is a fabled island from ancient legend, believed to have sunk into the ocean. It has become a byword for any lost civilisation."
+  },
+  "available": {
+    "synonym": "obtainable",
+    "clue": "Ready to be had or used, because nothing is blocking access.",
+    "explanation": "The word means something can be reached, obtained, or used right now. It applies equally to a free seat, a product in stock, or a person with spare time."
+  },
+  "awkward": {
+    "synonym": "ungainly",
+    "clue": "Lacking grace or ease, the way a stumble looks when someone lands badly.",
+    "explanation": "In this sense the word describes clumsy movement rather than social discomfort. The dictionary example uses it for a bad landing that nearly caused injury."
+  },
+  "backstage": {
+    "synonym": "behind the scenes",
+    "clue": "Relating to the hidden area of a theatre where performers prepare.",
+    "explanation": "As an adjective this describes the part of a theatre the audience never sees, including the dressing rooms. It is also used for anything happening out of public view."
+  },
+  "bellwether": {
+    "synonym": "barometer",
+    "clue": "Something watched closely because it signals which way a trend is heading.",
+    "explanation": "The word names an early indicator of change. Analysts often call one company or one district by this name when its results predict a wider pattern."
+  },
+  "bituminous": {
+    "synonym": "tarry",
+    "clue": "Describing a substance containing or soaked with natural pitch.",
+    "explanation": "This adjective describes material that contains a thick black petroleum residue. It is most often heard describing a soft, high-carbon type of coal."
+  },
+  "bookshelf": {
+    "synonym": "reading rack",
+    "clue": "An open ledge in a room where volumes stand side by side.",
+    "explanation": "This is a single open shelf made for holding reading material. Unlike a cupboard it has no doors, so everything on it stays visible."
+  },
+  "caffeine": {
+    "synonym": "stimulant",
+    "clue": "The bitter compound in coffee and tea that keeps you awake.",
+    "explanation": "This is a naturally occurring bitter substance found in coffee, tea, cacao and kola nuts. It is used medically as a stimulant and a diuretic."
+  },
+  "cardiovascular": {
+    "synonym": "circulatory",
+    "clue": "Relating to the heart together with the vessels that carry blood.",
+    "explanation": "The adjective covers the heart and the whole network of vessels serving it. You will meet it most often in medicine and in fitness training."
+  },
+  "challenge": {
+    "synonym": "hurdle",
+    "clue": "A task hard enough to test whoever decides to take it on.",
+    "explanation": "Used as a noun, the word names a difficult task or problem. In the dictionary example, finding a venue that met every requirement turned out to be one."
+  },
+  "chancellor": {
+    "synonym": "head of government",
+    "clue": "The chief minister leading the government in several European nations.",
+    "explanation": "In this sense the word names the highest minister of state in certain European countries. Germany and Austria both use the title for their head of government."
+  },
+  "chemistry": {
+    "synonym": "molecular science",
+    "clue": "The science of what substances are made of and how they change.",
+    "explanation": "This field studies the composition and structure of substances, and the transformations they undergo. It sits between physics and biology in the sciences."
+  },
+  "chimpanzee": {
+    "synonym": "great ape",
+    "clue": "A clever African ape, smaller than a gorilla and more at home in trees.",
+    "explanation": "This is a great ape native to equatorial Africa. It is smaller than a gorilla and spends far more of its time up in the branches."
+  },
+  "colloquy": {
+    "synonym": "dialogue",
+    "clue": "A formal conversation or exchange of views between people.",
+    "explanation": "The word means a talk or discussion, usually a fairly formal one. It is more literary than the everyday words for the same thing."
+  },
+  "comfortable": {
+    "synonym": "at ease",
+    "clue": "Feeling settled and secure, with nothing pressing to worry about.",
+    "explanation": "The word covers both giving and enjoying a sense of contentment and security. A chair can be described this way, and so can the person sitting in it."
+  },
+  "commitment": {
+    "synonym": "pledge",
+    "clue": "A promise given now to do something at a later time.",
+    "explanation": "This sense of the word means an agreement or promise about future action. The dictionary example describes an athlete giving a spoken one to a team."
+  },
+  "consistent": {
+    "synonym": "unvarying",
+    "clue": "Staying the same from one time to the next, without contradiction.",
+    "explanation": "This describes something marked by regularity and free from variation. The dictionary example notes that many Americans once wrote their own names differently from one document to the next."
+  },
+  "contest": {
+    "synonym": "competition",
+    "clue": "A struggle between rivals to see which one comes out on top.",
+    "explanation": "As a noun the word names a struggle for victory or superiority. Note that the verb form, meaning to dispute something, is a separate use."
+  },
+  "conversation": {
+    "synonym": "discourse",
+    "clue": "A spoken exchange in which people share ideas and opinions.",
+    "explanation": "The word means talk in which observations and ideas actually pass between people. One dictionary example draws a sharp line between mere talk and this."
+  },
+  "correspondence": {
+    "synonym": "letter writing",
+    "clue": "Communication carried on by written messages sent back and forth.",
+    "explanation": "In this sense the word means communication by letters or email. It can name the activity itself or the collected messages that resulted."
+  },
+  "criticize": {
+    "synonym": "censure",
+    "clue": "To point out what is wrong with someone or something.",
+    "explanation": "This verb means finding fault and saying so. It does not have to be unfair, though it usually carries a negative tone."
+  },
+  "deception": {
+    "synonym": "trickery",
+    "clue": "The act of making someone believe something that is not true.",
+    "explanation": "The word names the act of causing another person to accept something false as though it were true. It implies intent rather than honest error."
+  },
+  "definitely": {
+    "synonym": "unquestionably",
+    "clue": "In a way that leaves no room for doubt or ambiguity.",
+    "explanation": "This adverb signals certainty and the absence of any vagueness. In the dictionary example it emphasises how firmly the speaker holds their view of an actor."
+  },
+  "dictionary": {
+    "synonym": "lexicon",
+    "clue": "A reference source listing words with meanings and pronunciations.",
+    "explanation": "This is a reference work, printed or electronic, that lists words alphabetically. Each entry adds information such as pronunciation, origin and meaning."
+  },
+  "disparage": {
+    "synonym": "belittle",
+    "clue": "To speak of someone or something as if it had little worth.",
+    "explanation": "The verb means talking about something slightingly, lowering its apparent value. The dictionary example shows novels being dismissed with a contemptuous label."
+  },
+  "divulge": {
+    "synonym": "let slip",
+    "clue": "To make known a secret you were expected to keep.",
+    "explanation": "This verb means revealing information that was private or confidential. It carries a sense that the information was not yours to share."
+  },
+  "effervescent": {
+    "synonym": "bubbly",
+    "clue": "Lively and sparkling in personality, like a drink full of bubbles.",
+    "explanation": "Beyond fizzing liquids, the word describes an appealingly lively manner. The dictionary example applies it to someone who handled the press with fresh, direct energy."
+  },
+  "encyclopedia": {
+    "synonym": "reference work",
+    "clue": "A large reference set with articles on every branch of learning.",
+    "explanation": "This is a work covering all branches of knowledge, or treating one branch thoroughly. Articles are usually arranged alphabetically by subject."
+  },
+  "epistemology": {
+    "synonym": "theory of knowledge",
+    "clue": "The branch of philosophy asking how we know what we claim to know.",
+    "explanation": "This field studies the nature and grounds of knowledge, especially its limits and how far it can be trusted. It is one of the central areas of philosophy."
+  },
+  "eschatology": {
+    "synonym": "doctrine of last things",
+    "clue": "The branch of theology dealing with the end of the world.",
+    "explanation": "This part of theology concerns final events in the history of the world or of humankind. Different faiths give it very different content."
+  },
+  "ethereal": {
+    "synonym": "otherworldly",
+    "clue": "Delicate and light in a way that seems to come from another world.",
+    "explanation": "The word suggests something too fine or unearthly to belong here. The dictionary example uses it for the glow a rising full moon casts on a wild shore."
+  },
+  "euphoria": {
+    "synonym": "elation",
+    "clue": "An intense feeling of happiness and well-being that lifts you up.",
+    "explanation": "This names a strong sense of well-being or joy. Its opposite, a state of unease and dissatisfaction, has its own separate name."
+  },
+  "existentialism": {
+    "synonym": "philosophy of free choice",
+    "clue": "A philosophy centred on individual freedom and responsibility in an uncertain universe.",
+    "explanation": "This mainly twentieth-century movement gathers several different doctrines. What they share is a focus on the individual who must take responsibility for free choices without certain moral knowledge."
+  },
+  "expertise": {
+    "synonym": "mastery",
+    "clue": "The deep skill someone has after long practice in one field.",
+    "explanation": "The word names the specialised skill of someone highly trained in a subject. It refers to the ability itself, not the person who holds it."
+  },
+  "exquisite": {
+    "synonym": "flawless",
+    "clue": "So finely made or beautiful that it seems close to perfect.",
+    "explanation": "This describes something that pleases through its beauty or its perfect fitness for purpose. It suggests fine detail rather than sheer scale."
+  },
+  "fallacy": {
+    "synonym": "misconception",
+    "clue": "A mistaken belief, especially one built on faulty reasoning.",
+    "explanation": "The word names a false or mistaken idea. The dictionary example points to the error of treating a threat and a capability as the same thing."
+  },
+  "fluorescent": {
+    "synonym": "glowing",
+    "clue": "Giving off a bright glow when light strikes it.",
+    "explanation": "This adjective describes something bright and glowing because it re-emits the light it absorbs. Safety vests and tube lighting are everyday examples."
+  },
+  "gemstone": {
+    "synonym": "jewel",
+    "clue": "A mineral cut and polished so it can be set into jewellery.",
+    "explanation": "This is a mineral or petrified material valuable enough to cut and polish for ornament. Cutting is what turns the raw material into one."
+  },
+  "gnarled": {
+    "synonym": "knotty",
+    "clue": "Twisted and full of knots, the way an ancient tree trunk looks.",
+    "explanation": "The word describes a rough, twisted surface covered in hard lumps. It suits old trees and weathered hands equally well."
+  },
+  "hermeneutics": {
+    "synonym": "interpretive theory",
+    "clue": "The study of how texts, especially scripture, should be interpreted.",
+    "explanation": "This field examines the principles behind interpretation itself. It began with biblical study and now reaches into law, literature and philosophy."
+  },
+  "homesick": {
+    "synonym": "nostalgic",
+    "clue": "Sad and longing for your own house and family while far away.",
+    "explanation": "The word describes the ache of missing your familiar surroundings during an absence. Students and travellers meet it often in their first weeks away."
+  },
+  "illuminate": {
+    "synonym": "light up",
+    "clue": "To fill a dark place with light so things become visible.",
+    "explanation": "In this sense the verb means supplying or brightening something with light. A related figurative use means making an idea clearer."
+  },
+  "insistent": {
+    "synonym": "persistent",
+    "clue": "Repeating a demand firmly and refusing to be brushed aside.",
+    "explanation": "This describes someone or something that keeps pressing a point. It can apply to a person, a knock at the door, or a repeating musical phrase."
+  },
+  "instagram": {
+    "synonym": "upload",
+    "clue": "To share a photograph on a well-known picture-based social network.",
+    "explanation": "Used as a verb, this means posting a picture to a particular photo-sharing service. The dictionary example describes people doing it with cherry blossoms in spring."
+  },
+  "instruction": {
+    "synonym": "directions",
+    "clue": "A written outline telling you the steps for doing something.",
+    "explanation": "In this sense the word names an outline or manual of technical procedure. It usually appears in the plural on the leaflet inside a box."
+  },
+  "irrevocable": {
+    "synonym": "unalterable",
+    "clue": "Impossible to undo or take back once it has been done.",
+    "explanation": "This describes a decision or action that cannot be reversed. Legal documents use it to make clear that no one may change their mind later."
+  },
+  "jacuzzi": {
+    "synonym": "whirlpool bath",
+    "clue": "A heated tub with jets of swirling water for relaxing in.",
+    "explanation": "This is a trademark used for a bath or small pool with powerful water jets. Like several brand names, it is often used loosely for any similar tub."
+  },
+  "jerusalem": {
+    "synonym": "holy city",
+    "clue": "An ancient Middle Eastern city sacred to three major religions.",
+    "explanation": "This city in south-western Asia lies north-west of the Dead Sea. It has been a capital since ancient times and is holy to Jews, Christians and Muslims."
+  },
+  "jocund": {
+    "synonym": "merry",
+    "clue": "Cheerful and full of light-hearted high spirits.",
+    "explanation": "The word suggests brightness of mood and lively good humour. It is old-fashioned now and turns up mostly in poetry."
+  },
+  "knowledge": {
+    "synonym": "understanding",
+    "clue": "What you have gained through learning and experience over time.",
+    "explanation": "The word covers information, understanding and skill, however they were acquired. Both schooling and lived experience produce it."
+  },
+  "laminate": {
+    "synonym": "bond in layers",
+    "clue": "To join thin sheets together into one stronger material.",
+    "explanation": "As a verb this means uniting layers with adhesive or another method. Plywood and identity cards are both made this way."
+  },
+  "language": {
+    "synonym": "tongue",
+    "clue": "The system of words a community uses to speak and write.",
+    "explanation": "The word covers words, how they sound, how they are written and how they combine. What makes it work is that a whole community shares the system."
+  },
+  "lavender": {
+    "synonym": "aromatic herb",
+    "clue": "A fragrant purple-flowered plant grown for its scent and oil.",
+    "explanation": "This Mediterranean plant of the mint family has narrow leaves and lilac-purple spikes. It is dried for sachets and pressed for oil used in perfume."
+  },
+  "legend": {
+    "synonym": "folk tale",
+    "clue": "A story handed down from long ago, perhaps true, perhaps not.",
+    "explanation": "The word names a story that has come down from the past. Whether the events really happened is usually beyond proving."
+  },
+  "library": {
+    "synonym": "reading collection",
+    "clue": "A place holding volumes and recordings for borrowing rather than buying.",
+    "explanation": "This is a place keeping written, musical and reference material for people to use. The key point is that the material is lent out, not sold."
+  },
+  "literature": {
+    "synonym": "written works",
+    "clue": "Writing in prose or verse, valued as an art form.",
+    "explanation": "The word covers writing in either prose or verse. In a narrower use it means only the writing considered to have lasting artistic worth."
+  },
+  "locomotion": {
+    "synonym": "movement",
+    "clue": "The power or act of moving from one place to another.",
+    "explanation": "The word names both the ability to move about and the act itself. Biologists use it for how animals travel, whether by walking, swimming or flight."
+  },
+  "loquacious": {
+    "synonym": "garrulous",
+    "clue": "Fond of talking at great length, often more than needed.",
+    "explanation": "This describes someone given to fluent or excessive talk. The dictionary example uses it, with understatement, of a man who says little to reporters."
+  },
+  "manipulate": {
+    "synonym": "exploit",
+    "clue": "To control someone by unfair or sneaky means for your own gain.",
+    "explanation": "In this sense the verb means controlling a person through artful or underhand methods. The dictionary example describes someone used this way by those around him."
+  },
+  "melancholy": {
+    "synonym": "dejection",
+    "clue": "A settled, thoughtful sadness that hangs over someone's mood.",
+    "explanation": "As a noun this names a state of low spirits and sadness. The dictionary example describes a singer turning that feeling into tender art."
+  },
+  "misanthrope": {
+    "synonym": "curmudgeon",
+    "clue": "Someone with a deep distrust and dislike of people in general.",
+    "explanation": "This names a person who hates or mistrusts humankind as a whole. The dislike is general rather than aimed at any particular individual."
+  },
+  "mountain": {
+    "synonym": "summit",
+    "clue": "A great mass of rock rising far above the land around it.",
+    "explanation": "This is a landmass standing conspicuously above its surroundings and taller than a hill. Where exactly the line falls between the two varies by country."
+  },
+  "myopia": {
+    "synonym": "nearsightedness",
+    "clue": "The eye condition that makes distant objects look blurred.",
+    "explanation": "In this condition images focus in front of the retina rather than on it, so far-off things look unclear. The word is also used for short-term thinking."
+  },
+  "mystery": {
+    "synonym": "enigma",
+    "clue": "Something that stays unexplained no matter how hard you think.",
+    "explanation": "The word names something not understood, or perhaps beyond understanding altogether. It can describe a puzzle awaiting a solution or one that admits none."
+  },
+  "nefarious": {
+    "synonym": "villainous",
+    "clue": "Openly wicked, in the way a storybook schemer plots harm.",
+    "explanation": "The word means flagrantly evil or corrupt, with no attempt at concealment. The dictionary example applies it to the worst supervillains, who hide in plain sight."
+  },
+  "novelist": {
+    "synonym": "fiction writer",
+    "clue": "A writer whose work takes the form of long invented stories.",
+    "explanation": "This names someone who writes book-length works of fiction. A writer of short stories or poetry is described by a different word."
+  },
+  "onomatopoeia": {
+    "synonym": "sound imitation",
+    "clue": "The way certain words copy the very sound they describe.",
+    "explanation": "This is the naming of a thing or action by imitating the sound it makes. Buzz and hiss are standard examples."
+  },
+  "ornithology": {
+    "synonym": "bird study",
+    "clue": "The scientific study of birds and their behaviour.",
+    "explanation": "This is the branch of zoology devoted to birds. It covers their classification, habits, migration and song."
+  },
+  "oxygen": {
+    "synonym": "breathable gas",
+    "clue": "The gas making up a fifth of the air, which keeps us alive.",
+    "explanation": "This chemical element has atomic number eight and forms twenty-one percent of the atmosphere. Almost every known organism depends on it, and it drives combustion."
+  },
+  "oxymoron": {
+    "synonym": "contradiction in terms",
+    "clue": "A phrase that pairs two words which contradict each other.",
+    "explanation": "This is a combination of incongruous words, such as cruel kindness. The dictionary example notes that the point is the contradictory feeling behind it, not just the wordplay."
+  },
+  "panoply": {
+    "synonym": "splendid array",
+    "clue": "A full and impressive display of everything on show at once.",
+    "explanation": "The word names a magnificent or striking array. The dictionary example uses it for woods showing their whole spread of autumn foliage."
+  },
+  "parenthesis": {
+    "synonym": "curved bracket",
+    "clue": "One of the pair of curved marks that enclose an aside.",
+    "explanation": "This names one or both of the curved marks used to enclose an inserted remark. Mathematics uses the same marks to group symbols together."
+  },
+  "patricide": {
+    "synonym": "father-killing",
+    "clue": "The killing of one's own father.",
+    "explanation": "The word names the murder of a father by his own child. Related words describe the killing of a mother or a brother."
+  },
+  "peacock": {
+    "synonym": "male peafowl",
+    "clue": "A bird famous for spreading a shimmering fan of tail feathers.",
+    "explanation": "This is the male of a bird known for its crest and its long, loosely webbed tail coverts. The fan is spread mainly to attract a mate."
+  },
+  "pickle": {
+    "synonym": "gherkin",
+    "clue": "A cucumber kept in brine or vinegar so it lasts.",
+    "explanation": "In this sense the word names a preserved cucumber. The same word can describe the preserving liquid, and informally a difficult situation."
+  },
+  "pineapple": {
+    "synonym": "tropical fruit",
+    "clue": "A spiky tropical fruit with sweet yellow flesh inside.",
+    "explanation": "This is the large edible fruit of a tropical plant, formed from many flowers fused together. That fusion is why the skin looks so distinctly patterned."
+  },
+  "playful": {
+    "synonym": "jocular",
+    "clue": "Light-hearted and full of fun rather than serious.",
+    "explanation": "The word describes a humorous, teasing manner. It suits a joke made in good spirit or a kitten batting at a piece of string."
+  },
+  "poltergeist": {
+    "synonym": "noisy spirit",
+    "clue": "A ghost blamed for banging sounds and objects that move themselves.",
+    "explanation": "This names a mischievous spirit said to cause unexplained noises such as rapping. The name comes from German words for a knocking ghost."
+  },
+  "possessed": {
+    "synonym": "under a spell",
+    "clue": "Completely controlled by a spirit, a passion, or a fixed idea.",
+    "explanation": "The adjective describes someone overwhelmingly ruled by an outside force. That force might be supernatural, but it can equally be an obsession."
+  },
+  "prestigious": {
+    "synonym": "esteemed",
+    "clue": "Highly respected and carrying great standing in its field.",
+    "explanation": "This describes something honoured and widely admired. Universities, awards and journals are often described this way."
+  },
+  "probably": {
+    "synonym": "most likely",
+    "clue": "In all likelihood, though without complete certainty.",
+    "explanation": "This adverb marks something as reasonably expected to be true, but not guaranteed. It leaves a little room for being wrong."
+  },
+  "punishment": {
+    "synonym": "penalty",
+    "clue": "Suffering or loss imposed on someone as payment for wrongdoing.",
+    "explanation": "The word names suffering, pain or loss that serves as retribution. The idea of deserved payment is what separates it from mere misfortune."
+  },
+  "puzzle": {
+    "synonym": "brainteaser",
+    "clue": "A game or problem made deliberately hard to work out.",
+    "explanation": "This names something designed to be challenging to answer or solve. Crosswords and jigsaws are familiar kinds."
+  },
+  "quintessential": {
+    "synonym": "archetypal",
+    "clue": "Being the purest and most typical example of its kind.",
+    "explanation": "The word describes something perfectly representative of a type. The dictionary example applies it to a streetwise New Yorker."
+  },
+  "regenerate": {
+    "synonym": "renewed",
+    "clue": "Formed once more, as though made new a second time.",
+    "explanation": "Used as an adjective, this describes something formed or created again. Note that the verb, meaning to grow back, is a separate use."
+  },
+  "rhythmic": {
+    "synonym": "pulsing",
+    "clue": "Moving with a strong, regular beat you can feel.",
+    "explanation": "The adjective describes something marked by a pronounced repeating pattern in time. Drums, waves and breathing can all be described this way."
+  },
+  "scared": {
+    "synonym": "frightened",
+    "clue": "Filled with fear, the way a sudden noise leaves you.",
+    "explanation": "The word describes being thrown into a state of fear or panic. It covers everything from mild alarm to genuine terror."
+  },
+  "schadenfreude": {
+    "synonym": "malicious glee",
+    "clue": "The guilty pleasure of enjoying someone else's misfortune.",
+    "explanation": "Borrowed from German, this names the enjoyment taken in hearing about others' troubles. The dictionary example describes it spreading unpleasantly across social media."
+  },
+  "solitude": {
+    "synonym": "seclusion",
+    "clue": "The state of being entirely alone, away from other people.",
+    "explanation": "The word names being alone or remote from society. Unlike loneliness it need not be unhappy, and is often chosen deliberately."
+  },
+  "student": {
+    "synonym": "pupil",
+    "clue": "Someone who attends a school in order to learn.",
+    "explanation": "This names a person enrolled at a school. In wider use it can mean anyone making a careful study of a subject."
+  },
+  "supersede": {
+    "synonym": "replace",
+    "clue": "To take over the place of something older and set it aside.",
+    "explanation": "The verb means taking the position of something that came before. A new edition does this to the one it follows."
+  },
+  "variant": {
+    "synonym": "version",
+    "clue": "A form that differs a little from the standard type.",
+    "explanation": "As a noun this names something showing variation from a norm. The dictionary example refers to a differing form of a particular gene."
+  },
+  "victorious": {
+    "synonym": "triumphant",
+    "clue": "Having come out the winner in a contest or battle.",
+    "explanation": "The adjective describes whoever has won. It applies to teams, armies and arguments alike."
+  },
+  "vocabulary": {
+    "synonym": "word stock",
+    "clue": "The whole store of words a person or language uses.",
+    "explanation": "The word names the sum of words used by a language, a group, an individual or a field. Yours grows every time you learn a new one."
+  },
+  "wondrous": {
+    "synonym": "marvellous",
+    "clue": "So extraordinary that it fills you with amazement.",
+    "explanation": "This describes something to be marvelled at. It is a slightly poetic word, more at home in stories than in conversation."
+  },
+  "xenophobia": {
+    "synonym": "fear of foreigners",
+    "clue": "A deep fear and hatred of people from other countries.",
+    "explanation": "The word names fear and hatred of strangers or foreigners, or of anything foreign. It comes from Greek roots meaning stranger and fear."
+  },
+  "zeitgeist": {
+    "synonym": "spirit of the age",
+    "clue": "The mood and outlook that defines a particular period in history.",
+    "explanation": "Borrowed from German, this names the general intellectual, moral and cultural climate of an era. Each decade is often said to have its own."
+  },
+  "zygote": {
+    "synonym": "fertilized egg",
+    "clue": "The single cell formed when two reproductive cells join.",
+    "explanation": "This is the cell produced by the union of two gametes. Every animal that reproduces sexually begins as one."
+  }
+}
