@@ -4,5 +4,8 @@
   "scripts": {
     "collect:mw": "node --env-file=.env collect-mw.js",
     "test": "node --test"
+  },
+  "dependencies": {
+    "sharp": "^0.35.3"
   }
 }
