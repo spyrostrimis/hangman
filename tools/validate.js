@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
+import { buildMwAudioUrl } from "./lib/mw-audio.js";
 import { MW_MARKUP_REMAINS } from "./lib/mw-render.js";
 
 export const VALIDATION_CODES = Object.freeze({
@@ -19,6 +20,7 @@ export const VALIDATION_CODES = Object.freeze({
   MW_MARKUP_REMAINS: "MW_MARKUP_REMAINS",
   MISSING_AUDIO: "MISSING_AUDIO",
   AUDIO_404: "AUDIO_404",
+  AUDIO_URL_MISMATCH: "AUDIO_URL_MISMATCH",
   NO_PART_OF_SPEECH: "NO_PART_OF_SPEECH",
   CORPUS_MISSING_WORD: "CORPUS_MISSING_WORD",
   CORPUS_UNEXPECTED_WORD: "CORPUS_UNEXPECTED_WORD",
@@ -316,7 +318,8 @@ function validatePronunciation(pronunciation, path, errors) {
 
   requireString(pronunciation.mw, `${path}.mw`, errors);
   checkMarkup(pronunciation.mw, `${path}.mw`, errors);
-  if (!isNonEmptyString(pronunciation.audio_file)) {
+  const hasAudioFile = isNonEmptyString(pronunciation.audio_file);
+  if (!hasAudioFile) {
     addIssue(
       errors,
       VALIDATION_CODES.MISSING_AUDIO,
@@ -324,16 +327,26 @@ function validatePronunciation(pronunciation, path, errors) {
       "First Merriam-Webster pronunciation must provide usable audio",
     );
   }
-  if (
-    !isNonEmptyString(pronunciation.audio_url)
-    || !/^https:\/\/\S+$/i.test(pronunciation.audio_url)
-  ) {
+  const hasHttpsAudioUrl = isNonEmptyString(pronunciation.audio_url)
+    && /^https:\/\/\S+$/i.test(pronunciation.audio_url);
+  if (!hasHttpsAudioUrl) {
     addIssue(
       errors,
       VALIDATION_CODES.SCHEMA_INVALID,
       `${path}.audio_url`,
       "Expected an HTTPS audio URL",
     );
+  } else if (hasAudioFile) {
+    const expected = buildMwAudioUrl(pronunciation.audio_file);
+    if (pronunciation.audio_url !== expected) {
+      addIssue(
+        errors,
+        VALIDATION_CODES.AUDIO_URL_MISMATCH,
+        `${path}.audio_url`,
+        "Audio URL does not match the Merriam-Webster audio filename",
+        { expected, actual: pronunciation.audio_url },
+      );
+    }
   }
 }
 

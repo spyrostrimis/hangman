@@ -7,8 +7,10 @@ import {
   VALIDATION_CODES,
   validateManifest,
 } from "./validate.js";
+import { buildMwAudioUrl } from "./lib/mw-audio.js";
 
 function makeRecord(word) {
+  const audioFile = `${word}001`;
   return {
     word,
     mw_entry_id: `${word}:1`,
@@ -30,8 +32,8 @@ function makeRecord(word) {
     },
     pronunciation: {
       mw: "synthetic",
-      audio_file: `${word}001`,
-      audio_url: `https://media.example.test/audio/${word}001.mp3`,
+      audio_file: audioFile,
+      audio_url: buildMwAudioUrl(audioFile),
     },
     example: null,
     explanation: {
@@ -394,6 +396,71 @@ test("image key must remain an R2 object key rather than a full URL", () => {
   assert.ok(codes(result).includes(VALIDATION_CODES.IMAGE_KEY_INVALID));
 });
 
+test("matching audio filenames and URLs validate through the existing constructor", () => {
+  const cases = ["oxygen01", "ggsynthetic01", "bixsynthetic01", "3synthetic01", "_synthetic01"];
+
+  for (const audioFile of cases) {
+    const manifest = makeManifest();
+    manifest.words[0].pronunciation.audio_file = audioFile;
+    manifest.words[0].pronunciation.audio_url = buildMwAudioUrl(audioFile);
+
+    assert.equal(validateManifest(manifest).valid, true);
+  }
+});
+
+test("an unrelated HTTPS audio URL fails AUDIO_URL_MISMATCH", () => {
+  const manifest = makeManifest();
+  manifest.words[0].pronunciation.audio_file = "oxygen01";
+  manifest.words[0].pronunciation.audio_url = buildMwAudioUrl("oxygen01");
+  assert.equal(validateManifest(manifest).valid, true);
+
+  manifest.words[0].pronunciation.audio_url = "https://media.example.test/unrelated.mp3";
+
+  const result = validateManifest(manifest);
+  assert.equal(result.valid, false);
+  assert.deepEqual(
+    result.errors.find(({ code }) => code === VALIDATION_CODES.AUDIO_URL_MISMATCH),
+    {
+      code: VALIDATION_CODES.AUDIO_URL_MISMATCH,
+      path: "$.words[0].pronunciation.audio_url",
+      message: "Audio URL does not match the Merriam-Webster audio filename",
+      details: {
+        expected: buildMwAudioUrl("oxygen01"),
+        actual: "https://media.example.test/unrelated.mp3",
+      },
+    },
+  );
+});
+
+test("changing the audio filename while retaining its old URL fails", () => {
+  const manifest = makeManifest();
+  manifest.words[0].pronunciation.audio_file = "oxygen01";
+  manifest.words[0].pronunciation.audio_url = buildMwAudioUrl("oxygen01");
+  assert.equal(validateManifest(manifest).valid, true);
+
+  manifest.words[0].pronunciation.audio_file = "oxygen02";
+
+  const result = validateManifest(manifest);
+  assert.equal(result.valid, false);
+  assert.ok(codes(result).includes(VALIDATION_CODES.AUDIO_URL_MISMATCH));
+});
+
+test("invalid or non-HTTPS audio URLs do not also emit AUDIO_URL_MISMATCH", () => {
+  for (const audioUrl of ["not-a-url", "http://media.example.test/oxygen01.mp3"]) {
+    const manifest = makeManifest();
+    manifest.words[0].pronunciation.audio_file = "oxygen01";
+    manifest.words[0].pronunciation.audio_url = buildMwAudioUrl("oxygen01");
+    assert.equal(validateManifest(manifest).valid, true);
+
+    manifest.words[0].pronunciation.audio_url = audioUrl;
+
+    const result = validateManifest(manifest);
+    assert.equal(result.valid, false);
+    assert.ok(codes(result).includes(VALIDATION_CODES.SCHEMA_INVALID));
+    assert.ok(!codes(result).includes(VALIDATION_CODES.AUDIO_URL_MISMATCH));
+  }
+});
+
 test("exports the complete validator and future pipeline code contract", () => {
   for (const code of [
     "NO_MW_ENTRY",
@@ -410,6 +477,7 @@ test("exports the complete validator and future pipeline code contract", () => {
     "MW_MARKUP_REMAINS",
     "MISSING_AUDIO",
     "AUDIO_404",
+    "AUDIO_URL_MISMATCH",
     "NO_PART_OF_SPEECH",
   ]) {
     assert.equal(VALIDATION_CODES[code], code);
