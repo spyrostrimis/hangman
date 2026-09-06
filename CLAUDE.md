@@ -26,7 +26,10 @@ REBUILD, NOT MIGRATION. Most 2023 code is being replaced. Do not preserve or wor
 - API: Hono on Cloudflare Workers.
 - Data: D1 (users, scores) · static JSON manifest (words) · R2 (paintings).
 - Auth: `jose` (JWT), `bcryptjs`, httpOnly cookies, tokens MUST expire.
-- Generation pipeline: `tools/`, Node, local-only. `gpt-image-2` at 1024×1024 SQUARE for paintings — square is LOCKED, because the 116 surviving 2023 DALL·E 2 paintings are 512×512 and new images must sit beside them in the same frame. Do not "upgrade" this to landscape. MW Collegiate only for definition, pronunciation, audio, and an optional attributed example; an LLM generates the synonym hint, clue, and explanation locally. There is no Merriam-Webster Thesaurus API in this project.
+- Word-data pipeline: `tools/`, Node, local-only. MW Collegiate only, for definition, part of speech, written pronunciation, audio filename, and an optional attributed `vis` example. There is no Merriam-Webster Thesaurus API in this project.
+- Enrichment (`hints.synonym`, `hints.clue`, `explanation`): **LLM-authored during planning conversation, human-reviewed, and committed as static data in `tools/enrichment.json`.** There is NO enrichment generation harness and `tools/` never calls OpenAI. The `source` / `provenance` values stay `"llm-generated"` because that describes who produced the text, not how it was transported. If asked to build a generator for these fields, stop and confirm — it was considered and deliberately rejected for a locked 105-word corpus that needs human review either way.
+- Manifest assembly: `tools/build-manifest.js` is a small deterministic assembler, not a generator. Inputs `tools/words.locked.json` + `tools/output/mw-probe.json` + `tools/enrichment.json`; output `client/src/data/words.json`.
+- Image generation, if it ever happens: `gpt-image-2` at 1024×1024 SQUARE — square is LOCKED, because the 116 surviving 2023 DALL·E 2 paintings are 512×512 and new images must sit beside them in the same frame. Do not "upgrade" this to landscape. Not currently needed: all 105 shipping words already have a rescued painting.
 
 BEING REMOVED: MongoDB, Mongoose, Express, `bcrypt` (native), `jsonwebtoken`, `axios`, OpenAI SDK v3, `body-parser`, `mongoose-type-email`, `read-more-react`, `web-vitals`, `mdb-react-ui-kit`.
 
@@ -39,9 +42,37 @@ BEING REMOVED: MongoDB, Mongoose, Express, `bcrypt` (native), `jsonwebtoken`, `a
 - `core.autocrlf` is on. `.gitattributes` exists and contains exactly `* text=auto eol=lf`; watch for unexpected line-ending churn.
 - `../hangman-export/` is a SIBLING folder outside this repo — 203 MB of rescued 2023 data plus its own `node_modules`. It is not part of the repo and must never be moved into it or staged.
 
+## WORD DATA — FILE MAP
+
+Committed (tracked):
+
+- `tools/words.locked.json` — canonical 105-word corpus. THE authority for validation; never a generated count.
+- `tools/mw-overrides.json` — 76 explicit human `entry_id` + `unit` selections. Ambiguity is resolved here, never by hidden ranking.
+- `tools/enrichment.json` — reviewed synonym / clue / explanation per word. Flat `word -> {synonym, clue, explanation}`; deliberately carries NO provenance wrappers, which the assembler assigns.
+- `tools/schema/manifest.schema.json`, `tools/validate.js` — the manifest contract and its enforcement.
+- `tools/build-manifest.js` — deterministic assembler.
+- `client/src/data/words.json` — the built runtime manifest, 105 records, validator-green.
+
+Local-only (gitignored, never committed):
+
+- `tools/cache/collegiate/` — real MW responses. All 105 cached; reruns cost 0 GETs.
+- `tools/output/mw-probe.json` — probe/report output. Report-only fields must never leak into the manifest.
+- `tools/.env` — `MW_KEY`.
+
+## HINT / UI SEMANTICS
+
+Load-bearing for anything touching `hints`, `example`, or `explanation`:
+
+- **HINT 1 is `synonym`** and is the HARDER hint — a short synonym or close semantic equivalent, deliberately not a giveaway. It need not be a strict dictionary synonym where English offers no useful exact one.
+- **HINT 2 is `clue`** and is the friendlier fallback, a descriptive phrase giving more help after HINT 1.
+- **The painting is a post-guess REWARD, not an aid.** It appears only after the player wins; a loss shows a Game Over screen instead. Hint text must never be derived from or describe the painting.
+- **`explanation` and `example` are post-answer content**, shown after the word is solved. That is why answer-leak validation covers `synonym` and `clue` only.
+
 ## RUN / TEST
 
 From `client/`, run `npm run dev` for the Vite development server, `npm run build` for a production build, and `npm run preview` to serve the production build locally.
+
+From `tools/`, run the Node test suite for the word-data pipeline (166 passing at last commit) and `node validate.js ../client/src/data/words.json` to check the built manifest. The pipeline is local-only and never runs in production.
 
 ## DEPLOYMENT
 
@@ -114,6 +145,18 @@ Snapshot from the 2023 audit — may lag current code. **Verify against the actu
 - README's live link points at `hengman.netlify.app` — a host this project no longer uses. Acknowledgements section still literally reads "[Insert appropriate credits or references]".
 - `client/package.json` `homepage` is `hangman.spyrostrimis.com` — load-bearing under CRA only; dies with the Vite migration.
 - The 2023 working tree and HEAD disagreed about the API base URL and which word endpoint the client called. Both states are now committed as-found.
+
+## COMMITTED IS NOT WIRED
+
+This project keeps three states apart, and conflating them causes real damage:
+
+- **implemented / committed** — the code or data exists in the repo;
+- **agreed / planned** — a decision was taken, nothing was built;
+- **actually wired / live** — a player hitting hangman.spyrostrimis.com experiences it.
+
+As of the latest commit: `client/src/data/words.json` is built, committed and validator-green, but **React has NOT been wired to consume it**, and the R2 painting objects have **not** been prepared or uploaded. The `image.key` values in the manifest are intended keys, not proof that anything exists in R2.
+
+Pushing to `main` publishes through Pages, so data and tooling commits do go live as files — but that does not mean the visible game has switched to the new data path. Do not describe the rebuilt game as using the manifest or the images until that work is actually done.
 
 ## SCOPE
 
