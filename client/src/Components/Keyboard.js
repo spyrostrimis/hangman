@@ -150,6 +150,8 @@ const Keyboard = ({
             <img
               id="wordroonyimg"
               src={ronnyai}
+              width={170}
+              height={204}
               alt="painting by ChatGPT"
               title="painting by ChatGPT"
               // width={200}

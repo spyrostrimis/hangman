@@ -129,6 +129,8 @@ const Intro = () => {
             <img
               id="introronnyimg"
               src={ronnyai}
+              width={170}
+              height={204}
               // style={{ float: "right", height: "160px", cursor: "help" }}
               alt="The robot Professor Han Fastolfe"
               title="Professor Han Fastolfe"
@@ -193,6 +195,8 @@ const Intro = () => {
               <img
                 id="introartsyimg"
                 src={artsy}
+                width={288}
+                height={250}
                 // style={{ height: "123px", cursor: "help" }}
                 title="Artsy"
                 alt="The robot Artsy"

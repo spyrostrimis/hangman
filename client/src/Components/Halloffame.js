@@ -1,35 +1,27 @@
 import React from 'react'
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
+import { loadLeaderboard } from '../lib/leaderboard.js';
 import { Link } from "react-router-dom";
-import { Typewriter } from 'react-simple-typewriter'
 
 const Halloffame = ({ Winner = false}) => {
   const [allusers, setAllusers] = useState([]);
+  const [status, setStatus] = useState('loading');
   const token = localStorage.getItem("token");
   // if (token) {
   //   return <Navigate to="/" />;
   // }
-    useEffect(() => {
-      // Add a class to the body element when the component mounts
-      document.body.classList.add("hall-of-fame-body");
-
-      // Remove the class from the body element when the component unmounts
-      return () => {
-        document.body.classList.remove("hall-of-fame-body");
-      };
-    }, []);
-
-  async function getAllUsers() {
-    let response = await axios.get(
-      "http://localhost:8000/user/get-best-scores"
-    );
-    setAllusers(response.data);
-  }
 
   useEffect(() => {
-    getAllUsers();
+    const controller = new AbortController();
+    setStatus('loading');
+    loadLeaderboard(controller.signal).then(users => {
+      if (controller.signal.aborted) return;
+      setAllusers(users);
+      setStatus(users.length ? 'ready' : 'empty');
+    }).catch(() => {
+      if (!controller.signal.aborted) setStatus('error');
+    });
+    return () => controller.abort();
   }, []);
 
 
@@ -47,27 +39,40 @@ const Halloffame = ({ Winner = false}) => {
         </div>
       )}
       <h1>HALL OF FAME</h1>
-      <div className='halltable'>
-        <table id="highscores">
-          <thead>
-            <tr>
-              <th style={{ textAlign: "right" }}>Rank</th>
-              <th style={{ textAlign: "center", width: "480px" }}>Score</th>
-              <th>Player</th>
-            </tr>
-          </thead>
-          <tbody>
-            {allusers.map((user, index) => {
-              return (
-                <tr key={user.username}>
-                  <td>{index + 1}</td>
-                  <td>{user.score}</td>
-                  <td>{user.username}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <div className='halltable' aria-busy={status === 'loading'}>
+        <div aria-live="polite" aria-atomic="true">
+          {status !== 'ready' && (
+            <div className="hall-status">
+              {status === 'loading' && <p>Loading scores…</p>}
+              {status === 'empty' && <p>No scores yet.</p>}
+              {status === 'error' && (
+                <p>Scores are unavailable right now. Please try again later.</p>
+              )}
+            </div>
+          )}
+        </div>
+        {status === 'ready' && (
+          <table id="highscores">
+            <thead>
+              <tr>
+                <th style={{ textAlign: "right" }}>Rank</th>
+                <th style={{ textAlign: "center", width: "480px" }}>Score</th>
+                <th>Player</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allusers.map((user, index) => {
+                return (
+                  <tr key={user.username}>
+                    <td>{index + 1}</td>
+                    <td>{user.score}</td>
+                    <td>{user.username}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

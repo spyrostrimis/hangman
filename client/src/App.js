@@ -1,4 +1,6 @@
 import './App.css';
+import PageBackground from './Components/PageBackground';
+import { getPageArt, prefetchLinkArt } from './lib/page-art.js';
 // import Hello from './Components/Hello';
 import Navbar from './Components/Navbar';
 // import AuthWrapper from "./Components/AuthWrapper";
@@ -23,6 +25,7 @@ import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 
 function App() {
   const location = useLocation();
+  const pageArt = getPageArt(location.pathname);
   const isHangPage = location.pathname === "/hangman";
 
   const [selectedWord, setSelectedWord] = useState(null);
@@ -301,7 +304,13 @@ function App() {
     : null;
 
   return (
-    <>
+    <div
+      className="page-shell"
+      onPointerOverCapture={prefetchLinkArt}
+      onFocusCapture={prefetchLinkArt}
+      onTouchStartCapture={prefetchLinkArt}
+    >
+      <PageBackground key={pageArt.desktop} art={pageArt} />
       <div className="App">
         <Navbar />
         <Routes>
@@ -375,7 +384,7 @@ function App() {
         </Routes>
       </div>
       {/* <Footer /> */}
-    </>
+    </div>
   );
 }
 

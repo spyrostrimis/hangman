@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRef } from "react";
 import axios from "axios";
-import { useNavigate, Navigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 
 function Signup() {
   const usernameRef = useRef();
@@ -72,7 +72,7 @@ function Signup() {
           <br />
           <br />
           <span>
-            Already have an account? Please <a href="/login">log in</a>
+            Already have an account? Please <Link to="/login">log in</Link>
           </span>
         </form>
       </div>

@@ -1,6 +1,7 @@
 @font-face {
   font-family: technoboard;
-  src: url(./Fonts/TechnoBoard-519Ej.ttf);
+  src: url(./Fonts/TechnoBoard-519Ej.woff2) format("woff2");
+  font-display: swap;
 }
 
 /* @font-face {
@@ -15,7 +16,8 @@
 
 @font-face {
   font-family: bruno;
-  src: url(./Fonts/BrunoAceSC-Regular.ttf);
+  src: url(./Fonts/BrunoAceSC-Regular.woff2) format("woff2");
+  font-display: swap;
 }
 
 body,
@@ -29,9 +31,9 @@ html {
     overflow-y: hidden; */
   background-color: #e6f5f7;
   background-color: #bfc2ba;
-  background-color: #999999 !important;
+  background-color: #182028 !important;
   /* font-family: Roboto, Helvetica, Arial, sans-serif; */
-  background-image: url("./Images/bg-big.jpg");
+  background-image: none;
   background-size: cover;
   background-position: center center;
   background-blend-mode: multiply;
@@ -411,16 +413,7 @@ button:focus::after {
 /* HANGMAN PAGE */
 
 /* Additional styles for the Hall Of Fame page */
-.figure-body {
-  background-image: url("./Images/word-bg.jpg");
-  background-color: #999999 !important;
-  background-size: cover;
-  background-position: top center;
-  background-blend-mode: multiply;
-  background-blend-mode: overlay;
-  background-blend-mode: normal;
-  background-blend-mode: color-burn;
-}
+
 
 .figurefacts {
   width: 100%;
@@ -1058,13 +1051,7 @@ td:nth-of-type(3) {
 }
 
 /* Additional styles for the Illucia page */
-.illucia-body {
-  background-image: url("./Images/illucia-bg.jpg");
-  background-color: #999999 !important;
-  background-size: cover;
-  background-position: top center;
-  background-blend-mode: multiply;
-}
+
 
 .illucontainer {
   max-width: 900px;
@@ -1084,13 +1071,7 @@ td:nth-of-type(3) {
 }
 
 /* Additional styles for the Hall Of Fame page */
-.hall-of-fame-body {
-  background-image: url("./Images/hall-bg.jpg");
-  background-color: #999999 !important;
-  background-size: cover;
-  background-position: top center;
-  background-blend-mode: multiply;
-}
+
 
 .hallcontainer {
   max-width: 900px;
@@ -1564,3 +1545,47 @@ input {
     display: none;
   }
 }
+
+/* A single route-owned background prevents body-effect flashes and double loads. */
+.page-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  background: #182028;
+}
+.page-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  /* Keep image blending inside this layer, independent of scrolling content. */
+  isolation: isolate;
+  transform: translateZ(0);
+  pointer-events: none;
+  overflow: hidden;
+  background: #999;
+  opacity: 0;
+  transition: opacity 180ms ease-out;
+}
+.page-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.page-background.is-ready { opacity: 1; }
+.page-shell > .App {
+  position: relative;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-background { transition: none; }
+}
+#introronnyimg, #introartsyimg { width: auto; }
+#wordartsyimg, #wordroonyimg { height: auto; }
+.hall-status {
+  min-height: 8rem;
+  display: grid;
+  place-content: center;
+  gap: 0.75rem;
+  font: 1rem/1.6 Roboto, Arial, sans-serif;
+}
+.hall-status p { margin: 0; }

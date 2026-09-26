@@ -1,5 +1,4 @@
 import React from "react";
-import { useEffect } from "react";
 import artsy from "../Images/artsy.png";
 import defaultpainting from "../Images/painting.webp";
 import gameover from "../Images/gameover.png";
@@ -100,15 +99,6 @@ const BODY_PARTS = [HEAD, BODY, LEFT_ARM, RIGHT_ARM, LEFT_LEG, RIGHT_LEG];
 
 const Figure = ({ painting, Winner = false, Loser = false }) => {
   // console.log(painting);
-  useEffect(() => {
-    // Add a class to the body element when the component mounts
-    document.body.classList.add("figure-body");
-
-    // Remove the class from the body element when the component unmounts
-    return () => {
-      document.body.classList.remove("figure-body");
-    };
-  }, []);
 
   // useEffect(() => {
   //   setRemaining();
@@ -167,6 +157,8 @@ const Figure = ({ painting, Winner = false, Loser = false }) => {
         <img
           id="wordartsyimg"
           src={artsy}
+          width={288}
+          height={250}
           alt={`The robot Artsy`}
           // width={250}
         />
