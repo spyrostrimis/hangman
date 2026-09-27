@@ -10,7 +10,7 @@ import Figure from './Components/Figure';
 import Word from "./Components/Word";
 import Wordfacts from './Components/Wordfacts';
 import Keyboard from "./Components/Keyboard";
-const Illucia = lazy(() => import('./Components/Illucia'));
+import Illucia from './Components/Illucia';
 import Halloffame from "./Components/Halloffame";
 import Footer from './Components/Footer';
 import soundbtn from "./Images/soundbtn.png";
@@ -19,7 +19,7 @@ import manifest from "./data/words.json";
 import { buildAssetUrl, selectRandomWord } from "./lib/word-data.js";
 import { useRoundScore } from './lib/use-round-score.js';
 
-import { useCallback, useEffect, useState, lazy, Suspense } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 
 function App() {
@@ -372,11 +372,7 @@ function App() {
           />
           <Route
             path="/illucia"
-            element={
-              <Suspense fallback={<p className="session-loading" role="status">Loading Illucia…</p>}>
-                <Illucia />
-              </Suspense>
-            }
+            element={<Illucia />}
           />
           <Route
             path="/hall-of-fame"
