@@ -1,88 +1,100 @@
 # Accounts, Hall of Fame, and Illucia plan
 
-Prepared 2026-09-26 against `3a4fa1d`. Accounts implementation began 2026-09-26 after explicit user approval. Current verification/deployment status is tracked in `server/RELEASE.md`; Illucia remains a separate planned feature.
+Hangman: Rescue Mission is an English vocabulary game about reviving the robot Artsy by discovering a secret word. Originally a 2023 bootcamp project, it now runs on React/Vite and Cloudflare's Free plan.
+
+## Pages and games at a glance
+
+| Page | Purpose |
+| --- | --- |
+| Homeworld (`/`) | Introduces Professor Fastolfe, Artsy, and the rescue mission; leads into the game. |
+| Play Hangman (`/hangman`) | The player guesses the game's word one letter at a time. Hits reveal every matching letter; six incorrect guesses lose the round. Reveal the whole word to win. Hints help during play; a win unlocks the painting and vocabulary details, including pronunciation. Guests can play; signed-in winners earn 100 points. |
+| Play vs AI / Illucia (`/illucia`) | Planned reverse Hangman: the player supplies an English word and Illucia guesses letters. Hits reveal all matches without costing a chance; Illucia wins by revealing the word, and the player wins after her sixth miss. Currently a signed-in-only “Coming Soon” page; the game and choice of AI are not implemented. |
+| Hall of Fame (`/hall-of-fame`) | Public leaderboard of the top 100 cumulative player scores, with sign-in/signup links for guests. |
+| Create account (`/signup`) | Registers a username and password and signs the player in. Explains password requirements and the absence of password recovery. |
+| Sign in (`/login`) | Signs an existing player in and returns them to a supported requested page. The navigation provides Logout when signed in. |
+
+Prepared 2026-09-26; account sections updated 2026-09-27 to reflect the deployed implementation through `063ca07`. See [the release record](server/RELEASE.md) for verification evidence. Phase 4 below remains the original, unmodified future-game plan.
 
 ## Verified starting point
 
-- No `state.md` was found in this checkout. `CLAUDE.md` records the current rebuild state and constraints.
-- The static word game is rebuilt. Registration, login, leaderboard reads, and winner-score writes still target `http://localhost:8000`.
-- `server/` is the legacy Express/MongoDB reference. No Hono Worker or D1 migrations exist.
-- `Illucia.js` is a placeholder, with no reverse-Hangman engine or effective account gate.
-- The old word router contains eight routes in total, not six; retire the entire unused router rather than rebuilding any of it.
-- Preserve the existing decision: normal Hangman awards 100 points per reported win, and scoring remains client-authoritative and forgeable. This plan does not introduce server-authoritative gameplay.
+- The static Hangman game, registration, login/logout, cumulative scores, and Hall of Fame are live at https://hangman.spyrostrimis.com. The frontend uses same-origin `/user/*` requests, not the old localhost API.
+- React/Vite is served by Cloudflare Pages. A Hono Worker handles `hangman.spyrostrimis.com/user/*`; D1 stores users and scores. Local development uses a Vite proxy and a separate local D1 database.
+- The legacy Express/MongoDB/OpenAI backend and all eight `/word/` routes have been removed, along with obsolete client auth components, `axios`, and `jwt-decode`.
+- Normal gameplay uses 105 static word records and R2 paintings, with Merriam-Webster pronunciation audio. No live word-generation or dictionary API requests are made.
+- Illucia's account gate works, but its reverse-Hangman engine and guessing opponent remain unbuilt. Its future results do not currently contribute to the leaderboard.
+- Signed-in Hangman wins save 100 points. Guest wins and losses save nothing. Play Hangman shows no score-saving, success, or failure notifications, as requested in `063ca07`; totals are available in the Hall of Fame.
+- Scores remain client-authoritative and forgeable by design. Authentication and atomic increments are implemented; server-authoritative gameplay is deliberately excluded.
+- `CLAUDE.md` records repository rules and current state; no `state.md` was found in this checkout. [API documentation](server/README.md) covers the credential protocol, setup, release, and rollback.
 
 ## Phase 3: accounts and cumulative scores
 
-### 1. Agreed password design (supersedes bcryptjs)
+**Completed and deployed.** The sections below describe the implemented behavior and remaining limitations, rather than pending account-rebuild work.
 
-The user confirmed that secure bcryptjs hashing exceeds the Workers Free CPU budget. Approved replacement: browser Web Crypto PBKDF2-HMAC-SHA-256 at 600,000 iterations, random per-account salts, and server-side HMAC-SHA-256 verifiers under a separate secret pepper. A pre-login parameters endpoint returns real salts or stable secret-derived fake salts for unknown usernames. Verification uses native constant-time HMAC verification. Sessions still use jose and expiring HttpOnly cookies.
+### 1. Implemented password design
 
-The server cannot prove a modified client stretched a password or enforce the original password's strength. The transmitted derived credential is password-equivalent and must not be logged or stored. See server/README.md for the full versioned protocol, limitations and recovery implications. Production CPU measurements remain required before declaring Free-tier viability verified.
+The user tested bcryptjs and confirmed the Workers Free CPU problem. The approved replacement is browser Web Crypto PBKDF2-HMAC-SHA-256 at 600,000 iterations, with a random 128-bit salt per account. The Worker stores an HMAC-SHA-256 verifier under a separate secret pepper and verifies it with native Web Crypto. Login obtains versioned parameters first; unknown usernames receive stable, secret-derived fake salts with the same response shape.
 
-### 2. Establish the Worker and D1 foundation
+The raw password never goes to the API. The derived credential is password-equivalent and is neither persisted nor logged. The server cannot prove that a modified client performed stretching or enforce the original password's strength. The official signup form requires 15–128 characters. Public leaderboard names and duplicate-signup errors mean fake salts reduce, but do not eliminate, username enumeration.
 
-- Replace the legacy backend with a small Hono Worker, with explicit local-development, migration, test, and deployment scripts.
-- Proposed production routing: retain Pages for the frontend and route `hangman.spyrostrimis.com/user/*` to the Worker. Verify the Cloudflare zone, proxied DNS, and Pages coexistence during setup. Keep browser API requests relative and same-origin. Use a Vite development proxy for the same paths locally.
-- Store signing secrets using Workers secrets; use ignored local development secrets. Never put secrets in frontend environment variables.
-- Use checked-in D1 migrations and prepared statements. Create the following tables:
+The deployed Worker was measured on the confirmed Free plan: initial CPU P50 **1.96 ms**, P99/P999 **3.56 ms**, below the 10 ms allowance in the small release-test sample. This is not a load-test guarantee. Stretching responsiveness on a slow physical phone remains unmeasured.
 
-| Table | Proposed columns and constraints |
+### 2. Worker and D1 foundation
+
+- `server/src/` contains the Hono API, with local development, migration, type-check, test, and deployment scripts.
+- D1 `hangman-accounts` is provisioned in EEUR with migration `0001_accounts.sql` applied. Queries use prepared statements.
+- JWT signing, verifier pepper, and dummy-salt secrets are independent Workers secrets. Local secrets and runtime files are ignored by Git; credentials are never frontend configuration.
+
+| Table | Implemented columns and constraints |
 | --- | --- |
 | `users` | `id` primary key, display `username`, unique normalized `username_key`, `salt`, `verifier`, `kdf_version`, `created_at` |
-| `scores` | `user_id` primary key and foreign key to users, nonnegative integer `total` default 0, `updated_at` |
+| `scores` | `user_id` primary key and foreign key to users with cascading deletion, bounded nonnegative integer `total` default 0, `updated_at` |
 
-- This is one cumulative score per user, matching the existing game, rather than a history of individual matches. Create the user and initial score in an atomic D1 batch. Increment using SQL `total = total + 100`, avoiding a read-then-write race.
-- Index leaderboard ordering; use a deterministic secondary sort for tied totals.
-- Proposed default: fresh registrations and scores. No import of old MongoDB records is included; revisit before cutover if old accounts must survive.
+User creation and the initial score are one atomic D1 batch. Scores accumulate in one row per user; SQL increments avoid read/modify/write races. Leaderboard ordering is indexed and deterministic: total descending, then user ID ascending. Accounts started fresh; old MongoDB records were not imported.
 
-References: [Hono on Workers](https://hono.dev/docs/getting-started/cloudflare-workers), [Worker routes](https://developers.cloudflare.com/workers/configuration/routing/routes/), [D1 database API](https://developers.cloudflare.com/d1/worker-api/d1-database/), [D1 free-tier pricing and limits](https://developers.cloudflare.com/d1/platform/pricing/).
+### 3. API and cookie authentication
 
-### 3. Implement the API and cookie authentication
-
-Preserve the four existing route paths and HTTP methods; deliberately replace token response bodies with safe user data and cookies. Add the pre-login parameters endpoint plus two routes necessary for cookie-based frontend sessions:
-
-| Method and path | Contract |
+| Method and path | Live contract |
 | --- | --- |
 | `POST /user/auth-params` | Return versioned derivation parameters and an existing or stable fake salt. |
-| `POST /user/signup` | Validate username/credential/salt/version, create user and zero score, set session cookie, return safe user data; duplicate username is a conflict. |
-| `POST /user/login` | Verify credentials, set session cookie, return safe user data; generic invalid-credentials error. |
-| `GET /user/me` | Verify session and return current user and score; otherwise 401. |
-| `POST /user/logout` | Clear the session cookie. |
-| `GET /user/get-best-scores` | Public bounded leaderboard, preserving the array of `{ username, score }`; proposed first release: top 100, including zero totals. |
-| `PUT /user/add100` | Require authentication; add exactly 100 to the authenticated user's total and return the new total. Never accept a user ID or points amount from the caller. |
+| `POST /user/signup` | Validate username/credential/salt/version, create user and zero score, set the session cookie, and return safe user data; duplicate username returns 409. |
+| `POST /user/login` | Verify the credential, set the session cookie, and return safe user data; wrong or unknown credentials receive a generic 401. |
+| `GET /user/me` | Verify the session and return the current user and score; otherwise 401. |
+| `POST /user/logout` | Expire the browser's session cookie. |
+| `GET /user/get-best-scores` | Return a public array of `{ username, score }`, limited to the top 100, including zero totals. |
+| `PUT /user/add100` | Authenticate the player, accept only an empty JSON object, atomically add 100 to their total, and return `{ score }`. |
 
-- Use expiring, signed JWTs through `jose`, with verified algorithm, issuer, audience, and expiry. Proposed initial lifetime: 24 hours, without automatic refresh.
-- Use a host-only `HttpOnly`, `Secure`, `SameSite=Lax` cookie with `Path=/` and matching expiry. Apply an explicit localhost-only development configuration.
-- Logout clears the browser cookie; an already-copied JWT remains valid until expiry. Immediate token revocation is outside this initial stateless design.
-- Protect mutating requests with trusted-origin checks and required JSON where applicable. Do not enable wildcard credentialed CORS. Auth responses must not be cached.
-- Validate server-side lengths and formats, normalize usernames consistently, validate the credential format; enforce password length in the official client without claiming server-side enforcement, bound request sizes, and throttle authentication attempts using a verified free-tier-compatible mechanism. Never log passwords or tokens or return raw database errors.
-- No email collection, recovery emails, OAuth, or password reset in the initial slice; make the lack of recovery clear when registering.
+- `jose` signs HS256 JWTs with a 24-hour lifetime. Verification checks the algorithm, issuer, audience, subject, issued-at, and expiry; there is no automatic refresh.
+- Production uses a host-only `__Host-hangman_session` cookie with `HttpOnly`, `Secure`, `SameSite=Lax`, and `Path=/`. An explicit localhost-only configuration supports development.
+- Mutations require the exact trusted Origin and JSON content type. Bodies are limited to 2 KiB; all API responses use `no-store`.
+- Native rate-limit bindings allow 60 requests per IP per minute and 10 signup/login attempts per normalized username per minute. Limits are approximate and per Cloudflare location, not global abuse prevention.
+- Application logs omit credentials, tokens, and request bodies; responses do not expose database error details.
+- Logout clears the cookie; copied JWTs remain valid until expiry. Immediate revocation, email collection, OAuth, password reset, and account-recovery UI are not included.
 
-### 4. Connect registration, login, and navigation
+### 4. Registration, login, and navigation
 
-- Introduce one shared auth state with loading, authenticated, and guest states, populated by `/user/me` on reload.
-- Update Signup, Login, Navbar, Hall of Fame messaging, and Illucia access checks to consume that state.
-- Remove localStorage token reads/writes and JWT decoding; clear the legacy token key once during transition.
-- Preserve the visual design while adding visible validation, pending, and failure states. Use real labels, appropriate password autocomplete, and disabled duplicate submissions.
-- Successful signup signs the player in. Login restores a safe internal destination. Logout calls the API and updates the UI immediately after success.
-- Keep normal Hangman playable as a guest. Gate Illucia's page for registered users as advertised; any future AI endpoint must independently authenticate requests.
+- Shared auth state covers loading, authenticated, guest, and failure states. `/user/me` restores the session on reload and refreshes it on window focus.
+- Signup, Login, Navbar, Hall of Fame messaging, and Illucia use that state. Legacy localStorage token handling and client JWT decoding are removed; the old token key is cleared during transition.
+- Forms retain the visual design and provide labels, autocomplete, validation, pending/error states, and duplicate-submit prevention.
+- Signup signs the new player in. Login restores a supported internal destination. Logout updates the UI after API success.
+- Normal Hangman remains available to guests. Illucia redirects guests to login and returns signed-in players to its placeholder page.
 
-### 5. Connect wins and Hall of Fame
+### 5. Wins and Hall of Fame
 
-- Move the score side effect out of `Word.js` into the round lifecycle. Send one score request when a signed-in player wins; prevent ordinary duplicate sends from rerenders or effect reruns.
-- Guest wins and losses send nothing. Do not award a past guest win when somebody signs in afterward.
-- Show score-saving, success, and failure states without preventing the player from continuing. Do not automatically retry an ambiguous score write: it may already have reached the database.
-- Keep intentional replay/forgery limitations documented. Client duplicate prevention is a UI correctness measure, not anti-cheat or guaranteed exactly-once delivery.
-- Replace the leaderboard localhost URL, retaining timeout, abort, validation, and loading/empty/error states. Refresh when the Hall of Fame is opened so newly saved totals appear.
+- The score side effect now belongs to `useRoundScore`, not `Word.js`. One request is claimed per signed-in winning round, including under React StrictMode.
+- Guest wins and losses send no score request. Signing in after a guest win does not award it retrospectively.
+- Score saving runs silently: Play Hangman renders no score notifications on a win or loss. Removing the notification did not remove score persistence.
+- Ambiguous writes are not automatically retried. Client duplicate prevention handles ordinary rerenders; it is not anti-cheat or guaranteed exactly-once delivery.
+- The Hall of Fame fetches current totals when opened, validates the response, supports cancellation and a 10-second timeout, and retains loading, empty, error, and success states.
 
-### 6. Verify, retire legacy code, and release
+### 6. Verification, release, and remaining work
 
-- API tests: signup validation, duplicate races, wrong password, invalid/expired JWT, cookie attributes, logout, rejected origins, unauthenticated scoring, atomic concurrent increments, safe public leaderboard fields, bounds and tie ordering.
-- Frontend checks: register, reload, logout, login, expiration, guest play, one normal score submission per win, no score on loss, failed score save, and Hall of Fame loading/empty/failure/success. Cover the previous signup fall-through bug.
-- Follow repository test discipline: demonstrate new regression tests fail when the behavior under test is broken, then restore it. Run the relevant client/API suites and production build; manually verify desktop/mobile flows.
-- Remove the old Express/MongoDB/OpenAI backend and all eight `/word/` routes after their replacements are verified. Remove `axios` and `jwt-decode` only after checking all remaining imports, including disconnected legacy components.
-- Update architecture, setup, limitations, and deployment documentation. Do not describe accounts or scores as rebuilt until end-to-end verification succeeds.
-- Prepare D1 and secrets, deploy/verify the API, then publish the connected frontend. Keep changes scoped and reviewable on `main`; each push publishes production. Record rollback steps and preserve D1 data when reverting code. This planning request does not perform a deployment.
+- The account release passed **27 automated tests**: 8 Workers/D1 integration tests, 11 client Node tests, and 8 React component tests. Server types/checks and both production builds passed.
+- Tests cover credentials, duplicate registrations, cookies and token expiry, Origin enforcement, rate-limit decisions, atomic increments, leaderboard ordering/limits, forms, guest behavior, and score submission. Deliberately broken password verification, duplicate prevention, and signup navigation each caused a test failure before restoration.
+- Local browser checks covered account flows, mobile and desktop layout, session persistence, the Illucia gate, and a winning round. Production checks verified signup, login/logout, cookies, expired-token rejection, score saving, and persisted leaderboard totals. Disposable test accounts were removed afterward.
+- The later notification removal passed all 8 existing UI tests and the frontend build; the win screen was checked manually and the updated bundle verified live.
+- API/D1/secrets were deployed before the connected Pages frontend. The canonical domain and API coexist correctly. A Cloudflare Bulk Redirect sends the Pages hostname and deployment subdomains to the custom domain, preserving paths and query strings.
+- Architecture, protocol limitations, setup, release evidence, and rollback instructions are documented. Rollback preserves D1 data and secrets. Commits stay on `main`; each push publishes the frontend, while Worker deployment is separate.
+- Remaining limitations: physical slow-phone performance is unmeasured; password recovery and legacy-account migration are absent. The release audit found no server dependency advisories and nine existing client advisories, reserved for separate dependency work. Illucia gameplay remains Phase 4.
 
 ## Phase 4: Illucia reverse Hangman
 
