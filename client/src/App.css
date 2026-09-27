@@ -1608,3 +1608,552 @@ input {
 @media (max-width: 800px) {
   .navbarcustom nav a, .navbarcustom .nav-logout { font-size: 13px; padding: 10px 8px; }
 }
+
+/* =========================================
+   ILLUCIA: REVERSE HANGMAN STYLES
+   ========================================= */
+
+.illucontainer-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.illucia-stage-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Setup Console */
+.illucia-setup-container {
+  max-width: 680px;
+  width: 90%;
+  margin: 30px auto;
+  text-align: center;
+}
+
+.illucia-title {
+  font-family: "technoboard";
+  color: #d9d8db;
+  text-shadow: 0 0 15px rgba(165, 78, 215, 0.8), 0 0 5px rgba(0, 229, 255, 0.6);
+  margin-bottom: 12px;
+  letter-spacing: 2px;
+}
+
+.illucia-subtitle {
+  font-family: "bruno";
+  font-size: 1.1rem;
+  color: #cdcdcd;
+  margin-bottom: 24px;
+}
+
+.illucia-setup-form {
+  background: rgba(15, 17, 26, 0.85);
+  border: 1px solid rgba(165, 78, 215, 0.6);
+  border-radius: 12px;
+  padding: 30px 35px;
+  box-shadow: 0 0 20px rgba(165, 78, 215, 0.35), inset 0 0 30px rgba(0, 0, 0, 0.7);
+}
+
+.setup-field-group {
+  margin-bottom: 28px;
+  text-align: left;
+}
+
+.setup-label {
+  display: block;
+  font-family: "bruno";
+  font-size: 0.95rem;
+  color: #00e5ff;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.input-with-tools {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.input-with-tools input {
+  flex: 1 1 240px;
+  min-width: 0 !important;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-family: monospace;
+  font-size: 1.4rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  border: 1px solid rgba(0, 229, 255, 0.5) !important;
+  padding: 8px 14px;
+  border-radius: 6px !important;
+}
+
+.input-with-tools input:focus-visible {
+  outline: none;
+  border-color: #00e5ff !important;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+}
+
+.toggle-mask-btn,
+.random-word-btn {
+  background: rgba(44, 46, 52, 0.85);
+  color: #edee02;
+  border: 1px solid rgba(237, 238, 2, 0.6);
+  border-radius: 6px;
+  font-family: "bruno";
+  font-size: 0.85rem;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toggle-mask-btn:hover,
+.random-word-btn:hover {
+  background: rgba(237, 238, 2, 0.15);
+  box-shadow: 0 0 8px rgba(237, 238, 2, 0.5);
+}
+
+.validation-indicator {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: sans-serif;
+}
+
+.validation-indicator.neutral { color: #aaa; }
+.validation-indicator.valid { color: #51ff85; text-shadow: 0 0 6px rgba(81, 255, 133, 0.5); }
+.validation-indicator.invalid { color: #ff6b8b; text-shadow: 0 0 6px rgba(255, 107, 139, 0.5); }
+.indicator-symbol { font-weight: bold; }
+
+.difficulty-pills {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.pill-btn {
+  background: rgba(25, 27, 36, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #ccc;
+  padding: 12px 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.pill-btn b {
+  font-family: "bruno";
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+}
+
+.pill-btn small {
+  font-size: 0.75rem;
+  color: #999;
+}
+
+.pill-btn.selected {
+  background: rgba(165, 78, 215, 0.25);
+  border-color: #a54ed7;
+  color: #fff;
+  box-shadow: 0 0 12px rgba(165, 78, 215, 0.5);
+}
+
+.pill-btn.selected b {
+  color: #00e5ff;
+}
+
+.start-duel-btn {
+  width: 100%;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, rgba(165, 78, 215, 0.8), rgba(0, 229, 255, 0.8));
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-family: "bruno";
+  font-size: 1.25rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+  transition: all 0.2s ease;
+}
+
+.start-duel-btn:hover:not(:disabled) {
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.8);
+  transform: translateY(-2px);
+}
+
+.start-duel-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+/* Illucia Figure & Holo-Screen */
+.illucia-screen {
+  border-color: rgba(165, 78, 215, 0.7) !important;
+  box-shadow: 0 0 8px rgba(165, 78, 215, 0.8) !important;
+}
+
+.illucia-screen-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(180deg, #111424, #0b0c16) !important;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.9), 0 0 6px rgba(165, 78, 215, 0.5) !important;
+}
+
+.illucia-hud-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: "bruno";
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.hud-badge { color: #a54ed7; }
+.hud-status { color: #00e5ff; text-shadow: 0 0 6px rgba(0, 229, 255, 0.5); }
+
+.illucia-guess-spotlight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.illucia-current-guess {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.guess-label {
+  font-family: "bruno";
+  font-size: 0.85rem;
+  color: #cdcdcd;
+  letter-spacing: 2px;
+}
+
+.guess-letter-orb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.4) 0%, rgba(165, 78, 215, 0.2) 70%, transparent 100%);
+  border: 2px solid #00e5ff;
+  color: #fff;
+  font-family: "technoboard";
+  font-size: 2.2rem;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.7), inset 0 0 10px rgba(0, 229, 255, 0.4);
+}
+
+.guess-letter-orb.pulse {
+  animation: orbPulse 1.8s infinite ease-in-out;
+}
+
+@keyframes orbPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 12px rgba(0, 229, 255, 0.5); }
+  50% { transform: scale(1.08); box-shadow: 0 0 22px rgba(0, 229, 255, 0.9); }
+}
+
+.illucia-result-display.victory h3 {
+  color: #51ff85;
+  font-family: "technoboard";
+  font-size: 1.8rem;
+  margin: 0;
+  text-shadow: 0 0 15px rgba(81, 255, 133, 0.8);
+}
+
+.illucia-result-display.defeat h3 {
+  color: #ff3366;
+  font-family: "technoboard";
+  font-size: 1.8rem;
+  margin: 0;
+  text-shadow: 0 0 15px rgba(255, 51, 102, 0.8);
+}
+
+.illucia-result-display p {
+  color: #ccc;
+  font-size: 0.9rem;
+  margin: 4px 0 0;
+}
+
+/* 6 Synaptic Power Cells */
+.illucia-core-matrix {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 8px;
+}
+
+.core-matrix-title {
+  font-family: "bruno";
+  font-size: 0.72rem;
+  color: #aaa;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.core-nodes-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.core-node {
+  font-size: 1.4rem;
+  line-height: 1;
+  transition: all 0.3s ease;
+}
+
+.core-node.active {
+  color: #00e5ff;
+  text-shadow: 0 0 10px #00e5ff, 0 0 4px #a54ed7;
+  animation: nodeGlow 2s infinite alternate;
+}
+
+.core-node.depleted {
+  color: #ff3366;
+  text-shadow: 0 0 8px #ff3366;
+  opacity: 0.65;
+}
+
+@keyframes nodeGlow {
+  0% { text-shadow: 0 0 6px #00e5ff; }
+  100% { text-shadow: 0 0 14px #00e5ff, 0 0 8px #a54ed7; }
+}
+
+.illucia-avatar-pod {
+  position: absolute;
+  bottom: 12px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.illucia-holo-emitter {
+  background: rgba(15, 17, 26, 0.8);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  border-radius: 20px;
+  padding: 6px 18px;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+.holo-text {
+  font-family: "bruno";
+  font-size: 0.8rem;
+  color: #d9d8db;
+  letter-spacing: 2px;
+}
+
+/* Illucia Neural Terminal */
+.illucia-terminal-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-color: rgba(0, 229, 255, 0.7);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.7), inset 0 0 60px rgba(11, 12, 22, 0.85) !important;
+}
+
+.terminal-header h4 {
+  font-family: "technoboard";
+  color: #00e5ff;
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+  margin-bottom: 8px;
+}
+
+.terminal-metrics-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.metric-chip {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 0.75rem;
+  color: #eee;
+}
+
+.metric-chip b {
+  color: #edee02;
+}
+
+.terminal-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.terminal-feed {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 12px 14px;
+  min-height: 120px;
+  font-family: monospace;
+}
+
+.terminal-prompt {
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.terminal-message {
+  font-size: 1.05rem;
+  color: #00e5ff;
+  line-height: 1.5;
+  min-height: 50px;
+}
+
+.terminal-caret {
+  color: #edee02;
+  font-weight: bold;
+}
+
+.terminal-telemetry {
+  margin-top: 14px;
+}
+
+.telemetry-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #aaa;
+  margin-bottom: 4px;
+  font-family: "bruno";
+}
+
+.telemetry-bar-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.telemetry-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #a54ed7, #00e5ff);
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.7);
+  transition: width 0.4s ease;
+}
+
+/* Illucia Deck & Controls */
+.illucia-deck-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+  justify-content: center;
+}
+
+.deck-action-btn {
+  background: rgba(15, 17, 26, 0.85);
+  border: 1px solid rgba(0, 229, 255, 0.6);
+  color: #00e5ff;
+  border-radius: 6px;
+  font-family: "bruno";
+  font-size: 0.9rem;
+  padding: 6px 16px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+}
+
+.deck-action-btn:hover:not(:disabled) {
+  background: rgba(0, 229, 255, 0.2);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+}
+
+.deck-action-btn.active-autoplay {
+  border-color: #edee02;
+  color: #edee02;
+  box-shadow: 0 0 12px rgba(237, 238, 2, 0.7);
+}
+
+.deck-action-btn.forfeit {
+  border-color: rgba(255, 107, 139, 0.6);
+  color: #ff6b8b;
+}
+
+.deck-action-btn.forfeit:hover:not(:disabled) {
+  background: rgba(255, 107, 139, 0.2);
+  box-shadow: 0 0 10px rgba(255, 107, 139, 0.6);
+}
+
+.deck-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.illucia-letter-matrix .keyboardbtn {
+  cursor: default !important;
+}
+
+.illucia-letter-matrix .keyboardbtn.active {
+  background-color: #10cfe6 !important;
+  color: #000 !important;
+  box-shadow: 0 0 12px #10cfe6 !important;
+}
+
+.illucia-letter-matrix .keyboardbtn.inactive {
+  background-color: #3e1b24 !important;
+  color: #ff6b8b !important;
+  text-decoration: line-through;
+  opacity: 0.65;
+}
+
+.illucia-replay-deck {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  height: 100%;
+}
+
+.illucia-end-summary h4 {
+  font-family: "technoboard";
+  color: #edee02;
+  font-size: 1.3rem;
+  margin-bottom: 6px;
+  text-shadow: 0 0 10px rgba(237, 238, 2, 0.7);
+}
+
+.illucia-end-summary p {
+  color: #ddd;
+  font-size: 0.95rem;
+}
+
+.illucia-replay-actions {
+  display: flex;
+  gap: 16px;
+}
+
+@media (max-width: 800px) {
+  .difficulty-pills { grid-template-columns: 1fr; }
+  .illucia-deck-controls { flex-direction: column; align-items: stretch; }
+  .deck-action-btn { font-size: 0.8rem; padding: 6px 10px; }
+  .core-nodes-row { gap: 6px; }
+  .guess-letter-orb { width: 52px; height: 52px; font-size: 1.8rem; }
+}
+
