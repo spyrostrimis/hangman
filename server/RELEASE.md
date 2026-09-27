@@ -1,6 +1,6 @@
 # Account release record
 
-Updated 2026-09-27. Implementation and local verification are complete. The account API is deployed and verified; frontend publication is the remaining release step.
+Updated 2026-09-27. Registration, login, cumulative scores, and the Hall of Fame are deployed and verified at https://hangman.spyrostrimis.com.
 
 ## Verified locally
 
@@ -20,6 +20,12 @@ Cloudflare authentication was refreshed successfully after an expired OAuth call
 - Desktop account layout was visually verified at 1280 px, in addition to the mobile check.
 - A Windows DPAPI-encrypted recovery copy of production secrets is held locally in ignored `server/.wrangler/production-secrets.dpapi`; it is tied to this Windows user/machine. The temporary plaintext upload file was removed. Preserve the encrypted backup and arrange a secure portable backup before replacing the machine; no credentials are committed.
 
-Still to verify: the published frontend, browser behavior against production, canonical Pages redirect, and stretching responsiveness on a slow physical phone. Local duration is not a substitute for phone measurements.
+## Frontend release verification
+
+- Implementation commit `10bf933` published through the existing main-branch Pages integration, deployment `c681f532-bb26-4d30-9ef5-a190c55f7ff7`.
+- Real production browser signup completed, followed by a winning round, the "100 points saved" confirmation, and a persisted Hall of Fame score after reload. Logout and subsequent login also worked.
+- Both disposable release-test accounts and their scores were removed by exact account ID after verification.
+- The initial `_redirects` rule did not match domains and was removed. Cloudflare Bulk Redirect list `hangman_canonical` (`e93ee98a0589423e8d81d62881ded5ea`) and enabled rule `207bf44a68fe4e84b1514c04bd11c72d` now perform the canonical redirect, including deployment subdomains. `/signup?check=release` on the Pages hostname returns HTTP 301 to the same path and query on the custom domain.
+- Nested application routes serve the frontend while `/user/*` serves API JSON. Desktop and mobile layouts were checked; slow physical-phone stretching responsiveness remains unmeasured. Local duration is not a substitute for phone measurements.
 
 Scores are cumulative and client-authoritative by design. No password recovery UI, legacy-account migration, or Illucia gameplay is included.

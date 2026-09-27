@@ -22,10 +22,10 @@ REBUILD, NOT MIGRATION. Most 2023 code is being replaced. Do not preserve or wor
 
 ## CURRENT REBUILD STATE
 
-Account implementation verified locally on 2026-09-27; see server/RELEASE.md for deployment evidence and any remaining release blocker.
+Account implementation deployed and verified on 2026-09-27; see server/RELEASE.md for local and production evidence and remaining limitations.
 
 - The static word-game and route-background/loading slices are rebuilt and live.
-- The account/score slice is implemented locally: Hono Worker, D1 migrations, client-side PBKDF2 stretching, server HMAC verifiers, expiring cookie auth, connected forms, and cumulative scores. Production rollout must be verified separately; do not describe these as live without release evidence.
+- The account/score slice is live: Hono Worker, D1 migrations, client-side PBKDF2 stretching, server HMAC verifiers, expiring cookie auth, connected forms, and cumulative scores. Live browser signup, login, logout, session persistence, and a winning round saving 100 points were verified.
 - The old Express/MongoDB/OpenAI server has been removed. server/ now contains the replacement Worker, tests, migrations, and deployment documentation.
 - The browser uses relative /user/* API paths; Vite proxies these to the local Worker. JWTs and password-derived credentials are never stored in localStorage.
 - Illucia's registered-player gate is wired, but the reverse game remains a placeholder. It is not part of this account slice.
@@ -38,7 +38,7 @@ The rebuild uses small verified slices on main. Every push publishes the fronten
 - Client: React 18.2 + Vite 8.2.2 on Cloudflare Pages. CRA is gone. React 19 remains a later, separate upgrade.
 - API: Hono on Cloudflare Workers, implemented in `server/src/`, routed under the site's `/user/*` path. See `server/RELEASE.md` for production status.
 - Data: static JSON manifest (words) — BUILT AND LIVE at `client/src/data/words.json` · R2 (paintings) — LIVE, 105 objects in bucket `hangman-assets`, served from `https://assets.hangman.spyrostrimis.com` · D1 (users, scores) — schema and migrations implemented; remote provisioning status is recorded in `server/RELEASE.md`.
-- Auth: `jose` JWTs expire after 24 hours in HttpOnly cookies. The user tested bcryptjs and confirmed the CPU problem, then approved browser Web Crypto PBKDF2-SHA-256 at 600,000 iterations with peppered HMAC-SHA-256 server verifiers. Stable secret-derived dummy salts and native HMAC verification are implemented. See `server/README.md` for the exact protocol and limitations. Deployed CPU measurement is still required; do not weaken stretching.
+- Auth: `jose` JWTs expire after 24 hours in HttpOnly cookies. The user tested bcryptjs and confirmed the CPU problem, then approved browser Web Crypto PBKDF2-SHA-256 at 600,000 iterations with peppered HMAC-SHA-256 server verifiers. Stable secret-derived dummy salts and native HMAC verification are implemented. See `server/README.md` for the exact protocol and limitations. Initial deployed CPU measurements are recorded in server/RELEASE.md; do not weaken stretching.
 - Word-data pipeline: `tools/`, Node, local-only. MW Collegiate only, for definition, part of speech, written pronunciation, audio filename, and an optional attributed `vis` example. There is no Merriam-Webster Thesaurus API in this project.
 - Enrichment (`hints.synonym`, `hints.clue`, `explanation`): **LLM-authored during planning conversation, human-reviewed, and committed as static data in `tools/enrichment.json`.** There is NO enrichment generation harness and `tools/` never calls OpenAI. The `source` / `provenance` values stay `"llm-generated"` because that describes who produced the text, not how it was transported. If asked to build a generator for these fields, stop and confirm — it was considered and deliberately rejected for a locked 105-word corpus that needs human review either way.
 - Manifest assembly: `tools/build-manifest.js` is a small deterministic assembler, not a generator. Inputs `tools/words.locked.json` + `tools/output/mw-probe.json` + `tools/enrichment.json`; output `client/src/data/words.json`.
@@ -156,7 +156,7 @@ The rebuilt word-game path is WIRED AND LIVE at `hangman.spyrostrimis.com/hangma
 
 Also live from the current frontend pass: responsive route-specific backgrounds, local fonts, intent-based image preloading, stable background blending during scroll, reserved character-image dimensions, SPA links between login/signup, and bounded Hall of Fame loading/failure UI.
 
-Accounts, Hall of Fame data, and winner-score handling are implemented and locally tested. See server/RELEASE.md before claiming they are deployed; until the API and new frontend are published and verified, production remains on the older frontend.
+Accounts, Hall of Fame data, and winner-score handling are deployed and browser-verified. Initial Worker CPU measurements were 1.96 ms median and 3.56 ms P99 on the confirmed Free plan. See server/RELEASE.md for the small-sample qualification and full release evidence.
 
 Keep three states apart when writing status: implemented/committed, agreed/planned, and actually wired/live. The word-game and frontend-loading slices are live; the account release record is the authority for the Cloudflare account layer.
 

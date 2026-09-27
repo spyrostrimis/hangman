@@ -63,13 +63,14 @@ The test-pool dependency overrides align its older bundled Wrangler/Miniflare wi
 3. Set three independently generated, random secrets (at least 32 random bytes, base64url encoded) with `wrangler secret put JWT_SECRET`, `wrangler secret put AUTH_PEPPER`, and `wrangler secret put SALT_SECRET`. Never print or commit them. Keep a secure recovery copy of the pepper: losing it makes existing verifiers unusable. Pepper rotation needs a versioned migration; simply replacing it locks out accounts. Rotating JWT_SECRET invalidates sessions; rotating SALT_SECRET changes dummy salts only.
 4. Deploy the Worker and verify real production signup/login, cookies, expiry rejection, and score writes before publishing the frontend. Check deployed CPU usage against the Free plan budget; local timing is not production CPU evidence.
 5. Build and manually verify the frontend, then commit/push the scoped change on `main` (every push triggers a Pages production deployment). Confirm `/user/*` returns API JSON while `/`, `/hangman`, and nested SPA routes still serve the frontend.
-6. The `pages.dev` hostname is not the account origin; direct visitors to the canonical custom domain. Cloudflare quotas can make account operations temporarily unavailable; guest gameplay stays independent.
+6. The `pages.dev` hostname is not the account origin. Use the account-level Bulk Redirect list `hangman_canonical` to send `hangman-caq.pages.dev` (including deployment subdomains) to `https://hangman.spyrostrimis.com`, preserving the path and query string. Pages `_redirects` does not support domain-level source matching. Cloudflare quotas can make account operations temporarily unavailable; guest gameplay stays independent.
 
 Rollback: revert the frontend commit and redeploy Pages; use `wrangler rollback` to a known good Worker version if one exists. Keep D1 and secrets intact; do not drop the database or reverse data migrations as a code rollback. For the first release, removing the new Worker route returns the site to the prior frontend-only behavior, which had no functioning production accounts.
 
 ## References
 
 - [Cloudflare Workers limits](https://developers.cloudflare.com/workers/platform/limits/)
+- [Canonical Pages domain redirects](https://developers.cloudflare.com/pages/how-to/redirect-to-custom-domain/)
 - [Workers rate limiting](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/)
 - [Workers Web Crypto](https://developers.cloudflare.com/workers/runtime-apis/web-crypto/)
 - [OWASP password storage](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)

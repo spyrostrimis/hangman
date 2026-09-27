@@ -14,7 +14,7 @@ The game selects from 105 checked-in word records. Paintings are served from Clo
 
 The account rebuild uses a Hono Worker, D1, browser-side password stretching, and expiring HttpOnly cookies. Registered players earn 100 points per reported win; the public Hall of Fame displays the top 100 cumulative scores. Guest play remains available.
 
-Implementation and local tests are complete; production rollout and CPU validation are tracked in [the account release record](server/RELEASE.md). Do not infer deployment status from the presence of code.
+Accounts and scores are live and browser-verified on the custom domain. Production rollout, test evidence, and initial Free-tier CPU measurements are recorded in [the account release record](server/RELEASE.md).
 
 Passwords use PBKDF2-HMAC-SHA-256 (600,000 iterations) in the browser. The server stores an HMAC verifier under a separate secret pepper. [Account protocol, limitations, development and deployment instructions](server/README.md).
 
