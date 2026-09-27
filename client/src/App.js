@@ -300,7 +300,7 @@ function App() {
       onFocusCapture={prefetchLinkArt}
       onTouchStartCapture={prefetchLinkArt}
     >
-      <PageBackground key={pageArt.desktop} art={pageArt} />
+      <PageBackground art={pageArt} />
       <div className="App">
         <Navbar />
         <Routes>

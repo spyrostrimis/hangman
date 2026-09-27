@@ -1565,20 +1565,28 @@ input {
   overflow: hidden;
   background: #999;
   opacity: 0;
-  transition: opacity 180ms ease-out;
 }
 .page-background img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.page-background.is-ready { opacity: 1; }
+/* An animation, unlike a transition, always runs and ends, even for art that is
+   decoded before the layer's first frame; PageBackground settles on its end. */
+.page-background.is-ready {
+  opacity: 1;
+  animation: page-art-in 280ms ease-out;
+}
+@keyframes page-art-in {
+  from { opacity: 0; }
+}
 .page-shell > .App {
   position: relative;
   z-index: 1;
 }
 @media (prefers-reduced-motion: reduce) {
-  .page-background { transition: none; }
+  /* Near-instant, but still ends so older layers are released. */
+  .page-background.is-ready { animation-duration: 1ms; }
 }
 #introronnyimg, #introartsyimg { width: auto; }
 #wordartsyimg, #wordroonyimg { height: auto; }
