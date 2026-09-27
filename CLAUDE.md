@@ -2,33 +2,35 @@
 
 PROJECT: Web-based Hangman word game for learning English vocabulary and pronunciation. Built 2023 as a MERN bootcamp project (Social Hackers Academy); now being REBUILT as a portfolio piece on Cloudflare's free tier. This file is auto-read at session start — treat everything below as standing rules for this repo.
 
-REBUILD, NOT MIGRATION. Most 2023 code is being replaced. Do not preserve or work around code that should simply go. What survives: the game rules, the React components and visual design, the Hall of Fame, and the shape of the four auth routes.
+REBUILD, NOT MIGRATION. Most 2023 code is being replaced. Do not preserve or work around code that should simply go. What survives: the game rules, the React components and visual design, the Hall of Fame, the shape of the four auth routes, and the Illucia "Play vs AI" concept.
 
-<!-- ┌─ SYNC v3 · HARD RULES · mirrored in CLAUDE.md + project instructions -->
+<!-- ┌─ SYNC v4 · HARD RULES · mirrored in CLAUDE.md + project instructions -->
 <!-- │  Edit one → edit the other → bump BOTH version numbers. -->
 
 ## HARD RULES
 
-- App UI language = English. All in-game text stays English.
-- ZERO live third-party API calls in production. Word data is pre-generated into a static manifest. The only runtime external dependency is the hotlinked Merriam-Webster audio URL.
-- $0 running cost. Cloudflare free tier only. Flag anything that needs a paid plan; never implement it silently.
-- Secrets NEVER committed and never literal in source. `tools/` reads a gitignored `.env`. Production secrets via `wrangler secret` only. Never stage `*.zip`, `node_modules`, or build output.
-- `main` is the only branch, and pushing to it PUBLISHES to hangman.spyrostrimis.com. There is no staging. Every push is a live deploy.
+- App UI language = English. This is an English-vocabulary learning game; all in-game text stays English. (A sibling project has the opposite rule — do not pattern-match Greek UI conventions across.)
+- No live third-party API calls in production. All word data — definition, hints, pronunciation, audio URL, example, explanation, painting — stays pre-generated in the static manifest. The only third-party runtime dependency is the hotlinked Merriam-Webster audio URL.
+- ONE scoped AI exception, first-party only: Illucia (Play vs AI) may call Cloudflare Workers AI through the project's own Worker, and only when ALL of these hold: (1) models eligible for the Workers AI free allowance only; (2) the model receives public game state only — never the secret word, player-typed text, usernames or any other personal data; (3) game code adjudicates every rule, and model output is flavour text or a suggestion that is validated and length-bounded before use; (4) signed-in players only, rate-limited per user, with a hard timeout; (5) a local fallback keeps Illucia fully playable whenever the model fails or the daily allowance is spent. Any other runtime AI — another provider, an in-browser model, AI in the main Hangman game — needs a new HARD RULE decision first.
+- Running cost must stay $0. Cloudflare free tier only; the Workers AI free allowance is a ceiling, never a reason to upgrade. Any proposal requiring a paid plan gets flagged for a decision, never implemented silently.
+- Passwords: browser-side PBKDF2-HMAC-SHA-256 at 600,000 iterations with a random per-account salt; the Worker stores only an HMAC verifier under a separate secret pepper. The work factor only ever rises (through a new `kdf_version`); never lower it to fit a CPU limit. The raw password never leaves the browser, and the derived credential is never stored or logged.
+- Secrets: never committed, never a literal in source. `tools/` reads a gitignored `.env`; the Worker's local secrets live in ignored `server/.dev.vars*`; production secrets go in via `wrangler secret` only. `*.zip`, `node_modules`, `.wrangler/` and build output are never staged.
+- Every deploy is production; there is no staging. A push to `main` publishes the frontend to hangman.spyrostrimis.com, and `wrangler deploy` from `server/` publishes the API immediately. Treat both as deploys to a public URL.
 - Merriam-Webster: use the Collegiate Dictionary API only. Non-commercial only, 1000 queries/day/key. Attribution required in UI and README. Wherever MW content is displayed, MW's official branding guidelines apply and are binding: feature the unmodified official Merriam-Webster logo (PNG on web, at 50×50, 100×100 or 125×125, with the ® kept visible at bottom right), and write the product title out in full as "Merriam-Webster's Collegiate® Dictionary with Audio" — the ® is required on the first use of "Collegiate" on a page. Never "Webster's" alone; always hyphenate Merriam-Webster.
-- Example sentences must be REAL and sourced from MW with attribution. Never generate quotations attributed to real authors, works, or dates.
-- Scoring is client-authoritative and forgeable BY DESIGN. Documented, not fixed. Do not propose server-authoritative gameplay — it was considered and rejected.
+- Example sentences must be REAL, sourced from Merriam-Webster with attribution. Never LLM-generated quotations attributed to real authors, works, or dates. The 2023 version did this and it was wrong.
+- Scoring is client-authoritative and forgeable. This is a KNOWN, DELIBERATE choice — the Hall of Fame is documented as unverified rather than made authoritative. Do not propose server-authoritative gameplay as a fix; it was considered and rejected.
 
-<!-- └─ /SYNC v3 · HARD RULES -->
+<!-- └─ /SYNC v4 · HARD RULES -->
 
 ## CURRENT REBUILD STATE
 
-Account implementation deployed and verified on 2026-09-27; see server/RELEASE.md for local and production evidence and remaining limitations.
+HEAD `0eec78a` on `main` (2026-09-27). Account implementation deployed and verified on 2026-09-27; see server/RELEASE.md for local and production evidence and remaining limitations.
 
 - The static word-game and route-background/loading slices are rebuilt and live.
 - The account/score slice is live: Hono Worker, D1 migrations, client-side PBKDF2 stretching, server HMAC verifiers, expiring cookie auth, connected forms, and cumulative scores. Live browser signup, login, logout, session persistence, and a winning round saving 100 points were verified.
 - The old Express/MongoDB/OpenAI server has been removed. server/ now contains the replacement Worker, tests, migrations, and deployment documentation.
 - The browser uses relative /user/* API paths; Vite proxies these to the local Worker. JWTs and password-derived credentials are never stored in localStorage.
-- Illucia's registered-player gate is wired, but the reverse game remains a placeholder. It is not part of this account slice.
+- Illucia's registered-player gate is wired, but the reverse game remains a placeholder. It is Phase 4, planned in `PLAN-illucia.md` (see ILLUCIA below).
 - README.md describes the new architecture; server/README.md specifies the credential protocol, limitations, and release/rollback procedure.
 
 The rebuild uses small verified slices on main. Every push publishes the frontend; the API is deployed separately. Preserve the distinction between implemented, tested locally, and verified live.
@@ -42,7 +44,8 @@ The rebuild uses small verified slices on main. Every push publishes the fronten
 - Word-data pipeline: `tools/`, Node, local-only. MW Collegiate only, for definition, part of speech, written pronunciation, audio filename, and an optional attributed `vis` example. There is no Merriam-Webster Thesaurus API in this project.
 - Enrichment (`hints.synonym`, `hints.clue`, `explanation`): **LLM-authored during planning conversation, human-reviewed, and committed as static data in `tools/enrichment.json`.** There is NO enrichment generation harness and `tools/` never calls OpenAI. The `source` / `provenance` values stay `"llm-generated"` because that describes who produced the text, not how it was transported. If asked to build a generator for these fields, stop and confirm — it was considered and deliberately rejected for a locked 105-word corpus that needs human review either way.
 - Manifest assembly: `tools/build-manifest.js` is a small deterministic assembler, not a generator. Inputs `tools/words.locked.json` + `tools/output/mw-probe.json` + `tools/enrichment.json`; output `client/src/data/words.json`.
-- Image generation, if it ever happens: `gpt-image-2` at 1024×1024 SQUARE — square is LOCKED, because the 116 surviving 2023 DALL·E 2 paintings are 512×512 and new images must sit beside them in the same frame. Do not "upgrade" this to landscape. Not currently needed: all 105 shipping words already have a rescued painting.
+- Image generation, if it ever happens: SQUARE is LOCKED, because the 116 surviving 2023 DALL·E 2 paintings are 512×512 and new images must sit beside them in the same frame. Do not "upgrade" this to landscape. Model, size and cost are undecided (earlier notes named `gpt-image-2` at 1024×1024; that is a candidate, not a decision). Not currently needed: all 105 shipping words already have a rescued painting.
+- Illucia (planned, NOT built): local solver over a filtered SCOWL-derived word list, lazy-loaded on `/illucia`; optional Workers AI voice only under the HARD RULES AI exception. Details in `PLAN-illucia.md`.
 
 Already removed: CRA, `mdb-react-ui-kit`, Font Awesome, client `axios` and `jwt-decode`, and the legacy server dependency set. `client/src/base.css` intentionally preserves only the small reset/popover subset the UI still needs. `read-more-react`, `web-vitals`, and `buffer` remain for separate cleanup. The account component tests now use Testing Library; do not remove its dependencies as CRA leftovers. Still used: `react-bootstrap` and `react-tooltip` (Intro), `react-simple-typewriter` (Wordfacts). Verify actual imports before removing a package.
 
@@ -112,6 +115,7 @@ From `client/`, run `npm test` (11 Node tests), `npm run test:ui` (8 React compo
 - Pages URL: `https://hangman-caq.pages.dev`
 - Production URL: `https://hangman.spyrostrimis.com`
 - Git integration is active: pushes to `main` trigger production builds and deployments.
+- API: Worker `hangman-api`, deployed separately with `wrangler deploy` from `server/` (straight to production), routed at `hangman.spyrostrimis.com/user/*`, D1 `hangman-accounts`. Setup, release and rollback: `server/README.md`, `server/RELEASE.md`.
 - SPA fallback was manually verified with a direct nested route.
 - Current production checks: `/` and `/hangman` return HTTP 200. The route-background/loading work is committed on `main`; production remains a single Vite bundle with no code splitting yet.
 - R2 bucket: `hangman-assets`, Standard class, EEUR. Custom asset domain `https://assets.hangman.spyrostrimis.com`, SSL active. **`r2.dev` is DISABLED** — never use an `r2.dev` URL. 105 objects at `paintings/<word>.webp`, all verified HTTP 200 / `image/webp` / `public, max-age=604800`.
@@ -168,20 +172,22 @@ Current rescued corpus only: source PNGs are 512×512, converted at quality 90, 
 
 Do NOT generalise either number. 512×512 describes the 2023 corpus, not a dimension contract. Any future generated paintings may use different and larger source dimensions, and their generation settings are explicitly undecided.
 
-## ILLUCIA — PLAY VS AI (DESIGN ONLY, NOT BUILT)
+## ILLUCIA — PLAY VS AI (PLANNED, NOT BUILT)
 
-The reverse game: the player sets a secret word; Illucia guesses one letter at a time with six chances, exactly mirroring the main game's rules.
+The reverse game: the player sets a secret word; Illucia guesses one letter at a time. A hit reveals every occurrence and costs nothing; six misses and the player wins. Same rules as the main game — one shared core, not a copy.
 
-Undecided: how Illucia chooses letters. Options under discussion in planning:
+`PLAN-illucia.md` is the reference (evidence, options, build order I0–I7). Load-bearing points:
 
-- **Local solver** (frequency-based: keep dictionary words matching the known pattern and excluded letters, guess the letter in the most remaining candidates). Deterministic, instant, in-browser, $0. Needed in EVERY option — as the opponent itself or as the fallback when a model call fails.
-- **Workers AI** (Cloudflare-hosted model behind an authenticated Worker) either choosing letters, or only voicing Illucia's commentary while the solver chooses. Any live model call requires an explicit HARD RULE change first (the zero-live-API rule). Do not add one without that change being committed to both mirrored copies.
-- Whatever is chosen: normal game code adjudicates hits, misses and results; a model never sees the secret word and never judges the rules.
-- **Dictionary:** a public-domain English word list (ENABLE is the leading candidate), also used to check that the player's word is real. Lazy-loaded on `/illucia` only — the project's first code-split. Verify the licence before committing any list.
-- **Personality comes from scripted lines** tied to game events, not generated text.
-- **No Merriam-Webster content for player words.** Player words are usually outside the 105-word manifest and live MW calls are forbidden; the post-round screen shows the word only.
-- The solver is a pure module and gets tests written against its behaviour. It should share the six-chance rule with the extracted game core rather than restate it.
+- **Illucia's moves come from a local solver, never a model.** Filter the word list by length, revealed pattern and misses; guess the letter present in the most remaining candidates. Pure module, in-browser, deterministic, tested.
+- **The solver never receives the secret word** — only the public state. A test proves it, with a positive control.
+- **Player words must be in the accepted list** (A–Z, length 3–15, blocklist-filtered). Out-of-list words would collapse the solver.
+- **Difficulty is under discussion as vocabulary size** (SCOWL levels, e.g. ≤35 / ≤50 / ≤70). Simulation: Illucia limited to ≤35 wins ~94% against common words but ~11% against less-common ones. Not decided until Spyros confirms.
+- **Word list:** built by a deterministic `tools/` script from SCOWL (MIT-like licence; keep its copyright notice), with SCOWL offensive/vulgar entries removed and the LDNOOBW (CC-BY-4.0) blocklist applied. The npm SCOWL build contains profanity — never ship it unfiltered. Credit both in the README when it ships.
+- **Scripted lines are mandatory** — the v1 voice and the permanent fallback.
+- **Workers AI voice (optional, later)** only under the HARD RULES AI exception: Worker route under `/user/*`, request body carries public state only, reply validated and capped, per-user limit, ~2.5 s timeout, scripted fallback. It comments on the guess just made and never announces a next guess. Lines that mention the actual word are code-filled templates, never model-written.
+- **No Merriam-Webster content for player words** (no live MW calls). If the word is one of the 105 manifest words, its manifest facts may be shown.
+- Illucia results stay out of the +100 Hall of Fame unless a later decision says otherwise.
 
 ## SCOPE
 
-The current authorized slice is registration, login, and high scores, with the user-approved client-side stretching design. Finish and verify that slice; do not widen it into Illucia gameplay, a React upgrade, or unrelated game changes.
+The account slice is complete and live. Next is Phase 4 (Illucia), sequenced in `PLAN-illucia.md`, starting with game-core extraction (I1). Work only from the specific slice instruction given. Do not start the Workers AI slice (I5) until HARD RULES v4 is committed and the relevant decisions are recorded. Do not widen any slice into a React upgrade, dependency cleanup, or unrelated game changes.
