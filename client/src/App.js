@@ -222,7 +222,7 @@ function App() {
     wordToFind &&
     wordToFind.split("").every((letter) => chosenLetters.includes(letter));
   // console.log("Winner:", Winner);
-  const scoreMessage = useRoundScore(isHangPage ? selectedWord : null, Boolean(Winner));
+  useRoundScore(isHangPage ? selectedWord : null, Boolean(Winner));
 
   const addChosenLetter = useCallback(
     (letter) => {
@@ -336,7 +336,6 @@ function App() {
                   />
                 </div>
                 <div style={{ color: "transparent" }}>{wordToFind}</div>
-                {scoreMessage && <p className="score-status" role="status">{scoreMessage}</p>}
                 <Word
                   reveal={Loser}
                   wordToFind={wordToFind}

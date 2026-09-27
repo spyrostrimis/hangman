@@ -1599,7 +1599,6 @@ input {
 .account-form button:disabled, .nav-logout:disabled { opacity: .6; cursor: wait; }
 .account-help { font: 14px/1.5 sans-serif; text-align: left; margin-top: 12px; }
 .account-error { color: #ffb6c8; font: 16px/1.5 sans-serif; overflow-wrap: anywhere; }
-.score-status { color: #f3f400; text-align: center; padding: 8px 16px; }
 .navbarcustom .nav-logout { background: transparent; border: 0; color: #f3f400; font: inherit; font-family: bruno; font-size: 20px; font-weight: 600; padding: 25px; cursor: pointer; }
 .session-loading { padding: 16px; color: #ddd; }
 .navbarcustom { height: auto; min-height: 53px; flex-direction: column; }
