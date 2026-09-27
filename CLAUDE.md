@@ -22,29 +22,29 @@ REBUILD, NOT MIGRATION. Most 2023 code is being replaced. Do not preserve or wor
 
 ## CURRENT REBUILD STATE
 
-Verified at `3a4fa1d` on `main` (2026-09-26):
+Account implementation verified locally on 2026-09-27; see server/RELEASE.md for deployment evidence and any remaining release blocker.
 
-- The **word-game vertical slice is rebuilt and live**. Production selects one of 105 records from the bundled manifest, derives its painting URL from the R2 object key, hotlinks only Merriam-Webster audio, and needs no application backend to play a complete round.
-- The current frontend pass addresses **first-visit loading and stable route backgrounds**: responsive route-owned art, local WOFF2 fonts, a small checked-in compatibility stylesheet instead of the MDB package, intent-based image preloading, reserved character-image dimensions, and honest Hall of Fame loading/error states. The game text panel deliberately has a 16px monospace base size.
-- The **account/score vertical slice is not rebuilt**. Login, signup, winner score writes, and leaderboard reads still call `http://localhost:8000`; they do not work for production visitors. The Hall of Fame now times out and shows an error instead of hanging, but its data source is still legacy.
-- `server/` is preserved 2023 Express/MongoDB code, not the production API. Do not repair it piecemeal or describe it as deployed. Its replacement target remains Hono + D1 + secure cookie auth on Cloudflare.
-- `README.md` still describes the 2023 MERN/OpenAI version and links to the retired Netlify site. It is historical/stale documentation, not a statement of current architecture.
-- `/illucia` ("Play vs AI") is a **"Coming Soon" placeholder with no game behind it**. The intended game is the reverse of Hangman: the player sets a secret word and Illucia guesses letters with six chances. Nothing of it is built. How Illucia chooses letters is NOT decided — see ILLUCIA below.
+- The static word-game and route-background/loading slices are rebuilt and live.
+- The account/score slice is implemented locally: Hono Worker, D1 migrations, client-side PBKDF2 stretching, server HMAC verifiers, expiring cookie auth, connected forms, and cumulative scores. Production rollout must be verified separately; do not describe these as live without release evidence.
+- The old Express/MongoDB/OpenAI server has been removed. server/ now contains the replacement Worker, tests, migrations, and deployment documentation.
+- The browser uses relative /user/* API paths; Vite proxies these to the local Worker. JWTs and password-derived credentials are never stored in localStorage.
+- Illucia's registered-player gate is wired, but the reverse game remains a placeholder. It is not part of this account slice.
+- README.md describes the new architecture; server/README.md specifies the credential protocol, limitations, and release/rollback procedure.
 
-The rebuild is being done as small, verified vertical slices on `main`: remove a runtime dependency, establish the static or Cloudflare-native replacement, test it, manually verify the user-visible behavior, then push. Do not widen a task into the next slice without an explicit instruction.
+The rebuild uses small verified slices on main. Every push publishes the frontend; the API is deployed separately. Preserve the distinction between implemented, tested locally, and verified live.
 
 ## TARGET STACK
 
 - Client: React 18.2 + Vite 8.2.2 on Cloudflare Pages. CRA is gone. React 19 remains a later, separate upgrade.
-- API target: Hono on Cloudflare Workers. No Worker/API implementation exists yet — no `wrangler.toml`, no `functions/` directory; `server/` is the retained legacy reference only. Leading option (not yet locked): Pages Functions under `client/functions/`, so the API shares the site's origin and deploy. Pages Functions requests count against the same Workers Free quota (100k requests/day) and CPU limit.
-- Data: static JSON manifest (words) — BUILT AND LIVE at `client/src/data/words.json` · R2 (paintings) — LIVE, 105 objects in bucket `hangman-assets`, served from `https://assets.hangman.spyrostrimis.com` · D1 (users, scores) — not built.
-- Auth target: `jose` (JWT), httpOnly cookies, tokens MUST expire. **Password hashing is NOT locked:** the Workers Free plan allows 10 ms CPU per request, which pure-JS `bcryptjs` at a normal cost is expected to exceed. The choice between `bcryptjs` and WebCrypto PBKDF2 is settled by a measured spike on a deployed Worker, not by assumption. Current legacy auth uses `jsonwebtoken`, native `bcrypt`, localStorage, and non-expiring tokens; none of that is the target design.
+- API: Hono on Cloudflare Workers, implemented in `server/src/`, routed under the site's `/user/*` path. See `server/RELEASE.md` for production status.
+- Data: static JSON manifest (words) — BUILT AND LIVE at `client/src/data/words.json` · R2 (paintings) — LIVE, 105 objects in bucket `hangman-assets`, served from `https://assets.hangman.spyrostrimis.com` · D1 (users, scores) — schema and migrations implemented; remote provisioning status is recorded in `server/RELEASE.md`.
+- Auth: `jose` JWTs expire after 24 hours in HttpOnly cookies. The user tested bcryptjs and confirmed the CPU problem, then approved browser Web Crypto PBKDF2-SHA-256 at 600,000 iterations with peppered HMAC-SHA-256 server verifiers. Stable secret-derived dummy salts and native HMAC verification are implemented. See `server/README.md` for the exact protocol and limitations. Deployed CPU measurement is still required; do not weaken stretching.
 - Word-data pipeline: `tools/`, Node, local-only. MW Collegiate only, for definition, part of speech, written pronunciation, audio filename, and an optional attributed `vis` example. There is no Merriam-Webster Thesaurus API in this project.
 - Enrichment (`hints.synonym`, `hints.clue`, `explanation`): **LLM-authored during planning conversation, human-reviewed, and committed as static data in `tools/enrichment.json`.** There is NO enrichment generation harness and `tools/` never calls OpenAI. The `source` / `provenance` values stay `"llm-generated"` because that describes who produced the text, not how it was transported. If asked to build a generator for these fields, stop and confirm — it was considered and deliberately rejected for a locked 105-word corpus that needs human review either way.
 - Manifest assembly: `tools/build-manifest.js` is a small deterministic assembler, not a generator. Inputs `tools/words.locked.json` + `tools/output/mw-probe.json` + `tools/enrichment.json`; output `client/src/data/words.json`.
 - Image generation, if it ever happens: `gpt-image-2` at 1024×1024 SQUARE — square is LOCKED, because the 116 surviving 2023 DALL·E 2 paintings are 512×512 and new images must sit beside them in the same frame. Do not "upgrade" this to landscape. Not currently needed: all 105 shipping words already have a rescued painting.
 
-Already removed from the client bundle: CRA, `mdb-react-ui-kit`, and Font Awesome. `client/src/base.css` intentionally preserves only the small reset/popover subset the UI still needs. Still to remove as their owning slices are rebuilt: client `axios` and `jwt-decode` (both still imported by the account slice). Already unused with zero imports, removable as a dead-dependency commit: `read-more-react`, `web-vitals`, `buffer`, and all three `@testing-library/*` packages (CRA leftovers). Still used and NOT dead: `react-bootstrap` and `react-tooltip` (Intro), `react-simple-typewriter` (Wordfacts). Also to remove: the entire legacy server dependency set (MongoDB/Mongoose/Express/native `bcrypt`/`jsonwebtoken`/OpenAI SDK v3/etc.). Verify actual imports before removing a package.
+Already removed: CRA, `mdb-react-ui-kit`, Font Awesome, client `axios` and `jwt-decode`, and the legacy server dependency set. `client/src/base.css` intentionally preserves only the small reset/popover subset the UI still needs. `read-more-react`, `web-vitals`, and `buffer` remain for separate cleanup. The account component tests now use Testing Library; do not remove its dependencies as CRA leftovers. Still used: `react-bootstrap` and `react-tooltip` (Intro), `react-simple-typewriter` (Wordfacts). Verify actual imports before removing a package.
 
 ## GIT
 
@@ -53,7 +53,7 @@ Already removed from the client bundle: CRA, `mdb-react-ui-kit`, and Font Awesom
 - `main` only. No feature branches.
 - `push.autoSetupRemote` is unset locally and globally on this machine. Any new branch starts with no upstream and `git status` then stays SILENT about unpushed commits on it. (Moot while we stay on `main`, but know it.)
 - `core.autocrlf` is on. `.gitattributes` exists and contains exactly `* text=auto eol=lf`; watch for unexpected line-ending churn.
-- ⚠ **Secret-file ignore gap.** There is no root `.gitignore`. `client/.gitignore` is the CRA default: it ignores `.env.local` / `.env.*.local` but NOT a plain `.env`, `.dev.vars`, or `.wrangler/`. `tools/.gitignore` covers `tools/.env` only. Close this BEFORE any Cloudflare API work creates local secret files.
+- Server secrets and runtime output are ignored by `server/.gitignore` (`.env`, `.dev.vars*`, `.wrangler/`). There is no root `.gitignore`, and the client still has the CRA ignore rules. Keep account deployment credentials inside the ignored server locations; never create plain secret files at the root or in the client.
 - `../hangman-export/` is a SIBLING folder outside this repo — 203 MB of rescued 2023 data plus its own `node_modules`. It is not part of the repo and must never be moved into it or staged.
 
 ## WORD DATA — FILE MAP
@@ -91,7 +91,7 @@ Load-bearing for anything touching `hints`, `example`, or `explanation`:
 - Background and character art are prefetched only after link intent (pointer over, focus, or touch). `preload-images.js` deduplicates pending/completed work, swallows speculative failures, and permits retry. Respect `saveData` and 2G connections; do not eagerly preload every route.
 - TechnoBoard and Bruno Ace SC ship as local WOFF2 with `font-display: swap`; Roboto comes from local `@fontsource/roboto` package assets. There are no runtime web-font requests.
 - Character images used on the first view have intrinsic dimensions to prevent layout shift. Keep dimensions accurate if those files change.
-- `lib/leaderboard.js` validates the legacy response, forwards cancellation, and enforces a 10-second timeout. `Halloffame.js` renders loading, empty, ready, and failure states. This is resilience around the legacy localhost endpoint, not a rebuilt leaderboard backend.
+- `lib/leaderboard.js` validates `/user/get-best-scores`, forwards cancellation, and enforces a 10-second timeout through `lib/api.js`. `Halloffame.js` retains loading, empty, ready, and failure states.
 
 ## RUN / TEST
 
@@ -99,7 +99,7 @@ From `client/`, run `npm run dev` for the Vite development server, `npm run buil
 
 From `tools/`, run `npm test` (177 tests) and `node validate.js ../client/src/data/words.json`. The pipeline is local-only and never runs in production.
 
-From `client/`, run `npm test` (9 tests: manifest selection/asset URLs, speculative image loading, and leaderboard loading contract) and `npm run build`. The tests use Node's built-in runner; there is no browser component suite yet. User-visible CSS, responsive art, navigation, popovers, forms, and loading states still need manual browser verification in proportion to the change.
+From `client/`, run `npm test` (11 Node tests), `npm run test:ui` (8 React component tests), and `npm run build`. From `server/`, run `npm run setup:local`, `npm run types`, `npm run check`, `npm test` (8 Workers/D1 integration tests), and `npm run build` (dry run). User-visible CSS, responsive art, navigation, popovers, forms, and loading states still need manual browser verification in proportion to the change.
 
 ## DEPLOYMENT
 
@@ -134,50 +134,19 @@ From `client/`, run `npm test` (9 tests: manifest selection/asset URLs, speculat
 
 <!-- └─ /SYNC v2 · CHANGE DISCIPLINE -->
 
-## LEGACY LANDMINES STILL PRESENT
+## REMAINING GAME LANDMINES
 
-Verified against the current tree at `49092d9`. Most live in code slated for replacement and are recorded so they are not accidentally reimplemented or wastefully repaired. Do NOT fix these on sight; work from the specific instruction given.
+The account rebuild removes the legacy server, localStorage authentication, disconnected Hello/AuthWrapper files, signup error fall-through, and winner-score side effect from Word.js. The old audit in Git history describes the pre-account-rebuild tree, not the current implementation.
 
-**Genuine bugs / incomplete behavior**
+Still outside this slice:
 
-- `Signup.js` — `if (response.data.msg) alert(...)` has NO `return`, so execution falls through and writes the error object `{msg:"Username already exists"}` into `localStorage.token`, then navigates home. User appears logged in with a garbage token. `Login.js` has the identical shape but DOES return.
-- `wordmodel.js` `pre("save")` calls `this.synonym.endsWith(".")` unguarded → `/word/random` TypeErrors on every new word (that route never sets `synonym`).
-- `server.js` — `const port = 8000 || process.env.port` is backwards (always 8000), and lowercase `port`. Breaks platform port injection.
-- `remainingTries` starts at 5 while `Loser` is correctly derived at 6 incorrect guesses. Its displayed post-guess countdown happens to work, but the state is a redundant second source of truth for `6 - incorrectGuesses.length` and is maintained with a closure-based decrement. DELETE it when extracting game rules rather than adding more synchronization logic.
-- **Stale keyboard closure in `App.js`** (found by reading the code; not yet reproduced in a browser). The `keypress` effect depends on `[chosenLetters, isHangPage]` but not on `addChosenLetter`. The handler is registered on the render where `selectedWord` is still `null`, so the FIRST physical-keyboard guess of every round sees `wordToFind === ""` and `remainingTries === 5`: even a correct letter shows "You have 5 tries remaining..." and decrements `remainingTries`, so the countdown text is one lower than it should be for the rest of the round. Win/lose derivation is unaffected (it reads `chosenLetters`). Mouse-only rounds are unaffected. Characterize it, then let the pure-core extraction remove it; do not patch the dependency array in isolation.
-- **The answer sits in the page as text.** `App.js` renders `<div style={{color:"transparent"}}>{wordToFind}</div>`, so select-all/copy and screen readers expose the answer. (The `visibility: hidden` letter spans in `Word.js` are not read by screen readers.) The bundled manifest means a determined player can always read words in devtools — that is inherent to a client-side static game and accepted — but this div is a needless, accessible leak. Delete it with the game-core work.
-- React `StrictMode` is commented out in `index.js`. Relevant to the score write: the legacy `add100` effect in `Word.js` would double-fire under StrictMode in development. Any rebuilt score write must be idempotent per round rather than relying on StrictMode staying off.
-- Both `*-create-random` routes call `res.send()` BEFORE the async work, then `catch` writes to the already-sent response → `ERR_HTTP_HEADERS_SENT`. Because `createImage` sits before `Word.create`, a dead image call silently prevents any new word from being persisted while the client sees a clean 200.
-- Login and signup still have no request error state; the winner-score request only logs failure. Hall of Fame is the exception: it now has abort, timeout, response validation, and visible loading/empty/error states around the still-local endpoint.
-- MW parsing crashes on unrecognised words (2023 SERVER code only — the `tools/` pipeline handles this correctly): MW returns an array of suggestion STRINGS, so `data[0].hwi` is `undefined` and `.prs` throws. No optional chaining anywhere. The guard `if (resmw)` is always truthy (axios always resolves an object).
-- `SALTY_ROUNDS` — if unset, `Number(undefined)` is `NaN` and `bcrypt.hash` throws. Undocumented required env var.
-
-**Dead / broken**
-
-- The ENTIRE hangman stick figure is commented out — a JSX comment in `Figure.js` swallows the `BODY_PARTS` render. `Figure` doesn't even destructure `incorrectGuesses`. **There is no gallows, and this is now deliberate** — the game's story is rescuing a robot. DELETE the `BODY_PARTS` code; do not restore it. The six-guess counter needs a different visual.
-- `script.js` cannot run at all — ESM `import` in a CommonJS project plus top-level `await` outside an async function. `npm run dev` is broken.
-- `/word/get-mw-api` is hardcoded to `"russet"`, real lookup commented out. Debug leftover, publicly reachable.
-- `client/src/wordList.json` was deleted in commit `2f0ce90`. No longer a gap: `client/src/data/words.json` is the bundled word source and the game works with the backend off.
-- `Word.hint` is in the schema, written by nothing, read by nothing.
-- `Header` and `Footer` are imported into `App.js` but commented out of the render tree. `Hello` and `AuthWrapper` remain as disconnected files. Do not preserve these by default.
-- Known unused legacy imports include `mongoose` in both routers and `fs` in `wordrouter.js`. The old MDB/Typewriter imports in `Halloffame.js` were removed during the loading pass.
-
-**Structural**
-
-- `Word.js` — **the data-fetch inversion is fixed.** `App` owns the selected manifest record; `Word` now renders letters and still owns only the preserved localhost winner-score side effect. Remove that side effect from the component when rebuilding scoring.
-- The game rules live inline in `App.js` but are SHALLOW coupling, not deep — `Winner` and `Loser` are already pure derivations of `(wordToFind, chosenLetters)`. The only obstruction is `addChosenLetter` emitting literal JSX via `setInnertext`. Split message-generation out and the rule engine becomes a testable pure module.
-- `/user/add100` verifies the JWT then unconditionally adds 100. No game session, no word ID, no nonce. Replayable in a loop. **Known and accepted** — see hard rules.
-- Tokens never expire (no `expiresIn`), are stored in `localStorage`, and only `/user/add100` is protected. `AuthWrapper.js` is disconnected, so no route is guarded client-side either. `/illucia` advertises "Only for registered players" and is reachable by anyone.
-- `/word/get-all-words` returns every document INCLUDING image Buffers — unpaginated, unauthenticated, potentially megabytes.
-- No `helmet`, no rate limiting, `cors()` with no origin allowlist — on endpoints that spent money per call.
-- `server/Routers/wordrouter.js` defines EIGHT `/word/` routes; three call OpenAI live (`/word/random` and the two `*-create-random` routes). All eight go away when `server/` is deleted as a whole; production word gameplay already replaces them. There is no separate "delete the OpenAI routes" task.
-- `Illucia.js` reads `localStorage.token` into an unused variable and advertises "registered players only" with no guard.
-
-**Repo hygiene**
-
-- README's live link points at `hengman.netlify.app` — a host this project no longer uses. Acknowledgements section still literally reads "[Insert appropriate credits or references]".
-- The obsolete CRA `homepage` field is gone. Do not reintroduce it under Vite.
-- The 2023 working tree and HEAD disagreed about the API base URL and which word endpoint the client called. Both states are now committed as-found.
+- The physical-keyboard effect in App.js omits the current guess handler from its dependencies. Code inspection found a stale closure that can process the first key against an empty word. Characterize this during game-core extraction; it has not been repaired in the account slice.
+- App.js puts the answer in a transparent div, which can expose it to selection and assistive technology. Remove this unnecessary leak during game-core work; static word data and forgeable scores remain intentional.
+- remainingTries starts at 5 while Loser derives from six incorrect guesses; the displayed countdown works via the legacy redundant state. Replace it when extracting the game rules, not during account work.
+- The old hangman BODY_PARTS code remains commented out. There is deliberately no gallows: the story is rescuing a robot. Do not restore it.
+- Header/Footer imports and commented render references remain. React StrictMode is still disabled in the app, but the score lifecycle is tested under StrictMode and must not depend on that setting.
+- Game messages and rule derivations remain inline in App.js. Do not widen account changes into a game-engine rewrite.
+- Scores remain forgeable by design. UI duplicate prevention handles ordinary rerenders; it is not server-side win validation or exactly-once delivery.
 
 ## WHAT IS LIVE
 
@@ -187,9 +156,9 @@ The rebuilt word-game path is WIRED AND LIVE at `hangman.spyrostrimis.com/hangma
 
 Also live from the current frontend pass: responsive route-specific backgrounds, local fonts, intent-based image preloading, stable background blending during scroll, reserved character-image dimensions, SPA links between login/signup, and bounded Hall of Fame loading/failure UI.
 
-Still NOT rebuilt: auth, Hall of Fame data, and winner-score behavior. All four account-related client calls still target localhost. In production, the Hall of Fame should be expected to reach its visible unavailable state. Do not describe accounts, persisted scores, or leaderboard data as working production features.
+Accounts, Hall of Fame data, and winner-score handling are implemented and locally tested. See server/RELEASE.md before claiming they are deployed; until the API and new frontend are published and verified, production remains on the older frontend.
 
-Keep three states apart when writing status: implemented/committed, agreed/planned, and actually wired/live. The word-game and frontend-loading slices are in the third category; the Cloudflare account layer is only a target design.
+Keep three states apart when writing status: implemented/committed, agreed/planned, and actually wired/live. The word-game and frontend-loading slices are live; the account release record is the authority for the Cloudflare account layer.
 
 ## IMAGE ASSET CONVENTIONS
 
@@ -215,4 +184,4 @@ Undecided: how Illucia chooses letters. Options under discussion in planning:
 
 ## SCOPE
 
-The current completed slice is frontend first-visit/loading stability on top of the live static word game. The next active priority is decided in planning chats and may live in `state.md`, which is not part of this repo context. Work from the specific instruction given—do not infer that the account rebuild, README rewrite, dependency cleanup, React upgrade, Illucia, or any listed landmine is automatically next.
+The current authorized slice is registration, login, and high scores, with the user-approved client-side stretching design. Finish and verify that slice; do not widen it into Illucia gameplay, a React upgrade, or unrelated game changes.

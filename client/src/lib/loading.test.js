@@ -38,10 +38,10 @@ test('failed image speculation is handled and can be retried', async () => {
 
 test('leaderboard accepts populated and empty results and rejects malformed responses', async () => {
   const users = [{ username: 'Player', score: 100 }];
-  assert.equal(await loadLeaderboard(undefined, async () => ({data: users})), users);
-  assert.deepEqual(await loadLeaderboard(undefined, async () => ({data: []})), []);
+  assert.equal(await loadLeaderboard(undefined, async () => users), users);
+  assert.deepEqual(await loadLeaderboard(undefined, async () => []), []);
   for (const data of [{msg: 'unavailable'}, null, [null], [{username: 'Player'}]]) {
-    await assert.rejects(loadLeaderboard(undefined, async () => ({data})), /Invalid leaderboard/);
+    await assert.rejects(loadLeaderboard(undefined, async () => data), /Invalid leaderboard/);
   }
 });
 
@@ -49,9 +49,9 @@ test('leaderboard passes cancellation and a bounded timeout; failures reach the 
   const controller = new AbortController();
   let options;
   await loadLeaderboard(controller.signal, async (url, config) => {
-    assert.equal(url, 'http://localhost:8000/user/get-best-scores');
+    assert.equal(url, '/user/get-best-scores');
     options = config;
-    return {data: []};
+    return [];
   });
   assert.equal(options.signal, controller.signal);
   assert.equal(options.timeout, 10000);

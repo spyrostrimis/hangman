@@ -1,9 +1,7 @@
 import './App.css';
 import PageBackground from './Components/PageBackground';
 import { getPageArt, prefetchLinkArt } from './lib/page-art.js';
-// import Hello from './Components/Hello';
 import Navbar from './Components/Navbar';
-// import AuthWrapper from "./Components/AuthWrapper";
 import Intro from './Components/Intro';
 import Signup from "./Components/Signup";
 import Login from "./Components/Login";
@@ -19,6 +17,7 @@ import soundbtn from "./Images/soundbtn.png";
 import mwLogo from "./Images/mw-logo-dark-background.png";
 import manifest from "./data/words.json";
 import { buildAssetUrl, selectRandomWord } from "./lib/word-data.js";
+import { useRoundScore } from './lib/use-round-score.js';
 
 import { useCallback, useEffect, useState } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
@@ -223,6 +222,7 @@ function App() {
     wordToFind &&
     wordToFind.split("").every((letter) => chosenLetters.includes(letter));
   // console.log("Winner:", Winner);
+  const scoreMessage = useRoundScore(isHangPage ? selectedWord : null, Boolean(Winner));
 
   const addChosenLetter = useCallback(
     (letter) => {
@@ -336,6 +336,7 @@ function App() {
                   />
                 </div>
                 <div style={{ color: "transparent" }}>{wordToFind}</div>
+                {scoreMessage && <p className="score-status" role="status">{scoreMessage}</p>}
                 <Word
                   reveal={Loser}
                   wordToFind={wordToFind}

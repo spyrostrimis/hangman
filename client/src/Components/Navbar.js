@@ -1,81 +1,21 @@
-import React from 'react'
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import jwt_decode from "jwt-decode";
-import logoo from "../Images/logoo.png";
-
-const Navbar = () => {
-  let token = localStorage.getItem("token");
-  const navigate = useNavigate();
-  let decoded;
-
-  if (token) {
-    try {
-      decoded = jwt_decode(token);
-    } catch (error) {
-      localStorage.removeItem("token");
-      navigate("/login");
-    }
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from './AuthProvider';
+export default function Navbar() {
+  const { user, status, logout } = useAuth();
+  const [error, setError] = useState('');
+  const [pending, setPending] = useState(false);
+  async function signOut() {
+    setPending(true); setError('');
+    try { await logout(); } catch (failure) { setError(failure.message); }
+    finally { setPending(false); }
   }
-
-  function logout() {
-    localStorage.removeItem("token");
-  }
-
-  return (
-    <div className="navbarcustom">
-      {/* <nav>
-        <Link to="/hangman">
-          <img src={logoo} style={{ height: "36px" }} />
-        </Link>
-      </nav> */}
-      {/* <nav>
-        <Link to="/">HOMEWORLD</Link>
-      </nav>
-      <nav>
-        {token ? (
-          <>
-            <Link to="#">{decoded ? decoded.username : null}</Link>
-            <Link to="/hangman">Play Hangman</Link>
-            <Link to="/hangman">Play vs AI</Link>
-            <Link to="/hall-of-fame">Hall of Fame</Link>
-            <Link onClick={logout} to="/login">
-              Logout
-            </Link>
-          </>
-        ) : (
-          <>
-            <Link to="/hangman">Play Hangman</Link>
-            <Link to="/hangman">Play vs AI</Link>
-            <Link to="/hall-of-fame">Hall of Fame</Link>
-            <Link to="/login">Sign In</Link>
-            <Link to="/signup">Signup</Link>
-          </>
-        )}
-      </nav> */}
-      <nav>
-        {token ? (
-          <>
-            <Link to="/">HOMEWORLD</Link>
-            <Link to="/hangman">Play Hangman</Link>
-            <Link to="/illucia">Play vs AI</Link>
-            <Link to="/hall-of-fame">Hall of Fame</Link>
-            <Link onClick={logout} to="/login">
-              Logout
-            </Link>
-          </>
-        ) : (
-          <>
-            <Link to="/">HOMEWORLD</Link>
-            <Link to="/hangman">Play Hangman</Link>
-            <Link to="/illucia">Play vs AI</Link>
-            <Link to="/hall-of-fame">Hall of Fame</Link>
-            <Link to="/login">Sign In</Link>
-          </>
-        )}
-      </nav>
-    </div>
-  );
+  return <div className="navbarcustom"><nav>
+    <Link to="/">HOMEWORLD</Link>
+    <Link to="/hangman">Play Hangman</Link>
+    <Link to="/illucia">Play vs AI</Link>
+    <Link to="/hall-of-fame">Hall of Fame</Link>
+    {user ? <button className="nav-logout" onClick={signOut} disabled={pending}>{pending ? 'Signing out…' : 'Logout'}</button>
+      : status === 'loading' ? <span className="session-loading">Checking session…</span> : <Link to="/login">Sign In</Link>}
+  </nav>{error && <p role="alert" className="account-error">{error}</p>}</div>;
 }
-
-export default Navbar

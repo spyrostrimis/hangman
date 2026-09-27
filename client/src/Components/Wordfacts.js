@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from "react";
 import { Typewriter } from "react-simple-typewriter";
-import jwt_decode from "jwt-decode";
+import { useAuth } from './AuthProvider';
 
 const Wordfacts = ({
   Loser = false,
@@ -25,16 +25,7 @@ const Wordfacts = ({
 
   // const [innertext, setInnertext] = useState();
 
-  const token = localStorage.getItem("token");
-  let decoded;
-
-  if (token) {
-    try {
-      decoded = jwt_decode(token);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const { user } = useAuth();
 
   useEffect(() => {
     if (Winner || Loser) {
@@ -54,7 +45,7 @@ const Wordfacts = ({
               <Typewriter
                 words={[
                   `Artsy has shut down! Can you bring him back to life ${
-                    decoded ? decoded.username : ""
+                    user ? user.username : ""
                   }?`,
                   `You only have 6 attempts...`,
                 ]}

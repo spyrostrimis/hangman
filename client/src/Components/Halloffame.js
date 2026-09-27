@@ -1,15 +1,13 @@
 import React from 'react'
 import { useEffect, useState } from "react";
 import { loadLeaderboard } from '../lib/leaderboard.js';
+import { useAuth } from './AuthProvider';
 import { Link } from "react-router-dom";
 
 const Halloffame = ({ Winner = false}) => {
   const [allusers, setAllusers] = useState([]);
   const [status, setStatus] = useState('loading');
-  const token = localStorage.getItem("token");
-  // if (token) {
-  //   return <Navigate to="/" />;
-  // }
+  const { user, status: authStatus } = useAuth();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -28,7 +26,7 @@ const Halloffame = ({ Winner = false}) => {
 
   return (
     <div className="hallcontainer hall-of-fame">
-      {!token && (
+      {!user && authStatus !== 'loading' && (
         <div className='hallheader'>
           <h4>Let's get competitive!</h4>
           <h4>

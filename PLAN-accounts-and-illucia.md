@@ -1,6 +1,6 @@
 # Accounts, Hall of Fame, and Illucia plan
 
-Prepared 2026-09-26 against `3a4fa1d`. Planning only: none of these features has been implemented by this document.
+Prepared 2026-09-26 against `3a4fa1d`. Accounts implementation began 2026-09-26 after explicit user approval. Current verification/deployment status is tracked in `server/RELEASE.md`; Illucia remains a separate planned feature.
 
 ## Verified starting point
 
@@ -13,13 +13,11 @@ Prepared 2026-09-26 against `3a4fa1d`. Planning only: none of these features has
 
 ## Phase 3: accounts and cumulative scores
 
-### 1. Resolve the free-tier password-hashing constraint first
+### 1. Agreed password design (supersedes bcryptjs)
 
-The intended stack is Hono, D1, `jose`, and `bcryptjs`. Cloudflare Workers Free currently allows 10 ms of CPU per HTTP request. Secure password hashing is deliberately expensive, so `bcryptjs` is a feasibility risk, not a verified free-tier solution.
+The user confirmed that secure bcryptjs hashing exceeds the Workers Free CPU budget. Approved replacement: browser Web Crypto PBKDF2-HMAC-SHA-256 at 600,000 iterations, random per-account salts, and server-side HMAC-SHA-256 verifiers under a separate secret pepper. A pre-login parameters endpoint returns real salts or stable secret-derived fake salts for unknown usernames. Verification uses native constant-time HMAC verification. Sessions still use jose and expiring HttpOnly cookies.
 
-Before building the account UI integration, measure signup and login with a security-appropriate hash cost in the Workers runtime, including deployed CPU measurements before production cutover. Local success alone does not prove free-tier viability. Do not lower password-hashing strength to force it under the limit or silently enable a paid plan. If this fails, revise the authentication design explicitly; evaluate another secure password-verification approach against the same constraints before promising the exact stack.
-
-Reference: [Workers limits](https://developers.cloudflare.com/workers/platform/limits/).
+The server cannot prove a modified client stretched a password or enforce the original password's strength. The transmitted derived credential is password-equivalent and must not be logged or stored. See server/README.md for the full versioned protocol, limitations and recovery implications. Production CPU measurements remain required before declaring Free-tier viability verified.
 
 ### 2. Establish the Worker and D1 foundation
 
@@ -30,7 +28,7 @@ Reference: [Workers limits](https://developers.cloudflare.com/workers/platform/l
 
 | Table | Proposed columns and constraints |
 | --- | --- |
-| `users` | `id` primary key, display `username`, unique normalized `username_key`, `password_hash`, `created_at` |
+| `users` | `id` primary key, display `username`, unique normalized `username_key`, `salt`, `verifier`, `kdf_version`, `created_at` |
 | `scores` | `user_id` primary key and foreign key to users, nonnegative integer `total` default 0, `updated_at` |
 
 - This is one cumulative score per user, matching the existing game, rather than a history of individual matches. Create the user and initial score in an atomic D1 batch. Increment using SQL `total = total + 100`, avoiding a read-then-write race.
@@ -41,11 +39,12 @@ References: [Hono on Workers](https://hono.dev/docs/getting-started/cloudflare-w
 
 ### 3. Implement the API and cookie authentication
 
-Preserve the four existing route paths and HTTP methods; deliberately replace token response bodies with safe user data and cookies. Add two routes necessary for cookie-based frontend sessions:
+Preserve the four existing route paths and HTTP methods; deliberately replace token response bodies with safe user data and cookies. Add the pre-login parameters endpoint plus two routes necessary for cookie-based frontend sessions:
 
 | Method and path | Contract |
 | --- | --- |
-| `POST /user/signup` | Validate username/password, create user and zero score, set session cookie, return safe user data; duplicate username is a conflict. |
+| `POST /user/auth-params` | Return versioned derivation parameters and an existing or stable fake salt. |
+| `POST /user/signup` | Validate username/credential/salt/version, create user and zero score, set session cookie, return safe user data; duplicate username is a conflict. |
 | `POST /user/login` | Verify credentials, set session cookie, return safe user data; generic invalid-credentials error. |
 | `GET /user/me` | Verify session and return current user and score; otherwise 401. |
 | `POST /user/logout` | Clear the session cookie. |
@@ -56,7 +55,7 @@ Preserve the four existing route paths and HTTP methods; deliberately replace to
 - Use a host-only `HttpOnly`, `Secure`, `SameSite=Lax` cookie with `Path=/` and matching expiry. Apply an explicit localhost-only development configuration.
 - Logout clears the browser cookie; an already-copied JWT remains valid until expiry. Immediate token revocation is outside this initial stateless design.
 - Protect mutating requests with trusted-origin checks and required JSON where applicable. Do not enable wildcard credentialed CORS. Auth responses must not be cached.
-- Validate server-side lengths and formats, normalize usernames consistently, avoid password truncation (including bcrypt's byte limit if retained), bound request sizes, and throttle authentication attempts using a verified free-tier-compatible mechanism. Never log passwords or tokens or return raw database errors.
+- Validate server-side lengths and formats, normalize usernames consistently, validate the credential format; enforce password length in the official client without claiming server-side enforcement, bound request sizes, and throttle authentication attempts using a verified free-tier-compatible mechanism. Never log passwords or tokens or return raw database errors.
 - No email collection, recovery emails, OAuth, or password reset in the initial slice; make the lack of recovery clear when registering.
 
 ### 4. Connect registration, login, and navigation

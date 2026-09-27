@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import { AuthProvider } from './Components/AuthProvider';
 import { BrowserRouter } from "react-router-dom";
 import "./base.css";
 import "@fontsource/roboto/latin-300.css";
@@ -13,8 +14,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
   <BrowserRouter>
-    <App />
+    <AuthProvider><App /></AuthProvider>
   </BrowserRouter>
   // </React.StrictMode>
 );
-

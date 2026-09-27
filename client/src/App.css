@@ -1590,3 +1590,22 @@ input {
   font: 1rem/1.6 Roboto, Arial, sans-serif;
 }
 .hall-status p { margin: 0; }
+
+/* Account states share the existing forms and remain usable on narrow screens. */
+.account-form { padding: 24px clamp(12px, 4vw, 36px); }
+.account-form label { display: block; text-align: left; margin: 16px 0 6px; }
+.account-form input { width: 100%; min-width: 0 !important; }
+.account-form button { letter-spacing: 1px; color: #eee; filter: none; border: 1px solid #d8de0d; }
+.account-form button:disabled, .nav-logout:disabled { opacity: .6; cursor: wait; }
+.account-help { font: 14px/1.5 sans-serif; text-align: left; margin-top: 12px; }
+.account-error { color: #ffb6c8; font: 16px/1.5 sans-serif; overflow-wrap: anywhere; }
+.score-status { color: #f3f400; text-align: center; padding: 8px 16px; }
+.navbarcustom .nav-logout { background: transparent; border: 0; color: #f3f400; font: inherit; font-family: bruno; font-size: 20px; font-weight: 600; padding: 25px; cursor: pointer; }
+.session-loading { padding: 16px; color: #ddd; }
+.navbarcustom { height: auto; min-height: 53px; flex-direction: column; }
+.navbarcustom nav { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; }
+.navbarcustom nav a, .navbarcustom .nav-logout { display: inline-block; white-space: nowrap; padding: 12px 20px; }
+@media (max-width: 1280px) { .navbarcustom .nav-logout { font-size: 16px; } }
+@media (max-width: 800px) {
+  .navbarcustom nav a, .navbarcustom .nav-logout { font-size: 13px; padding: 10px 8px; }
+}

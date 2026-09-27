@@ -1,6 +1,4 @@
 import React from "react";
-import axios from "axios";
-import { useEffect } from "react";
 
 const Word = ({
   wordToFind,
@@ -8,27 +6,6 @@ const Word = ({
   Winner = false,
   reveal = false,
 }) => {
-  let token = localStorage.getItem("token");
-
-  useEffect(() => {
-    if (token) {
-      if (Winner) {
-        axios
-          .put("http://localhost:8000/user/add100", null, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((res) => {
-            console.log(res.data);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-    }
-  }, [Winner]);
-
   return (
     <div className={`word ${Winner || reveal ? "revealed" : ""}`}>
       {wordToFind.split("").map((letter, index) => (
