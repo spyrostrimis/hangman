@@ -18,9 +18,24 @@ import mwLogo from "./Images/mw-logo-dark-background.png";
 import manifest from "./data/words.json";
 import { buildAssetUrl, selectRandomWord } from "./lib/word-data.js";
 import { useRoundScore } from './lib/use-round-score.js';
+import {
+  applyGuess,
+  createRound,
+  getCorrectGuesses,
+  getIncorrectGuesses,
+  getLastGuess,
+  getRemainingMisses,
+  getRoundStatus,
+} from './lib/hangman-core.js';
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
+
+function roundReducer(round, action) {
+  if (action.type === 'start') return createRound(action.answer);
+  if (action.type === 'guess') return round ? applyGuess(round, action.letter) : round;
+  return null;
+}
 
 function App() {
   const location = useLocation();
@@ -31,10 +46,8 @@ function App() {
   const wordToFind = selectedWord?.word ?? "";
 
   const [innertext, setInnertext] = useState();
-  const [remainingTries, setRemainingTries] = useState(5);
   const [disablehint1, setDisablehint1] = useState(false);
   const [disablehint2, setDisablehint2] = useState(false);
-  // console.log("remainingTries1", remainingTries);
 
   function setInstructions() {
     // function showMore() {
@@ -212,59 +225,37 @@ function App() {
     document.getElementById("hint2").disabled = true;
   }
 
-  const [chosenLetters, setChosenLetters] = useState([]);
-  const incorrectGuesses = chosenLetters.filter(
-    (letter) => !wordToFind.includes(letter)
-  );
+  const [round, dispatch] = useReducer(roundReducer, null);
+  const chosenLetters = round?.guesses ?? [];
+  const incorrectGuesses = round ? getIncorrectGuesses(round) : [];
+  const status = round ? getRoundStatus(round) : 'playing';
+  const Loser = status === 'failed';
+  const Winner = status === 'solved';
+  useRoundScore(isHangPage ? selectedWord : null, Winner);
 
-  const Loser = incorrectGuesses.length >= 6;
-  const Winner =
-    wordToFind &&
-    wordToFind.split("").every((letter) => chosenLetters.includes(letter));
-  // console.log("Winner:", Winner);
-  useRoundScore(isHangPage ? selectedWord : null, Boolean(Winner));
-
+  // dispatch is stable and the reducer always sees the latest round, so the
+  // physical-keyboard listener can never act on a stale word.
   const addChosenLetter = useCallback(
-    (letter) => {
-      // console.log("remainingTries2", remainingTries);
-      // console.log("wordToFind2", wordToFind);
-      if (chosenLetters.includes(letter) || Winner || Loser) return;
-
-      setChosenLetters((currentLetters) => [...currentLetters, letter]);
-      // console.log("chosenLetters", chosenLetters);
-      // console.log("remainingTries3", remainingTries);
-      if (!wordToFind.includes(letter)) {
-        // console.log("remainingTries4", remainingTries);
-        // console.log("wordToFind4", wordToFind);
-        setRemainingTries(remainingTries - 1);
-        // console.log("remainingTries5", remainingTries);
-        if (remainingTries > 1) {
-          setInnertext(
-            <>
-              <h5>You have {remainingTries} tries remaining...</h5>
-            </>
-          );
-        }
-        if (remainingTries == 1) {
-          setInnertext(
-            <>
-              <h5>You have only {remainingTries} try left... make it count!</h5>
-            </>
-          );
-        }
-      }
-    },
-    [chosenLetters, wordToFind, remainingTries, Winner, Loser]
+    (letter) => dispatch({ type: 'guess', letter }),
+    []
   );
 
   useEffect(() => {
-    if (!isHangPage) {
-      // || Winner || Loser
-      // Skip the effect if not on the homepage - *or if the game is over - removed*
-      // setChosenLetters([]);
-      return;
-    }
-    // e: KeyboardEvent
+    const lastGuess = round && getLastGuess(round);
+    if (!lastGuess || lastGuess.correct || getRoundStatus(round) !== 'playing') return;
+    const remaining = getRemainingMisses(round);
+    setInnertext(
+      remaining === 1 ? (
+        <h5>You have only {remaining} try left... make it count!</h5>
+      ) : (
+        <h5>You have {remaining} tries remaining...</h5>
+      )
+    );
+  }, [round]);
+
+  useEffect(() => {
+    if (!isHangPage) return;
+
     const handler = (e) => {
       const key = e.key;
       if (!key.match(/^[a-zA-Z]$/)) return;
@@ -278,14 +269,11 @@ function App() {
     return () => {
       document.removeEventListener("keypress", handler);
     };
-  }, [chosenLetters, isHangPage]); // removed chosenLetters,
+  }, [isHangPage, addChosenLetter]);
 
   useEffect(() => {
     if (!isHangPage) {
-      // || Winner || Loser
-      // Skip the effect if not on the homepage - *or if the game is over - removed*
-      setChosenLetters([]);
-      setRemainingTries(5);
+      dispatch({ type: 'reset' });
       setInnertext("");
       setSelectedWord(null);
       setDisablehint1(false);
@@ -293,7 +281,9 @@ function App() {
       return;
     }
 
-    setSelectedWord(selectRandomWord(manifest.words));
+    const record = selectRandomWord(manifest.words);
+    setSelectedWord(record);
+    dispatch({ type: 'start', answer: record.word });
   }, [isHangPage]);
 
   const paintingUrl = selectedWord
@@ -335,7 +325,6 @@ function App() {
                     incorrectGuesses={incorrectGuesses.length}
                   />
                 </div>
-                <div style={{ color: "transparent" }}>{wordToFind}</div>
                 <Word
                   reveal={Loser}
                   wordToFind={wordToFind}
@@ -351,9 +340,7 @@ function App() {
                 >
                   <Keyboard
                     disabled={Winner || Loser}
-                    activeLetters={chosenLetters.filter((letter) =>
-                      wordToFind.includes(letter)
-                    )}
+                    activeLetters={round ? getCorrectGuesses(round) : []}
                     inactiveLetters={incorrectGuesses}
                     addChosenLetter={addChosenLetter}
                     setInstructions={setInstructions}
