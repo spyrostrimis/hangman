@@ -1,0 +1,86 @@
+/* Sign in / Sign up: Professor Fastolfe's pod beside the cyan screen. */
+.account {
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 440px);
+  justify-content: center;
+  align-items: end;
+  gap: 24px;
+  width: min(760px, calc(100% - 32px));
+  margin: 6vh auto 40px;
+}
+
+.account-pod {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 360px;
+  padding-bottom: 12px;
+  box-sizing: border-box;
+  border-bottom: 4px solid #d9d8dbbd;
+  border-radius: 70px;
+  background: radial-gradient(ellipse at 50% 35%, #1d2150b3, #05071299 70%);
+  box-shadow: inset 0 -80px 32px -34px #d9d8db91;
+}
+.account-pod img { width: auto; height: 190px; filter: drop-shadow(0 0 12px #9fd8ff40); }
+.account-bubble {
+  position: relative;
+  margin: 0 14px 16px;
+  padding: 10px 12px;
+  font: 14px/1.45 monospace;
+  text-align: left;
+  color: #eef;
+  background: #07091acc;
+  border: 1px solid rgb(67 228 64 / 60%);
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgb(67 228 64 / 45%);
+}
+.account-bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: 14px;
+  height: 14px;
+  background: #07091a;
+  border-right: 1px solid rgb(67 228 64 / 60%);
+  border-bottom: 1px solid rgb(67 228 64 / 60%);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.account-screen .hm-screen-inner { padding: 22px 26px 18px; }
+.account-form { text-align: left; }
+.account-form h1 { margin: 0 0 14px; font-family: technoboard; font-weight: normal; font-size: 30px; text-align: center; color: var(--hm-text); }
+.account-form label { display: block; margin: 14px 0 6px; font-family: bruno; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--hm-yellow); }
+.account-form input {
+  display: block;
+  width: 100%;
+  min-width: 0 !important;
+  min-height: 48px !important;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  font: 18px monospace;
+  color: #fff;
+  background: #05070fd9;
+  border: 0 !important;
+  border-bottom: 3px solid var(--hm-cyan) !important;
+  border-radius: 4px 4px 0 0 !important;
+  caret-color: var(--hm-yellow);
+}
+.account-form input:focus-visible { outline: 2px solid var(--hm-yellow); outline-offset: 2px; }
+.account-form input:disabled { opacity: .6; }
+.account-help { margin: 6px 0 0; font: 13px/1.5 monospace; color: var(--hm-muted); }
+.account-form .account-error { margin: 12px 0 0; }
+.account-form button[type="submit"] { display: block; margin: 22px auto 6px; min-width: 60%; }
+.account-switch { margin: 14px 0 0; text-align: center; font: 14px monospace; color: var(--hm-text); }
+.account-switch a { color: var(--hm-yellow); }
+
+@media (max-width: 800px) {
+  .account { grid-template-columns: minmax(0, 1fr); width: calc(100% - 24px); max-width: 440px; margin-top: 12px; gap: 12px; }
+  .account-pod { flex-direction: row; align-items: flex-end; height: auto; padding: 14px 12px 10px; border-radius: 40px; }
+  .account-pod img { height: 110px; order: -1; }
+  .account-bubble { margin: 0 0 30px 8px; font-size: 13px; }
+  .account-bubble::after { left: -8px; bottom: 16px; transform: rotate(135deg); }
+  .account-screen .hm-screen-inner { padding: 16px 14px; }
+}

@@ -98,55 +98,6 @@ a:hover {
   min-height: calc(100vh);
 }
 
-.formcontainer {
-  max-width: 540px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10vh;
-  font-weight: 900;
-  color: chartreuse;
-  color: #d9d8db;
-  padding: 20px;
-  border-bottom: 4px solid #caca02;
-  border-radius: 12px;
-  background-color: #00000063 !important;
-  box-shadow: 0px 8px 30px -4px rgba(230, 230, 230, 0.79) !important;
-  -webkit-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
-  -moz-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
-  /* font-family: zenblack; */
-  /* font-size: 16px; */
-}
-
-.formcontainer h1 {
-  margin-bottom: 25px;
-  font-family: "technoboard";
-  /* margin-top: 10px; */
-  /* filter: drop-shadow(0 0 15px yellow) drop-shadow(0 0 5px yellow) contrast(1) brightness(1); */
-  color: #d9d8dbe0;
-}
-
-.formcontainer a {
-  color: #edee02;
-}
-
-.form {
-  /* max-width: 300px; */
-  text-align: center;
-  margin-top: 20px;
-  /* background-color: #ffffff89; */
-  padding: 25px 40px;
-  padding: 40px 50px;
-  padding-top: 50px;
-  box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%);
-  -webkit-box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%);
-  -moz-box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%);
-  border-radius: 4px;
-}
-
-.form h1 {
-  margin-bottom: 45px;
-}
-
 input {
   min-width: 300px !important;
   min-height: 45px !important;
@@ -185,44 +136,6 @@ input[type="password" i] {
 a#checkmark {
   color: #f6f6f6;
   text-decoration: none;
-}
-
-.form button {
-  padding: 6px 5px;
-  cursor: pointer;
-  background: none;
-  color: #db3eb1;
-  /* border: 6px solid #db3eb1; */
-  border-radius: 100px;
-  padding: 12px 18px;
-  font-size: 20px;
-  font-family: tahoma;
-  letter-spacing: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  filter: drop-shadow(0 0 15px yellow) drop-shadow(0 0 2px yellow) contrast(2)
-    brightness(2);
-  position: relative;
-  overflow: hidden;
-  /* border: 2px solid yellow; */
-  /* border-bottom: 4px solid yellow; */
-  font-family: "bruno";
-  background-color: #00000080;
-  margin: 30px auto;
-}
-
-.form button:hover {
-  filter: drop-shadow(0 0 15px yellow) drop-shadow(0 0 2px yellow) contrast(2.3)
-    brightness(2.3);
-  border: 2px solid #d8de0d;
-}
-
-.form button span {
-  text-decoration: none;
-  padding: 10px;
-  border-radius: 5px;
-  font-weight: 600;
-  color: #303030;
 }
 
 .footer {
@@ -283,44 +196,12 @@ main {
 .illucontainer h1 {
   font-size: 2.3rem;
 }
-/* LOGIN SIGNUP PAGES MEDIA 1280 */
-.formcontainer {
-  max-width: 480px;
-  margin-top: 6vh;
-  font-size: 15px;
-  font-weight: 900;
-  padding: 22px;
-}
-
-.formcontainer h1 {
-  margin-bottom: 30px;
-  font-size: 2.1rem;
-}
-
-.form {
-  margin-top: 15px;
-  padding: 40px 60px;
-  padding-top: 40px;
-}
-
-.form h1 {
-  margin-bottom: 30px;
-  font-size: 2.1rem;
-}
 
 input {
   min-width: 240px !important;
   min-height: 40px !important;
 }
 
-.form button {
-  font-size: 16px;
-  margin: 22px auto;
-}
-
-.form button span {
-  padding: 8px;
-}
 }
 
 @media screen and (max-width: 860px) {
@@ -371,13 +252,7 @@ input {
   .page-background.is-ready { animation-duration: 1ms; }
 }
 
-/* Account states share the existing forms and remain usable on narrow screens. */
-.account-form { padding: 24px clamp(12px, 4vw, 36px); }
-.account-form label { display: block; text-align: left; margin: 16px 0 6px; }
-.account-form input { width: 100%; min-width: 0 !important; }
-.account-form button { letter-spacing: 1px; color: #eee; filter: none; border: 1px solid #d8de0d; }
-.account-form button:disabled, .nav-logout:disabled { opacity: .6; cursor: wait; }
-.account-help { font: 14px/1.5 sans-serif; text-align: left; margin-top: 12px; }
-.account-error { color: #ffb6c8; font: 16px/1.5 sans-serif; overflow-wrap: anywhere; }
+/* Account errors (sign-in forms and the navbar). */
 
+.account-error { color: #ffb6c8; font: 16px/1.5 sans-serif; overflow-wrap: anywhere; }
 
