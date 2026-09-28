@@ -17,6 +17,7 @@ from urllib.request import urlopen
 HERE = Path(__file__).resolve().parent
 OUTPUT = HERE.parent / 'client/public/illucia/words'
 LOCK = HERE / 'illucia-sources.json'
+FILTER = HERE / 'illucia-filter.json'
 
 
 def digest(data):
@@ -47,9 +48,18 @@ def normalized(word):
     return word.lower() if re.fullmatch(r'[A-Za-z]{3,15}', word) else None
 
 
-def compile_words(rows, flagged, blocklist):
-    blocked = {word.strip().lower() for word in blocklist.splitlines() if word.strip()}
-    blocked.update(word.lower() for word in flagged)
+def compile_words(rows, flagged, blocklist, lemmas=(), block=(), allow=()):
+    terms = {word.strip().lower() for word in blocklist.splitlines() if word.strip()}
+    terms.update(word.lower() for word in block)
+    blocked = terms | {word.lower() for word in flagged}
+    # Exact matching misses inflections (faggot -> faggots), so also block every
+    # word whose ESDB lemma is a term. A lemma-derived form that also belongs to
+    # a clean lemma (came: come/cum) stays only through an explicit allow entry.
+    derived = {word.lower() for word, lemma in lemmas if lemma.lower() in terms} - blocked
+    for word in allow:
+        if word in blocked or word not in derived:
+            raise ValueError(f'Allow entry {word!r} is stale or overrides a direct block')
+    blocked |= derived - set(allow)
     accepted = {}
     for word, size in rows:
         word = normalized(word)
@@ -76,10 +86,15 @@ def extract_words(source):
         flagged = [row[0] for row in db.execute(
             "select word from words join groups using (group_id) "
             "where usage_note like 'offensive-%' or usage_note like 'vulgar-%'")]
-    return rows, flagged
+        lemmas = db.execute(
+            'select w.word, l.word from words w join words l on l.word_id = w.lemma_id').fetchall()
+    return rows, flagged, lemmas
 
 
-def build(inputs, lock):
+def build(inputs, lock, project_filter):
+    rules = json.loads(project_filter)
+    if any(not re.fullmatch(r'[a-z]+', word) for word in [*rules['block'], *rules['allow']]):
+        raise ValueError('Filter entries must be lowercase a-z words')
     with tempfile.TemporaryDirectory(prefix='illucia-esdb-') as temporary:
         root = Path(temporary)
         archive = root / 'source.tar.gz'
@@ -93,8 +108,9 @@ def build(inputs, lock):
                                 capture_output=True, text=True, encoding='utf-8')
         if result.returncode:
             raise RuntimeError(result.stderr)
-        rows, flagged = extract_words(source)
-        accepted = compile_words(rows, flagged, inputs['blocklist'].decode('utf-8'))
+        rows, flagged, lemmas = extract_words(source)
+        accepted = compile_words(rows, flagged, inputs['blocklist'].decode('utf-8'),
+                                 lemmas, rules['block'], rules['allow'])
         files = word_files(accepted)
         if any(not data for data in files.values()):
             raise ValueError('Unexpected empty length bucket')
@@ -114,7 +130,9 @@ def build(inputs, lock):
     report = {
         'sources': lock,
         'policy': {'spelling': 'A', 'variantLevel': 1, 'categories': [''],
-                   'lengths': [3, 15], 'maximumSize': 70},
+                   'lengths': [3, 15], 'maximumSize': 70, 'blockLemmaForms': True,
+                   'projectFilter': {'file': 'tools/illucia-filter.json',
+                                     'sha256': digest(project_filter)}},
         'acceptedWords': len(accepted),
         'cumulativeSizes': {str(t): sum(s <= t for s in accepted.values()) for t in (35, 50, 70)},
         'files': {name: {'sha256': digest(data), 'bytes': len(data),
@@ -146,7 +164,7 @@ def main():
     lock = json.loads(LOCK.read_text(encoding='utf-8'))
     inputs = {name: source_bytes(name, spec, args.cache_dir, args.download)
               for name, spec in lock.items()}
-    files, report = build(inputs, lock)
+    files, report = build(inputs, lock, FILTER.read_bytes())
     publish(files, args.output_dir, args.check)
     print(json.dumps({'checked' if args.check else 'built': report['acceptedWords'],
                       'cumulativeSizes': report['cumulativeSizes']}, indent=2))

@@ -3543,7 +3543,6 @@ domesticate 35
 domesticity 35
 domiciliary 60
 domiciliate 70
-dominations 65
 domineering 40
 donnybrooks 60
 doorkeepers 60
@@ -6791,8 +6790,6 @@ mastication 50
 masticators 70
 masticatory 70
 mastoiditis 70
-masturbated 40
-masturbates 40
 masturbator 70
 matchboards 70
 matchmakers 35
@@ -10196,7 +10193,6 @@ sexological 70
 sexologists 60
 sextillions 70
 sextodecimo 70
-sexualities 65
 sexualizing 60
 shadberries 70
 shadowboxed 50
@@ -10730,7 +10726,6 @@ strangulate 50
 stranguries 70
 straphanger 70
 straplesses 40
-strappadoes 70
 strategical 60
 strategists 50
 strategized 60

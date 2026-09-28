@@ -36,7 +36,24 @@ Every spelling and inflection in an ESDB group whose usage note starts with
 `offensive-` or `vulgar-` is blocked globally, including words with another
 unflagged sense. The LDNOOBW English list supplies an additional case-normalized,
 whole-word deny set. For example, blocking `ass` does not block `class` or `grass`.
-This implements the two specified lists; neither upstream claims exhaustive coverage.
+
+Exact matching alone let inflections through (`faggot` was blocked, `faggots`
+was not), and ESDB flags only 152 words. So every word whose ESDB lemma is a
+blocked term is blocked too (`faggots`, `spics`, `whores`). This follows the
+lemma link only, never the whole group: LDNOOBW lists `fingering`, and
+`finger`/`fingers` stay. Collateral is accepted for inflections of listed terms
+(`butts`, `sucked`, `escorted`).
+
+`illucia-filter.json` is the reviewed project filter, with a reason per entry:
+- `block`: slurs and spelling variants neither upstream list catches (for example
+  `chink`, `gook`, `honky`, `fagot`). They are blocked with their lemma forms.
+- `allow`: forms kept because they also belong to a clean lemma (`came` is the
+  past tense of `come` as well as a form of `cum`). An allow entry fails the build
+  if it is stale or tries to override a directly blocked word.
+
+Owner decision (2026-09-28): `retard`, `queer` and `gay` stay accepted; `chink`
+and `homo` are blocked. The manifest records the filter's SHA-256. Neither upstream list, nor this
+filter, claims exhaustive coverage.
 
 Each `client/public/illucia/words/3.txt` through `15.txt` contains sorted
 `word size` records, LF endings, and a final newline. The size is the minimum

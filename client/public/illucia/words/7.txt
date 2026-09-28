@@ -1751,7 +1751,6 @@ bisques 70
 bisters 70
 bistort 70
 bistros 50
-bitched 35
 bitcoin 50
 bitmaps 60
 bittern 50
@@ -1963,7 +1962,6 @@ bonnier 50
 bonobos 60
 bonuses 35
 boobies 50
-boobing 40
 boodles 50
 boogers 60
 boogied 40
@@ -2457,7 +2455,6 @@ bussing 50
 bustard 70
 bustees 70
 busters 40
-bustier 60
 busting 35
 bustled 35
 bustler 70
@@ -2472,7 +2469,6 @@ butlery 70
 butters 35
 buttery 35
 butties 60
-butting 35
 buttock 40
 buttons 35
 butyrin 70
@@ -3167,7 +3163,6 @@ chiming 35
 chimney 35
 chinchy 70
 chinese 40
-chinked 35
 chinned 35
 chinook 50
 chintzy 50
@@ -3486,7 +3481,6 @@ cockers 60
 cockeye 70
 cockier 35
 cockily 50
-cocking 35
 cockles 50
 cockney 50
 cockpit 35
@@ -4337,7 +4331,6 @@ daresay 60
 dariole 70
 darkens 35
 darkest 35
-darkies 60
 darkish 60
 darkled 70
 darkles 70
@@ -5779,7 +5772,6 @@ eschars 70
 escheat 70
 eschews 40
 escolar 70
-escorts 35
 escribe 70
 escrows 50
 escuage 70
@@ -5840,7 +5832,6 @@ eugenio 50
 eugenol 70
 euglena 70
 eulogia 70
-eunuchs 40
 euphony 50
 euphroe 70
 eurasia 50
@@ -6012,8 +6003,6 @@ fadging 70
 fadings 70
 faeries 60
 faffing 60
-fagging 40
-faggots 35
 failing 35
 failure 35
 fainest 50
@@ -7518,7 +7507,6 @@ groomer 60
 grooved 35
 grooves 35
 gropers 60
-groping 35
 gropius 50
 grossed 35
 grosser 35
@@ -8198,7 +8186,6 @@ honesty 35
 honeyed 35
 honiara 50
 honkers 60
-honkies 60
 honking 35
 honored 35
 honoree 60
@@ -8211,7 +8198,6 @@ hoofers 60
 hoofing 35
 hooghly 70
 hookahs 50
-hookers 40
 hooking 35
 hookups 50
 hoopers 70
@@ -8238,7 +8224,6 @@ hording 35
 horizon 35
 hormone 35
 hornets 35
-hornier 35
 horning 70
 horrify 35
 horrors 35
@@ -8543,7 +8528,6 @@ inbuilt 35
 incases 70
 incense 35
 incepts 70
-incests 65
 inching 35
 incipit 70
 incised 50
@@ -9107,7 +9091,6 @@ kabukis 70
 kabyles 70
 kachina 70
 kaddish 60
-kaffirs 70
 kahului 60
 kahunas 70
 kaiaked 70
@@ -9282,7 +9265,6 @@ kingcup 70
 kingdom 35
 kinglet 70
 kingpin 40
-kinkier 35
 kinkily 60
 kinking 35
 kinross 70
@@ -9976,7 +9958,6 @@ logways 70
 logwood 70
 loiters 35
 lolcats 50
-lolitas 70
 lollard 50
 lollers 70
 lollies 60
@@ -11392,7 +11373,6 @@ negates 35
 neglect 35
 negress 60
 negrito 70
-negroes 35
 negroid 50
 neguses 70
 neighed 35
@@ -11686,7 +11666,6 @@ nylghau 70
 nymphae 70
 nymphal 70
 nymphet 60
-nymphos 60
 nynorsk 70
 oakland 50
 oarfish 70
@@ -11915,7 +11894,6 @@ organdy 50
 organic 35
 organon 70
 organza 60
-orgasms 40
 orgeats 70
 orgiast 70
 orients 35
@@ -12497,7 +12475,6 @@ pendant 35
 pendent 50
 pending 35
 penguin 35
-penises 35
 pennant 35
 pennate 70
 pennies 35
@@ -13010,7 +12987,6 @@ poisson 50
 poitier 50
 pokiest 35
 polacca 70
-polacks 70
 polacre 70
 polaris 50
 polders 70
@@ -13502,8 +13478,6 @@ pushily 60
 pushing 35
 pushkin 50
 pushpin 60
-pussier 35
-pussies 35
 pustule 50
 putamen 70
 putouts 60
@@ -13759,7 +13733,6 @@ raphael 50
 rapider 35
 rapidly 35
 rapiers 50
-rapists 35
 rappees 70
 rappels 60
 rappers 50
@@ -13909,7 +13882,6 @@ rectify 35
 rectors 35
 rectory 50
 rectrix 70
-rectums 35
 recurve 70
 recusal 70
 recused 60
@@ -13944,7 +13916,6 @@ redrawn 50
 redraws 50
 redress 35
 redroot 70
-redskin 40
 redtops 70
 reduced 35
 reducer 60
@@ -15011,7 +14982,6 @@ scarper 60
 scarred 35
 scarves 35
 scathes 70
-scatted 50
 scatter 35
 scauper 70
 scended 70
@@ -15329,7 +15299,6 @@ severed 35
 severer 35
 severus 50
 seville 50
-sexiest 40
 sexists 40
 sexless 50
 sexpots 50
@@ -16658,7 +16627,6 @@ succubi 60
 succumb 35
 succuss 70
 suckers 35
-sucking 35
 suckled 35
 suckles 35
 sucrase 70
@@ -17610,7 +17578,6 @@ torture 35
 toryism 70
 toscana 70
 toshiba 50
-tossers 60
 tossing 35
 tosspot 70
 tossups 40
@@ -17940,7 +17907,6 @@ turtles 35
 tuscans 70
 tuscany 50
 tusches 70
-tushies 70
 tuskers 70
 tussahs 70
 tussaud 50
@@ -18349,9 +18315,7 @@ vacuity 50
 vacuole 60
 vacuous 35
 vacuums 35
-vaginae 35
 vaginal 35
-vaginas 35
 vagrant 35
 vaguely 35
 vaguest 35
@@ -18646,7 +18610,6 @@ vouvray 70
 voyaged 35
 voyager 35
 voyages 35
-voyeurs 40
 vuitton 50
 vulgate 50
 vulpine 60
@@ -18730,7 +18693,6 @@ wangler 60
 wangles 50
 wanigan 70
 wankers 60
-wanking 60
 wannabe 40
 wanness 60
 wannest 35
@@ -18992,7 +18954,6 @@ whoopie 60
 whoopla 70
 whopped 60
 whopper 35
-whoring 60
 whorish 60
 whorled 50
 whoseso 60

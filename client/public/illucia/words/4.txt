@@ -725,7 +725,6 @@ cuke 70
 cull 35
 culm 70
 cult 35
-cums 60
 cups 35
 curb 35
 curd 35
@@ -753,7 +752,6 @@ dado 50
 dads 35
 daff 70
 daft 35
-dago 60
 dags 60
 dahl 70
 dahs 70
@@ -1123,7 +1121,6 @@ fade 35
 fado 70
 fads 35
 faff 60
-fags 40
 fahd 50
 fail 35
 fain 50
@@ -1448,7 +1445,6 @@ gone 35
 gong 35
 good 35
 goof 35
-gook 50
 goon 35
 goop 50
 gore 35
@@ -1648,7 +1644,6 @@ hols 60
 holt 50
 holy 35
 home 35
-homo 60
 homs 70
 hone 35
 hong 50
@@ -1818,7 +1813,6 @@ jams 35
 jana 50
 jane 50
 jape 50
-japs 60
 jarl 70
 jars 35
 jato 60
@@ -4104,7 +4098,6 @@ witt 50
 wive 60
 woad 60
 woes 35
-wogs 60
 woke 35
 woks 35
 wold 60
@@ -4172,7 +4165,6 @@ yeti 35
 yews 35
 yezo 70
 yhvh 70
-yids 60
 yipe 60
 yips 50
 ylem 70

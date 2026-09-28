@@ -1558,7 +1558,6 @@ bassists 40
 bassline 70
 bassoons 35
 basswood 60
-bastards 35
 bastardy 60
 bastiles 70
 bastille 50
@@ -1947,7 +1946,6 @@ bistorts 70
 bistoury 70
 bitchier 40
 bitchily 60
-bitching 35
 bitcoins 50
 bitewing 70
 bithynia 70
@@ -2081,7 +2079,6 @@ blowguns 50
 blowhard 60
 blowhole 60
 blowiest 60
-blowjobs 50
 blowlamp 60
 blowouts 35
 blowpipe 60
@@ -2655,7 +2652,6 @@ buskined 70
 busloads 60
 bustards 70
 bustiers 60
-bustiest 60
 bustlers 70
 bustling 35
 busybody 35
@@ -3476,7 +3472,6 @@ chimneys 35
 chinaman 70
 chinches 70
 chinchow 70
-chinking 35
 chinless 60
 chinning 35
 chinooks 65
@@ -6620,7 +6615,6 @@ eschewal 70
 eschewed 40
 escolars 70
 escorial 70
-escorted 35
 escribed 70
 escribes 70
 escuages 70
@@ -9361,7 +9355,6 @@ hormones 35
 hornbeam 60
 hornbill 70
 hornbook 70
-horniest 35
 hornless 50
 hornlike 60
 hornpipe 50
@@ -10180,7 +10173,6 @@ jewelers 35
 jeweling 35
 jewesses 65
 jezebels 50
-jigaboos 70
 jiggered 40
 jiggling 35
 jigsawed 35
@@ -10426,7 +10418,6 @@ kingsley 70
 kingston 50
 kingwood 70
 kinkajou 70
-kinkiest 35
 kinsfolk 60
 kinshasa 50
 kippered 50
@@ -14155,7 +14146,6 @@ playacts 60
 playback 35
 playbill 50
 playbook 60
-playboys 40
 playdate 60
 playgirl 60
 playgoer 50
@@ -14861,7 +14851,6 @@ pushcart 50
 pushiest 35
 pushover 35
 pushpins 60
-pussiest 35
 pussycat 40
 pustular 60
 pustules 50
@@ -15312,7 +15301,6 @@ redroots 70
 redshank 70
 redshift 50
 redshirt 60
-redskins 40
 redstart 70
 reducers 60
 reducing 35
@@ -16459,7 +16447,6 @@ scarping 60
 scarring 35
 scathing 35
 scatters 35
-scatting 50
 scaupers 70
 scavenge 40
 scenario 35
@@ -17501,9 +17488,7 @@ snarkier 50
 snarlers 70
 snarlier 60
 snarling 35
-snatched 35
 snatcher 60
-snatches 35
 snazzier 40
 snazzily 60
 sneakers 35
@@ -17767,7 +17752,6 @@ sparsely 35
 sparsest 35
 sparsity 50
 spartans 65
-spastics 40
 spathose 70
 spatters 35
 spatting 35
@@ -18706,7 +18690,6 @@ swimwear 60
 swindled 35
 swindler 35
 swindles 35
-swingers 50
 swinging 35
 swingled 70
 swingles 70
@@ -19540,7 +19523,6 @@ tramples 35
 tramroad 70
 tramways 60
 tranches 60
-trannies 70
 tranquil 35
 transact 35
 transect 60
@@ -19873,7 +19855,6 @@ twigging 35
 twilight 35
 twinging 35
 twinight 70
-twinkies 50
 twinkled 35
 twinkler 70
 twinkles 35
@@ -20977,7 +20958,6 @@ westerly 35
 westerns 35
 westings 70
 westward 35
-wetbacks 40
 wetlands 50
 wetsuits 40
 weymouth 70

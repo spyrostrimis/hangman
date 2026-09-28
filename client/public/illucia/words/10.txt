@@ -1336,7 +1336,6 @@ bassoonist 50
 bastardize 50
 bastinaded 70
 bastinades 70
-bastinados 70
 basutoland 60
 batfowling 70
 bathhouses 50
@@ -2807,7 +2806,6 @@ clintonias 70
 cliometric 60
 clipboards 35
 cliquishly 60
-clitorises 40
 cloakrooms 40
 clobbering 40
 clockmaker 70
@@ -5835,7 +5833,6 @@ filtration 50
 finalizing 40
 financials 60
 financiers 35
-fingerings 50
 fingerless 60
 fingerling 60
 fingermark 60
@@ -11009,7 +11006,6 @@ pedimented 70
 pedologies 70
 pedologist 70
 pedometers 50
-pedophiles 60
 pedophilia 60
 pedophilic 70
 peduncular 70
@@ -11335,7 +11331,6 @@ piccadilly 50
 piccalilli 50
 piccaninny 70
 piccoloist 70
-pickaninny 70
 pickpocket 35
 picnickers 50
 picnicking 35
@@ -14098,7 +14093,6 @@ sociopaths 40
 sociopathy 70
 sodalities 70
 soddenness 70
-sodomizing 60
 sojourners 60
 sojourning 35
 solarizing 70
@@ -14554,7 +14548,6 @@ straitness 70
 stramonium 70
 stranglers 50
 strangling 35
-strappados 70
 strasbourg 50
 stratagems 35
 strategics 60
@@ -15337,7 +15330,6 @@ threadlike 60
 threatened 35
 threepence 60
 threescore 50
-threesomes 50
 threnodial 70
 threnodies 50
 threnodist 70
@@ -15637,7 +15629,6 @@ triangulum 50
 triarchies 70
 triathlete 60
 triathlons 50
-tribadisms 70
 tribunates 70
 trichiases 70
 trichiasis 70
@@ -17033,7 +17024,6 @@ zoological 35
 zoologists 35
 zoometries 70
 zoomorphic 70
-zoophilias 70
 zoophilous 70
 zoophobias 70
 zootsuiter 70

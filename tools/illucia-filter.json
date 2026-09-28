@@ -1,0 +1,28 @@
+{
+  "block": {
+    "chink": "ethnic slur (owner decision: block despite the 'narrow opening' sense)",
+    "dago": "ethnic slur",
+    "darky": "racial slur; spelling variant of LDNOOBW 'darkie'",
+    "fagot": "spelling variant of LDNOOBW 'faggot' in the same ESDB group",
+    "gook": "ethnic slur",
+    "homo": "homophobic slur (owner decision)",
+    "honky": "racial slur; spelling variant of LDNOOBW 'honkey'",
+    "injun": "ethnic slur",
+    "jap": "ethnic slur",
+    "kafir": "racial slur; spelling variant of 'kaffir'",
+    "kaffir": "racial slur",
+    "pantie": "spelling variant of LDNOOBW 'panty' in the same ESDB group",
+    "pickaninny": "racial slur",
+    "polack": "ethnic slur",
+    "redskin": "ethnic slur",
+    "sambo": "racial slur",
+    "squaw": "ethnic slur",
+    "wog": "racial slur",
+    "yid": "ethnic slur"
+  },
+  "allow": {
+    "came": "past tense of 'come'; ESDB also lists it under the vulgar lemma 'cum'",
+    "spiced": "past tense of 'spice'; ESDB also lists it under the slur lemma 'spic'",
+    "spicing": "present participle of 'spice'; ESDB also lists it under the slur lemma 'spic'"
+  }
+}

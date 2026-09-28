@@ -26,69 +26,74 @@
       3,
       15
     ],
-    "maximumSize": 70
+    "maximumSize": 70,
+    "blockLemmaForms": true,
+    "projectFilter": {
+      "file": "tools/illucia-filter.json",
+      "sha256": "783e98cf8c4b0be38a9cb6d76abf63c1009df510522ab56b8aa5c561d5d908e4"
+    }
   },
-  "acceptedWords": 137548,
+  "acceptedWords": 137389,
   "cumulativeSizes": {
-    "35": 38602,
-    "50": 69382,
-    "70": 137548
+    "35": 38547,
+    "50": 69289,
+    "70": 137389
   },
   "files": {
     "3.txt": {
-      "sha256": "0234c8dd4469a170375074c9960cc44ae960c12ef55d3abbbb4cccdeef512ce0",
-      "bytes": 10472,
-      "words": 1496
+      "sha256": "bb772df4c0256a569d837c1bc48f38916310d0039a1311c2afd1c6e06efa5cc2",
+      "bytes": 10444,
+      "words": 1492
     },
     "4.txt": {
-      "sha256": "97e65fe32be82cc0b70f1cbb307f27e4fcc088f363b8a08010242a134d298bef",
-      "bytes": 33984,
-      "words": 4248
+      "sha256": "b07e58068c445c052f22ae6de843ca166c503b9696abadbbc371e00c3e15c0f9",
+      "bytes": 33920,
+      "words": 4240
     },
     "5.txt": {
-      "sha256": "c1bec4925b19360ce06ce3337a1df20c54d21dd2988263ab2cc8498f5b7ccce6",
-      "bytes": 76986,
-      "words": 8554
+      "sha256": "bc5793155ee667e67441b3ae0cce89c0a28aeebfd49524a958aa8d8bfd876eae",
+      "bytes": 76698,
+      "words": 8522
     },
     "6.txt": {
-      "sha256": "3c7452dd5e6dd25abd0d6bc62de52de0108d96190d70e047647aa142dbcd746d",
-      "bytes": 139820,
-      "words": 13982
+      "sha256": "85aa9a1148cd8cc5d3cd7decfe6c00111dae3d1d561c617dcc584ac84226fd0e",
+      "bytes": 139550,
+      "words": 13955
     },
     "7.txt": {
-      "sha256": "33af0a74b2e8ee6e15f0db73961afbc679f8e7b1b36fcc8f949b5d45f9196518",
-      "bytes": 213334,
-      "words": 19394
+      "sha256": "ab29224bc873cc0646588b8f1b3904f4c48097ce10c09713daa9027d0913f23e",
+      "bytes": 212905,
+      "words": 19355
     },
     "8.txt": {
-      "sha256": "e7c0b6ec5e72e9f33e901e56812be0a7663d006bef7037647d77ba2e4ec48531",
-      "bytes": 257352,
-      "words": 21446
+      "sha256": "6e6f3b5e0a9f151d8dd8ad78aa6e6d4ab4319f5529f87eb289406217d7a374be",
+      "bytes": 257112,
+      "words": 21426
     },
     "9.txt": {
-      "sha256": "f5c8bbe4b0ef4b98191c98de2fccf26a91b4aa84834c2129393d40dd9dcf0227",
-      "bytes": 265863,
-      "words": 20451
+      "sha256": "28aedbf73396e15a73f200d51b6bc957cf66830aba58a3af4f884f8a016ce231",
+      "bytes": 265759,
+      "words": 20443
     },
     "10.txt": {
-      "sha256": "81156c2ffafc6b6fc1bbe02db6ded3334a493090846eabf2a3fb588d3d0c4c31",
-      "bytes": 238630,
-      "words": 17045
+      "sha256": "89c8b2d1f6f4964dc5e86078d579de5f3a306e4994582c4a6358d0adeda89256",
+      "bytes": 238490,
+      "words": 17035
     },
     "11.txt": {
-      "sha256": "f8108b0275b2038c0f93acc8b936aa9702ddeee2f02bc69973ee1ae5b7abb41b",
-      "bytes": 187905,
-      "words": 12527
+      "sha256": "9d0e31e619d23b904ec79826f53ebca6050225cf9e479affe9c67dff039613cb",
+      "bytes": 187830,
+      "words": 12522
     },
     "12.txt": {
-      "sha256": "30768391a54e045ef5c81283bd949db5cacac54488a08114558578cdd2958c3f",
-      "bytes": 135168,
-      "words": 8448
+      "sha256": "f7a7b083e4f69dfeb110439c693616ecb8b7c3b259b5ac17014eb1a3ffbfe4b7",
+      "bytes": 135088,
+      "words": 8443
     },
     "13.txt": {
-      "sha256": "742b00c9b32d64d8397073dd7bf406cd1c0f562b9cd5ec1d65671ae5a13cba9f",
-      "bytes": 89607,
-      "words": 5271
+      "sha256": "46c4672a0f2a8d6852010d54d8714e8c6fa37009abb3764e24055d4ab2b0509c",
+      "bytes": 89590,
+      "words": 5270
     },
     "14.txt": {
       "sha256": "25a2d985f2489d15e6d249ef55da5c3080e4d8f833b42bdd73db4af45f54cb09",

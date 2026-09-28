@@ -4,7 +4,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from build_illucia_words import compile_words, word_files, verify, source_bytes, publish, OUTPUT
+from build_illucia_words import compile_words, word_files, verify, source_bytes, publish, OUTPUT, FILTER
 
 
 class IlluciaWordsTests(unittest.TestCase):
@@ -15,6 +15,26 @@ class IlluciaWordsTests(unittest.TestCase):
                          {'class': 35, 'grass': 50, 'kind': 35})
         self.assertEqual(compile_words(rows, [], ''),
                          {'ass': 35, 'class': 35, 'grass': 50, 'rude': 35, 'kind': 35})
+
+    def test_lemma_forms_of_blocked_terms_are_blocked(self):
+        rows = [('faggot', 35), ('faggots', 35), ('fingering', 35), ('fingers', 35),
+                ('chink', 35), ('chinks', 35), ('chinwag', 35)]
+        lemmas = [('faggots', 'faggot'), ('fingers', 'finger'), ('chinks', 'chink')]
+        # Positive control: exact matching alone lets the inflections through.
+        self.assertEqual(compile_words(rows, [], 'faggot\nfingering', [], ['chink']),
+                         {'faggots': 35, 'fingers': 35, 'chinks': 35, 'chinwag': 35})
+        # A blocked -ing entry must not reach its innocent lemma (fingering -/-> fingers).
+        self.assertEqual(compile_words(rows, [], 'faggot\nfingering', lemmas, ['chink']),
+                         {'fingers': 35, 'chinwag': 35})
+
+    def test_allow_keeps_forms_with_a_clean_lemma_and_rejects_misuse(self):
+        rows = [('came', 35), ('cums', 60), ('cum', 60)]
+        lemmas = [('came', 'come'), ('came', 'cum'), ('cums', 'cum')]
+        self.assertEqual(compile_words(rows, [], 'cum', lemmas), {})
+        self.assertEqual(compile_words(rows, [], 'cum', lemmas, allow=['came']), {'came': 35})
+        for bad in (['cum'], ['cat']):  # direct block, and an entry that is not needed
+            with self.assertRaisesRegex(ValueError, 'stale or overrides'):
+                compile_words(rows, [], 'cum', lemmas, allow=bad)
 
     def test_ascii_length_and_size_boundaries(self):
         rows = [(w, 35) for w in ['ab', 'abc', 'A' * 15, 'a' * 16, 'naïve',
@@ -71,6 +91,15 @@ class IlluciaWordsTests(unittest.TestCase):
         self.assertEqual(len(words), manifest['acceptedWords'])
         self.assertTrue({'cat', 'dog', 'class', 'grass', 'hello', 'color'} <= words.keys())
         self.assertFalse({'fuck', 'shit', 'ass', 'colour'} & words.keys())
+        rules = json.loads(FILTER.read_text())
+        self.assertEqual(manifest['policy']['projectFilter']['sha256'],
+                         hashlib.sha256(FILTER.read_bytes()).hexdigest())
+        leaks = {'faggots', 'fagots', 'spics', 'kikes', 'wetbacks', 'sluts', 'whores', 'twats',
+                 'pakis', 'darkies', 'jigaboos', 'chinks', 'homos', 'honkies', 'gooks', 'japs'}
+        self.assertFalse((leaks | set(rules['block'])) & words.keys())
+        innocent = {'finger', 'throat', 'shrimp', 'scissors', 'butter', 'scatter', 'spicy',
+                    'cocktail', 'retard', 'queer', 'gay'}
+        self.assertLessEqual(innocent | set(rules['allow']), words.keys())
         self.assertEqual({str(t): sum(s <= t for s in words.values()) for t in (35, 50, 70)},
                          manifest['cumulativeSizes'])
 

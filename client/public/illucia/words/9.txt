@@ -2494,7 +2494,6 @@ bulkiness 50
 bulldozed 35
 bulldozer 35
 bulldozes 35
-bulldykes 70
 bulletins 35
 bullfight 35
 bullfinch 50
@@ -2516,7 +2515,6 @@ bundesrat 70
 bundestag 50
 bundlings 70
 bungalows 35
-bungholes 50
 bunkhouse 50
 bunkmates 70
 buntlines 70
@@ -6437,7 +6435,6 @@ escheated 70
 eschewals 70
 eschewing 40
 escondido 60
-escorting 35
 escribing 70
 esculents 70
 eskisehir 70
@@ -16845,7 +16842,6 @@ snarkiest 50
 snarliest 60
 snatchers 60
 snatchier 70
-snatching 35
 snazziest 40
 sneakiest 35
 snickered 35
@@ -16916,8 +16912,6 @@ sociopath 40
 sodalites 70
 sodamides 70
 sodomites 50
-sodomized 60
-sodomizes 60
 softballs 35
 softbound 60
 softcover 60
@@ -17932,7 +17926,6 @@ swansdown 70
 swanskins 70
 swarthier 35
 swarthily 70
-swastikas 50
 swaybacks 70
 swaziland 50
 sweatband 60
@@ -19721,7 +19714,6 @@ vibrantly 50
 vibratile 70
 vibrating 35
 vibration 35
-vibrators 50
 vibratory 60
 vibrissae 70
 viburnums 50

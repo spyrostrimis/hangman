@@ -613,7 +613,6 @@ baselessness 70
 basidiospore 70
 baskervilles 70
 bastardizing 50
-bastinadoing 70
 bathymetries 70
 bathypelagic 70
 bathyscaphes 60
@@ -1594,7 +1593,6 @@ copolymerize 70
 coppersmiths 70
 coprocessors 70
 coprophagous 70
-coprophilias 70
 coprophilous 70
 copulatively 70
 copyrighting 35
@@ -2327,7 +2325,6 @@ domesticated 35
 domesticates 35
 domiciliated 70
 domiciliates 70
-dominatrices 60
 doorknockers 60
 doorstepping 35
 dorsiventral 70
@@ -2408,7 +2405,6 @@ egoistically 60
 egyptologies 70
 egyptologist 60
 eigenvectors 60
-ejaculations 35
 elaborations 35
 elasmobranch 70
 elasticities 65
@@ -5716,7 +5712,6 @@ phytogenesis 70
 phytohormone 70
 phytophagous 70
 piccaninnies 70
-pickaninnies 70
 pickerelweed 70
 pickwickians 70
 pictographic 70

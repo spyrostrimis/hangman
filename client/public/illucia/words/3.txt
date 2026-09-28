@@ -52,7 +52,6 @@ amy 50
 ana 50
 and 35
 ane 70
-ani 70
 ann 50
 ans 60
 ant 35
@@ -682,7 +681,6 @@ jab 35
 jag 50
 jam 35
 jan 50
-jap 60
 jar 35
 jat 70
 jaw 35
@@ -1441,7 +1439,6 @@ wiz 60
 wmd 50
 wnw 60
 woe 35
-wog 60
 wok 35
 won 35
 woo 35
@@ -1471,7 +1468,6 @@ yer 60
 yes 35
 yet 35
 yew 35
-yid 60
 yin 60
 yip 50
 yob 60

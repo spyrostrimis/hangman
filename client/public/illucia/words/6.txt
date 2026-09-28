@@ -478,7 +478,6 @@ antwan 50
 anubis 50
 anuran 70
 anuria 70
-anuses 35
 anvers 70
 anvils 35
 anyhow 35
@@ -1411,7 +1410,6 @@ bombes 70
 bonbon 50
 bonces 60
 bonded 35
-boners 50
 bonged 50
 bongos 40
 bonier 35
@@ -1427,7 +1425,6 @@ bonobo 60
 bonsai 50
 bonzer 70
 bonzes 70
-boobed 40
 boodle 50
 booger 60
 boogie 40
@@ -1807,7 +1804,6 @@ butane 50
 butene 70
 buteos 70
 butler 35
-butted 35
 butter 35
 buttes 35
 button 35
@@ -2266,7 +2262,6 @@ chimps 35
 chinan 70
 chinch 70
 chines 60
-chinks 35
 chinos 40
 chintz 35
 chippy 60
@@ -2494,7 +2489,6 @@ coccis 70
 coccus 50
 coccyx 50
 cochin 50
-cocked 35
 cocker 60
 cockle 50
 cocoas 35
@@ -3022,7 +3016,6 @@ daftly 60
 dagger 35
 dagmar 70
 dagoba 70
-dagoes 60
 dahlia 50
 daikon 60
 daimio 70
@@ -3389,7 +3382,6 @@ diglot 70
 diking 35
 diktat 60
 dilate 35
-dildos 60
 dillon 50
 dilute 35
 dimers 70
@@ -4235,9 +4227,7 @@ faerie 60
 faeroe 50
 faffed 60
 fafnir 50
-fagged 40
 fagins 70
-fagots 35
 failed 35
 faille 60
 fainer 50
@@ -5351,9 +5341,7 @@ groins 35
 grooms 35
 groove 35
 groovy 35
-groped 35
 groper 60
-gropes 35
 groszy 70
 grotto 35
 grotty 60
@@ -6534,8 +6522,6 @@ kaaren 70
 kaboom 50
 kabuki 60
 kabyle 70
-kaffir 70
-kafirs 70
 kahlua 50
 kahuna 60
 kaiaks 70
@@ -8499,7 +8485,6 @@ nubbly 70
 nubian 50
 nubile 50
 nuclei 35
-nudest 35
 nudged 35
 nudges 35
 nudism 50
@@ -8705,7 +8690,6 @@ oregon 50
 organa 70
 organs 35
 orgeat 70
-orgies 35
 oriels 60
 orient 35
 origan 70
@@ -8885,7 +8869,6 @@ panini 60
 panned 35
 pannes 70
 panted 35
-pantie 60
 pantos 60
 pantry 35
 panzer 70
@@ -9405,7 +9388,6 @@ pokeys 50
 pokier 35
 pokily 70
 poking 35
-polack 70
 poland 50
 polder 70
 poleax 70
@@ -10653,7 +10635,6 @@ salyut 50
 samara 50
 sambar 70
 sambas 50
-sambos 70
 samekh 70
 samian 70
 samiel 70
@@ -10992,9 +10973,7 @@ sewans 70
 seward 50
 sewers 35
 sewing 35
-sexier 40
 sexily 50
-sexing 35
 sexism 35
 sexist 35
 sexpot 50
@@ -11689,7 +11668,6 @@ spryly 50
 spuing 70
 spumed 50
 spumes 50
-spunks 35
 spunky 40
 spurge 60
 spurns 35
@@ -11706,7 +11684,6 @@ square 35
 squash 35
 squats 35
 squawk 35
-squaws 50
 squeak 35
 squeal 35
 squibb 50
@@ -11956,7 +11933,6 @@ suburb 35
 subway 35
 succor 35
 suchow 70
-sucked 35
 sucker 35
 suckle 35
 sucres 70
@@ -13439,7 +13415,6 @@ voyage 35
 vulcan 50
 vulgar 35
 vulgus 70
-vulvae 50
 vulval 70
 vulvar 70
 wabash 50
@@ -13499,7 +13474,6 @@ wampum 50
 wander 35
 wangle 50
 waning 35
-wanked 60
 wankel 50
 wanker 60
 wanner 35
@@ -13655,7 +13629,6 @@ whomps 70
 whomso 60
 whoops 35
 whoosh 40
-whores 35
 whorls 50
 whydah 70
 wiccan 70

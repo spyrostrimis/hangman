@@ -422,7 +422,6 @@ assad 50
 assai 70
 assam 50
 assay 50
-asses 35
 asset 35
 assur 70
 aster 50
@@ -1110,7 +1109,6 @@ busts 35
 butch 50
 buteo 70
 butte 35
-butts 35
 butty 60
 butut 70
 butyl 70
@@ -1353,7 +1351,6 @@ chimu 50
 china 35
 chine 60
 ching 70
-chink 35
 chino 50
 chins 35
 chios 70
@@ -1459,7 +1456,6 @@ clink 35
 clint 50
 clios 70
 clips 35
-clits 50
 clive 50
 cloak 35
 clock 35
@@ -1803,7 +1799,6 @@ dagan 70
 dagda 70
 daggy 70
 dagon 70
-dagos 60
 dahls 70
 dahna 70
 daily 35
@@ -1838,7 +1833,6 @@ dares 35
 daric 70
 darin 50
 dario 50
-darky 70
 darla 50
 darns 35
 darth 50
@@ -2489,7 +2483,6 @@ fados 70
 faena 70
 faffs 60
 fagin 50
-fagot 35
 fails 35
 faint 35
 fairs 35
@@ -3124,7 +3117,6 @@ goody 35
 gooey 35
 goofs 35
 goofy 35
-gooks 50
 goons 35
 goose 35
 goosy 70
@@ -3510,7 +3502,6 @@ homed 35
 homer 40
 homes 35
 homey 35
-homos 60
 honan 70
 honda 50
 hondo 70
@@ -3520,7 +3511,6 @@ hones 35
 honey 35
 hongs 70
 honks 35
-honky 60
 honor 35
 hooch 50
 hoods 35
@@ -3694,7 +3684,6 @@ infra 60
 ingle 70
 ingot 50
 inion 70
-injun 70
 inked 35
 inkle 70
 inlay 35
@@ -3928,7 +3917,6 @@ kaaba 50
 kabul 50
 kadar 70
 kadis 70
-kafir 70
 kafka 50
 kagus 70
 kaiak 70
@@ -4029,7 +4017,6 @@ kiddo 40
 kiefs 70
 kiers 70
 kieth 50
-kikes 60
 kills 35
 kilns 35
 kilos 35
@@ -4795,7 +4782,6 @@ milan 50
 milch 50
 miler 50
 miles 35
-milfs 50
 milia 70
 milks 35
 milky 35
@@ -4891,7 +4877,6 @@ monde 70
 monet 50
 money 35
 mongo 70
-mongs 70
 monks 35
 monte 50
 month 35
@@ -5211,8 +5196,6 @@ noyce 50
 noyes 50
 nubby 60
 nubia 50
-nuder 35
-nudes 35
 nudge 35
 nuked 40
 nukes 40
@@ -5438,7 +5421,6 @@ pains 35
 paint 35
 pairs 35
 paisa 70
-pakis 70
 palau 70
 paled 35
 paleo 60
@@ -5784,13 +5766,11 @@ pongs 60
 pooch 40
 poods 70
 pooed 60
-poofs 60
 poohs 50
 pooka 70
 poole 50
 pools 35
 poona 50
-poons 70
 poops 35
 popes 40
 poppa 60
@@ -6065,9 +6045,7 @@ rangy 50
 ranks 35
 rants 35
 raoul 50
-raped 35
 raper 60
-rapes 35
 rapid 35
 rared 35
 rarer 35
@@ -6463,7 +6441,6 @@ salve 35
 salvo 50
 samar 50
 samba 50
-sambo 70
 samey 60
 sammy 50
 samoa 50
@@ -6535,7 +6512,6 @@ scarf 35
 scarp 60
 scars 35
 scary 35
-scats 50
 scend 70
 scene 35
 scent 35
@@ -6649,8 +6625,6 @@ sever 35
 sewan 70
 sewed 35
 sewer 35
-sexed 35
-sexes 35
 sexts 70
 shack 35
 shade 35
@@ -6916,7 +6890,6 @@ slunk 35
 slurp 40
 slurs 35
 slush 35
-sluts 35
 slyly 35
 slype 70
 smack 35
@@ -6941,7 +6914,6 @@ smoko 70
 smoky 35
 smolt 70
 smote 50
-smuts 35
 snack 35
 snafu 40
 snags 35
@@ -7086,7 +7058,6 @@ sperm 35
 spews 35
 spica 50
 spice 35
-spics 60
 spicy 35
 spied 35
 spiel 40
@@ -7145,7 +7116,6 @@ sputa 65
 squab 50
 squad 35
 squat 35
-squaw 50
 squib 60
 squid 35
 stabs 35
@@ -7863,7 +7833,6 @@ tutus 50
 tuxes 40
 twain 50
 twang 35
-twats 60
 tweak 35
 tweed 35
 tween 60
@@ -8194,7 +8163,6 @@ wanda 50
 wands 35
 waned 35
 wanes 35
-wanks 60
 wanly 50
 wanna 35
 wants 35
