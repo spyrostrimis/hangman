@@ -84,7 +84,7 @@ function IlluciaSetup({ onStart }) {
         </label>)}</div>
         <p className="illucia-muted">Apprentice knows common words; Scholar knows more; Master knows every accepted word. All three use the same strategy.</p>
         <label className="illucia-secret-label" htmlFor="illucia-secret">Your secret word</label>
-        {/* Not type="password": browsers would offer to save and sync the word as a credential. Masked in CSS. */}
+        {/* Not type="password": browsers would offer to save and sync the word as a credential. */}
         <input id="illucia-secret" type="text" autoComplete="off" autoCorrect="off" autoCapitalize="none" spellCheck={false} value={secret} onChange={event => setSecret(event.target.value)} aria-describedby="illucia-trust illucia-validation" aria-invalid={Boolean(error)} />
         <p id="illucia-trust" className="illucia-muted">Your secret word never leaves your browser.</p>
         <p id="illucia-validation" role="alert">{error}</p>
