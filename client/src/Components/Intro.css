@@ -1,0 +1,96 @@
+/* Home: mission briefing on a cyan screen, then the crew. */
+.home { width: min(980px, calc(100% - 32px)); margin: 4px auto 40px; }
+.home-heading { margin-bottom: 18px; }
+
+.home-brief { max-width: 720px; margin: 0 auto; }
+.home-brief .hm-screen-inner { padding: 20px 28px 24px; text-align: left; }
+.home-brief h2 { margin: 0 0 12px; font-family: technoboard; font-weight: normal; font-size: 26px; text-align: center; color: var(--hm-text); }
+.home-brief h3 { margin: 18px 0 6px; font-family: bruno; font-weight: normal; font-size: 18px; letter-spacing: .08em; color: var(--hm-pink); text-shadow: 0 0 10px #db3eb188; }
+.home-brief p { margin: 0 0 10px; }
+.home-brief em { font-style: normal; color: var(--hm-yellow); text-shadow: 0 0 10px #edee0288; }
+.home-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin: 22px 0 4px; }
+.home-guest { margin-top: 14px !important; text-align: center; font-size: 14px; color: var(--hm-muted); }
+.home a:not(.hm-button) { color: var(--hm-yellow); }
+
+.home-crew { margin-top: 42px; }
+.home-crew > h2 { margin: 0 0 18px; font-family: technoboard; font-weight: normal; font-size: 28px; color: var(--hm-text); }
+.home-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: start; }
+
+.home-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 16px;
+  border-radius: 14px;
+  background: #0507128c;
+  border: 1px solid #93939333;
+  box-shadow: 0 0 10px -2px var(--accent);
+  transition: box-shadow .3s;
+}
+.home-card.open, .home-card:hover { box-shadow: 0 0 18px 1px var(--accent); }
+
+/* The rounded pod from the Hangman page, with each robot standing in it. */
+.home-card-pod {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  height: 210px;
+  padding-bottom: 10px;
+  border-bottom: 4px solid #d9d8dbbd;
+  border-radius: 14px 14px 70px 70px;
+  box-shadow: inset 0 -70px 32px -34px #d9d8db91;
+  background: radial-gradient(ellipse at 50% 30%, #1d2150b3, #05071299 70%);
+  overflow: hidden;
+}
+.home-card-pod img { width: auto; max-width: 90%; height: 170px; object-fit: contain; filter: drop-shadow(0 0 12px #9fd8ff40); }
+.home-card-pod-illucia img { height: 196px; }
+
+.home-card h3 { margin: 14px 0 2px; font-family: technoboard; font-weight: normal; font-size: 22px; color: var(--hm-text); }
+.home-card-role { margin: 0 0 12px; font-family: bruno; font-size: 11px; letter-spacing: .1em; color: var(--accent); }
+.home-card-toggle {
+  padding: 7px 14px 6px;
+  font-family: bruno;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #d0d2d5;
+  background: none;
+  border: 1px solid #93939333;
+  border-radius: 4px;
+  box-shadow: 0 0 5px 0 var(--accent);
+  cursor: pointer;
+}
+.home-card-toggle:hover, .home-card-toggle:focus-visible { color: #fff; box-shadow: 0 0 10px 1px var(--accent); }
+.home-card-toggle:focus-visible { outline: 2px solid var(--hm-yellow); outline-offset: 3px; }
+
+.home-card-bio {
+  margin: 14px 16px 0;
+  padding: 12px 14px;
+  text-align: left;
+  font: 14px/1.5 monospace;
+  color: #d0d2d5;
+  border-left: 3px solid var(--accent);
+  background: #00000055;
+  animation: home-bio .35s ease-out;
+}
+.home-card-bio p { margin: 0 0 8px; }
+.home-card-bio strong { color: #fff; }
+.home-card-bio small { color: var(--hm-muted); font-style: italic; }
+@keyframes home-bio { from { opacity: 0; transform: translateY(-6px); } }
+
+@media (max-width: 800px) {
+  .home { width: calc(100% - 24px); }
+  .home-brief .hm-screen-inner { padding: 16px 14px 18px; }
+  .home-brief h2 { font-size: 22px; }
+  .home-actions .hm-button { flex: 1 1 100%; max-width: 320px; }
+  .home-crew { margin-top: 30px; }
+  .home-cards { grid-template-columns: minmax(0, 1fr); max-width: 420px; margin: 0 auto; }
+  .home-card-pod { height: 180px; }
+  .home-card-pod img { height: 150px; }
+  .home-card-pod-illucia img { height: 170px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-card-bio { animation: none; }
+}

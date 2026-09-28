@@ -8,6 +8,7 @@ import hall from '../Images/bg-hall.webp';
 import hallMobile from '../Images/bg-hall-mobile.webp';
 import artsy from '../Images/artsy.png';
 import professor from '../Images/ronnyai.png';
+import illuciaFigure from '../Images/illucia.webp';
 import { createImagePreloader } from './preload-images.js';
 
 export const MOBILE_ART_MEDIA = '(max-width: 800px)';
@@ -46,4 +47,5 @@ export function prefetchLinkArt(event) {
     preload(artsy);
     preload(professor);
   }
+  if (path === '/') preload(illuciaFigure);
 }

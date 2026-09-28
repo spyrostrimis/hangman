@@ -1,219 +1,113 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import hanai from "../Images/hanai.png";
+import { useAuth } from "./AuthProvider";
 import artsy from "../Images/artsy.png";
-// import { Tooltip } from "react-tooltip";
-import ronny from "../Images/ronny.png";
 import ronnyai from "../Images/ronnyai.png";
-import Button from "react-bootstrap/Button";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Popover from "react-bootstrap/Popover";
+import illucia from "../Images/illucia.webp";
+import "./Intro.css";
+
+const CREW = [
+  {
+    id: "han",
+    name: "Han Fastolfe",
+    role: "Professor of Linguistics · Aurora",
+    image: { src: ronnyai, width: 170, height: 204, alt: "The robot Professor Han Fastolfe" },
+    accent: "#43e440",
+    bio: <>
+      <p>Han was created in <strong>Aurora</strong> in the year 4486 AD. His fascination with language and its structure led him to Earth.</p>
+      <p>For his key role in the reconciliation between Robots and Humans, he was honored with the seat of <strong>Professor of Linguistics at the MIT</strong>.</p>
+      <p>Han spends most of his free time with his beloved daughter <strong>Illucia</strong>.</p>
+      <small>Han Fastolfe is inspired from Isaac Asimov's Robot series.</small>
+    </>,
+  },
+  {
+    id: "artsy",
+    name: "Artsy",
+    role: "Painter · Solaria",
+    image: { src: artsy, width: 288, height: 250, alt: "The robot Artsy with his easel" },
+    accent: "#e1801b",
+    bio: <>
+      <p>Artsy originates from the planet <strong>Solaria</strong>. Unlike most robots, he cannot speak. So he <strong>communicates through painting</strong>.</p>
+      <p>His passion for creativity and artistic expression <strong>led him to Earth</strong> to explore different forms of art.</p>
+      <p>One fated day, while Artsy was drawing a beautiful lake scene at Massachusetts, he met his <strong>best friend Han</strong>.</p>
+      <small>Artsy is an original creation, embodying the fusion of art and AI.</small>
+    </>,
+  },
+  {
+    id: "illucia",
+    name: "Illucia",
+    role: "Han's daughter · Aurora",
+    image: { src: illucia, width: 272, height: 560, alt: "Illucia, a white robot with green eyes, thinking with a finger on her cheek" },
+    accent: "#a54ed7",
+    bio: <>
+      <p>Illucia is <strong>Professor Fastolfe's daughter</strong>, and she shares his love of words.</p>
+      <p>She has read every dictionary on Aurora. Twice. Give her a word and she will <strong>show you her working</strong>.</p>
+      <p>Think you can outwit her? <Link to="/illucia-observatory">Choose a secret word</Link> and watch her guess.</p>
+    </>,
+  },
+];
+
+function CrewCard({ member }) {
+  const [open, setOpen] = useState(false);
+  const bioId = `crew-${member.id}-bio`;
+  return <article className={`home-card ${open ? "open" : ""}`} style={{ "--accent": member.accent }}>
+    <div className={`home-card-pod home-card-pod-${member.id}`}>
+      <img {...member.image} alt={member.image.alt} />
+    </div>
+    <h3>{member.name}</h3>
+    <p className="home-card-role">{member.role}</p>
+    <button type="button" className="home-card-toggle" aria-expanded={open} aria-controls={bioId} onClick={() => setOpen(!open)}>
+      {open ? "Close file" : "Open file"}
+    </button>
+    <div id={bioId} className="home-card-bio" hidden={!open}>{member.bio}</div>
+  </article>;
+}
 
 const Intro = () => {
-  const [popoverOpen, setPopoverOpen] = useState(false);
-  const [popoverOpen2, setPopoverOpen2] = useState(false);
-  const popoverRef = useRef(null);
-
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
-        setPopoverOpen(false);
-        setPopoverOpen2(false);
-        document.getElementById("root").classList.remove("blur-effect");
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
-
-  const handlePopoverOpen = () => {
-    setPopoverOpen(true);
-    document.getElementById("root").classList.add("blur-effect");
-  };
-
-  const handlePopoverClose = () => {
-    setPopoverOpen(false);
-    document.getElementById("root").classList.remove("blur-effect");
-  };
-
-  const handlePopoverOpen2 = () => {
-    setPopoverOpen2(true);
-    document.getElementById("root").classList.add("blur-effect");
-  };
-
-  const handlePopoverClose2 = () => {
-    setPopoverOpen2(false);
-    document.getElementById("root").classList.remove("blur-effect");
-  };
-
-  const popoverRonnyIntro = (
-    <Popover id="introronny">
-      <Popover.Header id="introronnyheader">
-        Han Fastolfe
-        <button className="popover-close-btn" onClick={handlePopoverClose}>
-          &times;
-        </button>
-      </Popover.Header>
-      <Popover.Body id="introronnybody">
-        <p>
-          Han was created in <strong>Aurora</strong> in the year 4486 AD. His
-          fascination with language and its structure led him to Earth.
-        </p>
-        <p>
-          For his key role in the reconciliation between Robots and Humans, he
-          was honored with the seat of{" "}
-          <strong>Professor of Linguistics at the MIT</strong>.
-        </p>
-        <p>
-          Han spends most of his free time with his beloved daughter{" "}
-          <strong>Illucia</strong>.
-        </p>
-        <small>
-          <i>Han Fastolfe is inspired from Isaac Asimov's Robot series.</i>
-        </small>
-      </Popover.Body>
-    </Popover>
-  );
-
-  const popoverArtsyIntro = (
-    <Popover id="introartsy">
-      <Popover.Header id="introronnyheader">
-        Artsy
-        <button id="popover-close-btn-artsy" onClick={handlePopoverClose2}>
-          &times;
-        </button>
-      </Popover.Header>
-      <Popover.Body id="introronnybody">
-        <p>
-          Artsy originates from the planet <strong>Solaria</strong>. Unlike most
-          robots, he cannot speak. So he{" "}
-          <strong>communicates through painting</strong>.
-        </p>
-        <p>
-          His passion for creativity and artistic expression{" "}
-          <strong>led him to Earth</strong> to explore different forms of art.
-        </p>
-        <p>
-          One fated day, while Artsy was drawing a beautiful lake scene at
-          Massachusetts, he met his <strong>best friend Han</strong>.
-        </p>
-        <small>
-          <i>
-            Artsy is an original creation, embodying the fusion of art and AI.
-          </i>
-        </small>
-      </Popover.Body>
-    </Popover>
-  );
-
+  const { user, status } = useAuth();
   return (
-    <>
-      <span
-        style={{ color: "#edee02", textShadow: "0px 0px 15px #edee02" }}
-      ></span>
-      <div className="introcontainer">
-        {/* <h3>ABOUT THE GAME</h3> */}
-        {/* <figure> */}
-        <div ref={popoverRef} className="introbios">
-          <OverlayTrigger
-            trigger="click"
-            placement="left-start"
-            overlay={popoverRonnyIntro}
-            show={popoverOpen}
-            onToggle={handlePopoverOpen}
-          >
-            <img
-              id="introronnyimg"
-              src={ronnyai}
-              width={170}
-              height={204}
-              // style={{ float: "right", height: "160px", cursor: "help" }}
-              alt="The robot Professor Han Fastolfe"
-              title="Professor Han Fastolfe"
-              onClick={() => setPopoverOpen(!popoverOpen)}
-            />
-          </OverlayTrigger>
-        </div>
-        {/* {popoverOpen && (
-          <div className="overlay-effect" onClick={handlePopoverClose} />
-        )} */}
-        {/* </figure> */}
-        <p>
-          Welcome to the{" "}
-          <span
-            style={{ color: "#edee02", textShadow: "0px 0px 15px #edee02" }}
-          >
-            Hangman
-          </span>{" "}
-          Rescue Mission!
-        </p>
+    <div className="home">
+      <header className="home-heading">
+        <h1 className="hm-title">Hangman</h1>
+        <p className="hm-subtitle">Rescue Mission</p>
+      </header>
 
-        <p>
-          Professor Han Fastolfe urgently seeks your assistance. His dear friend
-          Artsy has mysteriously shut down. Only one thing can awaken Artsy from
-          its slumber —{" "}
-          <span
-            style={{ color: "#edee02", textShadow: "0px 0px 15px #edee02" }}
-          >
-            a secret word.
-          </span>
-        </p>
-        <p>Discover it and breathe life back into Artsy.</p>
-        <h3 style={{ marginBottom: "17px" }}>But beware!</h3>
-
-        <p>
-          You have a limited number of{" "}
-          <span
-            style={{ color: "#edee02", textShadow: "0px 0px 15px #edee02" }}
-          >
-            attempts.
-          </span>{" "}
-          With each incorrect guess, the situation becomes more precarious.
-        </p>
-        <p style={{ marginBottom: "10px" }}>
-          Choose your letters wisely and pay attention to any clues provided by
-          Professor Fastolfe to guide you on this{" "}
-          <span
-            style={{ color: "#edee02", textShadow: "0px 0px 15px #edee02" }}
-          >
-            captivating quest.
-          </span>
-        </p>
-        <div className="introartsyimg">
-          <div ref={popoverRef}>
-            <OverlayTrigger
-              trigger="click"
-              placement="top"
-              overlay={popoverArtsyIntro}
-              show={popoverOpen2}
-              onToggle={handlePopoverOpen2}
-            >
-              <img
-                id="introartsyimg"
-                src={artsy}
-                width={288}
-                height={250}
-                // style={{ height: "123px", cursor: "help" }}
-                title="Artsy"
-                alt="The robot Artsy"
-              />
-            </OverlayTrigger>
+      <section className="hm-screen home-brief" aria-labelledby="home-brief-title">
+        <div className="hm-screen-inner">
+          <h2 id="home-brief-title">Mission briefing</h2>
+          <p>
+            Professor Han Fastolfe urgently seeks your assistance. His dear friend
+            Artsy has mysteriously shut down. Only one thing can awaken Artsy from
+            his slumber — <em>a secret word</em>.
+          </p>
+          <p>Discover it and breathe life back into Artsy.</p>
+          <h3>But beware!</h3>
+          <p>
+            You have a limited number of <em>attempts</em>. With each incorrect
+            guess, the situation becomes more precarious. Choose your letters
+            wisely and pay attention to any clues provided by Professor Fastolfe
+            to guide you on this <em>captivating quest</em>.
+          </p>
+          <div className="home-actions">
+            <Link className="hm-button primary" to="/hangman">Play Hangman</Link>
+            <Link className="hm-button" to="/illucia-observatory">Challenge Illucia</Link>
           </div>
-          {/* {popoverOpen2 && (
-            <div className="overlay-effect" onClick={handlePopoverClose2} />
-          )} */}
+          {!user && status !== "loading" && (
+            <p className="home-guest">
+              <Link to="/login">Sign in</Link> or <Link to="/signup">create an account</Link> to
+              earn 100 points per rescue and claim your place in the Hall of Fame.
+            </p>
+          )}
         </div>
-      </div>
-      <div className="introbtn">
-        <Link to="/hangman">
-          <button id="introbtn">Play Hangman</button>
-        </Link>
-      </div>
-    </>
+      </section>
+
+      <section className="home-crew" aria-labelledby="home-crew-title">
+        <h2 id="home-crew-title">The crew</h2>
+        <div className="home-cards">
+          {CREW.map(member => <CrewCard key={member.id} member={member} />)}
+        </div>
+      </section>
+    </div>
   );
 };
 
