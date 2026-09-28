@@ -43,10 +43,16 @@ letter from hidden positions, and requires the same length. With E guessed at
 benchmarking and eventual explanations. Its optional policy parameter is for
 the benchmark; `chooseLetter` always retains the agreed baseline.
 
-Master's empty candidate set throws an invariant error. Lower-tier knowledge
-can be constructed, but an empty lower-tier set explicitly throws until I3b
-implements the specified fallback. I3 makes no difficulty/win-rate claims for
-lower tiers. No vocabulary widening is performed.
+Master's empty candidate set throws an invariant error. At lower tiers, an empty
+set selects the unused letter with the highest precomputed word-presence count
+in that tier's vocabulary of the same length. Counts never include higher-tier
+words, and repeated occurrences in one word count once. Ties are alphabetical,
+including when all remaining counts are zero or the tier's length bucket is empty.
+No vocabulary widening is performed. `analyzeDecision` reports `fallback: true`,
+zero candidates and zero candidate hits for fallback decisions.
+
+The supported tiers are exported as `VOCABULARY_TIERS`: Apprentice (35),
+Scholar (50), Master (70). See [the I3b measurements](ILLUCIA-TIERS.md).
 
 ## Precisely defined policies
 
@@ -90,8 +96,11 @@ per length mean the overall rate is length-balanced, not dictionary-weighted or
 representative of adversarial human choices.
 
 Zero-candidate counts are split into expected low-tier and Master-bug fields.
-Expected low-tier events are zero because I3 runs only Master. A Master invariant
-failure aborts the benchmark rather than silently reporting a completed run.
+Expected low-tier events are zero in I3 because it runs only Master. A Master
+invariant failure aborts the benchmark rather than silently reporting a completed
+run. The shared simulator also asserts that in-tier answers never lose all
+candidates. Current reports additionally count out-of-vocabulary games and games
+that enter fallback; the committed I3 report retains its original schema.
 
 Tests: `npm test` in `client/` and `tools/`. Coverage includes secret isolation,
 exact repeated-letter positions, whole-word hit counts, ties, policy differences,
@@ -100,7 +109,7 @@ six-miss adjudication, and report arithmetic. Six isolated code mutations were
 detected: hidden-hit acceptance, answer leakage, occurrence counting, removal of
 terminal checks, removal of the risk penalty, and disabling lookahead.
 
-I3b adds low-tier fallback and tier measurements; I4 adds asset loading and UI.
+I3b implements the lower-tier fallback and measurements; I4 adds asset loading and UI.
 
 ## Recorded I3 result
 

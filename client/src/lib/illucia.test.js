@@ -97,6 +97,52 @@ test('risk penalty and two-turn endgame lookahead affect benchmark choices', () 
   assert.equal(analyzeDecision(threeLeft, endgame, 'lookahead').letter, 'b');
 });
 
+test('zero-candidate fallback uses only its own tier, with deterministic unused-letter ties', () => {
+  const entries = parseLexicon('cat 35\ndog 35\nfib 70\nfob 70\nfox 70\n', 3);
+  const low = createKnowledge(entries, 35);
+  const master = createKnowledge(entries);
+  const state = toPublicState(roundAfter('fox', 'f'));
+  assert.deepEqual(low.words, ['cat', 'dog']);
+  assert.equal(low.frequency.f, 0);
+  assert.equal(master.frequency.f, 3);
+  assert.equal(chooseLetter(state, master), 'b'); // b and o tie; alphabetical b wins.
+  for (const policy of POLICIES) {
+    assert.deepEqual(analyzeDecision(state, low, policy),
+      { letter: 'a', candidateCount: 0, hitCount: 0, fallback: true });
+  }
+  assert.equal(chooseLetter(toPublicState(roundAfter('fox', 'fa')), low), 'c');
+  assert.deepEqual(low.words, ['cat', 'dog']);
+  // No unmentioned higher-tier vocabulary may be consulted or silently added.
+  const extended = parseLexicon('cat 35\ndog 35\nfib 70\nfob 70\nfox 70\nzzz 70\n', 3);
+  assert.deepEqual(analyzeDecision(state, createKnowledge(extended, 35)), analyzeDecision(state, low));
+  assert.throws(() => chooseLetter(state, knowledgeOf(['cat', 'dog'])), /Master invariant/);
+});
+
+test('fallback handles empty tier vocabularies and exhausted frequency counts without repeats', () => {
+  const entries = parseLexicon('fox 70\n', 3);
+  const low = createKnowledge(entries, 35);
+  assert.equal(low.words.length, 0);
+  assert.equal(chooseLetter(toPublicState(createRound('fox')), low), 'a');
+  assert.equal(chooseLetter(toPublicState(roundAfter('fox', 'ab')), low), 'c');
+  assert.equal(chooseLetter(toPublicState(roundAfter('fox', 'abcdef')), low), 'g'); // f is a hit, only five misses.
+  assert.equal(chooseLetter(toPublicState(roundAfter('fox', 'abcdeg')), low), null);
+  assert.equal(chooseLetter(toPublicState(roundAfter('fox', 'fox')), low), null);
+  assert.equal(chooseLetter(toPublicState(createRound('fox')), createKnowledge(entries)), 'f');
+});
+
+test('Apprentice and Scholar fallback frequencies respect their separate ceilings', () => {
+  const entries = parseLexicon('abc 35\nbbb 50\nxbx 70\n', 3);
+  const apprentice = createKnowledge(entries, 35);
+  const scholar = createKnowledge(entries, 50);
+  const state = toPublicState(roundAfter('xbx', 'x'));
+  assert.equal(scholar.frequency.b, 2); // bbb contributes one word, not three occurrences.
+  assert.equal(chooseLetter(state, apprentice), 'a');
+  assert.equal(chooseLetter(state, scholar), 'b');
+  assert.equal(apprentice.words.includes('bbb'), false);
+  assert.equal(scholar.words.includes('bbb'), true);
+  assert.equal(scholar.words.includes('xbx'), false);
+});
+
 test('all policies use shared adjudication, never repeat, and preserve the answer as a candidate', () => {
   const words = ['abb', 'bab', 'bba', 'ccc', 'ddd', 'eee', 'fff', 'ggg'];
   const knowledge = knowledgeOf(words);

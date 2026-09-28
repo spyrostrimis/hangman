@@ -1,4 +1,9 @@
 export const ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
+export const VOCABULARY_TIERS = Object.freeze([
+  Object.freeze({ id: 'apprentice', label: 'Apprentice', maxSize: 35 }),
+  Object.freeze({ id: 'scholar', label: 'Scholar', maxSize: 50 }),
+  Object.freeze({ id: 'master', label: 'Master', maxSize: 70 }),
+]);
 
 // Parses one length asset. Loading/network lifecycle belongs to the later UI slice.
 export function parseLexicon(text, length) {
@@ -21,7 +26,7 @@ export function isAcceptedWord(word, entries) {
 }
 
 export function createKnowledge(entries, maxSize = 70) {
-  if (![35, 50, 70].includes(maxSize)) throw new RangeError('Unknown vocabulary size.');
+  if (!VOCABULARY_TIERS.some(tier => tier.maxSize === maxSize)) throw new RangeError('Unknown vocabulary size.');
   const length = entries[0]?.word.length;
   if (!length || entries.some(entry => entry.word.length !== length)) {
     throw new Error('Knowledge requires one nonempty length lexicon.');

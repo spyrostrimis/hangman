@@ -77,7 +77,11 @@ export function analyzeDecision(publicState, knowledge, policy = 'count') {
   const candidates = filterCandidates(publicState, knowledge.words);
   if (candidates.length === 0) {
     if (knowledge.maxSize === 70) throw new Error('Master invariant: zero candidates.');
-    throw new Error('Lower-tier zero-candidate fallback is reserved for I3b.');
+    // Use only this tier's precomputed word-presence counts for this length.
+    // All-zero scores (including an empty tier) tie alphabetically.
+    const letter = [...ALPHABET].filter(value => !publicState.guessedLetters.includes(value))
+      .reduce((best, value) => best === null || knowledge.frequency[value] > knowledge.frequency[best] ? value : best, null);
+    return { letter, candidateCount: 0, hitCount: 0, fallback: true };
   }
   const guessed = new Set(publicState.guessedLetters);
   if (policy === 'frequency' || policy === 'count') {

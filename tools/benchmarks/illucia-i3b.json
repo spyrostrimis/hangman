@@ -1,0 +1,4402 @@
+{
+  "configuration": {
+    "seed": 20260928,
+    "perStratum": 100,
+    "policy": "count",
+    "maxSizes": [
+      35,
+      50,
+      70
+    ],
+    "fallback": "own-tier per-length word-presence frequency; alphabetical ties",
+    "wordBands": [
+      {
+        "name": "common",
+        "min": 35,
+        "max": 35
+      },
+      {
+        "name": "medium",
+        "min": 40,
+        "max": 50
+      },
+      {
+        "name": "rare",
+        "min": 55,
+        "max": 70
+      }
+    ],
+    "manifestSha256": "94f3a973eeb9b76e5cea718bd03fbcd1b5db263d22d88155e58bf5ca6ba56d72",
+    "sampleSha256": "7ae7d960b557b15ca2f5d5b72e4838b4906ea211f75fbec411ca77d25d03cf68"
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32",
+    "architecture": "x64"
+  },
+  "sampleCounts": {
+    "3": {
+      "common": 100,
+      "medium": 100,
+      "rare": 100
+    },
+    "4": {
+      "common": 100,
+      "medium": 100,
+      "rare": 100
+    },
+    "5": {
+      "common": 100,
+      "medium": 100,
+      "rare": 100
+    },
+    "6": {
+      "common": 100,
+      "medium": 100,
+      "rare": 100
+    },
+    "7": {
+      "common": 100,
+      "medium": 100,
+      "rare": 100
+    },
+    "8": {
+      "common": 100,
+      "medium": 100,
+      "rare": 100
+    },
+    "9": {
+      "common": 100,
+      "medium": 100,
+      "rare": 100
+    },
+    "10": {
+      "common": 100,
+      "medium": 100,
+      "rare": 100
+    },
+    "11": {
+      "common": 100,
+      "medium": 100,
+      "rare": 100
+    },
+    "12": {
+      "common": 100,
+      "medium": 100,
+      "rare": 100
+    },
+    "13": {
+      "common": 100,
+      "medium": 100,
+      "rare": 100
+    },
+    "14": {
+      "common": 100,
+      "medium": 100,
+      "rare": 100
+    },
+    "15": {
+      "common": 100,
+      "medium": 100,
+      "rare": 100
+    }
+  },
+  "results": {
+    "35": {
+      "vocabularyCounts": {
+        "3": 498,
+        "4": 1859,
+        "5": 3431,
+        "6": 5233,
+        "7": 6670,
+        "8": 6452,
+        "9": 5329,
+        "10": 3975,
+        "11": 2556,
+        "12": 1442,
+        "13": 728,
+        "14": 313,
+        "15": 116
+      },
+      "overall": {
+        "games": 3900,
+        "wins": 1541,
+        "winRate": 0.3951,
+        "averageMisses": 4.3767,
+        "averageTurns": 10.2026,
+        "decisionMilliseconds": {
+          "p50": 0.3365,
+          "p95": 2.8677
+        },
+        "candidateSizes": {
+          "mean": 366.1204,
+          "p50": 1,
+          "p95": 2556,
+          "max": 6670
+        },
+        "outOfVocabularyGames": 2600,
+        "gamesUsingFallback": 2196,
+        "zeroCandidateEvents": {
+          "expectedLowTier": 16766,
+          "masterBugs": 0
+        }
+      },
+      "byWordBand": {
+        "common": {
+          "games": 1300,
+          "wins": 1157,
+          "winRate": 0.89,
+          "averageMisses": 1.7715,
+          "averageTurns": 8.6315,
+          "decisionMilliseconds": {
+            "p50": 0.3634,
+            "p95": 3.0299
+          },
+          "candidateSizes": {
+            "mean": 430.392,
+            "p50": 3,
+            "p95": 3431,
+            "max": 6670
+          },
+          "outOfVocabularyGames": 0,
+          "gamesUsingFallback": 0,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "medium": {
+          "games": 1300,
+          "wins": 216,
+          "winRate": 0.1662,
+          "averageMisses": 5.6477,
+          "averageTurns": 10.9608,
+          "decisionMilliseconds": {
+            "p50": 0.3284,
+            "p95": 2.7498
+          },
+          "candidateSizes": {
+            "mean": 342.1251,
+            "p50": 0,
+            "p95": 1993,
+            "max": 6670
+          },
+          "outOfVocabularyGames": 1300,
+          "gamesUsingFallback": 1088,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 8282,
+            "masterBugs": 0
+          }
+        },
+        "rare": {
+          "games": 1300,
+          "wins": 168,
+          "winRate": 0.1292,
+          "averageMisses": 5.7108,
+          "averageTurns": 11.0154,
+          "decisionMilliseconds": {
+            "p50": 0.3272,
+            "p95": 2.6794
+          },
+          "candidateSizes": {
+            "mean": 339.6341,
+            "p50": 0,
+            "p95": 1993,
+            "max": 6670
+          },
+          "outOfVocabularyGames": 1300,
+          "gamesUsingFallback": 1108,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 8484,
+            "masterBugs": 0
+          }
+        }
+      },
+      "byLength": {
+        "3": {
+          "overall": {
+            "games": 300,
+            "wins": 58,
+            "winRate": 0.1933,
+            "averageMisses": 5.55,
+            "averageTurns": 7.0167,
+            "decisionMilliseconds": {
+              "p50": 0.0845,
+              "p95": 0.2058
+            },
+            "candidateSizes": {
+              "mean": 151.4048,
+              "p50": 56,
+              "p95": 498,
+              "max": 498
+            },
+            "outOfVocabularyGames": 200,
+            "gamesUsingFallback": 42,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 106,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 44,
+              "winRate": 0.44,
+              "averageMisses": 4.91,
+              "averageTurns": 7.01,
+              "decisionMilliseconds": {
+                "p50": 0.0885,
+                "p95": 0.2157
+              },
+              "candidateSizes": {
+                "mean": 150.9786,
+                "p50": 58,
+                "p95": 498,
+                "max": 498
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 9,
+              "winRate": 0.09,
+              "averageMisses": 5.83,
+              "averageTurns": 6.97,
+              "decisionMilliseconds": {
+                "p50": 0.0837,
+                "p95": 0.202
+              },
+              "candidateSizes": {
+                "mean": 153.2525,
+                "p50": 58,
+                "p95": 498,
+                "max": 498
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 19,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 52,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 5,
+              "winRate": 0.05,
+              "averageMisses": 5.91,
+              "averageTurns": 7.07,
+              "decisionMilliseconds": {
+                "p50": 0.0798,
+                "p95": 0.2015
+              },
+              "candidateSizes": {
+                "mean": 150.0057,
+                "p50": 50,
+                "p95": 498,
+                "max": 498
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 23,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 54,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "4": {
+          "overall": {
+            "games": 300,
+            "wins": 62,
+            "winRate": 0.2067,
+            "averageMisses": 5.5033,
+            "averageTurns": 7.8433,
+            "decisionMilliseconds": {
+              "p50": 0.2761,
+              "p95": 0.9016
+            },
+            "candidateSizes": {
+              "mean": 430.5402,
+              "p50": 67,
+              "p95": 1859,
+              "max": 1859
+            },
+            "outOfVocabularyGames": 200,
+            "gamesUsingFallback": 74,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 174,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 49,
+              "winRate": 0.49,
+              "averageMisses": 4.8,
+              "averageTurns": 7.76,
+              "decisionMilliseconds": {
+                "p50": 0.2674,
+                "p95": 0.9005
+              },
+              "candidateSizes": {
+                "mean": 412.6134,
+                "p50": 66,
+                "p95": 1859,
+                "max": 1859
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 4,
+              "winRate": 0.04,
+              "averageMisses": 5.94,
+              "averageTurns": 7.84,
+              "decisionMilliseconds": {
+                "p50": 0.2774,
+                "p95": 0.9014
+              },
+              "candidateSizes": {
+                "mean": 444.8112,
+                "p50": 67,
+                "p95": 1859,
+                "max": 1859
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 33,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 90,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 9,
+              "winRate": 0.09,
+              "averageMisses": 5.77,
+              "averageTurns": 7.93,
+              "decisionMilliseconds": {
+                "p50": 0.2774,
+                "p95": 0.9036
+              },
+              "candidateSizes": {
+                "mean": 433.9735,
+                "p50": 66,
+                "p95": 1859,
+                "max": 1859
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 41,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 84,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "5": {
+          "overall": {
+            "games": 300,
+            "wins": 100,
+            "winRate": 0.3333,
+            "averageMisses": 5.12,
+            "averageTurns": 8.48,
+            "decisionMilliseconds": {
+              "p50": 0.4647,
+              "p95": 2.1128
+            },
+            "candidateSizes": {
+              "mean": 623.886,
+              "p50": 33,
+              "p95": 3431,
+              "max": 3431
+            },
+            "outOfVocabularyGames": 200,
+            "gamesUsingFallback": 125,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 356,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 80,
+              "winRate": 0.8,
+              "averageMisses": 3.83,
+              "averageTurns": 8.15,
+              "decisionMilliseconds": {
+                "p50": 0.4761,
+                "p95": 2.1136
+              },
+              "candidateSizes": {
+                "mean": 635.3607,
+                "p50": 49,
+                "p95": 3431,
+                "max": 3431
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 10,
+              "winRate": 0.1,
+              "averageMisses": 5.75,
+              "averageTurns": 8.62,
+              "decisionMilliseconds": {
+                "p50": 0.4658,
+                "p95": 2.1035
+              },
+              "candidateSizes": {
+                "mean": 619.6845,
+                "p50": 26,
+                "p95": 3431,
+                "max": 3431
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 61,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 169,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 10,
+              "winRate": 0.1,
+              "averageMisses": 5.78,
+              "averageTurns": 8.67,
+              "decisionMilliseconds": {
+                "p50": 0.4587,
+                "p95": 2.1184
+              },
+              "candidateSizes": {
+                "mean": 617.2768,
+                "p50": 23,
+                "p95": 3431,
+                "max": 3431
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 64,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 187,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "6": {
+          "overall": {
+            "games": 300,
+            "wins": 103,
+            "winRate": 0.3433,
+            "averageMisses": 4.8867,
+            "averageTurns": 8.82,
+            "decisionMilliseconds": {
+              "p50": 0.741,
+              "p95": 3.8699
+            },
+            "candidateSizes": {
+              "mean": 795.5306,
+              "p50": 13,
+              "p95": 5233,
+              "max": 5233
+            },
+            "outOfVocabularyGames": 200,
+            "gamesUsingFallback": 166,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 541,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 88,
+              "winRate": 0.88,
+              "averageMisses": 2.92,
+              "averageTurns": 8.17,
+              "decisionMilliseconds": {
+                "p50": 0.7788,
+                "p95": 3.8139
+              },
+              "candidateSizes": {
+                "mean": 875.186,
+                "p50": 32,
+                "p95": 5233,
+                "max": 5233
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 8,
+              "winRate": 0.08,
+              "averageMisses": 5.86,
+              "averageTurns": 9.05,
+              "decisionMilliseconds": {
+                "p50": 0.7121,
+                "p95": 3.91
+              },
+              "candidateSizes": {
+                "mean": 772.8453,
+                "p50": 9,
+                "p95": 5233,
+                "max": 5233
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 82,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 275,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 7,
+              "winRate": 0.07,
+              "averageMisses": 5.88,
+              "averageTurns": 9.24,
+              "decisionMilliseconds": {
+                "p50": 0.7358,
+                "p95": 3.9459
+              },
+              "candidateSizes": {
+                "mean": 747.3182,
+                "p50": 9,
+                "p95": 5233,
+                "max": 5233
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 84,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 266,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "7": {
+          "overall": {
+            "games": 300,
+            "wins": 123,
+            "winRate": 0.41,
+            "averageMisses": 4.5333,
+            "averageTurns": 9.4067,
+            "decisionMilliseconds": {
+              "p50": 0.9102,
+              "p95": 5.4344
+            },
+            "candidateSizes": {
+              "mean": 881.4252,
+              "p50": 4,
+              "p95": 6670,
+              "max": 6670
+            },
+            "outOfVocabularyGames": 200,
+            "gamesUsingFallback": 193,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 847,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 97,
+              "winRate": 0.97,
+              "averageMisses": 2.23,
+              "averageTurns": 8.32,
+              "decisionMilliseconds": {
+                "p50": 0.9969,
+                "p95": 5.4056
+              },
+              "candidateSizes": {
+                "mean": 993.976,
+                "p50": 15,
+                "p95": 6670,
+                "max": 6670
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 9,
+              "winRate": 0.09,
+              "averageMisses": 5.77,
+              "averageTurns": 9.96,
+              "decisionMilliseconds": {
+                "p50": 0.8969,
+                "p95": 5.4166
+              },
+              "candidateSizes": {
+                "mean": 842.2088,
+                "p50": 2,
+                "p95": 6670,
+                "max": 6670
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 95,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 406,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 17,
+              "winRate": 0.17,
+              "averageMisses": 5.6,
+              "averageTurns": 9.94,
+              "decisionMilliseconds": {
+                "p50": 0.8707,
+                "p95": 5.4527
+              },
+              "candidateSizes": {
+                "mean": 826.5131,
+                "p50": 1,
+                "p95": 6670,
+                "max": 6670
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 98,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 441,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "8": {
+          "overall": {
+            "games": 300,
+            "wins": 120,
+            "winRate": 0.4,
+            "averageMisses": 4.3167,
+            "averageTurns": 9.7667,
+            "decisionMilliseconds": {
+              "p50": 0.9477,
+              "p95": 6.3348
+            },
+            "candidateSizes": {
+              "mean": 778.5751,
+              "p50": 2,
+              "p95": 6452,
+              "max": 6452
+            },
+            "outOfVocabularyGames": 200,
+            "gamesUsingFallback": 196,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 1082,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 99,
+              "winRate": 0.99,
+              "averageMisses": 1.46,
+              "averageTurns": 8.02,
+              "decisionMilliseconds": {
+                "p50": 1.0048,
+                "p95": 6.1803
+              },
+              "candidateSizes": {
+                "mean": 938.591,
+                "p50": 7,
+                "p95": 6452,
+                "max": 6452
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 10,
+              "winRate": 0.1,
+              "averageMisses": 5.79,
+              "averageTurns": 10.7,
+              "decisionMilliseconds": {
+                "p50": 1.0053,
+                "p95": 6.8876
+              },
+              "candidateSizes": {
+                "mean": 699.8757,
+                "p50": 0,
+                "p95": 6452,
+                "max": 6452
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 98,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 537,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 11,
+              "winRate": 0.11,
+              "averageMisses": 5.7,
+              "averageTurns": 10.58,
+              "decisionMilliseconds": {
+                "p50": 0.8777,
+                "p95": 5.9865
+              },
+              "candidateSizes": {
+                "mean": 736.8696,
+                "p50": 0,
+                "p95": 6452,
+                "max": 6452
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 98,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 545,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "9": {
+          "overall": {
+            "games": 300,
+            "wins": 122,
+            "winRate": 0.4067,
+            "averageMisses": 4.1767,
+            "averageTurns": 10.2,
+            "decisionMilliseconds": {
+              "p50": 0.7064,
+              "p95": 5.4782
+            },
+            "candidateSizes": {
+              "mean": 585.4219,
+              "p50": 1,
+              "p95": 5329,
+              "max": 5329
+            },
+            "outOfVocabularyGames": 200,
+            "gamesUsingFallback": 200,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 1320,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 1.05,
+              "averageTurns": 8.52,
+              "decisionMilliseconds": {
+                "p50": 0.7227,
+                "p95": 5.4206
+              },
+              "candidateSizes": {
+                "mean": 698.0176,
+                "p50": 2,
+                "p95": 5329,
+                "max": 5329
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 12,
+              "winRate": 0.12,
+              "averageMisses": 5.71,
+              "averageTurns": 10.96,
+              "decisionMilliseconds": {
+                "p50": 0.7281,
+                "p95": 5.7065
+              },
+              "candidateSizes": {
+                "mean": 544.4653,
+                "p50": 0,
+                "p95": 5329,
+                "max": 5329
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 636,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 10,
+              "winRate": 0.1,
+              "averageMisses": 5.77,
+              "averageTurns": 11.12,
+              "decisionMilliseconds": {
+                "p50": 0.6766,
+                "p95": 5.2923
+              },
+              "candidateSizes": {
+                "mean": 539.5198,
+                "p50": 0,
+                "p95": 5329,
+                "max": 5329
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 684,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "10": {
+          "overall": {
+            "games": 300,
+            "wins": 126,
+            "winRate": 0.42,
+            "averageMisses": 4.05,
+            "averageTurns": 10.7267,
+            "decisionMilliseconds": {
+              "p50": 0.4814,
+              "p95": 4.2458
+            },
+            "candidateSizes": {
+              "mean": 406.9121,
+              "p50": 1,
+              "p95": 3975,
+              "max": 3975
+            },
+            "outOfVocabularyGames": 200,
+            "gamesUsingFallback": 200,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 1607,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.66,
+              "averageTurns": 8.66,
+              "decisionMilliseconds": {
+                "p50": 0.5311,
+                "p95": 4.2929
+              },
+              "candidateSizes": {
+                "mean": 505.9145,
+                "p50": 2,
+                "p95": 3975,
+                "max": 3975
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 16,
+              "winRate": 0.16,
+              "averageMisses": 5.68,
+              "averageTurns": 11.75,
+              "decisionMilliseconds": {
+                "p50": 0.4657,
+                "p95": 4.234
+              },
+              "candidateSizes": {
+                "mean": 374.1583,
+                "p50": 0,
+                "p95": 3975,
+                "max": 3975
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 801,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 10,
+              "winRate": 0.1,
+              "averageMisses": 5.81,
+              "averageTurns": 11.77,
+              "decisionMilliseconds": {
+                "p50": 0.4717,
+                "p95": 4.234
+              },
+              "candidateSizes": {
+                "mean": 366.7672,
+                "p50": 0,
+                "p95": 3975,
+                "max": 3975
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 806,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "11": {
+          "overall": {
+            "games": 300,
+            "wins": 134,
+            "winRate": 0.4467,
+            "averageMisses": 3.9333,
+            "averageTurns": 11.3,
+            "decisionMilliseconds": {
+              "p50": 0.3028,
+              "p95": 2.9518
+            },
+            "candidateSizes": {
+              "mean": 249.2171,
+              "p50": 0,
+              "p95": 2556,
+              "max": 2556
+            },
+            "outOfVocabularyGames": 200,
+            "gamesUsingFallback": 200,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 1789,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.52,
+              "averageTurns": 8.85,
+              "decisionMilliseconds": {
+                "p50": 0.3285,
+                "p95": 2.9805
+              },
+              "candidateSizes": {
+                "mean": 316.5853,
+                "p50": 2,
+                "p95": 2556,
+                "max": 2556
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 20,
+              "winRate": 0.2,
+              "averageMisses": 5.53,
+              "averageTurns": 12.38,
+              "decisionMilliseconds": {
+                "p50": 0.3008,
+                "p95": 2.9513
+              },
+              "candidateSizes": {
+                "mean": 230.6511,
+                "p50": 0,
+                "p95": 2556,
+                "max": 2556
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 873,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 14,
+              "winRate": 0.14,
+              "averageMisses": 5.75,
+              "averageTurns": 12.67,
+              "decisionMilliseconds": {
+                "p50": 0.2917,
+                "p95": 2.9425
+              },
+              "candidateSizes": {
+                "mean": 220.3015,
+                "p50": 0,
+                "p95": 2556,
+                "max": 2556
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 916,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "12": {
+          "overall": {
+            "games": 300,
+            "wins": 145,
+            "winRate": 0.4833,
+            "averageMisses": 3.7867,
+            "averageTurns": 11.6867,
+            "decisionMilliseconds": {
+              "p50": 0.1681,
+              "p95": 1.7945
+            },
+            "candidateSizes": {
+              "mean": 132.3662,
+              "p50": 0,
+              "p95": 1442,
+              "max": 1442
+            },
+            "outOfVocabularyGames": 200,
+            "gamesUsingFallback": 200,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 1993,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.22,
+              "averageTurns": 9,
+              "decisionMilliseconds": {
+                "p50": 0.1707,
+                "p95": 1.7881
+              },
+              "candidateSizes": {
+                "mean": 171.2033,
+                "p50": 1,
+                "p95": 1442,
+                "max": 1442
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 30,
+              "winRate": 0.3,
+              "averageMisses": 5.43,
+              "averageTurns": 13.01,
+              "decisionMilliseconds": {
+                "p50": 0.1628,
+                "p95": 1.7829
+              },
+              "candidateSizes": {
+                "mean": 118.7471,
+                "p50": 0,
+                "p95": 1442,
+                "max": 1442
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 989,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 15,
+              "winRate": 0.15,
+              "averageMisses": 5.71,
+              "averageTurns": 13.05,
+              "decisionMilliseconds": {
+                "p50": 0.1725,
+                "p95": 1.8296
+              },
+              "candidateSizes": {
+                "mean": 119.1594,
+                "p50": 0,
+                "p95": 1442,
+                "max": 1442
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 1004,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "13": {
+          "overall": {
+            "games": 300,
+            "wins": 151,
+            "winRate": 0.5033,
+            "averageMisses": 3.73,
+            "averageTurns": 12.0567,
+            "decisionMilliseconds": {
+              "p50": 0.0857,
+              "p95": 0.9851
+            },
+            "candidateSizes": {
+              "mean": 63.7321,
+              "p50": 0,
+              "p95": 728,
+              "max": 728
+            },
+            "outOfVocabularyGames": 200,
+            "gamesUsingFallback": 200,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 2134,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.22,
+              "averageTurns": 9.58,
+              "decisionMilliseconds": {
+                "p50": 0.0885,
+                "p95": 0.9857
+              },
+              "candidateSizes": {
+                "mean": 80.6775,
+                "p50": 1,
+                "p95": 728,
+                "max": 728
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 30,
+              "winRate": 0.3,
+              "averageMisses": 5.39,
+              "averageTurns": 13.12,
+              "decisionMilliseconds": {
+                "p50": 0.0854,
+                "p95": 0.9855
+              },
+              "candidateSizes": {
+                "mean": 58.9047,
+                "p50": 0,
+                "p95": 728,
+                "max": 728
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 1031,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 21,
+              "winRate": 0.21,
+              "averageMisses": 5.58,
+              "averageTurns": 13.47,
+              "decisionMilliseconds": {
+                "p50": 0.0843,
+                "p95": 0.984
+              },
+              "candidateSizes": {
+                "mean": 56.3823,
+                "p50": 0,
+                "p95": 728,
+                "max": 728
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 1103,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "14": {
+          "overall": {
+            "games": 300,
+            "wins": 145,
+            "winRate": 0.4833,
+            "averageMisses": 3.6533,
+            "averageTurns": 12.51,
+            "decisionMilliseconds": {
+              "p50": 0.0397,
+              "p95": 0.4504
+            },
+            "candidateSizes": {
+              "mean": 26.227,
+              "p50": 0,
+              "p95": 313,
+              "max": 313
+            },
+            "outOfVocabularyGames": 200,
+            "gamesUsingFallback": 200,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 2328,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.13,
+              "averageTurns": 10.03,
+              "decisionMilliseconds": {
+                "p50": 0.0412,
+                "p95": 0.4512
+              },
+              "candidateSizes": {
+                "mean": 33.4407,
+                "p50": 1,
+                "p95": 313,
+                "max": 313
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 24,
+              "winRate": 0.24,
+              "averageMisses": 5.43,
+              "averageTurns": 13.92,
+              "decisionMilliseconds": {
+                "p50": 0.0379,
+                "p95": 0.4501
+              },
+              "candidateSizes": {
+                "mean": 23.3736,
+                "p50": 0,
+                "p95": 313,
+                "max": 313
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 1178,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 21,
+              "winRate": 0.21,
+              "averageMisses": 5.4,
+              "averageTurns": 13.58,
+              "decisionMilliseconds": {
+                "p50": 0.0406,
+                "p95": 0.4492
+              },
+              "candidateSizes": {
+                "mean": 23.824,
+                "p50": 0,
+                "p95": 313,
+                "max": 313
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 1150,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "15": {
+          "overall": {
+            "games": 300,
+            "wins": 152,
+            "winRate": 0.5067,
+            "averageMisses": 3.6567,
+            "averageTurns": 12.82,
+            "decisionMilliseconds": {
+              "p50": 0.0159,
+              "p95": 0.1757
+            },
+            "candidateSizes": {
+              "mean": 9.545,
+              "p50": 0,
+              "p95": 116,
+              "max": 116
+            },
+            "outOfVocabularyGames": 200,
+            "gamesUsingFallback": 200,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 2489,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.08,
+              "averageTurns": 10.14,
+              "decisionMilliseconds": {
+                "p50": 0.0186,
+                "p95": 0.1758
+              },
+              "candidateSizes": {
+                "mean": 12.7189,
+                "p50": 1,
+                "p95": 116,
+                "max": 116
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 34,
+              "winRate": 0.34,
+              "averageMisses": 5.31,
+              "averageTurns": 14.21,
+              "decisionMilliseconds": {
+                "p50": 0.0145,
+                "p95": 0.1757
+              },
+              "candidateSizes": {
+                "mean": 8.3512,
+                "p50": 0,
+                "p95": 116,
+                "max": 116
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 1245,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 18,
+              "winRate": 0.18,
+              "averageMisses": 5.58,
+              "averageTurns": 14.11,
+              "decisionMilliseconds": {
+                "p50": 0.015,
+                "p95": 0.1756
+              },
+              "candidateSizes": {
+                "mean": 8.4663,
+                "p50": 0,
+                "p95": 116,
+                "max": 116
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 1244,
+                "masterBugs": 0
+              }
+            }
+          }
+        }
+      },
+      "comparisonLengths5to9": {
+        "common": {
+          "games": 500,
+          "wins": 464,
+          "winRate": 0.928,
+          "averageMisses": 2.298,
+          "averageTurns": 8.236,
+          "decisionMilliseconds": {
+            "p50": 0.8122,
+            "p95": 5.3362
+          },
+          "candidateSizes": {
+            "mean": 827.415,
+            "p50": 15,
+            "p95": 5329,
+            "max": 6670
+          },
+          "outOfVocabularyGames": 0,
+          "gamesUsingFallback": 0,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "medium": {
+          "games": 500,
+          "wins": 49,
+          "winRate": 0.098,
+          "averageMisses": 5.776,
+          "averageTurns": 9.858,
+          "decisionMilliseconds": {
+            "p50": 0.7981,
+            "p95": 5.3682
+          },
+          "candidateSizes": {
+            "mean": 693.4538,
+            "p50": 2,
+            "p95": 5329,
+            "max": 6670
+          },
+          "outOfVocabularyGames": 500,
+          "gamesUsingFallback": 436,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 2023,
+            "masterBugs": 0
+          }
+        },
+        "rare": {
+          "games": 500,
+          "wins": 55,
+          "winRate": 0.11,
+          "averageMisses": 5.746,
+          "averageTurns": 9.91,
+          "decisionMilliseconds": {
+            "p50": 0.7631,
+            "p95": 5.3325
+          },
+          "candidateSizes": {
+            "mean": 691.5861,
+            "p50": 2,
+            "p95": 5329,
+            "max": 6670
+          },
+          "outOfVocabularyGames": 500,
+          "gamesUsingFallback": 444,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 2123,
+            "masterBugs": 0
+          }
+        }
+      }
+    },
+    "50": {
+      "vocabularyCounts": {
+        "3": 912,
+        "4": 2971,
+        "5": 5689,
+        "6": 8686,
+        "7": 11227,
+        "8": 11294,
+        "9": 9759,
+        "10": 7608,
+        "11": 5127,
+        "12": 3195,
+        "13": 1770,
+        "14": 780,
+        "15": 364
+      },
+      "overall": {
+        "games": 3900,
+        "wins": 2454,
+        "winRate": 0.6292,
+        "averageMisses": 3.1695,
+        "averageTurns": 9.5023,
+        "decisionMilliseconds": {
+          "p50": 0.6578,
+          "p95": 5.5774
+        },
+        "candidateSizes": {
+          "mean": 696.8613,
+          "p50": 2,
+          "p95": 5127,
+          "max": 11294
+        },
+        "outOfVocabularyGames": 1300,
+        "gamesUsingFallback": 1054,
+        "zeroCandidateEvents": {
+          "expectedLowTier": 7893,
+          "masterBugs": 0
+        }
+      },
+      "byWordBand": {
+        "common": {
+          "games": 1300,
+          "wins": 1131,
+          "winRate": 0.87,
+          "averageMisses": 1.9215,
+          "averageTurns": 8.7462,
+          "decisionMilliseconds": {
+            "p50": 0.6831,
+            "p95": 5.8679
+          },
+          "candidateSizes": {
+            "mean": 753.758,
+            "p50": 4,
+            "p95": 5689,
+            "max": 11294
+          },
+          "outOfVocabularyGames": 0,
+          "gamesUsingFallback": 0,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "medium": {
+          "games": 1300,
+          "wins": 1146,
+          "winRate": 0.8815,
+          "averageMisses": 1.8838,
+          "averageTurns": 8.7062,
+          "decisionMilliseconds": {
+            "p50": 0.6897,
+            "p95": 5.8792
+          },
+          "candidateSizes": {
+            "mean": 760.8688,
+            "p50": 3,
+            "p95": 5689,
+            "max": 11294
+          },
+          "outOfVocabularyGames": 0,
+          "gamesUsingFallback": 0,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "rare": {
+          "games": 1300,
+          "wins": 177,
+          "winRate": 0.1362,
+          "averageMisses": 5.7031,
+          "averageTurns": 11.0546,
+          "decisionMilliseconds": {
+            "p50": 0.6247,
+            "p95": 4.6438
+          },
+          "candidateSizes": {
+            "mean": 601.4363,
+            "p50": 0,
+            "p95": 3772,
+            "max": 11294
+          },
+          "outOfVocabularyGames": 1300,
+          "gamesUsingFallback": 1054,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 7893,
+            "masterBugs": 0
+          }
+        }
+      },
+      "byLength": {
+        "3": {
+          "overall": {
+            "games": 300,
+            "wins": 71,
+            "winRate": 0.2367,
+            "averageMisses": 5.3567,
+            "averageTurns": 6.9733,
+            "decisionMilliseconds": {
+              "p50": 0.1471,
+              "p95": 0.3706
+            },
+            "candidateSizes": {
+              "mean": 287.4383,
+              "p50": 101,
+              "p95": 912,
+              "max": 912
+            },
+            "outOfVocabularyGames": 100,
+            "gamesUsingFallback": 11,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 19,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 29,
+              "winRate": 0.29,
+              "averageMisses": 5.24,
+              "averageTurns": 7.12,
+              "decisionMilliseconds": {
+                "p50": 0.144,
+                "p95": 0.3716
+              },
+              "candidateSizes": {
+                "mean": 277.0169,
+                "p50": 101,
+                "p95": 912,
+                "max": 912
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 40,
+              "winRate": 0.4,
+              "averageMisses": 4.86,
+              "averageTurns": 6.6,
+              "decisionMilliseconds": {
+                "p50": 0.148,
+                "p95": 0.37
+              },
+              "candidateSizes": {
+                "mean": 302.3076,
+                "p50": 112,
+                "p95": 912,
+                "max": 912
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 2,
+              "winRate": 0.02,
+              "averageMisses": 5.97,
+              "averageTurns": 7.2,
+              "decisionMilliseconds": {
+                "p50": 0.1477,
+                "p95": 0.371
+              },
+              "candidateSizes": {
+                "mean": 284.1139,
+                "p50": 97,
+                "p95": 912,
+                "max": 912
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 11,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 19,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "4": {
+          "overall": {
+            "games": 300,
+            "wins": 92,
+            "winRate": 0.3067,
+            "averageMisses": 5.2267,
+            "averageTurns": 7.7733,
+            "decisionMilliseconds": {
+              "p50": 0.4419,
+              "p95": 1.4712
+            },
+            "candidateSizes": {
+              "mean": 675.184,
+              "p50": 101,
+              "p95": 2971,
+              "max": 2971
+            },
+            "outOfVocabularyGames": 100,
+            "gamesUsingFallback": 25,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 52,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 39,
+              "winRate": 0.39,
+              "averageMisses": 5.13,
+              "averageTurns": 7.87,
+              "decisionMilliseconds": {
+                "p50": 0.4395,
+                "p95": 1.4655
+              },
+              "candidateSizes": {
+                "mean": 690.3202,
+                "p50": 99,
+                "p95": 2971,
+                "max": 2971
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 47,
+              "winRate": 0.47,
+              "averageMisses": 4.67,
+              "averageTurns": 7.4,
+              "decisionMilliseconds": {
+                "p50": 0.4431,
+                "p95": 1.4726
+              },
+              "candidateSizes": {
+                "mean": 699.6973,
+                "p50": 124,
+                "p95": 2971,
+                "max": 2971
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 6,
+              "winRate": 0.06,
+              "averageMisses": 5.88,
+              "averageTurns": 8.05,
+              "decisionMilliseconds": {
+                "p50": 0.441,
+                "p95": 1.4728
+              },
+              "candidateSizes": {
+                "mean": 637.8522,
+                "p50": 75,
+                "p95": 2971,
+                "max": 2971
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 25,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 52,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "5": {
+          "overall": {
+            "games": 300,
+            "wins": 166,
+            "winRate": 0.5533,
+            "averageMisses": 4.5267,
+            "averageTurns": 8.32,
+            "decisionMilliseconds": {
+              "p50": 0.7808,
+              "p95": 3.5312
+            },
+            "candidateSizes": {
+              "mean": 1022.0929,
+              "p50": 51,
+              "p95": 5689,
+              "max": 5689
+            },
+            "outOfVocabularyGames": 100,
+            "gamesUsingFallback": 49,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 115,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 80,
+              "winRate": 0.8,
+              "averageMisses": 4.03,
+              "averageTurns": 8.36,
+              "decisionMilliseconds": {
+                "p50": 0.7833,
+                "p95": 3.5393
+              },
+              "candidateSizes": {
+                "mean": 993.4426,
+                "p50": 61,
+                "p95": 5689,
+                "max": 5689
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 72,
+              "winRate": 0.72,
+              "averageMisses": 3.83,
+              "averageTurns": 7.86,
+              "decisionMilliseconds": {
+                "p50": 0.8037,
+                "p95": 3.535
+              },
+              "candidateSizes": {
+                "mean": 1087.3181,
+                "p50": 56,
+                "p95": 5689,
+                "max": 5689
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 14,
+              "winRate": 0.14,
+              "averageMisses": 5.72,
+              "averageTurns": 8.74,
+              "decisionMilliseconds": {
+                "p50": 0.7695,
+                "p95": 3.5172
+              },
+              "candidateSizes": {
+                "mean": 990.8398,
+                "p50": 40,
+                "p95": 5689,
+                "max": 5689
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 49,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 115,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "6": {
+          "overall": {
+            "games": 300,
+            "wins": 184,
+            "winRate": 0.6133,
+            "averageMisses": 4.1033,
+            "averageTurns": 8.69,
+            "decisionMilliseconds": {
+              "p50": 1.1765,
+              "p95": 6.2674
+            },
+            "candidateSizes": {
+              "mean": 1329.0694,
+              "p50": 26,
+              "p95": 8686,
+              "max": 8686
+            },
+            "outOfVocabularyGames": 100,
+            "gamesUsingFallback": 78,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 229,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 87,
+              "winRate": 0.87,
+              "averageMisses": 3.23,
+              "averageTurns": 8.47,
+              "decisionMilliseconds": {
+                "p50": 1.2516,
+                "p95": 6.2578
+              },
+              "candidateSizes": {
+                "mean": 1377.5608,
+                "p50": 45,
+                "p95": 8686,
+                "max": 8686
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 91,
+              "winRate": 0.91,
+              "averageMisses": 3.17,
+              "averageTurns": 8.17,
+              "decisionMilliseconds": {
+                "p50": 1.1877,
+                "p95": 6.2811
+              },
+              "candidateSizes": {
+                "mean": 1404.366,
+                "p50": 24,
+                "p95": 8686,
+                "max": 8686
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 6,
+              "winRate": 0.06,
+              "averageMisses": 5.91,
+              "averageTurns": 9.43,
+              "decisionMilliseconds": {
+                "p50": 1.1384,
+                "p95": 6.2519
+              },
+              "candidateSizes": {
+                "mean": 1220.2789,
+                "p50": 14,
+                "p95": 8686,
+                "max": 8686
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 78,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 229,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "7": {
+          "overall": {
+            "games": 300,
+            "wins": 215,
+            "winRate": 0.7167,
+            "averageMisses": 3.41,
+            "averageTurns": 8.92,
+            "decisionMilliseconds": {
+              "p50": 1.5304,
+              "p95": 9.0818
+            },
+            "candidateSizes": {
+              "mean": 1562.1891,
+              "p50": 12,
+              "p95": 11227,
+              "max": 11227
+            },
+            "outOfVocabularyGames": 100,
+            "gamesUsingFallback": 92,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 362,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 96,
+              "winRate": 0.96,
+              "averageMisses": 2.35,
+              "averageTurns": 8.4,
+              "decisionMilliseconds": {
+                "p50": 1.5319,
+                "p95": 9.0916
+              },
+              "candidateSizes": {
+                "mean": 1634.819,
+                "p50": 24,
+                "p95": 11227,
+                "max": 11227
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 97,
+              "winRate": 0.97,
+              "averageMisses": 2.34,
+              "averageTurns": 8.43,
+              "decisionMilliseconds": {
+                "p50": 1.573,
+                "p95": 9.0787
+              },
+              "candidateSizes": {
+                "mean": 1678.6216,
+                "p50": 16,
+                "p95": 11227,
+                "max": 11227
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 22,
+              "winRate": 0.22,
+              "averageMisses": 5.54,
+              "averageTurns": 9.93,
+              "decisionMilliseconds": {
+                "p50": 1.4888,
+                "p95": 9.0783
+              },
+              "candidateSizes": {
+                "mean": 1401.9053,
+                "p50": 4,
+                "p95": 11227,
+                "max": 11227
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 92,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 362,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "8": {
+          "overall": {
+            "games": 300,
+            "wins": 210,
+            "winRate": 0.7,
+            "averageMisses": 3.01,
+            "averageTurns": 9.1033,
+            "decisionMilliseconds": {
+              "p50": 1.5306,
+              "p95": 10.1444
+            },
+            "candidateSizes": {
+              "mean": 1467.5372,
+              "p50": 5,
+              "p95": 11294,
+              "max": 11294
+            },
+            "outOfVocabularyGames": 100,
+            "gamesUsingFallback": 99,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 483,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 1.65,
+              "averageTurns": 8.23,
+              "decisionMilliseconds": {
+                "p50": 1.5631,
+                "p95": 10.1632
+              },
+              "candidateSizes": {
+                "mean": 1599.7339,
+                "p50": 9,
+                "p95": 11294,
+                "max": 11294
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 99,
+              "winRate": 0.99,
+              "averageMisses": 1.67,
+              "averageTurns": 8.53,
+              "decisionMilliseconds": {
+                "p50": 1.634,
+                "p95": 10.1619
+              },
+              "candidateSizes": {
+                "mean": 1545.7679,
+                "p50": 7,
+                "p95": 11294,
+                "max": 11294
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 11,
+              "winRate": 0.11,
+              "averageMisses": 5.71,
+              "averageTurns": 10.55,
+              "decisionMilliseconds": {
+                "p50": 1.4629,
+                "p95": 10.0695
+              },
+              "candidateSizes": {
+                "mean": 1301.1592,
+                "p50": 1,
+                "p95": 11294,
+                "max": 11294
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 99,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 483,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "9": {
+          "overall": {
+            "games": 300,
+            "wins": 211,
+            "winRate": 0.7033,
+            "averageMisses": 2.7633,
+            "averageTurns": 9.4533,
+            "decisionMilliseconds": {
+              "p50": 1.3053,
+              "p95": 10.0717
+            },
+            "candidateSizes": {
+              "mean": 1163.6555,
+              "p50": 2,
+              "p95": 9759,
+              "max": 9759
+            },
+            "outOfVocabularyGames": 100,
+            "gamesUsingFallback": 100,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 643,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 1.21,
+              "averageTurns": 8.68,
+              "decisionMilliseconds": {
+                "p50": 1.4934,
+                "p95": 10.7259
+              },
+              "candidateSizes": {
+                "mean": 1258.0392,
+                "p50": 3,
+                "p95": 9759,
+                "max": 9759
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 1.33,
+              "averageTurns": 8.54,
+              "decisionMilliseconds": {
+                "p50": 1.3596,
+                "p95": 10.4391
+              },
+              "candidateSizes": {
+                "mean": 1290.7623,
+                "p50": 3,
+                "p95": 9759,
+                "max": 9759
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 11,
+              "winRate": 0.11,
+              "averageMisses": 5.75,
+              "averageTurns": 11.14,
+              "decisionMilliseconds": {
+                "p50": 1.1918,
+                "p95": 9.4766
+              },
+              "candidateSizes": {
+                "mean": 992.6732,
+                "p50": 0,
+                "p95": 9759,
+                "max": 9759
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 643,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "10": {
+          "overall": {
+            "games": 300,
+            "wins": 212,
+            "winRate": 0.7067,
+            "averageMisses": 2.4567,
+            "averageTurns": 9.8433,
+            "decisionMilliseconds": {
+              "p50": 0.964,
+              "p95": 8.191
+            },
+            "candidateSizes": {
+              "mean": 849.5364,
+              "p50": 1,
+              "p95": 7608,
+              "max": 7608
+            },
+            "outOfVocabularyGames": 100,
+            "gamesUsingFallback": 100,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 776,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.71,
+              "averageTurns": 8.71,
+              "decisionMilliseconds": {
+                "p50": 1.0041,
+                "p95": 8.2572
+              },
+              "candidateSizes": {
+                "mean": 962.0861,
+                "p50": 2,
+                "p95": 7608,
+                "max": 7608
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.86,
+              "averageTurns": 8.93,
+              "decisionMilliseconds": {
+                "p50": 1.0167,
+                "p95": 8.3429
+              },
+              "candidateSizes": {
+                "mean": 944.8533,
+                "p50": 1,
+                "p95": 7608,
+                "max": 7608
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 12,
+              "winRate": 0.12,
+              "averageMisses": 5.8,
+              "averageTurns": 11.89,
+              "decisionMilliseconds": {
+                "p50": 0.9209,
+                "p95": 8.0553
+              },
+              "candidateSizes": {
+                "mean": 695.5004,
+                "p50": 0,
+                "p95": 7608,
+                "max": 7608
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 776,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "11": {
+          "overall": {
+            "games": 300,
+            "wins": 213,
+            "winRate": 0.71,
+            "averageMisses": 2.35,
+            "averageTurns": 10.26,
+            "decisionMilliseconds": {
+              "p50": 0.6054,
+              "p95": 5.8885
+            },
+            "candidateSizes": {
+              "mean": 546.1205,
+              "p50": 1,
+              "p95": 5127,
+              "max": 5127
+            },
+            "outOfVocabularyGames": 100,
+            "gamesUsingFallback": 100,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 894,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.64,
+              "averageTurns": 8.97,
+              "decisionMilliseconds": {
+                "p50": 0.6412,
+                "p95": 5.8957
+              },
+              "candidateSizes": {
+                "mean": 629.2843,
+                "p50": 2,
+                "p95": 5127,
+                "max": 5127
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.63,
+              "averageTurns": 9.23,
+              "decisionMilliseconds": {
+                "p50": 0.6237,
+                "p95": 5.885
+              },
+              "candidateSizes": {
+                "mean": 603.5211,
+                "p50": 1,
+                "p95": 5127,
+                "max": 5127
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 13,
+              "winRate": 0.13,
+              "averageMisses": 5.78,
+              "averageTurns": 12.58,
+              "decisionMilliseconds": {
+                "p50": 0.5803,
+                "p95": 5.8844
+              },
+              "candidateSizes": {
+                "mean": 444.7067,
+                "p50": 0,
+                "p95": 5127,
+                "max": 5127
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 894,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "12": {
+          "overall": {
+            "games": 300,
+            "wins": 215,
+            "winRate": 0.7167,
+            "averageMisses": 2.1567,
+            "averageTurns": 10.57,
+            "decisionMilliseconds": {
+              "p50": 0.3691,
+              "p95": 3.9693
+            },
+            "candidateSizes": {
+              "mean": 325.6402,
+              "p50": 1,
+              "p95": 3195,
+              "max": 3195
+            },
+            "outOfVocabularyGames": 100,
+            "gamesUsingFallback": 100,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 961,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.3,
+              "averageTurns": 9.08,
+              "decisionMilliseconds": {
+                "p50": 0.3737,
+                "p95": 3.9485
+              },
+              "candidateSizes": {
+                "mean": 375.2687,
+                "p50": 1,
+                "p95": 3195,
+                "max": 3195
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.44,
+              "averageTurns": 9.56,
+              "decisionMilliseconds": {
+                "p50": 0.3705,
+                "p95": 3.9723
+              },
+              "candidateSizes": {
+                "mean": 360.4257,
+                "p50": 1,
+                "p95": 3195,
+                "max": 3195
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 15,
+              "winRate": 0.15,
+              "averageMisses": 5.73,
+              "averageTurns": 13.07,
+              "decisionMilliseconds": {
+                "p50": 0.3649,
+                "p95": 3.9789
+              },
+              "candidateSizes": {
+                "mean": 265.7184,
+                "p50": 0,
+                "p95": 3195,
+                "max": 3195
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 961,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "13": {
+          "overall": {
+            "games": 300,
+            "wins": 222,
+            "winRate": 0.74,
+            "averageMisses": 2.06,
+            "averageTurns": 10.9833,
+            "decisionMilliseconds": {
+              "p50": 0.2141,
+              "p95": 2.4163
+            },
+            "candidateSizes": {
+              "mean": 170.9633,
+              "p50": 1,
+              "p95": 1770,
+              "max": 1770
+            },
+            "outOfVocabularyGames": 100,
+            "gamesUsingFallback": 100,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 1047,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.25,
+              "averageTurns": 9.61,
+              "decisionMilliseconds": {
+                "p50": 0.2155,
+                "p95": 2.4202
+              },
+              "candidateSizes": {
+                "mean": 194.6774,
+                "p50": 1,
+                "p95": 1770,
+                "max": 1770
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.4,
+              "averageTurns": 9.77,
+              "decisionMilliseconds": {
+                "p50": 0.2299,
+                "p95": 2.416
+              },
+              "candidateSizes": {
+                "mean": 194.9652,
+                "p50": 1,
+                "p95": 1770,
+                "max": 1770
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 22,
+              "winRate": 0.22,
+              "averageMisses": 5.53,
+              "averageTurns": 13.57,
+              "decisionMilliseconds": {
+                "p50": 0.2056,
+                "p95": 2.4154
+              },
+              "candidateSizes": {
+                "mean": 136.8887,
+                "p50": 0,
+                "p95": 1770,
+                "max": 1770
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 1047,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "14": {
+          "overall": {
+            "games": 300,
+            "wins": 223,
+            "winRate": 0.7433,
+            "averageMisses": 1.87,
+            "averageTurns": 11.1633,
+            "decisionMilliseconds": {
+              "p50": 0.0938,
+              "p95": 1.1292
+            },
+            "candidateSizes": {
+              "mean": 73.1418,
+              "p50": 1,
+              "p95": 780,
+              "max": 780
+            },
+            "outOfVocabularyGames": 100,
+            "gamesUsingFallback": 100,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 1099,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.15,
+              "averageTurns": 10.05,
+              "decisionMilliseconds": {
+                "p50": 0.0926,
+                "p95": 1.1268
+              },
+              "candidateSizes": {
+                "mean": 81.6179,
+                "p50": 1,
+                "p95": 780,
+                "max": 780
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.22,
+              "averageTurns": 10.05,
+              "decisionMilliseconds": {
+                "p50": 0.1014,
+                "p95": 1.129
+              },
+              "candidateSizes": {
+                "mean": 81.7114,
+                "p50": 1,
+                "p95": 780,
+                "max": 780
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 23,
+              "winRate": 0.23,
+              "averageMisses": 5.24,
+              "averageTurns": 13.39,
+              "decisionMilliseconds": {
+                "p50": 0.0899,
+                "p95": 1.1321
+              },
+              "candidateSizes": {
+                "mean": 60.348,
+                "p50": 0,
+                "p95": 780,
+                "max": 780
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 1099,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "15": {
+          "overall": {
+            "games": 300,
+            "wins": 220,
+            "winRate": 0.7333,
+            "averageMisses": 1.9133,
+            "averageTurns": 11.4767,
+            "decisionMilliseconds": {
+              "p50": 0.0445,
+              "p95": 0.5573
+            },
+            "candidateSizes": {
+              "mean": 33.167,
+              "p50": 1,
+              "p95": 364,
+              "max": 364
+            },
+            "outOfVocabularyGames": 100,
+            "gamesUsingFallback": 100,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 1213,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.09,
+              "averageTurns": 10.15,
+              "decisionMilliseconds": {
+                "p50": 0.0468,
+                "p95": 0.5586
+              },
+              "candidateSizes": {
+                "mean": 37.7251,
+                "p50": 1,
+                "p95": 364,
+                "max": 364
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.07,
+              "averageTurns": 10.11,
+              "decisionMilliseconds": {
+                "p50": 0.0476,
+                "p95": 0.5576
+              },
+              "candidateSizes": {
+                "mean": 37.8971,
+                "p50": 1,
+                "p95": 364,
+                "max": 364
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 20,
+              "winRate": 0.2,
+              "averageMisses": 5.58,
+              "averageTurns": 14.17,
+              "decisionMilliseconds": {
+                "p50": 0.0421,
+                "p95": 0.5559
+              },
+              "candidateSizes": {
+                "mean": 26.5272,
+                "p50": 0,
+                "p95": 364,
+                "max": 364
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 100,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 1213,
+                "masterBugs": 0
+              }
+            }
+          }
+        }
+      },
+      "comparisonLengths5to9": {
+        "common": {
+          "games": 500,
+          "wins": 463,
+          "winRate": 0.926,
+          "averageMisses": 2.494,
+          "averageTurns": 8.428,
+          "decisionMilliseconds": {
+            "p50": 1.3696,
+            "p95": 9.4355
+          },
+          "candidateSizes": {
+            "mean": 1371.4093,
+            "p50": 21,
+            "p95": 9759,
+            "max": 11294
+          },
+          "outOfVocabularyGames": 0,
+          "gamesUsingFallback": 0,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "medium": {
+          "games": 500,
+          "wins": 459,
+          "winRate": 0.918,
+          "averageMisses": 2.468,
+          "averageTurns": 8.306,
+          "decisionMilliseconds": {
+            "p50": 1.3489,
+            "p95": 9.446
+          },
+          "candidateSizes": {
+            "mean": 1405.7135,
+            "p50": 16,
+            "p95": 9759,
+            "max": 11294
+          },
+          "outOfVocabularyGames": 0,
+          "gamesUsingFallback": 0,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "rare": {
+          "games": 500,
+          "wins": 64,
+          "winRate": 0.128,
+          "averageMisses": 5.726,
+          "averageTurns": 9.958,
+          "decisionMilliseconds": {
+            "p50": 1.2673,
+            "p95": 9.0805
+          },
+          "candidateSizes": {
+            "mean": 1182.4402,
+            "p50": 5,
+            "p95": 9759,
+            "max": 11294
+          },
+          "outOfVocabularyGames": 500,
+          "gamesUsingFallback": 418,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 1832,
+            "masterBugs": 0
+          }
+        }
+      }
+    },
+    "70": {
+      "vocabularyCounts": {
+        "3": 1496,
+        "4": 4248,
+        "5": 8554,
+        "6": 13982,
+        "7": 19394,
+        "8": 21446,
+        "9": 20451,
+        "10": 17045,
+        "11": 12527,
+        "12": 8448,
+        "13": 5271,
+        "14": 2990,
+        "15": 1696
+      },
+      "overall": {
+        "games": 3900,
+        "wins": 3353,
+        "winRate": 0.8597,
+        "averageMisses": 2.0538,
+        "averageTurns": 8.8451,
+        "decisionMilliseconds": {
+          "p50": 1.4877,
+          "p95": 11.0473
+        },
+        "candidateSizes": {
+          "mean": 1448.5958,
+          "p50": 5,
+          "p95": 12527,
+          "max": 21446
+        },
+        "outOfVocabularyGames": 0,
+        "gamesUsingFallback": 0,
+        "zeroCandidateEvents": {
+          "expectedLowTier": 0,
+          "masterBugs": 0
+        }
+      },
+      "byWordBand": {
+        "common": {
+          "games": 1300,
+          "wins": 1101,
+          "winRate": 0.8469,
+          "averageMisses": 2.0754,
+          "averageTurns": 8.8646,
+          "decisionMilliseconds": {
+            "p50": 1.4697,
+            "p95": 11.3506
+          },
+          "candidateSizes": {
+            "mean": 1435.8978,
+            "p50": 7,
+            "p95": 12527,
+            "max": 21446
+          },
+          "outOfVocabularyGames": 0,
+          "gamesUsingFallback": 0,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "medium": {
+          "games": 1300,
+          "wins": 1122,
+          "winRate": 0.8631,
+          "averageMisses": 2.0462,
+          "averageTurns": 8.8362,
+          "decisionMilliseconds": {
+            "p50": 1.4914,
+            "p95": 11.7016
+          },
+          "candidateSizes": {
+            "mean": 1451.5792,
+            "p50": 5,
+            "p95": 12527,
+            "max": 21446
+          },
+          "outOfVocabularyGames": 0,
+          "gamesUsingFallback": 0,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "rare": {
+          "games": 1300,
+          "wins": 1130,
+          "winRate": 0.8692,
+          "averageMisses": 2.04,
+          "averageTurns": 8.8346,
+          "decisionMilliseconds": {
+            "p50": 1.5052,
+            "p95": 10.6471
+          },
+          "candidateSizes": {
+            "mean": 1458.3529,
+            "p50": 5,
+            "p95": 12527,
+            "max": 21446
+          },
+          "outOfVocabularyGames": 0,
+          "gamesUsingFallback": 0,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "byLength": {
+        "3": {
+          "overall": {
+            "games": 300,
+            "wins": 83,
+            "winRate": 0.2767,
+            "averageMisses": 5.2833,
+            "averageTurns": 6.9667,
+            "decisionMilliseconds": {
+              "p50": 0.246,
+              "p95": 0.6329
+            },
+            "candidateSizes": {
+              "mean": 478.9593,
+              "p50": 143,
+              "p95": 1496,
+              "max": 1496
+            },
+            "outOfVocabularyGames": 0,
+            "gamesUsingFallback": 0,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 0,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 22,
+              "winRate": 0.22,
+              "averageMisses": 5.47,
+              "averageTurns": 7.25,
+              "decisionMilliseconds": {
+                "p50": 0.2311,
+                "p95": 0.6237
+              },
+              "candidateSizes": {
+                "mean": 448.3462,
+                "p50": 129,
+                "p95": 1496,
+                "max": 1496
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 30,
+              "winRate": 0.3,
+              "averageMisses": 5.17,
+              "averageTurns": 6.82,
+              "decisionMilliseconds": {
+                "p50": 0.2897,
+                "p95": 0.7609
+              },
+              "candidateSizes": {
+                "mean": 494.9619,
+                "p50": 167,
+                "p95": 1496,
+                "max": 1496
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 31,
+              "winRate": 0.31,
+              "averageMisses": 5.21,
+              "averageTurns": 6.83,
+              "decisionMilliseconds": {
+                "p50": 0.2409,
+                "p95": 0.5998
+              },
+              "candidateSizes": {
+                "mean": 495.4758,
+                "p50": 155,
+                "p95": 1496,
+                "max": 1496
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "4": {
+          "overall": {
+            "games": 300,
+            "wins": 125,
+            "winRate": 0.4167,
+            "averageMisses": 4.9533,
+            "averageTurns": 7.6533,
+            "decisionMilliseconds": {
+              "p50": 0.6057,
+              "p95": 2.065
+            },
+            "candidateSizes": {
+              "mean": 973.3807,
+              "p50": 142,
+              "p95": 4248,
+              "max": 4248
+            },
+            "outOfVocabularyGames": 0,
+            "gamesUsingFallback": 0,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 0,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 34,
+              "winRate": 0.34,
+              "averageMisses": 5.19,
+              "averageTurns": 7.89,
+              "decisionMilliseconds": {
+                "p50": 0.5926,
+                "p95": 2.0661
+              },
+              "candidateSizes": {
+                "mean": 975.6439,
+                "p50": 136,
+                "p95": 4248,
+                "max": 4248
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 44,
+              "winRate": 0.44,
+              "averageMisses": 4.86,
+              "averageTurns": 7.54,
+              "decisionMilliseconds": {
+                "p50": 0.6174,
+                "p95": 2.0663
+              },
+              "candidateSizes": {
+                "mean": 975.805,
+                "p50": 183,
+                "p95": 4248,
+                "max": 4248
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 47,
+              "winRate": 0.47,
+              "averageMisses": 4.81,
+              "averageTurns": 7.53,
+              "decisionMilliseconds": {
+                "p50": 0.6188,
+                "p95": 2.0635
+              },
+              "candidateSizes": {
+                "mean": 968.5817,
+                "p50": 142,
+                "p95": 4248,
+                "max": 4248
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "5": {
+          "overall": {
+            "games": 300,
+            "wins": 201,
+            "winRate": 0.67,
+            "averageMisses": 4.2533,
+            "averageTurns": 8.24,
+            "decisionMilliseconds": {
+              "p50": 1.1666,
+              "p95": 5.2479
+            },
+            "candidateSizes": {
+              "mean": 1557.8451,
+              "p50": 82,
+              "p95": 8554,
+              "max": 8554
+            },
+            "outOfVocabularyGames": 0,
+            "gamesUsingFallback": 0,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 0,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 65,
+              "winRate": 0.65,
+              "averageMisses": 4.41,
+              "averageTurns": 8.47,
+              "decisionMilliseconds": {
+                "p50": 1.1511,
+                "p95": 5.2501
+              },
+              "candidateSizes": {
+                "mean": 1479.1015,
+                "p50": 96,
+                "p95": 8554,
+                "max": 8554
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 69,
+              "winRate": 0.69,
+              "averageMisses": 4.09,
+              "averageTurns": 8.05,
+              "decisionMilliseconds": {
+                "p50": 1.1893,
+                "p95": 5.2484
+              },
+              "candidateSizes": {
+                "mean": 1602.1031,
+                "p50": 78,
+                "p95": 8554,
+                "max": 8554
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 67,
+              "winRate": 0.67,
+              "averageMisses": 4.26,
+              "averageTurns": 8.2,
+              "decisionMilliseconds": {
+                "p50": 1.1528,
+                "p95": 5.2442
+              },
+              "candidateSizes": {
+                "mean": 1595.7329,
+                "p50": 77,
+                "p95": 8554,
+                "max": 8554
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "6": {
+          "overall": {
+            "games": 300,
+            "wins": 257,
+            "winRate": 0.8567,
+            "averageMisses": 3.4367,
+            "averageTurns": 8.4667,
+            "decisionMilliseconds": {
+              "p50": 1.8662,
+              "p95": 9.9278
+            },
+            "candidateSizes": {
+              "mean": 2196.6378,
+              "p50": 48,
+              "p95": 13982,
+              "max": 13982
+            },
+            "outOfVocabularyGames": 0,
+            "gamesUsingFallback": 0,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 0,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 85,
+              "winRate": 0.85,
+              "averageMisses": 3.47,
+              "averageTurns": 8.68,
+              "decisionMilliseconds": {
+                "p50": 1.8708,
+                "p95": 9.9231
+              },
+              "candidateSizes": {
+                "mean": 2150.9816,
+                "p50": 58,
+                "p95": 13982,
+                "max": 13982
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 85,
+              "winRate": 0.85,
+              "averageMisses": 3.41,
+              "averageTurns": 8.23,
+              "decisionMilliseconds": {
+                "p50": 1.8673,
+                "p95": 9.9278
+              },
+              "candidateSizes": {
+                "mean": 2253.1531,
+                "p50": 37,
+                "p95": 13982,
+                "max": 13982
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 87,
+              "winRate": 0.87,
+              "averageMisses": 3.43,
+              "averageTurns": 8.49,
+              "decisionMilliseconds": {
+                "p50": 1.8601,
+                "p95": 9.9334
+              },
+              "candidateSizes": {
+                "mean": 2188.5312,
+                "p50": 44,
+                "p95": 13982,
+                "max": 13982
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "7": {
+          "overall": {
+            "games": 300,
+            "wins": 290,
+            "winRate": 0.9667,
+            "averageMisses": 2.5733,
+            "averageTurns": 8.62,
+            "decisionMilliseconds": {
+              "p50": 2.5853,
+              "p95": 15.5624
+            },
+            "candidateSizes": {
+              "mean": 2778.5526,
+              "p50": 24,
+              "p95": 19394,
+              "max": 19394
+            },
+            "outOfVocabularyGames": 0,
+            "gamesUsingFallback": 0,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 0,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 96,
+              "winRate": 0.96,
+              "averageMisses": 2.52,
+              "averageTurns": 8.57,
+              "decisionMilliseconds": {
+                "p50": 2.5153,
+                "p95": 15.4995
+              },
+              "candidateSizes": {
+                "mean": 2736.7351,
+                "p50": 32,
+                "p95": 19394,
+                "max": 19394
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 95,
+              "winRate": 0.95,
+              "averageMisses": 2.64,
+              "averageTurns": 8.7,
+              "decisionMilliseconds": {
+                "p50": 2.6214,
+                "p95": 15.559
+              },
+              "candidateSizes": {
+                "mean": 2795.6299,
+                "p50": 21,
+                "p95": 19394,
+                "max": 19394
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 99,
+              "winRate": 0.99,
+              "averageMisses": 2.56,
+              "averageTurns": 8.59,
+              "decisionMilliseconds": {
+                "p50": 2.5899,
+                "p95": 15.6522
+              },
+              "candidateSizes": {
+                "mean": 2802.9767,
+                "p50": 19,
+                "p95": 19394,
+                "max": 19394
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "8": {
+          "overall": {
+            "games": 300,
+            "wins": 297,
+            "winRate": 0.99,
+            "averageMisses": 1.9467,
+            "averageTurns": 8.6733,
+            "decisionMilliseconds": {
+              "p50": 2.8402,
+              "p95": 19.0322
+            },
+            "candidateSizes": {
+              "mean": 2923.9362,
+              "p50": 11,
+              "p95": 21446,
+              "max": 21446
+            },
+            "outOfVocabularyGames": 0,
+            "gamesUsingFallback": 0,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 0,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 99,
+              "winRate": 0.99,
+              "averageMisses": 1.79,
+              "averageTurns": 8.35,
+              "decisionMilliseconds": {
+                "p50": 2.8999,
+                "p95": 19.0379
+              },
+              "candidateSizes": {
+                "mean": 2986.0144,
+                "p50": 13,
+                "p95": 21446,
+                "max": 21446
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 99,
+              "winRate": 0.99,
+              "averageMisses": 1.93,
+              "averageTurns": 8.79,
+              "decisionMilliseconds": {
+                "p50": 2.781,
+                "p95": 19.0535
+              },
+              "candidateSizes": {
+                "mean": 2849.1422,
+                "p50": 9,
+                "p95": 21446,
+                "max": 21446
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 99,
+              "winRate": 0.99,
+              "averageMisses": 2.12,
+              "averageTurns": 8.88,
+              "decisionMilliseconds": {
+                "p50": 2.854,
+                "p95": 19.0143
+              },
+              "candidateSizes": {
+                "mean": 2939.5991,
+                "p50": 11,
+                "p95": 21446,
+                "max": 21446
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "9": {
+          "overall": {
+            "games": 300,
+            "wins": 300,
+            "winRate": 1,
+            "averageMisses": 1.3767,
+            "averageTurns": 8.6967,
+            "decisionMilliseconds": {
+              "p50": 3.4981,
+              "p95": 20.8607
+            },
+            "candidateSizes": {
+              "mean": 2655.0483,
+              "p50": 5,
+              "p95": 20451,
+              "max": 20451
+            },
+            "outOfVocabularyGames": 0,
+            "gamesUsingFallback": 0,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 0,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 1.31,
+              "averageTurns": 8.78,
+              "decisionMilliseconds": {
+                "p50": 2.6777,
+                "p95": 20.1594
+              },
+              "candidateSizes": {
+                "mean": 2605.3622,
+                "p50": 5,
+                "p95": 20451,
+                "max": 20451
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 1.53,
+              "averageTurns": 8.74,
+              "decisionMilliseconds": {
+                "p50": 4.9059,
+                "p95": 39.0029
+              },
+              "candidateSizes": {
+                "mean": 2650.762,
+                "p50": 5,
+                "p95": 20451,
+                "max": 20451
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 1.29,
+              "averageTurns": 8.57,
+              "decisionMilliseconds": {
+                "p50": 2.6733,
+                "p95": 20.2762
+              },
+              "candidateSizes": {
+                "mean": 2710.3232,
+                "p50": 4,
+                "p95": 20451,
+                "max": 20451
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "10": {
+          "overall": {
+            "games": 300,
+            "wins": 300,
+            "winRate": 1,
+            "averageMisses": 0.92,
+            "averageTurns": 8.9533,
+            "decisionMilliseconds": {
+              "p50": 2.3028,
+              "p95": 18.8976
+            },
+            "candidateSizes": {
+              "mean": 2092.1404,
+              "p50": 2,
+              "p95": 17045,
+              "max": 17045
+            },
+            "outOfVocabularyGames": 0,
+            "gamesUsingFallback": 0,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 0,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.89,
+              "averageTurns": 8.89,
+              "decisionMilliseconds": {
+                "p50": 2.2827,
+                "p95": 18.3234
+              },
+              "candidateSizes": {
+                "mean": 2109.7233,
+                "p50": 3,
+                "p95": 17045,
+                "max": 17045
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.96,
+              "averageTurns": 9.03,
+              "decisionMilliseconds": {
+                "p50": 2.3055,
+                "p95": 19.3974
+              },
+              "candidateSizes": {
+                "mean": 2092.0731,
+                "p50": 2,
+                "p95": 17045,
+                "max": 17045
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.91,
+              "averageTurns": 8.94,
+              "decisionMilliseconds": {
+                "p50": 2.3167,
+                "p95": 18.9705
+              },
+              "candidateSizes": {
+                "mean": 2074.7237,
+                "p50": 2,
+                "p95": 17045,
+                "max": 17045
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "11": {
+          "overall": {
+            "games": 300,
+            "wins": 300,
+            "winRate": 1,
+            "averageMisses": 0.7767,
+            "averageTurns": 9.2867,
+            "decisionMilliseconds": {
+              "p50": 1.706,
+              "p95": 15.1352
+            },
+            "candidateSizes": {
+              "mean": 1474.7042,
+              "p50": 2,
+              "p95": 12527,
+              "max": 12527
+            },
+            "outOfVocabularyGames": 0,
+            "gamesUsingFallback": 0,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 0,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.81,
+              "averageTurns": 9.14,
+              "decisionMilliseconds": {
+                "p50": 1.5809,
+                "p95": 14.705
+              },
+              "candidateSizes": {
+                "mean": 1508.4147,
+                "p50": 2,
+                "p95": 12527,
+                "max": 12527
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.87,
+              "averageTurns": 9.47,
+              "decisionMilliseconds": {
+                "p50": 1.5702,
+                "p95": 14.8343
+              },
+              "candidateSizes": {
+                "mean": 1437.0201,
+                "p50": 2,
+                "p95": 12527,
+                "max": 12527
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.65,
+              "averageTurns": 9.25,
+              "decisionMilliseconds": {
+                "p50": 1.9915,
+                "p95": 16.9747
+              },
+              "candidateSizes": {
+                "mean": 1479.9751,
+                "p50": 2,
+                "p95": 12527,
+                "max": 12527
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "12": {
+          "overall": {
+            "games": 300,
+            "wins": 300,
+            "winRate": 1,
+            "averageMisses": 0.47,
+            "averageTurns": 9.4833,
+            "decisionMilliseconds": {
+              "p50": 1.1904,
+              "p95": 11.3681
+            },
+            "candidateSizes": {
+              "mean": 953.0541,
+              "p50": 1,
+              "p95": 8448,
+              "max": 8448
+            },
+            "outOfVocabularyGames": 0,
+            "gamesUsingFallback": 0,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 0,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.53,
+              "averageTurns": 9.31,
+              "decisionMilliseconds": {
+                "p50": 1.4557,
+                "p95": 13.0689
+              },
+              "candidateSizes": {
+                "mean": 975.9721,
+                "p50": 1,
+                "p95": 8448,
+                "max": 8448
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.36,
+              "averageTurns": 9.48,
+              "decisionMilliseconds": {
+                "p50": 1.1174,
+                "p95": 11.0948
+              },
+              "candidateSizes": {
+                "mean": 946.8808,
+                "p50": 1,
+                "p95": 8448,
+                "max": 8448
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.52,
+              "averageTurns": 9.66,
+              "decisionMilliseconds": {
+                "p50": 1.0985,
+                "p95": 10.7903
+              },
+              "candidateSizes": {
+                "mean": 937.0248,
+                "p50": 1,
+                "p95": 8448,
+                "max": 8448
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "13": {
+          "overall": {
+            "games": 300,
+            "wins": 300,
+            "winRate": 1,
+            "averageMisses": 0.3467,
+            "averageTurns": 9.7167,
+            "decisionMilliseconds": {
+              "p50": 0.6456,
+              "p95": 7.2058
+            },
+            "candidateSizes": {
+              "mean": 576.2995,
+              "p50": 1,
+              "p95": 5271,
+              "max": 5271
+            },
+            "outOfVocabularyGames": 0,
+            "gamesUsingFallback": 0,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 0,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.29,
+              "averageTurns": 9.65,
+              "decisionMilliseconds": {
+                "p50": 0.6311,
+                "p95": 7.2083
+              },
+              "candidateSizes": {
+                "mean": 576.2394,
+                "p50": 1,
+                "p95": 5271,
+                "max": 5271
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.44,
+              "averageTurns": 9.81,
+              "decisionMilliseconds": {
+                "p50": 0.6754,
+                "p95": 7.2155
+              },
+              "candidateSizes": {
+                "mean": 578.9185,
+                "p50": 1,
+                "p95": 5271,
+                "max": 5271
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.31,
+              "averageTurns": 9.69,
+              "decisionMilliseconds": {
+                "p50": 0.6378,
+                "p95": 7.1779
+              },
+              "candidateSizes": {
+                "mean": 573.7079,
+                "p50": 1,
+                "p95": 5271,
+                "max": 5271
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "14": {
+          "overall": {
+            "games": 300,
+            "wins": 300,
+            "winRate": 1,
+            "averageMisses": 0.21,
+            "averageTurns": 10.0533,
+            "decisionMilliseconds": {
+              "p50": 0.3689,
+              "p95": 4.3727
+            },
+            "candidateSizes": {
+              "mean": 310.8757,
+              "p50": 1,
+              "p95": 2990,
+              "max": 2990
+            },
+            "outOfVocabularyGames": 0,
+            "gamesUsingFallback": 0,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 0,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.17,
+              "averageTurns": 10.07,
+              "decisionMilliseconds": {
+                "p50": 0.3758,
+                "p95": 4.4241
+              },
+              "candidateSizes": {
+                "mean": 310.1162,
+                "p50": 1,
+                "p95": 2990,
+                "max": 2990
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.25,
+              "averageTurns": 10.08,
+              "decisionMilliseconds": {
+                "p50": 0.3833,
+                "p95": 4.4444
+              },
+              "candidateSizes": {
+                "mean": 310.6022,
+                "p50": 1,
+                "p95": 2990,
+                "max": 2990
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.21,
+              "averageTurns": 10.01,
+              "decisionMilliseconds": {
+                "p50": 0.3509,
+                "p95": 4.3073
+              },
+              "candidateSizes": {
+                "mean": 311.9151,
+                "p50": 1,
+                "p95": 2990,
+                "max": 2990
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "15": {
+          "overall": {
+            "games": 300,
+            "wins": 300,
+            "winRate": 1,
+            "averageMisses": 0.1533,
+            "averageTurns": 10.1767,
+            "decisionMilliseconds": {
+              "p50": 0.2045,
+              "p95": 2.5666
+            },
+            "candidateSizes": {
+              "mean": 172.6142,
+              "p50": 1,
+              "p95": 1696,
+              "max": 1696
+            },
+            "outOfVocabularyGames": 0,
+            "gamesUsingFallback": 0,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 0,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.13,
+              "averageTurns": 10.19,
+              "decisionMilliseconds": {
+                "p50": 0.1941,
+                "p95": 2.5697
+              },
+              "candidateSizes": {
+                "mean": 171.8999,
+                "p50": 1,
+                "p95": 1696,
+                "max": 1696
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.09,
+              "averageTurns": 10.13,
+              "decisionMilliseconds": {
+                "p50": 0.205,
+                "p95": 2.5578
+              },
+              "candidateSizes": {
+                "mean": 172.6772,
+                "p50": 1,
+                "p95": 1696,
+                "max": 1696
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 100,
+              "winRate": 1,
+              "averageMisses": 0.24,
+              "averageTurns": 10.21,
+              "decisionMilliseconds": {
+                "p50": 0.2141,
+                "p95": 2.5709
+              },
+              "candidateSizes": {
+                "mean": 173.2644,
+                "p50": 1,
+                "p95": 1696,
+                "max": 1696
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            }
+          }
+        }
+      },
+      "comparisonLengths5to9": {
+        "common": {
+          "games": 500,
+          "wins": 445,
+          "winRate": 0.89,
+          "averageMisses": 2.7,
+          "averageTurns": 8.57,
+          "decisionMilliseconds": {
+            "p50": 2.3662,
+            "p95": 15.7221
+          },
+          "candidateSizes": {
+            "mean": 2391.1466,
+            "p50": 32,
+            "p95": 19394,
+            "max": 21446
+          },
+          "outOfVocabularyGames": 0,
+          "gamesUsingFallback": 0,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "medium": {
+          "games": 500,
+          "wins": 448,
+          "winRate": 0.896,
+          "averageMisses": 2.72,
+          "averageTurns": 8.502,
+          "decisionMilliseconds": {
+            "p50": 2.5934,
+            "p95": 18.7489
+          },
+          "candidateSizes": {
+            "mean": 2445.8711,
+            "p50": 23,
+            "p95": 19394,
+            "max": 21446
+          },
+          "outOfVocabularyGames": 0,
+          "gamesUsingFallback": 0,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "rare": {
+          "games": 500,
+          "wins": 452,
+          "winRate": 0.904,
+          "averageMisses": 2.732,
+          "averageTurns": 8.546,
+          "decisionMilliseconds": {
+            "p50": 2.3949,
+            "p95": 15.9503
+          },
+          "candidateSizes": {
+            "mean": 2459.0293,
+            "p50": 23,
+            "p95": 19394,
+            "max": 21446
+          },
+          "outOfVocabularyGames": 0,
+          "gamesUsingFallback": 0,
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      }
+    }
+  }
+}

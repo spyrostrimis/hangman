@@ -13,8 +13,8 @@ Status legend: ✅ done · ▶ next · ☐ planned · ◇ optional/later · **OP
 | MOB   | Phone pass on the existing pages, **before** the Illucia page (see §7)                                                                                                              | ▶                                                                                         |
 | I2 | Word-list build tool | ✅ `2fad03f` — pinned, filtered, reproducible ESDB vocabulary |
 | I3 | Solver + benchmark harness | ✅ implemented and locally verified — [results](../../tools/ILLUCIA-SOLVER.md#recorded-i3-result); count retained |
-| I3b | Zero-candidate fallback + tier benchmark | ▶ next |
-| I4    | Illucia page v1                                                                                                                                                                     | ☐ after MOB, I3, I3b                                                                      |
+| I3b | Zero-candidate fallback + tier benchmark | ✅ implemented and locally verified — [11,700-game results](../../tools/ILLUCIA-TIERS.md#recorded-result-and-tier-decision) |
+| I4 | Illucia page v1 | ▶ next, after confirming MOB completion |
 | I5    | Workers AI commentary                                                                                                                                                               | ◇                                                                                         |
 | I6    | Text-to-speech toggle                                                                                                                                                               | ◇                                                                                         |
 | I7    | "Which Illucia can beat your word?" race experiment                                                                                                                                 | ◇                                                                                         |
@@ -27,7 +27,7 @@ History note: `238db29` shipped a complete, unplanned Illucia (unfiltered ENABLE
 2. **V1 policy is candidate hit-counting.** Guess the unused letter that appears in the most remaining candidate words. Entropy, risk-adjusted entropy and lookahead must _beat it in the committed benchmark_ before replacing it (§3.3). Changed from ChatGPT's first proposal, on measured evidence.
 3. **Uniform candidate weights.** The player picks the word to beat her, so "prefer common words" is the wrong assumption.
 4. **A `chooseLetter(publicState, knowledge)` boundary from day one.** A `toPublicState(round)` function is the only way into it, so no strategy can ever receive the answer.
-5. **Difficulty is vocabulary tiers:** Apprentice / Scholar / Master. Different tiers know different amounts of English; they never make deliberately random mistakes. **Locked only after I3b** measures the tiers with the explicit zero-candidate fallback (§3.2). Master may ship first.
+5. **Difficulty is vocabulary tiers:** Apprentice ≤35 / Scholar ≤50 / Master ≤70. I3b measured and retained these ceilings with own-tier zero-candidate fallback ([results](../../tools/ILLUCIA-TIERS.md#recorded-result-and-tier-decision)). Tiers differ in vocabulary, never deliberate random mistakes; success need not increase for every individual word.
 6. **Word list: ESDB/SCOWL v2** (successor to SCOWL). "Is this an accepted word?" and "does this Illucia know it?" are separate questions with separate names in the code.
 7. **Profanity filtering is mandatory**, both from ESDB's own flags and the LDNOOBW blocklist. It happens at build time and matches normalised _whole words_ only (no Scunthorpe problem).
 8. **Words are 3–15 letters.** 20 is revisited only after the board passes the phone check.
@@ -94,6 +94,18 @@ Tier effect (5–9-letter words, ETAOIN fallback, so optimistic for the player):
 Random mistakes don't work as difficulty. 50% random picks among the top five letters still win ~99% of 8–10-letter words.
 
 Literature: dictionary solvers reach 99–100% on 10+ letters ([sharkfeeder](http://www.sharkfeeder.com/hangman/)); on words _outside_ the dictionary they drop to ~18%, and n-gram/neural models reach ~50–60% on the Trexquant benchmark ([example](https://github.com/techbhuvi04/Hangman-Challenge)). Neither is needed for v1: every accepted word is in the full Master lexicon, while lower tiers handle out-of-tier words with the explicit zero-candidate fallback in §3.2 .
+
+### I3b measured tier results
+
+The committed ESDB v2 benchmark uses the actual own-tier fallback and supersedes the preliminary SCOWL v1 / ETAOIN estimates above. Across the same 500 sampled 5–9-letter words per band, Illucia wins:
+
+| Player word band | Apprentice ≤35 | Scholar ≤50 | Master ≤70 |
+| --- | --- | --- | --- |
+| Common (=35) | 92.8% | 92.6% | 89.0% |
+| Less common (40–50) | 9.8% | 91.8% | 89.6% |
+| Rare (55–70) | 11.0% | 12.8% | 90.4% |
+
+The full 3–15-letter run covers 11,700 games, with zero Master or in-tier candidate failures. [Method, limitations, and full results](../../tools/ILLUCIA-TIERS.md).
 
 ### 3.4 Benchmark harness (I3, committed in `tools/`)
 

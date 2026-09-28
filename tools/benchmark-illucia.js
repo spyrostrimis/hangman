@@ -28,7 +28,8 @@ export function sampleWords(entries, count, seed) {
 }
 
 export function simulate(word, knowledge, policy, clock = () => performance.now()) {
-  if (knowledge.maxSize === 70 && !knowledge.words.includes(word)) {
+  const inVocabulary = knowledge.words.includes(word);
+  if (knowledge.maxSize === 70 && !inVocabulary) {
     throw new Error('Master invariant: answer is outside the vocabulary.');
   }
   let round = createRound(word);
@@ -40,13 +41,17 @@ export function simulate(word, knowledge, policy, clock = () => performance.now(
     const decision = analyzeDecision(state, knowledge, policy);
     milliseconds.push(clock() - start);
     candidateSizes.push(decision.candidateCount);
+    if (decision.candidateCount === 0 && inVocabulary) {
+      throw new Error('Known-word invariant: zero candidates for an in-tier answer.');
+    }
     const next = applyGuess(round, decision.letter);
     if (next === round || next.guesses.length > 26) throw new Error('Solver made no legal progress.');
     round = next;
   }
   return { word, won: getRoundStatus(round) === 'solved',
     misses: getIncorrectGuesses(round).length, turns: round.guesses.length,
-    guesses: round.guesses.join(''), milliseconds, candidateSizes };
+    guesses: round.guesses.join(''), milliseconds, candidateSizes,
+    maxSize: knowledge.maxSize, inVocabulary };
 }
 
 function quantile(values, fraction) {
@@ -67,32 +72,48 @@ export function summarize(games) {
     averageTurns: rounded(mean(games.map(game => game.turns))),
     decisionMilliseconds: { p50: rounded(quantile(times, 0.5)), p95: rounded(quantile(times, 0.95)) },
     candidateSizes: { mean: rounded(mean(sizes)), p50: quantile(sizes, 0.5), p95: quantile(sizes, 0.95), max: sizes.reduce((a, b) => Math.max(a, b), 0) },
-    zeroCandidateEvents: { expectedLowTier: 0, masterBugs: sizes.filter(size => size === 0).length },
+    outOfVocabularyGames: games.filter(game => !game.inVocabulary).length,
+    gamesUsingFallback: games.filter(game => game.candidateSizes.includes(0)).length,
+    zeroCandidateEvents: {
+      expectedLowTier: games.filter(game => game.maxSize < 70).reduce((total, game) =>
+        total + game.candidateSizes.filter(size => size === 0).length, 0),
+      masterBugs: games.filter(game => game.maxSize === 70).reduce((total, game) =>
+        total + game.candidateSizes.filter(size => size === 0).length, 0),
+    },
   };
+}
+
+export async function loadLexicons() {
+  const dataRoot = resolve(ROOT, 'client/public/illucia/words');
+  const manifestBytes = await readFile(resolve(dataRoot, 'manifest.json'));
+  const manifest = JSON.parse(manifestBytes);
+  const entriesByLength = {};
+  for (let length = 3; length <= 15; length++) {
+    const bytes = await readFile(resolve(dataRoot, `${length}.txt`));
+    if (createHash('sha256').update(bytes).digest('hex') !== manifest.files[`${length}.txt`].sha256) {
+      throw new Error(`Vocabulary checksum mismatch for length ${length}.`);
+    }
+    entriesByLength[length] = parseLexicon(bytes.toString('utf8'), length);
+  }
+  return { entriesByLength, manifestSha256: createHash('sha256').update(manifestBytes).digest('hex') };
 }
 
 export async function benchmark({ perLength = 250, seed = DEFAULT_SEED, policies = POLICIES } = {}) {
   if (!Number.isInteger(perLength) || perLength < 1) throw new Error('perLength must be a positive integer.');
   if (!Number.isInteger(seed) || seed < 0 || seed > 0xffffffff) throw new Error('seed must be an unsigned 32-bit integer.');
   if (!policies.length || policies.some(policy => !POLICIES.includes(policy))) throw new Error('Unknown policies.');
-  const dataRoot = resolve(ROOT, 'client/public/illucia/words');
-  const manifestBytes = await readFile(resolve(dataRoot, 'manifest.json'));
-  const manifest = JSON.parse(manifestBytes);
+  const { entriesByLength, manifestSha256 } = await loadLexicons();
   const samples = {};
   const knowledgeByLength = {};
   for (let length = 3; length <= 15; length++) {
-    const bytes = await readFile(resolve(dataRoot, `${length}.txt`));
-    if (createHash('sha256').update(bytes).digest('hex') !== manifest.files[`${length}.txt`].sha256) {
-      throw new Error(`Vocabulary checksum mismatch for length ${length}.`);
-    }
-    const entries = parseLexicon(bytes.toString('utf8'), length);
+    const entries = entriesByLength[length];
     samples[length] = sampleWords(entries, perLength, seed + length);
     knowledgeByLength[length] = createKnowledge(entries);
   }
   const report = {
     configuration: { seed, perLength, maxSize: 70, policies,
       baseline: 'count', riskExponent: 2, lookahead: { depth: 2, maxCandidates: 12, maxMissesLeft: 2 },
-      manifestSha256: createHash('sha256').update(manifestBytes).digest('hex'),
+      manifestSha256,
       sampleSha256: createHash('sha256').update(JSON.stringify(samples)).digest('hex') },
     environment: { node: process.version, platform: process.platform, architecture: process.arch },
     results: {},
