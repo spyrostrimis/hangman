@@ -32,6 +32,8 @@ Use Node.js 24. From `client/`, run `npm ci` and `npm run dev`. The Vite server 
 - Illucia vocabulary: `python tools/build_illucia_words.py --download`, then
   `python tools/build_illucia_words.py --check`. Python 3.12+; pinned inputs,
   offline rebuilds, filtering policy and tests: [build documentation](tools/ILLUCIA-WORDS.md).
+- Illucia solver benchmark: `node tools/benchmark-illucia.js`.
+  [Policies, public-state boundary and reproducibility](tools/ILLUCIA-SOLVER.md).
 
 Pages builds the `client/` directory with `npm run build` and publishes `dist/`. The Worker is deployed separately. Pushes to `main` publish the frontend; secrets and build output must never be committed.
 

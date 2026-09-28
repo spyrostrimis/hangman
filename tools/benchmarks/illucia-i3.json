@@ -1,0 +1,4135 @@
+{
+  "configuration": {
+    "seed": 20260928,
+    "perLength": 250,
+    "maxSize": 70,
+    "policies": [
+      "frequency",
+      "count",
+      "entropy",
+      "risk",
+      "lookahead"
+    ],
+    "baseline": "count",
+    "riskExponent": 2,
+    "lookahead": {
+      "depth": 2,
+      "maxCandidates": 12,
+      "maxMissesLeft": 2
+    },
+    "manifestSha256": "94f3a973eeb9b76e5cea718bd03fbcd1b5db263d22d88155e58bf5ca6ba56d72",
+    "sampleSha256": "85de144de4bdf2e5b9ccdf0c619485cb472c54c5fb24c7044f7d99e54a1b973c"
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32",
+    "architecture": "x64"
+  },
+  "results": {
+    "frequency": {
+      "overall": {
+        "games": 3250,
+        "wins": 475,
+        "winRate": 0.1462,
+        "averageMisses": 5.6723,
+        "averageTurns": 10.9668,
+        "decisionMilliseconds": {
+          "p50": 1.2098,
+          "p95": 5.5825
+        },
+        "candidateSizes": {
+          "mean": 1181.9039,
+          "p50": 2,
+          "p95": 8448,
+          "max": 21446
+        },
+        "zeroCandidateEvents": {
+          "expectedLowTier": 0,
+          "masterBugs": 0
+        }
+      },
+      "byLength": {
+        "3": {
+          "games": 250,
+          "wins": 25,
+          "winRate": 0.1,
+          "averageMisses": 5.756,
+          "averageTurns": 6.992,
+          "decisionMilliseconds": {
+            "p50": 0.206,
+            "p95": 0.2799
+          },
+          "candidateSizes": {
+            "mean": 500.3598,
+            "p50": 203,
+            "p95": 1496,
+            "max": 1496
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "4": {
+          "games": 250,
+          "wins": 24,
+          "winRate": 0.096,
+          "averageMisses": 5.768,
+          "averageTurns": 7.82,
+          "decisionMilliseconds": {
+            "p50": 0.5671,
+            "p95": 0.9771
+          },
+          "candidateSizes": {
+            "mean": 968.8762,
+            "p50": 180,
+            "p95": 4248,
+            "max": 4248
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "5": {
+          "games": 250,
+          "wins": 16,
+          "winRate": 0.064,
+          "averageMisses": 5.856,
+          "averageTurns": 8.616,
+          "decisionMilliseconds": {
+            "p50": 1.1618,
+            "p95": 2.4207
+          },
+          "candidateSizes": {
+            "mean": 1517.9294,
+            "p50": 78,
+            "p95": 8554,
+            "max": 8554
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "6": {
+          "games": 250,
+          "wins": 22,
+          "winRate": 0.088,
+          "averageMisses": 5.748,
+          "averageTurns": 9.12,
+          "decisionMilliseconds": {
+            "p50": 1.8633,
+            "p95": 4.4121
+          },
+          "candidateSizes": {
+            "mean": 2057.0825,
+            "p50": 41,
+            "p95": 13982,
+            "max": 13982
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "7": {
+          "games": 250,
+          "wins": 17,
+          "winRate": 0.068,
+          "averageMisses": 5.844,
+          "averageTurns": 9.776,
+          "decisionMilliseconds": {
+            "p50": 2.5325,
+            "p95": 6.9219
+          },
+          "candidateSizes": {
+            "mean": 2522.829,
+            "p50": 19,
+            "p95": 19394,
+            "max": 19394
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "8": {
+          "games": 250,
+          "wins": 30,
+          "winRate": 0.12,
+          "averageMisses": 5.744,
+          "averageTurns": 10.36,
+          "decisionMilliseconds": {
+            "p50": 2.7083,
+            "p95": 8.5127
+          },
+          "candidateSizes": {
+            "mean": 2459.0274,
+            "p50": 6,
+            "p95": 21446,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "9": {
+          "games": 250,
+          "wins": 31,
+          "winRate": 0.124,
+          "averageMisses": 5.752,
+          "averageTurns": 11.336,
+          "decisionMilliseconds": {
+            "p50": 2.5092,
+            "p95": 9.0222
+          },
+          "candidateSizes": {
+            "mean": 2062.7064,
+            "p50": 2,
+            "p95": 20451,
+            "max": 20451
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "10": {
+          "games": 250,
+          "wins": 37,
+          "winRate": 0.148,
+          "averageMisses": 5.652,
+          "averageTurns": 11.812,
+          "decisionMilliseconds": {
+            "p50": 2.006,
+            "p95": 8.0969
+          },
+          "candidateSizes": {
+            "mean": 1600.1355,
+            "p50": 1,
+            "p95": 17045,
+            "max": 17045
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "11": {
+          "games": 250,
+          "wins": 40,
+          "winRate": 0.16,
+          "averageMisses": 5.664,
+          "averageTurns": 12.476,
+          "decisionMilliseconds": {
+            "p50": 1.4484,
+            "p95": 6.4258
+          },
+          "candidateSizes": {
+            "mean": 1092.7759,
+            "p50": 1,
+            "p95": 12527,
+            "max": 12527
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "12": {
+          "games": 250,
+          "wins": 41,
+          "winRate": 0.164,
+          "averageMisses": 5.676,
+          "averageTurns": 12.892,
+          "decisionMilliseconds": {
+            "p50": 0.9619,
+            "p95": 4.6059
+          },
+          "candidateSizes": {
+            "mean": 701.524,
+            "p50": 1,
+            "p95": 8448,
+            "max": 8448
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "13": {
+          "games": 250,
+          "wins": 53,
+          "winRate": 0.212,
+          "averageMisses": 5.516,
+          "averageTurns": 13.232,
+          "decisionMilliseconds": {
+            "p50": 0.6005,
+            "p95": 3.1526
+          },
+          "candidateSizes": {
+            "mean": 423.1986,
+            "p50": 1,
+            "p95": 5271,
+            "max": 5271
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "14": {
+          "games": 250,
+          "wins": 68,
+          "winRate": 0.272,
+          "averageMisses": 5.376,
+          "averageTurns": 13.9,
+          "decisionMilliseconds": {
+            "p50": 0.3432,
+            "p95": 1.9084
+          },
+          "candidateSizes": {
+            "mean": 224.758,
+            "p50": 1,
+            "p95": 2990,
+            "max": 2990
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "15": {
+          "games": 250,
+          "wins": 71,
+          "winRate": 0.284,
+          "averageMisses": 5.388,
+          "averageTurns": 14.236,
+          "decisionMilliseconds": {
+            "p50": 0.1915,
+            "p95": 1.1497
+          },
+          "candidateSizes": {
+            "mean": 123.891,
+            "p50": 1,
+            "p95": 1696,
+            "max": 1696
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "byDistinctLetters": {
+        "1": {
+          "games": 1,
+          "wins": 1,
+          "winRate": 1,
+          "averageMisses": 0,
+          "averageTurns": 1,
+          "decisionMilliseconds": {
+            "p50": 0.2757,
+            "p95": 0.2757
+          },
+          "candidateSizes": {
+            "mean": 1496,
+            "p50": 1496,
+            "p95": 1496,
+            "max": 1496
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "2": {
+          "games": 32,
+          "wins": 6,
+          "winRate": 0.1875,
+          "averageMisses": 5.4063,
+          "averageTurns": 6.375,
+          "decisionMilliseconds": {
+            "p50": 0.2397,
+            "p95": 0.5773
+          },
+          "candidateSizes": {
+            "mean": 661.75,
+            "p50": 385,
+            "p95": 1496,
+            "max": 4248
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "3": {
+          "games": 281,
+          "wins": 30,
+          "winRate": 0.1068,
+          "averageMisses": 5.7616,
+          "averageTurns": 7.1281,
+          "decisionMilliseconds": {
+            "p50": 0.2383,
+            "p95": 0.8711
+          },
+          "candidateSizes": {
+            "mean": 638.4109,
+            "p50": 195,
+            "p95": 2652,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "4": {
+          "games": 305,
+          "wins": 23,
+          "winRate": 0.0754,
+          "averageMisses": 5.8262,
+          "averageTurns": 8.0557,
+          "decisionMilliseconds": {
+            "p50": 0.7582,
+            "p95": 2.3622
+          },
+          "candidateSizes": {
+            "mean": 1249.9565,
+            "p50": 128,
+            "p95": 5651,
+            "max": 19394
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "5": {
+          "games": 356,
+          "wins": 32,
+          "winRate": 0.0899,
+          "averageMisses": 5.7781,
+          "averageTurns": 8.8539,
+          "decisionMilliseconds": {
+            "p50": 1.7417,
+            "p95": 5.1656
+          },
+          "candidateSizes": {
+            "mean": 1993.5063,
+            "p50": 58,
+            "p95": 13982,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "6": {
+          "games": 375,
+          "wins": 33,
+          "winRate": 0.088,
+          "averageMisses": 5.8027,
+          "averageTurns": 9.8427,
+          "decisionMilliseconds": {
+            "p50": 2.3628,
+            "p95": 7.0098
+          },
+          "candidateSizes": {
+            "mean": 2225.4061,
+            "p50": 11,
+            "p95": 19394,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "7": {
+          "games": 433,
+          "wins": 62,
+          "winRate": 0.1432,
+          "averageMisses": 5.6628,
+          "averageTurns": 10.8453,
+          "decisionMilliseconds": {
+            "p50": 2.3361,
+            "p95": 8.2024
+          },
+          "candidateSizes": {
+            "mean": 1932.1339,
+            "p50": 3,
+            "p95": 19394,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "8": {
+          "games": 429,
+          "wins": 70,
+          "winRate": 0.1632,
+          "averageMisses": 5.6457,
+          "averageTurns": 11.8648,
+          "decisionMilliseconds": {
+            "p50": 1.7819,
+            "p95": 6.7572
+          },
+          "candidateSizes": {
+            "mean": 1299.3413,
+            "p50": 1,
+            "p95": 12527,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "9": {
+          "games": 469,
+          "wins": 86,
+          "winRate": 0.1834,
+          "averageMisses": 5.6162,
+          "averageTurns": 12.9701,
+          "decisionMilliseconds": {
+            "p50": 1.0525,
+            "p95": 4.6167
+          },
+          "candidateSizes": {
+            "mean": 744.5558,
+            "p50": 1,
+            "p95": 5271,
+            "max": 20451
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "10": {
+          "games": 346,
+          "wins": 79,
+          "winRate": 0.2283,
+          "averageMisses": 5.4827,
+          "averageTurns": 14.0231,
+          "decisionMilliseconds": {
+            "p50": 0.5835,
+            "p95": 2.9407
+          },
+          "candidateSizes": {
+            "mean": 425.1129,
+            "p50": 1,
+            "p95": 2990,
+            "max": 17045
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "11": {
+          "games": 165,
+          "wins": 29,
+          "winRate": 0.1758,
+          "averageMisses": 5.5939,
+          "averageTurns": 14.9152,
+          "decisionMilliseconds": {
+            "p50": 0.4078,
+            "p95": 1.9445
+          },
+          "candidateSizes": {
+            "mean": 289.4909,
+            "p50": 1,
+            "p95": 1696,
+            "max": 12527
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "12": {
+          "games": 48,
+          "wins": 17,
+          "winRate": 0.3542,
+          "averageMisses": 5.4167,
+          "averageTurns": 16.25,
+          "decisionMilliseconds": {
+            "p50": 0.2592,
+            "p95": 1.1537
+          },
+          "candidateSizes": {
+            "mean": 165.1718,
+            "p50": 1,
+            "p95": 1696,
+            "max": 8448
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "13": {
+          "games": 9,
+          "wins": 6,
+          "winRate": 0.6667,
+          "averageMisses": 4.6667,
+          "averageTurns": 17.2222,
+          "decisionMilliseconds": {
+            "p50": 0.256,
+            "p95": 1.1554
+          },
+          "candidateSizes": {
+            "mean": 127.0581,
+            "p50": 1,
+            "p95": 1696,
+            "max": 2990
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "14": {
+          "games": 1,
+          "wins": 1,
+          "winRate": 1,
+          "averageMisses": 3,
+          "averageTurns": 17,
+          "decisionMilliseconds": {
+            "p50": 0.1914,
+            "p95": 1.2116
+          },
+          "candidateSizes": {
+            "mean": 108.5294,
+            "p50": 1,
+            "p95": 1696,
+            "max": 1696
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "byVocabularySize": {
+        "common": {
+          "games": 849,
+          "wins": 94,
+          "winRate": 0.1107,
+          "averageMisses": 5.7621,
+          "averageTurns": 9.9282,
+          "decisionMilliseconds": {
+            "p50": 1.5903,
+            "p95": 5.9256
+          },
+          "candidateSizes": {
+            "mean": 1459.4914,
+            "p50": 15,
+            "p95": 12527,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "medium": {
+          "games": 686,
+          "wins": 95,
+          "winRate": 0.1385,
+          "averageMisses": 5.6953,
+          "averageTurns": 10.5991,
+          "decisionMilliseconds": {
+            "p50": 1.2807,
+            "p95": 5.6076
+          },
+          "candidateSizes": {
+            "mean": 1245.2026,
+            "p50": 3,
+            "p95": 8554,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "rare": {
+          "games": 1715,
+          "wins": 286,
+          "winRate": 0.1668,
+          "averageMisses": 5.6187,
+          "averageTurns": 11.628,
+          "decisionMilliseconds": {
+            "p50": 1.1157,
+            "p95": 5.47
+          },
+          "candidateSizes": {
+            "mean": 1041.4952,
+            "p50": 1,
+            "p95": 8448,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "hardestWords": [
+        {
+          "word": "phenylketonuria",
+          "won": false,
+          "misses": 6,
+          "turns": 18,
+          "guesses": "ietnsaorlcpmuhdgyb",
+          "size": 70
+        },
+        {
+          "word": "vermiculations",
+          "won": false,
+          "misses": 6,
+          "turns": 18,
+          "guesses": "ietnsarolcpumdhgyb",
+          "size": 70
+        },
+        {
+          "word": "claustrophobes",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ietnsarolcpumdhgy",
+          "size": 70
+        },
+        {
+          "word": "computerization",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ietnsaorlcpmuhdgy",
+          "size": 50
+        },
+        {
+          "word": "convertiplanes",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ietnsarolcpumdhgy",
+          "size": 70
+        },
+        {
+          "word": "discomfortable",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ietnsarolcpumdhgy",
+          "size": 70
+        },
+        {
+          "word": "emulsification",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ietnsarolcpumdhgy",
+          "size": 50
+        },
+        {
+          "word": "equiponderances",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ietnsaorlcpmuhdgy",
+          "size": 70
+        },
+        {
+          "word": "histocompatible",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ietnsaorlcpmuhdgy",
+          "size": 70
+        },
+        {
+          "word": "impersonalizing",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ietnsaorlcpmuhdgy",
+          "size": 70
+        },
+        {
+          "word": "insupportable",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ientsarolcpmugdhy",
+          "size": 50
+        },
+        {
+          "word": "laughingstock",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ientsarolcpmugdhy",
+          "size": 35
+        },
+        {
+          "word": "nonprejudicial",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ietnsarolcpumdhgy",
+          "size": 60
+        },
+        {
+          "word": "quadruplication",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ietnsaorlcpmuhdgy",
+          "size": 60
+        },
+        {
+          "word": "rebroadcasting",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ietnsarolcpumdhgy",
+          "size": 60
+        },
+        {
+          "word": "secularization",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ietnsarolcpumdhgy",
+          "size": 50
+        },
+        {
+          "word": "upperclasswoman",
+          "won": false,
+          "misses": 6,
+          "turns": 17,
+          "guesses": "ietnsaorlcpmuhdgy",
+          "size": 60
+        },
+        {
+          "word": "aluminiferous",
+          "won": false,
+          "misses": 6,
+          "turns": 16,
+          "guesses": "ientsarolcpmugdh",
+          "size": 70
+        },
+        {
+          "word": "anfractuosities",
+          "won": false,
+          "misses": 6,
+          "turns": 16,
+          "guesses": "ietnsaorlcpmuhdg",
+          "size": 70
+        },
+        {
+          "word": "astronautically",
+          "won": false,
+          "misses": 6,
+          "turns": 16,
+          "guesses": "ietnsaorlcpmuhdg",
+          "size": 70
+        }
+      ]
+    },
+    "count": {
+      "overall": {
+        "games": 3250,
+        "wins": 2769,
+        "winRate": 0.852,
+        "averageMisses": 2.0865,
+        "averageTurns": 8.8342,
+        "decisionMilliseconds": {
+          "p50": 1.4457,
+          "p95": 10.6544
+        },
+        "candidateSizes": {
+          "mean": 1455.2969,
+          "p50": 5,
+          "p95": 12527,
+          "max": 21446
+        },
+        "zeroCandidateEvents": {
+          "expectedLowTier": 0,
+          "masterBugs": 0
+        }
+      },
+      "byLength": {
+        "3": {
+          "games": 250,
+          "wins": 56,
+          "winRate": 0.224,
+          "averageMisses": 5.38,
+          "averageTurns": 6.888,
+          "decisionMilliseconds": {
+            "p50": 0.2572,
+            "p95": 0.6092
+          },
+          "candidateSizes": {
+            "mean": 496.7369,
+            "p50": 183,
+            "p95": 1496,
+            "max": 1496
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "4": {
+          "games": 250,
+          "wins": 105,
+          "winRate": 0.42,
+          "averageMisses": 5.012,
+          "averageTurns": 7.744,
+          "decisionMilliseconds": {
+            "p50": 0.6034,
+            "p95": 2.07
+          },
+          "candidateSizes": {
+            "mean": 958.5527,
+            "p50": 136,
+            "p95": 4248,
+            "max": 4248
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "5": {
+          "games": 250,
+          "wins": 165,
+          "winRate": 0.66,
+          "averageMisses": 4.28,
+          "averageTurns": 8.236,
+          "decisionMilliseconds": {
+            "p50": 1.2073,
+            "p95": 5.3001
+          },
+          "candidateSizes": {
+            "mean": 1573.2016,
+            "p50": 75,
+            "p95": 8554,
+            "max": 8554
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "6": {
+          "games": 250,
+          "wins": 212,
+          "winRate": 0.848,
+          "averageMisses": 3.376,
+          "averageTurns": 8.404,
+          "decisionMilliseconds": {
+            "p50": 1.995,
+            "p95": 10.256
+          },
+          "candidateSizes": {
+            "mean": 2203.9248,
+            "p50": 50,
+            "p95": 13982,
+            "max": 13982
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "7": {
+          "games": 250,
+          "wins": 234,
+          "winRate": 0.936,
+          "averageMisses": 2.816,
+          "averageTurns": 8.764,
+          "decisionMilliseconds": {
+            "p50": 2.6693,
+            "p95": 15.6243
+          },
+          "candidateSizes": {
+            "mean": 2764.9261,
+            "p50": 28,
+            "p95": 19394,
+            "max": 19394
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "8": {
+          "games": 250,
+          "wins": 247,
+          "winRate": 0.988,
+          "averageMisses": 1.916,
+          "averageTurns": 8.508,
+          "decisionMilliseconds": {
+            "p50": 3.0754,
+            "p95": 19.2244
+          },
+          "candidateSizes": {
+            "mean": 2978.67,
+            "p50": 11,
+            "p95": 21446,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "9": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 1.404,
+          "averageTurns": 8.784,
+          "decisionMilliseconds": {
+            "p50": 2.7357,
+            "p95": 20.1486
+          },
+          "candidateSizes": {
+            "mean": 2642.556,
+            "p50": 5,
+            "p95": 20451,
+            "max": 20451
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "10": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.976,
+          "averageTurns": 8.828,
+          "decisionMilliseconds": {
+            "p50": 2.1814,
+            "p95": 18.2557
+          },
+          "candidateSizes": {
+            "mean": 2137.5659,
+            "p50": 2,
+            "p95": 17045,
+            "max": 17045
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "11": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.66,
+          "averageTurns": 9.224,
+          "decisionMilliseconds": {
+            "p50": 1.5975,
+            "p95": 14.4437
+          },
+          "candidateSizes": {
+            "mean": 1478.0091,
+            "p50": 2,
+            "p95": 12527,
+            "max": 12527
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "12": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.532,
+          "averageTurns": 9.504,
+          "decisionMilliseconds": {
+            "p50": 1.0331,
+            "p95": 10.4859
+          },
+          "candidateSizes": {
+            "mean": 951.1507,
+            "p50": 1,
+            "p95": 8448,
+            "max": 8448
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "13": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.376,
+          "averageTurns": 9.62,
+          "decisionMilliseconds": {
+            "p50": 0.6666,
+            "p95": 7.366
+          },
+          "candidateSizes": {
+            "mean": 581.7634,
+            "p50": 1,
+            "p95": 5271,
+            "max": 5271
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "14": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.204,
+          "averageTurns": 10.02,
+          "decisionMilliseconds": {
+            "p50": 0.364,
+            "p95": 4.2967
+          },
+          "candidateSizes": {
+            "mean": 311.5269,
+            "p50": 1,
+            "p95": 2990,
+            "max": 2990
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "15": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.192,
+          "averageTurns": 10.32,
+          "decisionMilliseconds": {
+            "p50": 0.2072,
+            "p95": 2.6104
+          },
+          "candidateSizes": {
+            "mean": 170.6349,
+            "p50": 1,
+            "p95": 1696,
+            "max": 1696
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "byDistinctLetters": {
+        "1": {
+          "games": 1,
+          "wins": 1,
+          "winRate": 1,
+          "averageMisses": 0,
+          "averageTurns": 1,
+          "decisionMilliseconds": {
+            "p50": 0.5992,
+            "p95": 0.5992
+          },
+          "candidateSizes": {
+            "mean": 1496,
+            "p50": 1496,
+            "p95": 1496,
+            "max": 1496
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "2": {
+          "games": 32,
+          "wins": 14,
+          "winRate": 0.4375,
+          "averageMisses": 4.6875,
+          "averageTurns": 5.9375,
+          "decisionMilliseconds": {
+            "p50": 0.3705,
+            "p95": 1.1614
+          },
+          "candidateSizes": {
+            "mean": 716.4211,
+            "p50": 583,
+            "p95": 1589,
+            "max": 4248
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "3": {
+          "games": 281,
+          "wins": 79,
+          "winRate": 0.2811,
+          "averageMisses": 5.242,
+          "averageTurns": 6.9644,
+          "decisionMilliseconds": {
+            "p50": 0.359,
+            "p95": 1.5297
+          },
+          "candidateSizes": {
+            "mean": 639.0761,
+            "p50": 167,
+            "p95": 2652,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "4": {
+          "games": 305,
+          "wins": 170,
+          "winRate": 0.5574,
+          "averageMisses": 4.4885,
+          "averageTurns": 7.6885,
+          "decisionMilliseconds": {
+            "p50": 0.7923,
+            "p95": 5.1532
+          },
+          "candidateSizes": {
+            "mean": 1285.0712,
+            "p50": 100,
+            "p95": 5651,
+            "max": 19394
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "5": {
+          "games": 356,
+          "wins": 263,
+          "winRate": 0.7388,
+          "averageMisses": 3.6994,
+          "averageTurns": 8.1517,
+          "decisionMilliseconds": {
+            "p50": 1.782,
+            "p95": 10.1709
+          },
+          "candidateSizes": {
+            "mean": 2138.7233,
+            "p50": 61,
+            "p95": 13982,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "6": {
+          "games": 375,
+          "wins": 350,
+          "winRate": 0.9333,
+          "averageMisses": 2.512,
+          "averageTurns": 8.3573,
+          "decisionMilliseconds": {
+            "p50": 2.517,
+            "p95": 17.2689
+          },
+          "candidateSizes": {
+            "mean": 2595.4917,
+            "p50": 21,
+            "p95": 19394,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "7": {
+          "games": 433,
+          "wins": 426,
+          "winRate": 0.9838,
+          "averageMisses": 1.5935,
+          "averageTurns": 8.5681,
+          "decisionMilliseconds": {
+            "p50": 2.5476,
+            "p95": 18.851
+          },
+          "candidateSizes": {
+            "mean": 2429.8057,
+            "p50": 6,
+            "p95": 20451,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "8": {
+          "games": 429,
+          "wins": 428,
+          "winRate": 0.9977,
+          "averageMisses": 0.9837,
+          "averageTurns": 8.9767,
+          "decisionMilliseconds": {
+            "p50": 1.8669,
+            "p95": 17.9573
+          },
+          "candidateSizes": {
+            "mean": 1708.0712,
+            "p50": 2,
+            "p95": 17045,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "9": {
+          "games": 469,
+          "wins": 469,
+          "winRate": 1,
+          "averageMisses": 0.5629,
+          "averageTurns": 9.5629,
+          "decisionMilliseconds": {
+            "p50": 1.1065,
+            "p95": 10.4102
+          },
+          "candidateSizes": {
+            "mean": 1008.2299,
+            "p50": 1,
+            "p95": 8448,
+            "max": 20451
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "10": {
+          "games": 346,
+          "wins": 346,
+          "winRate": 1,
+          "averageMisses": 0.3179,
+          "averageTurns": 10.3179,
+          "decisionMilliseconds": {
+            "p50": 0.6989,
+            "p95": 7.0951
+          },
+          "candidateSizes": {
+            "mean": 577.7754,
+            "p50": 1,
+            "p95": 5271,
+            "max": 17045
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "11": {
+          "games": 165,
+          "wins": 165,
+          "winRate": 1,
+          "averageMisses": 0.2061,
+          "averageTurns": 11.2061,
+          "decisionMilliseconds": {
+            "p50": 0.4523,
+            "p95": 4.2684
+          },
+          "candidateSizes": {
+            "mean": 385.6901,
+            "p50": 1,
+            "p95": 2990,
+            "max": 12527
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "12": {
+          "games": 48,
+          "wins": 48,
+          "winRate": 1,
+          "averageMisses": 0.2083,
+          "averageTurns": 12.2083,
+          "decisionMilliseconds": {
+            "p50": 0.2742,
+            "p95": 2.6513
+          },
+          "candidateSizes": {
+            "mean": 219.8055,
+            "p50": 1,
+            "p95": 1696,
+            "max": 8448
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "13": {
+          "games": 9,
+          "wins": 9,
+          "winRate": 1,
+          "averageMisses": 0,
+          "averageTurns": 13,
+          "decisionMilliseconds": {
+            "p50": 0.2687,
+            "p95": 2.7092
+          },
+          "candidateSizes": {
+            "mean": 168.2393,
+            "p50": 1,
+            "p95": 1696,
+            "max": 2990
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "14": {
+          "games": 1,
+          "wins": 1,
+          "winRate": 1,
+          "averageMisses": 0,
+          "averageTurns": 14,
+          "decisionMilliseconds": {
+            "p50": 0.1475,
+            "p95": 2.7424
+          },
+          "candidateSizes": {
+            "mean": 131.5714,
+            "p50": 1,
+            "p95": 1696,
+            "max": 1696
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "byVocabularySize": {
+        "common": {
+          "games": 849,
+          "wins": 632,
+          "winRate": 0.7444,
+          "averageMisses": 2.9847,
+          "averageTurns": 8.5018,
+          "decisionMilliseconds": {
+            "p50": 1.6689,
+            "p95": 10.9704
+          },
+          "candidateSizes": {
+            "mean": 1685.5035,
+            "p50": 26,
+            "p95": 13982,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "medium": {
+          "games": 686,
+          "wins": 568,
+          "winRate": 0.828,
+          "averageMisses": 2.3251,
+          "averageTurns": 8.6516,
+          "decisionMilliseconds": {
+            "p50": 1.4677,
+            "p95": 10.558
+          },
+          "candidateSizes": {
+            "mean": 1511.6099,
+            "p50": 8,
+            "p95": 12527,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "rare": {
+          "games": 1715,
+          "wins": 1569,
+          "winRate": 0.9149,
+          "averageMisses": 1.5464,
+          "averageTurns": 9.0717,
+          "decisionMilliseconds": {
+            "p50": 1.2864,
+            "p95": 10.6399
+          },
+          "candidateSizes": {
+            "mean": 1327.0125,
+            "p50": 2,
+            "p95": 8554,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "hardestWords": [
+        {
+          "word": "jumpier",
+          "won": false,
+          "misses": 6,
+          "turns": 12,
+          "guesses": "esriaoumpbdh",
+          "size": 35
+        },
+        {
+          "word": "sharing",
+          "won": false,
+          "misses": 6,
+          "turns": 12,
+          "guesses": "eaingsthdkmp",
+          "size": 35
+        },
+        {
+          "word": "shaving",
+          "won": false,
+          "misses": 6,
+          "turns": 12,
+          "guesses": "eaingsthdkmp",
+          "size": 35
+        },
+        {
+          "word": "unhooked",
+          "won": false,
+          "misses": 6,
+          "turns": 12,
+          "guesses": "esrdnulaiokc",
+          "size": 35
+        },
+        {
+          "word": "witched",
+          "won": false,
+          "misses": 6,
+          "turns": 12,
+          "guesses": "esrdlnhctaib",
+          "size": 35
+        },
+        {
+          "word": "bulkier",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "esriaoumkcn",
+          "size": 35
+        },
+        {
+          "word": "hurtling",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eingaoulmds",
+          "size": 35
+        },
+        {
+          "word": "mights",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eaistghbdfl",
+          "size": 65
+        },
+        {
+          "word": "patters",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "esranlmgtbh",
+          "size": 35
+        },
+        {
+          "word": "singer",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eraitngbflm",
+          "size": 35
+        },
+        {
+          "word": "tanker",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eralndgkbch",
+          "size": 35
+        },
+        {
+          "word": "winder",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eraitngdbcf",
+          "size": 60
+        },
+        {
+          "word": "zapping",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eainglrspcd",
+          "size": 40
+        },
+        {
+          "word": "betony",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "ersngadoyl",
+          "size": 70
+        },
+        {
+          "word": "bonnets",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "esrtluagop",
+          "size": 35
+        },
+        {
+          "word": "bucket",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "erdslntckp",
+          "size": 35
+        },
+        {
+          "word": "burns",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "easoiurbgk",
+          "size": 35
+        },
+        {
+          "word": "caned",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "esrdapwmcg",
+          "size": 35
+        },
+        {
+          "word": "chavs",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "easrlhcdmo",
+          "size": 70
+        },
+        {
+          "word": "cocking",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "eaingolsrp",
+          "size": 35
+        }
+      ]
+    },
+    "entropy": {
+      "overall": {
+        "games": 3250,
+        "wins": 2762,
+        "winRate": 0.8498,
+        "averageMisses": 2.1468,
+        "averageTurns": 8.8575,
+        "decisionMilliseconds": {
+          "p50": 1.4521,
+          "p95": 13.387
+        },
+        "candidateSizes": {
+          "mean": 1449.6646,
+          "p50": 4,
+          "p95": 12527,
+          "max": 21446
+        },
+        "zeroCandidateEvents": {
+          "expectedLowTier": 0,
+          "masterBugs": 0
+        }
+      },
+      "byLength": {
+        "3": {
+          "games": 250,
+          "wins": 56,
+          "winRate": 0.224,
+          "averageMisses": 5.436,
+          "averageTurns": 6.964,
+          "decisionMilliseconds": {
+            "p50": 0.2747,
+            "p95": 1.0002
+          },
+          "candidateSizes": {
+            "mean": 490.838,
+            "p50": 183,
+            "p95": 1496,
+            "max": 1496
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "4": {
+          "games": 250,
+          "wins": 101,
+          "winRate": 0.404,
+          "averageMisses": 5.012,
+          "averageTurns": 7.608,
+          "decisionMilliseconds": {
+            "p50": 0.6668,
+            "p95": 3.3403
+          },
+          "candidateSizes": {
+            "mean": 976.7156,
+            "p50": 147,
+            "p95": 4248,
+            "max": 4248
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "5": {
+          "games": 250,
+          "wins": 176,
+          "winRate": 0.704,
+          "averageMisses": 4.232,
+          "averageTurns": 8.184,
+          "decisionMilliseconds": {
+            "p50": 1.2458,
+            "p95": 7.6015
+          },
+          "candidateSizes": {
+            "mean": 1576.9756,
+            "p50": 72,
+            "p95": 8554,
+            "max": 8554
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "6": {
+          "games": 250,
+          "wins": 206,
+          "winRate": 0.824,
+          "averageMisses": 3.384,
+          "averageTurns": 8.24,
+          "decisionMilliseconds": {
+            "p50": 1.9505,
+            "p95": 13.0542
+          },
+          "candidateSizes": {
+            "mean": 2246.6413,
+            "p50": 49,
+            "p95": 13982,
+            "max": 13982
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "7": {
+          "games": 250,
+          "wins": 226,
+          "winRate": 0.904,
+          "averageMisses": 2.92,
+          "averageTurns": 8.696,
+          "decisionMilliseconds": {
+            "p50": 2.7119,
+            "p95": 20.7885
+          },
+          "candidateSizes": {
+            "mean": 2786.736,
+            "p50": 24,
+            "p95": 19394,
+            "max": 19394
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "8": {
+          "games": 250,
+          "wins": 247,
+          "winRate": 0.988,
+          "averageMisses": 1.992,
+          "averageTurns": 8.568,
+          "decisionMilliseconds": {
+            "p50": 2.9241,
+            "p95": 25.1708
+          },
+          "candidateSizes": {
+            "mean": 2950.0514,
+            "p50": 8,
+            "p95": 21446,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "9": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 1.48,
+          "averageTurns": 8.86,
+          "decisionMilliseconds": {
+            "p50": 2.5789,
+            "p95": 25.0597
+          },
+          "candidateSizes": {
+            "mean": 2611.5747,
+            "p50": 3,
+            "p95": 20451,
+            "max": 20451
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "10": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 1.052,
+          "averageTurns": 8.904,
+          "decisionMilliseconds": {
+            "p50": 2.7475,
+            "p95": 23.2811
+          },
+          "candidateSizes": {
+            "mean": 2118.3288,
+            "p50": 1,
+            "p95": 17045,
+            "max": 17045
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "11": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.76,
+          "averageTurns": 9.324,
+          "decisionMilliseconds": {
+            "p50": 1.5767,
+            "p95": 16.8939
+          },
+          "candidateSizes": {
+            "mean": 1460.6422,
+            "p50": 1,
+            "p95": 12527,
+            "max": 12527
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "12": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.608,
+          "averageTurns": 9.58,
+          "decisionMilliseconds": {
+            "p50": 1.0465,
+            "p95": 12.6404
+          },
+          "candidateSizes": {
+            "mean": 943.0731,
+            "p50": 1,
+            "p95": 8448,
+            "max": 8448
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "13": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.472,
+          "averageTurns": 9.716,
+          "decisionMilliseconds": {
+            "p50": 0.7159,
+            "p95": 9.4552
+          },
+          "candidateSizes": {
+            "mean": 575.317,
+            "p50": 1,
+            "p95": 5271,
+            "max": 5271
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "14": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.324,
+          "averageTurns": 10.14,
+          "decisionMilliseconds": {
+            "p50": 0.3896,
+            "p95": 5.9013
+          },
+          "candidateSizes": {
+            "mean": 310.3168,
+            "p50": 1,
+            "p95": 2990,
+            "max": 2990
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "15": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.236,
+          "averageTurns": 10.364,
+          "decisionMilliseconds": {
+            "p50": 0.2016,
+            "p95": 3.5567
+          },
+          "candidateSizes": {
+            "mean": 169.7159,
+            "p50": 1,
+            "p95": 1696,
+            "max": 1696
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "byDistinctLetters": {
+        "1": {
+          "games": 1,
+          "wins": 1,
+          "winRate": 1,
+          "averageMisses": 0,
+          "averageTurns": 1,
+          "decisionMilliseconds": {
+            "p50": 0.9472,
+            "p95": 0.9472
+          },
+          "candidateSizes": {
+            "mean": 1496,
+            "p50": 1496,
+            "p95": 1496,
+            "max": 1496
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "2": {
+          "games": 32,
+          "wins": 14,
+          "winRate": 0.4375,
+          "averageMisses": 4.5938,
+          "averageTurns": 5.8438,
+          "decisionMilliseconds": {
+            "p50": 0.4743,
+            "p95": 1.5701
+          },
+          "candidateSizes": {
+            "mean": 712.4064,
+            "p50": 583,
+            "p95": 1589,
+            "max": 4248
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "3": {
+          "games": 281,
+          "wins": 78,
+          "winRate": 0.2776,
+          "averageMisses": 5.2598,
+          "averageTurns": 6.968,
+          "decisionMilliseconds": {
+            "p50": 0.3684,
+            "p95": 2.1737
+          },
+          "candidateSizes": {
+            "mean": 638.3248,
+            "p50": 155,
+            "p95": 2652,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "4": {
+          "games": 305,
+          "wins": 165,
+          "winRate": 0.541,
+          "averageMisses": 4.541,
+          "averageTurns": 7.6262,
+          "decisionMilliseconds": {
+            "p50": 0.9062,
+            "p95": 7.0621
+          },
+          "candidateSizes": {
+            "mean": 1296.6655,
+            "p50": 113,
+            "p95": 6876,
+            "max": 19394
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "5": {
+          "games": 356,
+          "wins": 272,
+          "winRate": 0.764,
+          "averageMisses": 3.6629,
+          "averageTurns": 8.0843,
+          "decisionMilliseconds": {
+            "p50": 1.77,
+            "p95": 12.9896
+          },
+          "candidateSizes": {
+            "mean": 2150.9722,
+            "p50": 61,
+            "p95": 13982,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "6": {
+          "games": 375,
+          "wins": 341,
+          "winRate": 0.9093,
+          "averageMisses": 2.6053,
+          "averageTurns": 8.328,
+          "decisionMilliseconds": {
+            "p50": 2.5011,
+            "p95": 21.5122
+          },
+          "candidateSizes": {
+            "mean": 2604.6859,
+            "p50": 19,
+            "p95": 19394,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "7": {
+          "games": 433,
+          "wins": 425,
+          "winRate": 0.9815,
+          "averageMisses": 1.6744,
+          "averageTurns": 8.6005,
+          "decisionMilliseconds": {
+            "p50": 2.5698,
+            "p95": 24.1076
+          },
+          "candidateSizes": {
+            "mean": 2413.3606,
+            "p50": 4,
+            "p95": 20451,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "8": {
+          "games": 429,
+          "wins": 428,
+          "winRate": 0.9977,
+          "averageMisses": 1.0117,
+          "averageTurns": 8.9977,
+          "decisionMilliseconds": {
+            "p50": 1.8823,
+            "p95": 21.7924
+          },
+          "candidateSizes": {
+            "mean": 1701.0552,
+            "p50": 1,
+            "p95": 17045,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "9": {
+          "games": 469,
+          "wins": 469,
+          "winRate": 1,
+          "averageMisses": 0.693,
+          "averageTurns": 9.693,
+          "decisionMilliseconds": {
+            "p50": 1.117,
+            "p95": 13.3146
+          },
+          "candidateSizes": {
+            "mean": 997.0774,
+            "p50": 1,
+            "p95": 8448,
+            "max": 20451
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "10": {
+          "games": 346,
+          "wins": 346,
+          "winRate": 1,
+          "averageMisses": 0.3902,
+          "averageTurns": 10.3902,
+          "decisionMilliseconds": {
+            "p50": 0.7028,
+            "p95": 9.2302
+          },
+          "candidateSizes": {
+            "mean": 572.59,
+            "p50": 1,
+            "p95": 5271,
+            "max": 17045
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "11": {
+          "games": 165,
+          "wins": 165,
+          "winRate": 1,
+          "averageMisses": 0.3212,
+          "averageTurns": 11.3212,
+          "decisionMilliseconds": {
+            "p50": 0.4497,
+            "p95": 5.7051
+          },
+          "candidateSizes": {
+            "mean": 380.651,
+            "p50": 1,
+            "p95": 2990,
+            "max": 12527
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "12": {
+          "games": 48,
+          "wins": 48,
+          "winRate": 1,
+          "averageMisses": 0.2917,
+          "averageTurns": 12.2917,
+          "decisionMilliseconds": {
+            "p50": 0.2751,
+            "p95": 3.6049
+          },
+          "candidateSizes": {
+            "mean": 218.1475,
+            "p50": 1,
+            "p95": 1696,
+            "max": 8448
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "13": {
+          "games": 9,
+          "wins": 9,
+          "winRate": 1,
+          "averageMisses": 0,
+          "averageTurns": 13,
+          "decisionMilliseconds": {
+            "p50": 0.2862,
+            "p95": 3.5182
+          },
+          "candidateSizes": {
+            "mean": 168.8547,
+            "p50": 1,
+            "p95": 1696,
+            "max": 2990
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "14": {
+          "games": 1,
+          "wins": 1,
+          "winRate": 1,
+          "averageMisses": 0,
+          "averageTurns": 14,
+          "decisionMilliseconds": {
+            "p50": 0.1666,
+            "p95": 3.6346
+          },
+          "candidateSizes": {
+            "mean": 131.5714,
+            "p50": 1,
+            "p95": 1696,
+            "max": 1696
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "byVocabularySize": {
+        "common": {
+          "games": 849,
+          "wins": 632,
+          "winRate": 0.7444,
+          "averageMisses": 3.0554,
+          "averageTurns": 8.4982,
+          "decisionMilliseconds": {
+            "p50": 1.6856,
+            "p95": 13.5326
+          },
+          "candidateSizes": {
+            "mean": 1685.2643,
+            "p50": 23,
+            "p95": 13982,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "medium": {
+          "games": 686,
+          "wins": 571,
+          "winRate": 0.8324,
+          "averageMisses": 2.3717,
+          "averageTurns": 8.691,
+          "decisionMilliseconds": {
+            "p50": 1.4929,
+            "p95": 13.6919
+          },
+          "candidateSizes": {
+            "mean": 1502.3905,
+            "p50": 6,
+            "p95": 12527,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "rare": {
+          "games": 1715,
+          "wins": 1559,
+          "winRate": 0.909,
+          "averageMisses": 1.607,
+          "averageTurns": 9.102,
+          "decisionMilliseconds": {
+            "p50": 1.2939,
+            "p95": 13.2693
+          },
+          "candidateSizes": {
+            "mean": 1320.6318,
+            "p50": 1,
+            "p95": 8554,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "hardestWords": [
+        {
+          "word": "jumpier",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "erislnmbudh",
+          "size": 35
+        },
+        {
+          "word": "patters",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "esrltuabhmn",
+          "size": 35
+        },
+        {
+          "word": "burns",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "eaoislrubg",
+          "size": 35
+        },
+        {
+          "word": "clits",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "eaoistruch",
+          "size": 50
+        },
+        {
+          "word": "dorps",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "eaoslnrdik",
+          "size": 70
+        },
+        {
+          "word": "famous",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "eanrstumbc",
+          "size": 35
+        },
+        {
+          "word": "gougers",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "esrltnpbga",
+          "size": 50
+        },
+        {
+          "word": "jinking",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "eaoigtlnkf",
+          "size": 60
+        },
+        {
+          "word": "laxer",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "eratlcgkms",
+          "size": 35
+        },
+        {
+          "word": "lazes",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "ersamlcdkn",
+          "size": 50
+        },
+        {
+          "word": "mewing",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "ernsdtgkwh",
+          "size": 35
+        },
+        {
+          "word": "milts",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "eaoisltghj",
+          "size": 60
+        },
+        {
+          "word": "moues",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "ersalonmdk",
+          "size": 60
+        },
+        {
+          "word": "named",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "ersdoapwmf",
+          "size": 35
+        },
+        {
+          "word": "pashes",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "ershabcdfg",
+          "size": 70
+        },
+        {
+          "word": "sharing",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "easntplhdk",
+          "size": 35
+        },
+        {
+          "word": "shaving",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "easntplhdk",
+          "size": 35
+        },
+        {
+          "word": "strove",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "eiaonsrbdk",
+          "size": 35
+        },
+        {
+          "word": "tripping",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "eaoistnlgc",
+          "size": 35
+        },
+        {
+          "word": "vowed",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "ersdotlwbc",
+          "size": 35
+        }
+      ]
+    },
+    "risk": {
+      "overall": {
+        "games": 3250,
+        "wins": 2777,
+        "winRate": 0.8545,
+        "averageMisses": 2.0615,
+        "averageTurns": 8.8111,
+        "decisionMilliseconds": {
+          "p50": 1.4385,
+          "p95": 13.1631
+        },
+        "candidateSizes": {
+          "mean": 1457.616,
+          "p50": 5,
+          "p95": 12527,
+          "max": 21446
+        },
+        "zeroCandidateEvents": {
+          "expectedLowTier": 0,
+          "masterBugs": 0
+        }
+      },
+      "byLength": {
+        "3": {
+          "games": 250,
+          "wins": 56,
+          "winRate": 0.224,
+          "averageMisses": 5.38,
+          "averageTurns": 6.892,
+          "decisionMilliseconds": {
+            "p50": 0.276,
+            "p95": 0.9818
+          },
+          "candidateSizes": {
+            "mean": 496.4544,
+            "p50": 183,
+            "p95": 1496,
+            "max": 1496
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "4": {
+          "games": 250,
+          "wins": 101,
+          "winRate": 0.404,
+          "averageMisses": 4.956,
+          "averageTurns": 7.656,
+          "decisionMilliseconds": {
+            "p50": 0.6603,
+            "p95": 3.3308
+          },
+          "candidateSizes": {
+            "mean": 969.5084,
+            "p50": 138,
+            "p95": 4248,
+            "max": 4248
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "5": {
+          "games": 250,
+          "wins": 172,
+          "winRate": 0.688,
+          "averageMisses": 4.196,
+          "averageTurns": 8.196,
+          "decisionMilliseconds": {
+            "p50": 1.2191,
+            "p95": 7.3866
+          },
+          "candidateSizes": {
+            "mean": 1576.3065,
+            "p50": 70,
+            "p95": 8554,
+            "max": 8554
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "6": {
+          "games": 250,
+          "wins": 217,
+          "winRate": 0.868,
+          "averageMisses": 3.292,
+          "averageTurns": 8.344,
+          "decisionMilliseconds": {
+            "p50": 1.9453,
+            "p95": 13.3665
+          },
+          "candidateSizes": {
+            "mean": 2217.2071,
+            "p50": 47,
+            "p95": 13982,
+            "max": 13982
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "7": {
+          "games": 250,
+          "wins": 236,
+          "winRate": 0.944,
+          "averageMisses": 2.752,
+          "averageTurns": 8.696,
+          "decisionMilliseconds": {
+            "p50": 2.6845,
+            "p95": 20.5652
+          },
+          "candidateSizes": {
+            "mean": 2782.8767,
+            "p50": 28,
+            "p95": 19394,
+            "max": 19394
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "8": {
+          "games": 250,
+          "wins": 245,
+          "winRate": 0.98,
+          "averageMisses": 1.916,
+          "averageTurns": 8.496,
+          "decisionMilliseconds": {
+            "p50": 2.83,
+            "p95": 24.3873
+          },
+          "candidateSizes": {
+            "mean": 2978.1304,
+            "p50": 10,
+            "p95": 21446,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "9": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 1.372,
+          "averageTurns": 8.752,
+          "decisionMilliseconds": {
+            "p50": 2.6963,
+            "p95": 24.7689
+          },
+          "candidateSizes": {
+            "mean": 2651.8478,
+            "p50": 4,
+            "p95": 20451,
+            "max": 20451
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "10": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.968,
+          "averageTurns": 8.82,
+          "decisionMilliseconds": {
+            "p50": 2.1914,
+            "p95": 22.3866
+          },
+          "candidateSizes": {
+            "mean": 2138.4685,
+            "p50": 1,
+            "p95": 17045,
+            "max": 17045
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "11": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.66,
+          "averageTurns": 9.224,
+          "decisionMilliseconds": {
+            "p50": 1.5563,
+            "p95": 16.8111
+          },
+          "candidateSizes": {
+            "mean": 1476.4909,
+            "p50": 1,
+            "p95": 12527,
+            "max": 12527
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "12": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.54,
+          "averageTurns": 9.512,
+          "decisionMilliseconds": {
+            "p50": 1.027,
+            "p95": 12.0551
+          },
+          "candidateSizes": {
+            "mean": 949.8701,
+            "p50": 1,
+            "p95": 8448,
+            "max": 8448
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "13": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.36,
+          "averageTurns": 9.604,
+          "decisionMilliseconds": {
+            "p50": 0.6513,
+            "p95": 9.3853
+          },
+          "candidateSizes": {
+            "mean": 582.1874,
+            "p50": 1,
+            "p95": 5271,
+            "max": 5271
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "14": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.208,
+          "averageTurns": 10.024,
+          "decisionMilliseconds": {
+            "p50": 0.361,
+            "p95": 5.6864
+          },
+          "candidateSizes": {
+            "mean": 311.2602,
+            "p50": 1,
+            "p95": 2990,
+            "max": 2990
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "15": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.2,
+          "averageTurns": 10.328,
+          "decisionMilliseconds": {
+            "p50": 0.1978,
+            "p95": 3.4847
+          },
+          "candidateSizes": {
+            "mean": 170.3323,
+            "p50": 1,
+            "p95": 1696,
+            "max": 1696
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "byDistinctLetters": {
+        "1": {
+          "games": 1,
+          "wins": 1,
+          "winRate": 1,
+          "averageMisses": 0,
+          "averageTurns": 1,
+          "decisionMilliseconds": {
+            "p50": 0.9961,
+            "p95": 0.9961
+          },
+          "candidateSizes": {
+            "mean": 1496,
+            "p50": 1496,
+            "p95": 1496,
+            "max": 1496
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "2": {
+          "games": 32,
+          "wins": 14,
+          "winRate": 0.4375,
+          "averageMisses": 4.6563,
+          "averageTurns": 5.9063,
+          "decisionMilliseconds": {
+            "p50": 0.4973,
+            "p95": 1.7227
+          },
+          "candidateSizes": {
+            "mean": 720.3439,
+            "p50": 583,
+            "p95": 1589,
+            "max": 4248
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "3": {
+          "games": 281,
+          "wins": 78,
+          "winRate": 0.2776,
+          "averageMisses": 5.2171,
+          "averageTurns": 6.9324,
+          "decisionMilliseconds": {
+            "p50": 0.3708,
+            "p95": 2.1764
+          },
+          "candidateSizes": {
+            "mean": 641.7295,
+            "p50": 167,
+            "p95": 2652,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "4": {
+          "games": 305,
+          "wins": 166,
+          "winRate": 0.5443,
+          "averageMisses": 4.4689,
+          "averageTurns": 7.6361,
+          "decisionMilliseconds": {
+            "p50": 0.9434,
+            "p95": 7.0923
+          },
+          "candidateSizes": {
+            "mean": 1292.8205,
+            "p50": 104,
+            "p95": 6876,
+            "max": 19394
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "5": {
+          "games": 356,
+          "wins": 276,
+          "winRate": 0.7753,
+          "averageMisses": 3.5674,
+          "averageTurns": 8.0843,
+          "decisionMilliseconds": {
+            "p50": 1.7604,
+            "p95": 13.123
+          },
+          "candidateSizes": {
+            "mean": 2151.9288,
+            "p50": 61,
+            "p95": 13982,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "6": {
+          "games": 375,
+          "wins": 347,
+          "winRate": 0.9253,
+          "averageMisses": 2.464,
+          "averageTurns": 8.2827,
+          "decisionMilliseconds": {
+            "p50": 2.4879,
+            "p95": 21.4438
+          },
+          "candidateSizes": {
+            "mean": 2617.8986,
+            "p50": 21,
+            "p95": 19394,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "7": {
+          "games": 433,
+          "wins": 429,
+          "winRate": 0.9908,
+          "averageMisses": 1.5658,
+          "averageTurns": 8.552,
+          "decisionMilliseconds": {
+            "p50": 2.4982,
+            "p95": 23.8624
+          },
+          "candidateSizes": {
+            "mean": 2429.2746,
+            "p50": 5,
+            "p95": 20451,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "8": {
+          "games": 429,
+          "wins": 428,
+          "winRate": 0.9977,
+          "averageMisses": 0.972,
+          "averageTurns": 8.965,
+          "decisionMilliseconds": {
+            "p50": 1.8005,
+            "p95": 21.4912
+          },
+          "candidateSizes": {
+            "mean": 1709.786,
+            "p50": 1,
+            "p95": 17045,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "9": {
+          "games": 469,
+          "wins": 469,
+          "winRate": 1,
+          "averageMisses": 0.5928,
+          "averageTurns": 9.5928,
+          "decisionMilliseconds": {
+            "p50": 1.0997,
+            "p95": 12.0282
+          },
+          "candidateSizes": {
+            "mean": 1006.1947,
+            "p50": 1,
+            "p95": 8448,
+            "max": 20451
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "10": {
+          "games": 346,
+          "wins": 346,
+          "winRate": 1,
+          "averageMisses": 0.3237,
+          "averageTurns": 10.3237,
+          "decisionMilliseconds": {
+            "p50": 0.6858,
+            "p95": 9.2792
+          },
+          "candidateSizes": {
+            "mean": 576.1741,
+            "p50": 1,
+            "p95": 5271,
+            "max": 17045
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "11": {
+          "games": 165,
+          "wins": 165,
+          "winRate": 1,
+          "averageMisses": 0.2,
+          "averageTurns": 11.2,
+          "decisionMilliseconds": {
+            "p50": 0.4471,
+            "p95": 5.6735
+          },
+          "candidateSizes": {
+            "mean": 384.2045,
+            "p50": 1,
+            "p95": 2990,
+            "max": 12527
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "12": {
+          "games": 48,
+          "wins": 48,
+          "winRate": 1,
+          "averageMisses": 0.2083,
+          "averageTurns": 12.2083,
+          "decisionMilliseconds": {
+            "p50": 0.2663,
+            "p95": 3.5068
+          },
+          "candidateSizes": {
+            "mean": 220.5137,
+            "p50": 1,
+            "p95": 1696,
+            "max": 8448
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "13": {
+          "games": 9,
+          "wins": 9,
+          "winRate": 1,
+          "averageMisses": 0,
+          "averageTurns": 13,
+          "decisionMilliseconds": {
+            "p50": 0.2771,
+            "p95": 3.4812
+          },
+          "candidateSizes": {
+            "mean": 168.0427,
+            "p50": 1,
+            "p95": 1696,
+            "max": 2990
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "14": {
+          "games": 1,
+          "wins": 1,
+          "winRate": 1,
+          "averageMisses": 0,
+          "averageTurns": 14,
+          "decisionMilliseconds": {
+            "p50": 0.146,
+            "p95": 3.486
+          },
+          "candidateSizes": {
+            "mean": 131.5714,
+            "p50": 1,
+            "p95": 1696,
+            "max": 1696
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "byVocabularySize": {
+        "common": {
+          "games": 849,
+          "wins": 637,
+          "winRate": 0.7503,
+          "averageMisses": 2.9482,
+          "averageTurns": 8.4605,
+          "decisionMilliseconds": {
+            "p50": 1.6913,
+            "p95": 13.6921
+          },
+          "candidateSizes": {
+            "mean": 1692.8075,
+            "p50": 26,
+            "p95": 13982,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "medium": {
+          "games": 686,
+          "wins": 576,
+          "winRate": 0.8397,
+          "averageMisses": 2.2813,
+          "averageTurns": 8.6443,
+          "decisionMilliseconds": {
+            "p50": 1.4514,
+            "p95": 13.322
+          },
+          "candidateSizes": {
+            "mean": 1511.1035,
+            "p50": 7,
+            "p95": 12527,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "rare": {
+          "games": 1715,
+          "wins": 1564,
+          "winRate": 0.912,
+          "averageMisses": 1.5347,
+          "averageTurns": 9.0513,
+          "decisionMilliseconds": {
+            "p50": 1.2529,
+            "p95": 12.8752
+          },
+          "candidateSizes": {
+            "mean": 1328.3523,
+            "p50": 2,
+            "p95": 8554,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "hardestWords": [
+        {
+          "word": "shaving",
+          "won": false,
+          "misses": 6,
+          "turns": 12,
+          "guesses": "eaingrlstphd",
+          "size": 35
+        },
+        {
+          "word": "witched",
+          "won": false,
+          "misses": 6,
+          "turns": 12,
+          "guesses": "ersdlnhctaib",
+          "size": 35
+        },
+        {
+          "word": "hurtling",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eaingoulmds",
+          "size": 35
+        },
+        {
+          "word": "mights",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eaistghbdfl",
+          "size": 65
+        },
+        {
+          "word": "pillowed",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "esrdntlowab",
+          "size": 35
+        },
+        {
+          "word": "singer",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eraitngbflm",
+          "size": 35
+        },
+        {
+          "word": "tanker",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eralndgkbch",
+          "size": 35
+        },
+        {
+          "word": "tripping",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eaingsrtlcm",
+          "size": 35
+        },
+        {
+          "word": "unhooked",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "esrdnulaioc",
+          "size": 35
+        },
+        {
+          "word": "walked",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "ersdlavkbct",
+          "size": 35
+        },
+        {
+          "word": "winder",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eraitngdbcf",
+          "size": 60
+        },
+        {
+          "word": "zapping",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eainglrspcd",
+          "size": 40
+        },
+        {
+          "word": "bonnets",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "esrtlugcop",
+          "size": 35
+        },
+        {
+          "word": "caned",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "esrdapwmcg",
+          "size": 35
+        },
+        {
+          "word": "chavs",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "easrlthcdm",
+          "size": 70
+        },
+        {
+          "word": "clits",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "eaoisrtuch",
+          "size": 50
+        },
+        {
+          "word": "cocking",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "eaingolsrp",
+          "size": 35
+        },
+        {
+          "word": "conked",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "ersdlniaog",
+          "size": 50
+        },
+        {
+          "word": "coped",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "esrdaotlck",
+          "size": 35
+        },
+        {
+          "word": "curial",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "easnrmtulb",
+          "size": 70
+        }
+      ]
+    },
+    "lookahead": {
+      "overall": {
+        "games": 3250,
+        "wins": 2774,
+        "winRate": 0.8535,
+        "averageMisses": 2.0615,
+        "averageTurns": 8.8068,
+        "decisionMilliseconds": {
+          "p50": 1.4536,
+          "p95": 13.6381
+        },
+        "candidateSizes": {
+          "mean": 1458.3277,
+          "p50": 5,
+          "p95": 12527,
+          "max": 21446
+        },
+        "zeroCandidateEvents": {
+          "expectedLowTier": 0,
+          "masterBugs": 0
+        }
+      },
+      "byLength": {
+        "3": {
+          "games": 250,
+          "wins": 56,
+          "winRate": 0.224,
+          "averageMisses": 5.38,
+          "averageTurns": 6.892,
+          "decisionMilliseconds": {
+            "p50": 0.335,
+            "p95": 1.043
+          },
+          "candidateSizes": {
+            "mean": 496.4544,
+            "p50": 183,
+            "p95": 1496,
+            "max": 1496
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "4": {
+          "games": 250,
+          "wins": 101,
+          "winRate": 0.404,
+          "averageMisses": 4.952,
+          "averageTurns": 7.636,
+          "decisionMilliseconds": {
+            "p50": 0.6958,
+            "p95": 3.416
+          },
+          "candidateSizes": {
+            "mean": 972.0424,
+            "p50": 138,
+            "p95": 4248,
+            "max": 4248
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "5": {
+          "games": 250,
+          "wins": 170,
+          "winRate": 0.68,
+          "averageMisses": 4.2,
+          "averageTurns": 8.172,
+          "decisionMilliseconds": {
+            "p50": 1.2292,
+            "p95": 7.5172
+          },
+          "candidateSizes": {
+            "mean": 1580.9285,
+            "p50": 72,
+            "p95": 8554,
+            "max": 8554
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "6": {
+          "games": 250,
+          "wins": 217,
+          "winRate": 0.868,
+          "averageMisses": 3.296,
+          "averageTurns": 8.344,
+          "decisionMilliseconds": {
+            "p50": 1.951,
+            "p95": 13.6699
+          },
+          "candidateSizes": {
+            "mean": 2217.2057,
+            "p50": 47,
+            "p95": 13982,
+            "max": 13982
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "7": {
+          "games": 250,
+          "wins": 235,
+          "winRate": 0.94,
+          "averageMisses": 2.748,
+          "averageTurns": 8.684,
+          "decisionMilliseconds": {
+            "p50": 2.8206,
+            "p95": 21.6669
+          },
+          "candidateSizes": {
+            "mean": 2786.7176,
+            "p50": 28,
+            "p95": 19394,
+            "max": 19394
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "8": {
+          "games": 250,
+          "wins": 245,
+          "winRate": 0.98,
+          "averageMisses": 1.916,
+          "averageTurns": 8.496,
+          "decisionMilliseconds": {
+            "p50": 2.8414,
+            "p95": 25.6925
+          },
+          "candidateSizes": {
+            "mean": 2978.1304,
+            "p50": 10,
+            "p95": 21446,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "9": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 1.372,
+          "averageTurns": 8.752,
+          "decisionMilliseconds": {
+            "p50": 2.6754,
+            "p95": 26.4002
+          },
+          "candidateSizes": {
+            "mean": 2651.8478,
+            "p50": 4,
+            "p95": 20451,
+            "max": 20451
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "10": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.968,
+          "averageTurns": 8.82,
+          "decisionMilliseconds": {
+            "p50": 2.2363,
+            "p95": 23.8362
+          },
+          "candidateSizes": {
+            "mean": 2138.4685,
+            "p50": 1,
+            "p95": 17045,
+            "max": 17045
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "11": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.66,
+          "averageTurns": 9.224,
+          "decisionMilliseconds": {
+            "p50": 1.5488,
+            "p95": 17.4909
+          },
+          "candidateSizes": {
+            "mean": 1476.4909,
+            "p50": 1,
+            "p95": 12527,
+            "max": 12527
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "12": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.54,
+          "averageTurns": 9.512,
+          "decisionMilliseconds": {
+            "p50": 1.0187,
+            "p95": 12.7992
+          },
+          "candidateSizes": {
+            "mean": 949.8701,
+            "p50": 1,
+            "p95": 8448,
+            "max": 8448
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "13": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.36,
+          "averageTurns": 9.604,
+          "decisionMilliseconds": {
+            "p50": 0.6365,
+            "p95": 9.7561
+          },
+          "candidateSizes": {
+            "mean": 582.1874,
+            "p50": 1,
+            "p95": 5271,
+            "max": 5271
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "14": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.208,
+          "averageTurns": 10.024,
+          "decisionMilliseconds": {
+            "p50": 0.3647,
+            "p95": 5.9272
+          },
+          "candidateSizes": {
+            "mean": 311.2602,
+            "p50": 1,
+            "p95": 2990,
+            "max": 2990
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "15": {
+          "games": 250,
+          "wins": 250,
+          "winRate": 1,
+          "averageMisses": 0.2,
+          "averageTurns": 10.328,
+          "decisionMilliseconds": {
+            "p50": 0.1985,
+            "p95": 3.6332
+          },
+          "candidateSizes": {
+            "mean": 170.3323,
+            "p50": 1,
+            "p95": 1696,
+            "max": 1696
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "byDistinctLetters": {
+        "1": {
+          "games": 1,
+          "wins": 1,
+          "winRate": 1,
+          "averageMisses": 0,
+          "averageTurns": 1,
+          "decisionMilliseconds": {
+            "p50": 0.9734,
+            "p95": 0.9734
+          },
+          "candidateSizes": {
+            "mean": 1496,
+            "p50": 1496,
+            "p95": 1496,
+            "max": 1496
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "2": {
+          "games": 32,
+          "wins": 14,
+          "winRate": 0.4375,
+          "averageMisses": 4.6563,
+          "averageTurns": 5.9063,
+          "decisionMilliseconds": {
+            "p50": 0.5143,
+            "p95": 1.6297
+          },
+          "candidateSizes": {
+            "mean": 720.3439,
+            "p50": 583,
+            "p95": 1589,
+            "max": 4248
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "3": {
+          "games": 281,
+          "wins": 78,
+          "winRate": 0.2776,
+          "averageMisses": 5.2171,
+          "averageTurns": 6.9324,
+          "decisionMilliseconds": {
+            "p50": 0.4405,
+            "p95": 2.2637
+          },
+          "candidateSizes": {
+            "mean": 641.7295,
+            "p50": 167,
+            "p95": 2652,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "4": {
+          "games": 305,
+          "wins": 166,
+          "winRate": 0.5443,
+          "averageMisses": 4.459,
+          "averageTurns": 7.6164,
+          "decisionMilliseconds": {
+            "p50": 0.9818,
+            "p95": 7.391
+          },
+          "candidateSizes": {
+            "mean": 1296.1537,
+            "p50": 104,
+            "p95": 6876,
+            "max": 19394
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "5": {
+          "games": 356,
+          "wins": 274,
+          "winRate": 0.7697,
+          "averageMisses": 3.5758,
+          "averageTurns": 8.0674,
+          "decisionMilliseconds": {
+            "p50": 1.7734,
+            "p95": 13.633
+          },
+          "candidateSizes": {
+            "mean": 2156.4196,
+            "p50": 61,
+            "p95": 13982,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "6": {
+          "games": 375,
+          "wins": 346,
+          "winRate": 0.9227,
+          "averageMisses": 2.4693,
+          "averageTurns": 8.2827,
+          "decisionMilliseconds": {
+            "p50": 2.5137,
+            "p95": 23.1067
+          },
+          "candidateSizes": {
+            "mean": 2617.8989,
+            "p50": 21,
+            "p95": 19394,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "7": {
+          "games": 433,
+          "wins": 429,
+          "winRate": 0.9908,
+          "averageMisses": 1.5612,
+          "averageTurns": 8.5473,
+          "decisionMilliseconds": {
+            "p50": 2.5576,
+            "p95": 25.0212
+          },
+          "candidateSizes": {
+            "mean": 2430.5844,
+            "p50": 5,
+            "p95": 20451,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "8": {
+          "games": 429,
+          "wins": 428,
+          "winRate": 0.9977,
+          "averageMisses": 0.972,
+          "averageTurns": 8.965,
+          "decisionMilliseconds": {
+            "p50": 1.8005,
+            "p95": 22.8197
+          },
+          "candidateSizes": {
+            "mean": 1709.786,
+            "p50": 1,
+            "p95": 17045,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "9": {
+          "games": 469,
+          "wins": 469,
+          "winRate": 1,
+          "averageMisses": 0.5928,
+          "averageTurns": 9.5928,
+          "decisionMilliseconds": {
+            "p50": 1.0874,
+            "p95": 12.6719
+          },
+          "candidateSizes": {
+            "mean": 1006.1947,
+            "p50": 1,
+            "p95": 8448,
+            "max": 20451
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "10": {
+          "games": 346,
+          "wins": 346,
+          "winRate": 1,
+          "averageMisses": 0.3237,
+          "averageTurns": 10.3237,
+          "decisionMilliseconds": {
+            "p50": 0.6811,
+            "p95": 9.6778
+          },
+          "candidateSizes": {
+            "mean": 576.1741,
+            "p50": 1,
+            "p95": 5271,
+            "max": 17045
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "11": {
+          "games": 165,
+          "wins": 165,
+          "winRate": 1,
+          "averageMisses": 0.2,
+          "averageTurns": 11.2,
+          "decisionMilliseconds": {
+            "p50": 0.4462,
+            "p95": 5.9008
+          },
+          "candidateSizes": {
+            "mean": 384.2045,
+            "p50": 1,
+            "p95": 2990,
+            "max": 12527
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "12": {
+          "games": 48,
+          "wins": 48,
+          "winRate": 1,
+          "averageMisses": 0.2083,
+          "averageTurns": 12.2083,
+          "decisionMilliseconds": {
+            "p50": 0.2656,
+            "p95": 3.6488
+          },
+          "candidateSizes": {
+            "mean": 220.5137,
+            "p50": 1,
+            "p95": 1696,
+            "max": 8448
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "13": {
+          "games": 9,
+          "wins": 9,
+          "winRate": 1,
+          "averageMisses": 0,
+          "averageTurns": 13,
+          "decisionMilliseconds": {
+            "p50": 0.2665,
+            "p95": 3.6391
+          },
+          "candidateSizes": {
+            "mean": 168.0427,
+            "p50": 1,
+            "p95": 1696,
+            "max": 2990
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "14": {
+          "games": 1,
+          "wins": 1,
+          "winRate": 1,
+          "averageMisses": 0,
+          "averageTurns": 14,
+          "decisionMilliseconds": {
+            "p50": 0.1483,
+            "p95": 3.6173
+          },
+          "candidateSizes": {
+            "mean": 131.5714,
+            "p50": 1,
+            "p95": 1696,
+            "max": 1696
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "byVocabularySize": {
+        "common": {
+          "games": 849,
+          "wins": 637,
+          "winRate": 0.7503,
+          "averageMisses": 2.947,
+          "averageTurns": 8.4547,
+          "decisionMilliseconds": {
+            "p50": 1.6943,
+            "p95": 13.9327
+          },
+          "candidateSizes": {
+            "mean": 1693.9824,
+            "p50": 26,
+            "p95": 13982,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "medium": {
+          "games": 686,
+          "wins": 576,
+          "winRate": 0.8397,
+          "averageMisses": 2.2799,
+          "averageTurns": 8.6414,
+          "decisionMilliseconds": {
+            "p50": 1.457,
+            "p95": 13.5896
+          },
+          "candidateSizes": {
+            "mean": 1511.6123,
+            "p50": 7,
+            "p95": 12527,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        },
+        "rare": {
+          "games": 1715,
+          "wins": 1561,
+          "winRate": 0.9102,
+          "averageMisses": 1.5359,
+          "averageTurns": 9.0472,
+          "decisionMilliseconds": {
+            "p50": 1.2579,
+            "p95": 13.5026
+          },
+          "candidateSizes": {
+            "mean": 1328.9514,
+            "p50": 2,
+            "p95": 8554,
+            "max": 21446
+          },
+          "zeroCandidateEvents": {
+            "expectedLowTier": 0,
+            "masterBugs": 0
+          }
+        }
+      },
+      "hardestWords": [
+        {
+          "word": "shaving",
+          "won": false,
+          "misses": 6,
+          "turns": 12,
+          "guesses": "eaingrlstphd",
+          "size": 35
+        },
+        {
+          "word": "witched",
+          "won": false,
+          "misses": 6,
+          "turns": 12,
+          "guesses": "ersdlnhctaib",
+          "size": 35
+        },
+        {
+          "word": "hurtling",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eaingoulmdb",
+          "size": 35
+        },
+        {
+          "word": "mights",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eaistghbdfl",
+          "size": 65
+        },
+        {
+          "word": "pillowed",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "esrdntlowab",
+          "size": 35
+        },
+        {
+          "word": "singer",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eraitngbflm",
+          "size": 35
+        },
+        {
+          "word": "tanker",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eralndgkbch",
+          "size": 35
+        },
+        {
+          "word": "tripping",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eaingsrtlcm",
+          "size": 35
+        },
+        {
+          "word": "unhooked",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "esrdnulaioc",
+          "size": 35
+        },
+        {
+          "word": "walked",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "ersdlavkbct",
+          "size": 35
+        },
+        {
+          "word": "winder",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eraitngdbcf",
+          "size": 60
+        },
+        {
+          "word": "zapping",
+          "won": false,
+          "misses": 6,
+          "turns": 11,
+          "guesses": "eainglrspcd",
+          "size": 40
+        },
+        {
+          "word": "bonnets",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "esrtlugcop",
+          "size": 35
+        },
+        {
+          "word": "caned",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "esrdapwmcg",
+          "size": 35
+        },
+        {
+          "word": "chavs",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "easrlthwcd",
+          "size": 70
+        },
+        {
+          "word": "chuffed",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "ersdlnhcip",
+          "size": 60
+        },
+        {
+          "word": "clits",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "eaoisrtuch",
+          "size": 50
+        },
+        {
+          "word": "cocking",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "eaingolsrp",
+          "size": 35
+        },
+        {
+          "word": "conked",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "ersdlniaog",
+          "size": 50
+        },
+        {
+          "word": "coped",
+          "won": false,
+          "misses": 6,
+          "turns": 10,
+          "guesses": "esrdaotlck",
+          "size": 35
+        }
+      ]
+    }
+  }
+}
