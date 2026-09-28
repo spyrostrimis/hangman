@@ -1,0 +1,10 @@
+Illucia vocabulary: English Speller Database (ESDB/SCOWL v2).
+Copyright 2000-2026 by Kevin Atkinson. See ESDB-Copyright.txt.
+https://github.com/en-wl/wordlist
+
+Filtered using the English List of Dirty, Naughty, Obscene, and Otherwise Bad Words
+by LDNOOBW contributors, licensed under CC BY 4.0. See LDNOOBW-LICENSE.txt.
+https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words
+https://creativecommons.org/licenses/by/4.0/
+Changes: American English, normal variants, no special categories, ASCII letters,
+3-15 characters, lowercase, deduplication, profanity filtering, length/tier files.

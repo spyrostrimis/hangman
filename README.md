@@ -29,10 +29,22 @@ Use Node.js 24. From `client/`, run `npm ci` and `npm run dev`. The Vite server 
 - Client: `npm test`, `npm run test:ui`, `npm run build`.
 - API: `npm run types`, `npm run check`, `npm test`, `npm run build`.
 - Word-data tools: `npm test` and `node validate.js ../client/src/data/words.json` from `tools/`.
+- Illucia vocabulary: `python tools/build_illucia_words.py --download`, then
+  `python tools/build_illucia_words.py --check`. Python 3.12+; pinned inputs,
+  offline rebuilds, filtering policy and tests: [build documentation](tools/ILLUCIA-WORDS.md).
 
 Pages builds the `client/` directory with `npm run build` and publishes `dist/`. The Worker is deployed separately. Pushes to `main` publish the frontend; secrets and build output must never be committed.
 
 ## Credits and license
+
+Illucia's prepared vocabulary derives from [ESDB/SCOWL v2](https://github.com/en-wl/wordlist),
+copyright 2000–2026 by Kevin Atkinson; its [copyright and permission notice](client/public/illucia/words/ESDB-Copyright.txt)
+is included with the word files. Profanity filtering also uses the English list by
+[LDNOOBW contributors](https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words),
+licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+The derived vocabulary is filtered, lowercased, deduplicated and split by length with size annotations.
+[In-app credits source](client/public/illucia/credits.html). The vocabulary is prepared for the future Illucia game;
+the current placeholder does not load it.
 
 <img src="client/src/Images/mw-logo-dark-background.png" alt="Merriam-Webster logo" width="100" height="100" />
 

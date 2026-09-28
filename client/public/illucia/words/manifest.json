@@ -1,0 +1,104 @@
+{
+  "sources": {
+    "esdb": {
+      "release": "rel-2026.02.25",
+      "commit": "7e99edab8e32f9f9ea2b15f249ca8d4d67237410",
+      "url": "https://codeload.github.com/en-wl/wordlist/tar.gz/7e99edab8e32f9f9ea2b15f249ca8d4d67237410",
+      "sha256": "770dd3e42d20b47bb2dd87d150db4ee5472841a7f062876592f67840f5a0b902"
+    },
+    "blocklist": {
+      "commit": "5faf2ba42d7b1c0977169ec3611df25a3c08eb13",
+      "url": "https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/5faf2ba42d7b1c0977169ec3611df25a3c08eb13/en",
+      "sha256": "af851ecef1d5f212caba17339b12ac39cc2fef7d78c74876f67237644fcee8bd"
+    },
+    "blocklist_license": {
+      "url": "https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/5faf2ba42d7b1c0977169ec3611df25a3c08eb13/LICENSE",
+      "sha256": "55bfbc1759943f7d19acfc68e35644b7fbe10cd8d39ab3551ce5ecff5dda9979"
+    }
+  },
+  "policy": {
+    "spelling": "A",
+    "variantLevel": 1,
+    "categories": [
+      ""
+    ],
+    "lengths": [
+      3,
+      15
+    ],
+    "maximumSize": 70
+  },
+  "acceptedWords": 137548,
+  "cumulativeSizes": {
+    "35": 38602,
+    "50": 69382,
+    "70": 137548
+  },
+  "files": {
+    "3.txt": {
+      "sha256": "0234c8dd4469a170375074c9960cc44ae960c12ef55d3abbbb4cccdeef512ce0",
+      "bytes": 10472,
+      "words": 1496
+    },
+    "4.txt": {
+      "sha256": "97e65fe32be82cc0b70f1cbb307f27e4fcc088f363b8a08010242a134d298bef",
+      "bytes": 33984,
+      "words": 4248
+    },
+    "5.txt": {
+      "sha256": "c1bec4925b19360ce06ce3337a1df20c54d21dd2988263ab2cc8498f5b7ccce6",
+      "bytes": 76986,
+      "words": 8554
+    },
+    "6.txt": {
+      "sha256": "3c7452dd5e6dd25abd0d6bc62de52de0108d96190d70e047647aa142dbcd746d",
+      "bytes": 139820,
+      "words": 13982
+    },
+    "7.txt": {
+      "sha256": "33af0a74b2e8ee6e15f0db73961afbc679f8e7b1b36fcc8f949b5d45f9196518",
+      "bytes": 213334,
+      "words": 19394
+    },
+    "8.txt": {
+      "sha256": "e7c0b6ec5e72e9f33e901e56812be0a7663d006bef7037647d77ba2e4ec48531",
+      "bytes": 257352,
+      "words": 21446
+    },
+    "9.txt": {
+      "sha256": "f5c8bbe4b0ef4b98191c98de2fccf26a91b4aa84834c2129393d40dd9dcf0227",
+      "bytes": 265863,
+      "words": 20451
+    },
+    "10.txt": {
+      "sha256": "81156c2ffafc6b6fc1bbe02db6ded3334a493090846eabf2a3fb588d3d0c4c31",
+      "bytes": 238630,
+      "words": 17045
+    },
+    "11.txt": {
+      "sha256": "f8108b0275b2038c0f93acc8b936aa9702ddeee2f02bc69973ee1ae5b7abb41b",
+      "bytes": 187905,
+      "words": 12527
+    },
+    "12.txt": {
+      "sha256": "30768391a54e045ef5c81283bd949db5cacac54488a08114558578cdd2958c3f",
+      "bytes": 135168,
+      "words": 8448
+    },
+    "13.txt": {
+      "sha256": "742b00c9b32d64d8397073dd7bf406cd1c0f562b9cd5ec1d65671ae5a13cba9f",
+      "bytes": 89607,
+      "words": 5271
+    },
+    "14.txt": {
+      "sha256": "25a2d985f2489d15e6d249ef55da5c3080e4d8f833b42bdd73db4af45f54cb09",
+      "bytes": 53820,
+      "words": 2990
+    },
+    "15.txt": {
+      "sha256": "9fe34fd9ecbc07fa5b60533bfb494b04a6eeeb67c4b0aac706f61487ff611917",
+      "bytes": 32224,
+      "words": 1696
+    }
+  }
+}

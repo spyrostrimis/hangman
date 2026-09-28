@@ -1,0 +1,17 @@
+{
+  "esdb": {
+    "release": "rel-2026.02.25",
+    "commit": "7e99edab8e32f9f9ea2b15f249ca8d4d67237410",
+    "url": "https://codeload.github.com/en-wl/wordlist/tar.gz/7e99edab8e32f9f9ea2b15f249ca8d4d67237410",
+    "sha256": "770dd3e42d20b47bb2dd87d150db4ee5472841a7f062876592f67840f5a0b902"
+  },
+  "blocklist": {
+    "commit": "5faf2ba42d7b1c0977169ec3611df25a3c08eb13",
+    "url": "https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/5faf2ba42d7b1c0977169ec3611df25a3c08eb13/en",
+    "sha256": "af851ecef1d5f212caba17339b12ac39cc2fef7d78c74876f67237644fcee8bd"
+  },
+  "blocklist_license": {
+    "url": "https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/5faf2ba42d7b1c0977169ec3611df25a3c08eb13/LICENSE",
+    "sha256": "55bfbc1759943f7d19acfc68e35644b7fbe10cd8d39ab3551ce5ecff5dda9979"
+  }
+}
