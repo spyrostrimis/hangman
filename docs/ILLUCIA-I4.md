@@ -5,7 +5,7 @@ Implemented and verified locally on 2026-09-28. Not yet verified in production. 
 ## Behavior
 
 - Signed-in route with setup, playing and finished states. Apprentice ≤35, Scholar ≤50 and Master ≤70 use the existing count policy and own-tier fallback.
-- Masked input accepts only A–Z, 3–15 letters, and validates against the filtered Master lexicon. The sole vocabulary request is `/illucia/words/<length>.txt`. Input state is cleared and the form unmounts on start. There is no secret-bearing request, browser storage, score request, or model call.
+- The secret field is a plain text input masked with CSS where the browser supports it; it is deliberately not `type="password"`, so browsers do not offer to save and sync the word as a credential. It accepts only A–Z, 3–15 letters, and validates against the filtered Master lexicon. The sole vocabulary request is `/illucia/words/<length>.txt`. Input state is cleared and the form unmounts on start. There is no secret-bearing request, browser storage, score request, or model call.
 - Turns use `chooseLetter(toPublicState(round), knowledge)` and shared `applyGuess`. A 1.1-second timer is cancelled on restart, route departure, account change, or completion. Download cancellation and a 10-second timeout permit retry.
 - Candidate counts, pattern, six-slot miss meter, read-only letter history, live announcements, turn log and decision explanation. Candidate words appear only in the result. Restart is not a victory and never reloads the page.
 - Scripted commentary covers opening, hits/misses, three misses, last chance, rare letters, rejected words and both outcomes. The temporary SVG robot is drawn in code; final character art remains open. No generated image or paid service was used.

@@ -21,7 +21,7 @@
 .illucia-tiers input { accent-color: #d3b5f4; width: 18px; height: 18px; min-width: 18px !important; min-height: 18px !important; margin: 0; }
 .illucia-muted, .illucia-credits { color: #bdc9d8; font-size: 14px; }
 .illucia-secret-label { display: block; margin: 16px 0 8px; }
-#illucia-secret { width: min(100%, 320px); min-width: 0 !important; min-height: 48px; border: 1px solid #8695ac; border-radius: 8px; padding: 10px; background: #0b1520; color: white; font-size: 18px; letter-spacing: .15em; }
+#illucia-secret { width: min(100%, 320px); min-width: 0 !important; min-height: 48px; border: 1px solid #8695ac; border-radius: 8px; padding: 10px; background: #0b1520; color: white; font-size: 18px; letter-spacing: .15em; -webkit-text-security: disc; }
 #illucia-validation { color: #ffd5ba; }
 #illucia-validation:empty { margin: 0; }
 .illucia-game-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 16px; }

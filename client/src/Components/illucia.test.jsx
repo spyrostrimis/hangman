@@ -26,7 +26,12 @@ const tick = () => act(async () => { await vi.advanceTimersByTimeAsync(1100); })
 
 it('loads only the length, clears the secret, uses public state, reveals repeated letters and stops after winning', async () => {
   const view = mount();
-  expect(screen.getByLabelText('Your secret word').type).toBe('password');
+  // A password field would let browsers offer to save and sync the secret as a credential.
+  const secretInput = screen.getByLabelText('Your secret word');
+  expect(secretInput.type).toBe('text');
+  expect(secretInput.getAttribute('autocomplete')).toBe('off');
+  expect(view.container.querySelectorAll('input').length).toBeGreaterThan(0);
+  expect(view.container.querySelector('input[type="password"]')).toBeNull();
   await start();
   expect(fetch).toHaveBeenCalledTimes(1);
   expect(fetch.mock.calls[0][0]).toBe('/illucia/words/5.txt');
