@@ -168,6 +168,16 @@
 .word > span > span.found { display: inline-block; animation: word-flip .5s ease-out; }
 .word > span > span.missed { text-shadow: 0 0 10px #b2007488; }
 @keyframes word-flip { from { transform: rotateX(90deg); color: var(--hm-yellow); } }
+/* The 2023 finale: 3 s after the round ends the word slides out and its row
+   collapses, so the flipped console rises into its place. --word-row is just
+   above the row's height, so the collapse starts as soon as the fade ends. */
+.word { --word-row: 3rem; }
+.word.revealed { overflow: hidden; animation: word-leave 5s ease 3s forwards; }
+@keyframes word-leave {
+  0% { max-height: var(--word-row); opacity: 1; transform: translateX(0); }
+  50% { max-height: var(--word-row); opacity: 0; transform: translateX(-20px); }
+  100% { max-height: 0; opacity: 0; }
+}
 
 /* ---------- Console (the flip card) ---------- */
 .keyboardcontainer {
@@ -264,7 +274,7 @@
   .keyboardcontainer { width: min(760px, calc(100% - 32px)); }
   #wordroonyimg { height: 124px; }
   .keyboardronny { right: -20px; bottom: calc(100% - 52px); }
-  .word { font-size: 1.6rem; margin-top: 22px; }
+  .word { font-size: 1.6rem; margin-top: 22px; --word-row: 2.4rem; }
 }
 
 /* Phones (same breakpoint as the route art): stack the panels and fit the
@@ -294,6 +304,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .figurescreeninner.has-art, .figure-banner, .artsy-status-state, .word > span > span.found { animation: none; }
+  .figurescreeninner.has-art, .figure-banner, .artsy-status-state, .word > span > span.found, .word.revealed { animation: none; }
   .keyboardcontainer-inner { transition: none; }
 }
