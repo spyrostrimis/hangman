@@ -1,7 +1,7 @@
 import { Hono, type Context } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { getCookie, setCookie } from 'hono/cookie';
-import { KDF, SALT_PATTERN, CREDENTIAL_PATTERN, USERNAME_PATTERN, normalizeUsername } from '../../shared/auth-protocol.js';
+import { KDF, SALT_PATTERN, CREDENTIAL_PATTERN, USERNAME_PATTERN, SIGNIN_USERNAME_PATTERN, normalizeUsername } from '../../shared/auth-protocol.js';
 import { checkVerifier, fakeSalt, makeVerifier, sessionToken, sessionUserId, SESSION_SECONDS } from './crypto';
 
 type AppEnv = { Bindings: Env; Variables: { user: PublicUser } };
@@ -27,9 +27,9 @@ async function readInput(c: C): Promise<Record<string, unknown> | null> {
     return value && typeof value === 'object' && !Array.isArray(value) ? value : null;
   } catch { return null; }
 }
-function usernameFrom(input: Record<string, unknown> | null) {
+function usernameFrom(input: Record<string, unknown> | null, pattern = SIGNIN_USERNAME_PATTERN) {
   const value = input?.username;
-  return typeof value === 'string' && USERNAME_PATTERN.test(value.trim()) ? value.trim() : null;
+  return typeof value === 'string' && pattern.test(value.trim()) ? value.trim() : null;
 }
 async function accountLimit(c: C, key: string) {
   const result = await c.env.AUTH_LIMIT.limit({ key: `auth:${key}` });
@@ -61,7 +61,7 @@ app.post('/user/auth-params', async c => {
 });
 app.post('/user/signup', async c => {
   const input = await readInput(c);
-  const username = usernameFrom(input);
+  const username = usernameFrom(input, USERNAME_PATTERN);
   if (!username || !input || typeof input.credential !== 'string' || !CREDENTIAL_PATTERN.test(input.credential)
     || typeof input.salt !== 'string' || !SALT_PATTERN.test(input.salt) || input.version !== KDF.version) return failure(c, 'Invalid registration details.', 400);
   const key = normalizeUsername(username);

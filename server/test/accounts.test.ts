@@ -4,7 +4,7 @@ import { SignJWT } from 'jose';
 import app from '../src/index';
 import { KDF } from '../../shared/auth-protocol.js';
 import { deriveCredential } from '../../client/src/lib/credential.js';
-import { AUDIENCE, ISSUER, secretBytes } from '../src/crypto';
+import { AUDIENCE, ISSUER, makeVerifier, secretBytes } from '../src/crypto';
 
 const origin = 'https://hangman.spyrostrimis.com';
 let requestNumber = 0;
@@ -74,6 +74,21 @@ describe('account API with real local D1 and Workers crypto', () => {
     expect(known.status).toBe(401); expect(unknown.status).toBe(401);
     expect(await unknown.json()).toEqual(await known.json());
     expect((await request('login', { method: 'POST', body: registration() })).status).toBe(200);
+  });
+
+  it('caps new usernames at 20 characters while older 35-character accounts can still sign in', async () => {
+    expect((await request('signup', { method: 'POST', body: registration('a'.repeat(21)) })).status).toBe(400);
+    expect((await request('signup', { method: 'POST', body: registration('a'.repeat(20)) })).status).toBe(200);
+    const legacy = 'b'.repeat(28);
+    const { salt, credential } = registration();
+    await env.DB.batch([
+      env.DB.prepare('INSERT INTO users (id, username, username_key, salt, verifier) VALUES (?, ?, ?, ?, ?)')
+        .bind('legacy', legacy, legacy, salt, await makeVerifier(env.AUTH_PEPPER, legacy, salt, credential)),
+      env.DB.prepare('INSERT INTO scores (user_id) VALUES (?)').bind('legacy'),
+    ]);
+    expect((await request('auth-params', { method: 'POST', body: { username: legacy } })).status).toBe(200);
+    expect((await request('login', { method: 'POST', body: { username: legacy, credential } })).status).toBe(200);
+    expect((await request('login', { method: 'POST', body: { username: 'b'.repeat(36), credential } })).status).toBe(400);
   });
 
   it('handles duplicate-name races atomically and rejects malformed credentials', async () => {

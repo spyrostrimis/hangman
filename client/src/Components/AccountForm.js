@@ -14,6 +14,8 @@ export default function AccountForm({ signup = false }) {
   const from = location.state?.from;
   const destination = ['/illucia', '/hangman', '/hall-of-fame'].includes(from) ? from : '/';
   if (user) return <Navigate to={destination} replace />;
+  // Sign-in keeps the former 35-character limit for accounts created before new names were capped at 20.
+  const maxName = signup ? 20 : 35;
   async function submit(event) {
     event.preventDefault();
     if (busy.current) return;
@@ -41,8 +43,8 @@ export default function AccountForm({ signup = false }) {
       <h1>{signup ? 'Create account' : 'Sign in'}</h1>
       <label htmlFor="username">Username</label>
       <input id="username" name="username" type="text" required autoComplete="username" autoCapitalize="none"
-        spellCheck={false} pattern="[A-Za-z0-9]{3,35}" minLength={3} maxLength={35} disabled={pending}
-        title="Use 3–35 letters or numbers." />
+        spellCheck={false} pattern={`[A-Za-z0-9]{3,${maxName}}`} minLength={3} maxLength={maxName} disabled={pending}
+        title={`Use 3–${maxName} letters or numbers.`} />
       <label htmlFor="password">Password</label>
       <input id="password" name="password" type="password" required maxLength={128} minLength={signup ? 15 : 1}
         autoComplete={signup ? 'new-password' : 'current-password'} disabled={pending} aria-describedby={signup ? 'password-help' : undefined} />

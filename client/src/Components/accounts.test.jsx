@@ -56,6 +56,15 @@ describe('account forms', () => {
     expect(body).toEqual({ username: 'Player', credential: 'cd'.repeat(32), ...parameters });
     expect(body).not.toHaveProperty('password');
   });
+  it('limits new usernames to 20 characters but lets older accounts sign in with up to 35', () => {
+    const signup = form();
+    expect(screen.getByLabelText('Username').maxLength).toBe(20);
+    expect(screen.getByLabelText('Username').getAttribute('pattern')).toBe('[A-Za-z0-9]{3,20}');
+    signup.unmount();
+    form(false);
+    expect(screen.getByLabelText('Username').maxLength).toBe(35);
+    expect(screen.getByLabelText('Username').getAttribute('pattern')).toBe('[A-Za-z0-9]{3,35}');
+  });
   it('fetches parameters before stretching and handles wrong password without navigation', async () => {
     let wrong = true;
     vi.mocked(apiRequest).mockImplementation(async path => {

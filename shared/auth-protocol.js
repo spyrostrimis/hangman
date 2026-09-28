@@ -2,7 +2,10 @@
 export const KDF = Object.freeze({ algorithm: 'PBKDF2-SHA-256', iterations: 600000, version: 1 });
 export const SALT_PATTERN = /^[a-f0-9]{32}$/;
 export const CREDENTIAL_PATTERN = /^[a-f0-9]{64}$/;
-export const USERNAME_PATTERN = /^[A-Za-z0-9]{3,35}$/;
+// New accounts get at most 20 characters. Sign-in still accepts the former 35-character
+// limit so accounts created before the change are not locked out.
+export const USERNAME_PATTERN = /^[A-Za-z0-9]{3,20}$/;
+export const SIGNIN_USERNAME_PATTERN = /^[A-Za-z0-9]{3,35}$/;
 export const normalizeUsername = username => username.trim().toLowerCase();
 export const toHex = bytes => Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
 export const fromHex = hex => Uint8Array.from(hex.match(/../g) ?? [], byte => parseInt(byte, 16));
