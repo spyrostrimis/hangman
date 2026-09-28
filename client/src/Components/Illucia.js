@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import RegisteredOnly from './RegisteredOnly';
 import { useAuth } from './AuthProvider';
 import { applyGuess, createRound, getPattern, getRemainingMisses, getRoundStatus, MAX_MISSES } from '../lib/hangman-core.js';
 import { ALPHABET, VOCABULARY_TIERS, createKnowledge, isAcceptedWord, parseLexicon } from '../lib/illucia/lexicon.js';
@@ -13,7 +13,7 @@ export default function Illucia() {
   const { user, status, refresh } = useAuth();
   if (status === 'loading') return <p role="status">Checking your session…</p>;
   if (status === 'error') return <div className="illucia-page"><p>Cannot check your session right now.</p><button onClick={refresh}>Try again</button></div>;
-  if (!user) return <Navigate to="/login" replace state={{ from: '/illucia' }} />;
+  if (!user) return <RegisteredOnly from="/illucia" />;
   return <IlluciaPage key={user.id} />;
 }
 

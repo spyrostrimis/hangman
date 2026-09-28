@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import RegisteredOnly from './RegisteredOnly';
 import { useAuth } from './AuthProvider';
 import IlluciaFigure from './IlluciaFigure';
 import { applyGuess, createRound, getPattern, getRemainingMisses, getRoundStatus, MAX_MISSES } from '../lib/hangman-core.js';
@@ -22,7 +22,7 @@ export default function IlluciaObservatory() {
   const { user, status, refresh } = useAuth();
   if (status === 'loading') return <p role="status">Checking your session…</p>;
   if (status === 'error') return <div className="obs-page"><p>Cannot check your session right now.</p><button onClick={refresh}>Try again</button></div>;
-  if (!user) return <Navigate to="/login" replace state={{ from: '/illucia-observatory' }} />;
+  if (!user) return <RegisteredOnly from="/illucia-observatory" />;
   return <ObservatoryPage key={user.id} username={user.username} />;
 }
 

@@ -5,6 +5,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthProvider';
 import AccountForm from './AccountForm';
 import Illucia from './Illucia';
+import IlluciaObservatory from './IlluciaObservatory';
 import Halloffame from './Halloffame';
 import { apiRequest, ApiError } from '../lib/api.js';
 import { deriveCredential, registrationParameters } from '../lib/credential.js';
@@ -148,13 +149,25 @@ describe('round score lifecycle', () => {
   });
 });
 
-it('redirects guests from Illucia and admits a signed-in player', async () => {
-  const tree = () => <MemoryRouter initialEntries={['/illucia']}><AuthProvider><Routes>
-    <Route path="/illucia" element={<Illucia />} /><Route path="/login" element={<p>Login gate</p>} />
+it('shows guests a registered-only notice on both Illucia pages and admits a signed-in player', async () => {
+  const tree = path => <MemoryRouter initialEntries={[path]}><AuthProvider><Routes>
+    <Route path="/illucia" element={<Illucia />} />
+    <Route path="/illucia-observatory" element={<IlluciaObservatory />} />
+    <Route path="/login" element={<p>Login gate</p>} />
   </Routes></AuthProvider></MemoryRouter>;
-  const guest = render(tree()); await screen.findByText('Login gate'); guest.unmount();
+  for (const path of ['/illucia', '/illucia-observatory']) {
+    const guest = render(tree(path));
+    expect(await screen.findByText(/Only for/)).toBeTruthy();
+    expect(screen.getByText(/Only for/).textContent).toBe('Only for registered players');
+    // No redirect to the sign-in form, and no game for guests.
+    expect(screen.queryByText('Login gate')).toBeNull();
+    expect(screen.queryByLabelText(/secret word/i)).toBeNull();
+    expect(screen.getByRole('link', { name: 'registered' }).getAttribute('href')).toBe('/login');
+    guest.unmount();
+  }
   apiRequest.mockResolvedValue({ user: player });
-  render(tree()); expect(await screen.findByText('Can your word outwit Illucia?')).toBeTruthy();
+  render(tree('/illucia')); expect(await screen.findByText('Can your word outwit Illucia?')).toBeTruthy();
+  expect(screen.queryByText(/Only for/)).toBeNull();
 });
 
 it('renders leaderboard loading, populated, empty and failure states without hanging', async () => {
