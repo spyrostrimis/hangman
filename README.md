@@ -20,7 +20,7 @@ Passwords use PBKDF2-HMAC-SHA-256 (600,000 iterations) in the browser. The serve
 
 Scoring is client-authoritative and forgeable by design. The server authenticates the player and increments the total; it does not verify the game. Password recovery is not available yet. Logout clears the browser cookie; copied tokens expire after 24 hours.
 
-Illucia remains a registered-player placeholder. Reverse Hangman and live AI are a separate future feature.
+Illucia is reverse Hangman for signed-in players: choose an accepted 3–15-letter word and challenge Apprentice, Scholar, or Master. A deterministic local solver guesses letters; six misses wins the round for you. The secret stays in the browser, commentary is scripted, and this mode awards no Hall of Fame points. [I4 implementation and local verification](docs/ILLUCIA-I4.md). Live AI commentary remains a later feature.
 
 ## Development
 
@@ -47,8 +47,7 @@ is included with the word files. Profanity filtering also uses the English list 
 [LDNOOBW contributors](https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words),
 licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 The derived vocabulary is filtered, lowercased, deduplicated and split by length with size annotations.
-[In-app credits source](client/public/illucia/credits.html). The vocabulary is prepared for the future Illucia game;
-the current placeholder does not load it.
+[In-app credits source](client/public/illucia/credits.html). Illucia loads only the selected word length when a challenge is submitted; the vocabulary is not bundled into JavaScript.
 
 <img src="client/src/Images/mw-logo-dark-background.png" alt="Merriam-Webster logo" width="100" height="100" />
 

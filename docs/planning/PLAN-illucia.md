@@ -10,11 +10,11 @@ Status legend: ✅ done · ▶ next · ☐ planned · ◇ optional/later · **OP
 | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | I0    | HARD RULES v4 in both mirrored copies                                                                                                                                               | ✅ `2c4317a`                                                                              |
 | I1    | Shared pure game core (`client/src/lib/hangman-core.js`); `/hangman` switched to it; stale keyboard closure, `remainingTries` and the answer `<div>` removed; Caps Lock fix flagged | ✅ `b482b9b` — reviewed: characterization tests first, mutation-checked, browser-verified |
-| MOB   | Phone pass on the existing pages, **before** the Illucia page (see §7)                                                                                                              | ▶                                                                                         |
+| MOB | Phone pass on existing pages | ✅ confirmed complete by Spyros, 2026-09-28 |
 | I2 | Word-list build tool | ✅ `2fad03f` — pinned, filtered, reproducible ESDB vocabulary |
 | I3 | Solver + benchmark harness | ✅ implemented and locally verified — [results](../../tools/ILLUCIA-SOLVER.md#recorded-i3-result); count retained |
 | I3b | Zero-candidate fallback + tier benchmark | ✅ implemented and locally verified — [11,700-game results](../../tools/ILLUCIA-TIERS.md#recorded-result-and-tier-decision) |
-| I4 | Illucia page v1 | ▶ next, after confirming MOB completion |
+| I4 | Illucia page v1 | ✅ implemented and locally verified — [evidence](../ILLUCIA-I4.md); production verification pending |
 | I5    | Workers AI commentary                                                                                                                                                               | ◇                                                                                         |
 | I6    | Text-to-speech toggle                                                                                                                                                               | ◇                                                                                         |
 | I7    | "Which Illucia can beat your word?" race experiment                                                                                                                                 | ◇                                                                                         |

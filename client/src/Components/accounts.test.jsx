@@ -154,7 +154,7 @@ it('redirects guests from Illucia and admits a signed-in player', async () => {
   </Routes></AuthProvider></MemoryRouter>;
   const guest = render(tree()); await screen.findByText('Login gate'); guest.unmount();
   apiRequest.mockResolvedValue({ user: player });
-  render(tree()); expect(await screen.findByText('Coming Soon!')).toBeTruthy();
+  render(tree()); expect(await screen.findByText('Can your word outwit Illucia?')).toBeTruthy();
 });
 
 it('renders leaderboard loading, populated, empty and failure states without hanging', async () => {
