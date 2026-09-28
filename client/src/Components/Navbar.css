@@ -76,9 +76,9 @@
   .navbarcustom { width: calc(100% - 24px); margin: 10px auto 12px; padding: 4px 6px; }
   .navbarcustom nav { flex-direction: column; width: 100%; }
   .nav-links { width: 100%; }
-  .nav-links a { flex: 0 0 33.33%; }
+  .nav-links a { flex: 0 0 33.33%; box-sizing: border-box; }
   .nav-account { width: 100%; justify-content: center; padding: 2px 0 0; border-left: 0; border-top: 1px solid #d8de0d44; }
-  .navbarcustom a, .navbarcustom .nav-logout { font-size: 12px; padding: 12px 4px; text-align: center; }
+  .navbarcustom a, .navbarcustom .nav-logout { font-size: min(12px, 3.1vw); padding: 12px 2px; text-align: center; }
   .navbarcustom a::after { bottom: 4px; }
   .nav-player { flex-direction: row; align-items: baseline; gap: 8px; max-width: 60%; }
 }
