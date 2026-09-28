@@ -15,6 +15,7 @@ const backgrounds = {
   '/': { desktop: home, mobile: homeMobile, position: 'center' },
   '/hangman': { desktop: hangman, mobile: hangmanMobile, position: 'top', blend: 'color-burn' },
   '/illucia': { desktop: illucia, mobile: illuciaMobile, position: 'top' },
+  '/illucia-observatory': { desktop: illucia, mobile: illuciaMobile, position: 'top' },
   '/hall-of-fame': { desktop: hall, mobile: hallMobile, position: 'top' },
 };
 

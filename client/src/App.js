@@ -11,6 +11,7 @@ import Word from "./Components/Word";
 import Wordfacts from './Components/Wordfacts';
 import Keyboard from "./Components/Keyboard";
 import Illucia from './Components/Illucia';
+import IlluciaObservatory from './Components/IlluciaObservatory';
 import Halloffame from "./Components/Halloffame";
 import Footer from './Components/Footer';
 import soundbtn from "./Images/soundbtn.png";
@@ -361,6 +362,7 @@ function App() {
             path="/illucia"
             element={<Illucia />}
           />
+          <Route path="/illucia-observatory" element={<IlluciaObservatory />} />
           <Route
             path="/hall-of-fame"
             element={<Halloffame Winner={Winner} />}

@@ -14,6 +14,7 @@ export default function Navbar() {
     <Link to="/">HOMEWORLD</Link>
     <Link to="/hangman">Play Hangman</Link>
     <Link to="/illucia">Play vs AI</Link>
+    <Link to="/illucia-observatory">Illucia</Link>
     <Link to="/hall-of-fame">Hall of Fame</Link>
     {user ? <button className="nav-logout" onClick={signOut} disabled={pending}>{pending ? 'Signing out…' : 'Logout'}</button>
       : status === 'loading' ? <span className="session-loading">Checking session…</span> : <Link to="/login">Sign In</Link>}
