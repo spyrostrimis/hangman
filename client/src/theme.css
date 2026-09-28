@@ -1,0 +1,88 @@
+/* Shared look for every page, taken from the Hangman game and the Illucia
+   Observatory: TechnoBoard titles, Bruno Ace SC controls, monospace text,
+   cyan screens, yellow neon, grey consoles. */
+:root {
+  --hm-cyan: rgb(16 207 230);
+  --hm-yellow: #f3f400;
+  --hm-neon: #edee02;
+  --hm-green: #3ee07a;
+  --hm-hit: rgb(22 142 27);
+  --hm-magenta: #bd1b6d;
+  --hm-pink: #db3eb1;
+  --hm-violet: #a54ed7;
+  --hm-steel: #2c2e34;
+  --hm-text: #d9d8db;
+  --hm-muted: #a9a8ad;
+}
+
+.hm-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; margin: 0; }
+
+/* Neon page title, as on the Observatory. */
+.hm-title {
+  margin: 0;
+  font-family: technoboard;
+  font-weight: normal;
+  font-size: clamp(32px, 5.5vw, 50px);
+  letter-spacing: .06em;
+  color: var(--hm-neon);
+  text-shadow: 0 0 15px var(--hm-neon);
+}
+.hm-subtitle { margin: 4px 0 0; font-family: bruno; font-size: 13px; letter-spacing: .12em; color: #b8b7bb; }
+
+/* The cyan screen from Word Facts, with faint CRT scanlines. */
+.hm-screen {
+  padding: 8px;
+  border: 1px solid rgb(16 207 230 / 50%);
+  border-radius: 5px;
+  background-color: #00000063;
+  box-shadow: 0 0 2px 2px var(--hm-cyan);
+}
+.hm-screen-inner {
+  position: relative;
+  padding: 16px 20px;
+  border-radius: 2px;
+  box-shadow: 0 0 8px 0 rgb(16 207 230 / 99%), inset 0 0 119px 41px #d9d8db2e;
+  color: var(--hm-text);
+  font-family: monospace;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.hm-screen-inner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, #ffffff08 0 1px, transparent 1px 4px);
+}
+
+/* Arcade button: Bruno, cyan glow, curved top like the replay buttons. */
+.hm-button {
+  display: inline-block;
+  padding: 14px 32px;
+  font-family: bruno;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #d0d2d5;
+  background: none;
+  border: 1px solid #93939333;
+  border-radius: 12px 12px 5px 5px / 80px 80px 5px 5px;
+  box-shadow: 0 0 10px 0 rgb(16 207 230 / 99%), inset 0 0 33px 10px #d9d8db24;
+  cursor: pointer;
+  transition: color .2s, box-shadow .2s;
+}
+.hm-button:hover, .hm-button:focus-visible { color: #95dee9; box-shadow: 0 0 16px 2px rgb(16 207 230 / 99%), inset 0 0 33px 10px #d9d8db24; }
+.hm-button.primary { color: var(--hm-yellow); box-shadow: 0 0 10px 0 #edee02cc, inset 0 0 33px 10px #d9d8db24; }
+.hm-button.primary:hover, .hm-button.primary:focus-visible { color: #fff; box-shadow: 0 0 18px 3px #edee02cc, inset 0 0 33px 10px #d9d8db24; }
+.hm-button:disabled { opacity: .6; cursor: wait; }
+a.hm-button:hover { color: #95dee9 !important; }
+a.hm-button.primary:hover { color: #fff !important; }
+
+/* Row of six power cells. */
+.hm-cells { display: flex; gap: 5px; }
+.hm-cells span { width: 13px; height: 24px; border-radius: 2px; border: 1px solid #bd1b6d99; background: #1a1b20; transition: background .4s, box-shadow .4s; }
+.hm-cells span.on { border-color: var(--hm-green); background: var(--hm-green); box-shadow: 0 0 6px var(--hm-green); }
+.hm-label { display: block; font-family: bruno; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--hm-muted); margin-bottom: 6px; }
+
+:where(.hm-screen, .hm-button, .navbarcustom) :focus-visible, .hm-button:focus-visible { outline: 2px solid var(--hm-yellow); outline-offset: 3px; }

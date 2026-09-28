@@ -1,0 +1,84 @@
+/* The yellow neon capsule, now with a lit marker under the current page
+   and the signed-in player's name and points. */
+.navbarcustom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  margin: 15px auto 18px;
+  padding: 2px 14px;
+  box-sizing: border-box;
+  border-bottom: 3px solid #d8de0d;
+  border-radius: 10px 10px 12px 12px / 60px 60px 12px 12px;
+  box-shadow: 0 0 4px 0 rgb(255 255 0 / 85%), 0 1px 30px -1px rgb(230 230 230 / 79%), inset 0 -4px 15px 2px rgb(230 230 230 / 25%);
+  background: #05071259;
+}
+.navbarcustom nav { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; column-gap: 6px; }
+.nav-links, .nav-account { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; }
+.nav-account { gap: 4px; padding-left: 10px; border-left: 1px solid #d8de0d44; }
+
+.navbarcustom a, .navbarcustom .nav-logout {
+  position: relative;
+  display: inline-block;
+  padding: 14px 14px;
+  font-family: bruno;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  color: #f3f400;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition: color .2s, text-shadow .2s;
+}
+.navbarcustom a:hover, .navbarcustom .nav-logout:hover:not(:disabled) { color: #fff !important; text-shadow: 0 0 10px #edee02; }
+.navbarcustom .nav-logout:disabled { opacity: .6; cursor: wait; }
+
+/* Current page: a short lit bar, like a console LED. */
+.navbarcustom a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 0;
+  height: 3px;
+  border-radius: 2px;
+  background: #edee02;
+  box-shadow: 0 0 8px 1px #edee02;
+  transform: translateX(-50%);
+  transition: width .25s ease;
+}
+.navbarcustom a.active::after { width: 60%; }
+.navbarcustom a.active { text-shadow: 0 0 10px #edee0299; }
+
+.nav-player {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  max-width: 180px;
+  padding: 4px 8px;
+  line-height: 1.2;
+  text-align: right;
+}
+.nav-player-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; font: 13px monospace; color: var(--hm-text, #d9d8db); }
+.nav-player-score { font-family: bruno; font-size: 12px; color: var(--hm-cyan, #10cfe6); text-shadow: 0 0 6px rgb(16 207 230 / 60%); }
+.session-loading { padding: 14px; font: 13px monospace; color: #ddd; }
+.navbarcustom .account-error { margin: 0 0 8px; }
+
+@media (min-width: 1281px) {
+  .navbarcustom a, .navbarcustom .nav-logout { font-size: 18px; padding: 16px 16px; }
+}
+
+/* Phones: links in a tidy three-column grid, the player's row underneath. */
+@media (max-width: 800px) {
+  .navbarcustom { width: calc(100% - 24px); margin: 10px auto 12px; padding: 4px 6px; }
+  .navbarcustom nav { flex-direction: column; width: 100%; }
+  .nav-links { width: 100%; }
+  .nav-links a { flex: 0 0 33.33%; }
+  .nav-account { width: 100%; justify-content: center; padding: 2px 0 0; border-left: 0; border-top: 1px solid #d8de0d44; }
+  .navbarcustom a, .navbarcustom .nav-logout { font-size: 12px; padding: 12px 4px; text-align: center; }
+  .navbarcustom a::after { bottom: 4px; }
+  .nav-player { flex-direction: row; align-items: baseline; gap: 8px; max-width: 60%; }
+}

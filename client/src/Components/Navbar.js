@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
+import './Navbar.css';
+
+const LINKS = [
+  { to: '/', label: 'HOMEWORLD', end: true },
+  { to: '/hangman', label: 'Play Hangman' },
+  { to: '/illucia', label: 'Play vs AI' },
+  { to: '/illucia-observatory', label: 'Illucia' },
+  { to: '/hall-of-fame', label: 'Hall of Fame' },
+];
+
 export default function Navbar() {
   const { user, status, logout } = useAuth();
   const [error, setError] = useState('');
@@ -10,13 +20,23 @@ export default function Navbar() {
     try { await logout(); } catch (failure) { setError(failure.message); }
     finally { setPending(false); }
   }
-  return <div className="navbarcustom"><nav>
-    <Link to="/">HOMEWORLD</Link>
-    <Link to="/hangman">Play Hangman</Link>
-    <Link to="/illucia">Play vs AI</Link>
-    <Link to="/illucia-observatory">Illucia</Link>
-    <Link to="/hall-of-fame">Hall of Fame</Link>
-    {user ? <button className="nav-logout" onClick={signOut} disabled={pending}>{pending ? 'Signing out…' : 'Logout'}</button>
-      : status === 'loading' ? <span className="session-loading">Checking session…</span> : <Link to="/login">Sign In</Link>}
-  </nav>{error && <p role="alert" className="account-error">{error}</p>}</div>;
+  return <div className="navbarcustom">
+    <nav aria-label="Main">
+      <div className="nav-links">
+        {LINKS.map(link => <NavLink key={link.to} to={link.to} end={link.end}>{link.label}</NavLink>)}
+      </div>
+      <div className="nav-account">
+        {user ? <>
+          <span className="nav-player" title={`Signed in as ${user.username}`}>
+            <span className="nav-player-name">{user.username}</span>
+            <span className="nav-player-score">{(user.score ?? 0).toLocaleString('en-US')} pts</span>
+          </span>
+          <button type="button" className="nav-logout" onClick={signOut} disabled={pending}>{pending ? 'Signing out…' : 'Logout'}</button>
+        </> : status === 'loading'
+          ? <span className="session-loading">Checking session…</span>
+          : <NavLink to="/login">Sign In</NavLink>}
+      </div>
+    </nav>
+    {error && <p role="alert" className="account-error">{error}</p>}
+  </div>;
 }

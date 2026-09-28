@@ -98,61 +98,6 @@ a:hover {
   min-height: calc(100vh);
 }
 
-.navbarcustom {
-  display: flex;
-  justify-content: center;
-  padding: 0px 15px 0px 12px;
-  margin: 15px 20px 20px 20px;
-  /* background-color: #eee; */
-  /* max-width: 1240px; */
-  height: 53px;
-  margin-left: auto;
-  margin-right: auto;
-  font-family: "PT Sans Narrow", sans-serif;
-  font-family: technoboard;
-  /* font-size: 19px !important; */
-  /* border-bottom: 4px solid yellow; */
-  /* border-radius: 12px; */
-  /* background-color: #c0c0c021 !important; */
-  /* box-shadow: 0px 8px 30px -4px rgba(230, 230, 230, 0.79) !important; */
-  /* -webkit-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79); */
-  -moz-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
-  border-bottom: 3px solid #d8de0d;
-  border-radius: 12px;
-  /* background-color: #1c230f30 !important; */
-  /* box-shadow: 0px 8px 30px -4px rgba(230, 230, 230, 0.79) !important; */
-  /* -webkit-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79); */
-  -moz-box-shadow: 2px 6px 0px 3px rgba(230, 230, 230, 0.79);
-  box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%),
-    0px 1px 30px -1px rgba(230, 230, 230, 0.79),
-    inset 0px -4px 15px 2px rgba(230, 230, 230, 0.25);
-  -webkit-box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%),
-    0px 1px 30px -1px rgba(230, 230, 230, 0.79),
-    inset 0px -4px 15px 2px rgba(230, 230, 230, 0.25);
-  -moz-box-shadow: 0px 0px 4px 0px rgb(255 255 0 / 85%),
-    0px 1px 30px -1px rgba(230, 230, 230, 0.79),
-    inset 0px -4px 15px 2px rgba(230, 230, 230, 0.25);
-  align-items: center;
-  /* width: 1240px; */
-  border-top-left-radius: 10px 60px;
-  border-top-right-radius: 10px 60px;
-}
-
-.navbarcustom a {
-  text-decoration: none;
-  padding: 25px;
-  /* font-weight: 600; */
-  font-family: "PT Sans Narrow", sans-serif;
-  font-size: 20px;
-  color: #206ec7;
-  color: #262622;
-  font-family: technoboard;
-  color: #f3f400;
-  /* text-transform: uppercase; */
-  font-family: bruno;
-  font-weight: 600;
-}
-
 .formcontainer {
   max-width: 540px;
   margin-left: auto;
@@ -413,7 +358,6 @@ button:focus::after {
 /* HANGMAN PAGE */
 
 /* Additional styles for the Hall Of Fame page */
-
 
 .figurefacts {
   width: 100%;
@@ -1053,7 +997,6 @@ td:nth-of-type(3) {
 
 /* Additional styles for the Illucia page */
 
-
 .illucontainer {
   max-width: 900px;
   margin-left: auto;
@@ -1072,7 +1015,6 @@ td:nth-of-type(3) {
 }
 
 /* Additional styles for the Hall Of Fame page */
-
 
 .hallcontainer {
   max-width: 900px;
@@ -1259,31 +1201,9 @@ button.popover-close-btn:hover {
   background: none;
   color: #2cb5f9f2;
 }
-/* 
-@media (min-width: 960px) and (max-width: 1024px) {
-  .navbarcustom {
-  display: flex;
-  justify-content: space-between;
-  padding: 0px 15px 0px 12px;
-  margin: 15px 20px 20px 20px;
-  height: 53px;
-}
-  #root {
-    transform: scale(0.8) translateZ(0);
-  }
-  
-} 
-*/
+
 
 @media screen and (max-width: 1280px) {
-  .navbarcustom {
-    margin: 12px 20px 0px 15px;
-    height: 41px;
-  }
-  .navbarcustom a {
-    font-size: 16px;
-    padding: 20px;
-  }
   .introcontainer {
     font-weight: 600;
     font-size: 16px;
@@ -1607,15 +1527,6 @@ input {
 .account-form button:disabled, .nav-logout:disabled { opacity: .6; cursor: wait; }
 .account-help { font: 14px/1.5 sans-serif; text-align: left; margin-top: 12px; }
 .account-error { color: #ffb6c8; font: 16px/1.5 sans-serif; overflow-wrap: anywhere; }
-.navbarcustom .nav-logout { background: transparent; border: 0; color: #f3f400; font: inherit; font-family: bruno; font-size: 20px; font-weight: 600; padding: 25px; cursor: pointer; }
-.session-loading { padding: 16px; color: #ddd; }
-.navbarcustom { height: auto; min-height: 53px; flex-direction: column; }
-.navbarcustom nav { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; }
-.navbarcustom nav a, .navbarcustom .nav-logout { display: inline-block; white-space: nowrap; padding: 12px 20px; }
-@media (max-width: 1280px) { .navbarcustom .nav-logout { font-size: 16px; } }
-@media (max-width: 800px) {
-  .navbarcustom nav a, .navbarcustom .nav-logout { font-size: 13px; padding: 10px 8px; }
-}
 
 /* Phone layout for /hangman (same breakpoint as the mobile route art):
    stack the two panels, keep Artsy clear of the painting, and fit the word

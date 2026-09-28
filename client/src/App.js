@@ -1,3 +1,4 @@
+import './theme.css';
 import './App.css';
 import PageBackground from './Components/PageBackground';
 import { getPageArt, prefetchLinkArt } from './lib/page-art.js';
