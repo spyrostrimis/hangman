@@ -1,8 +1,10 @@
-import React from 'react'
-import { useState, useEffect } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
-import ronny from "../Images/ronny.png";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import ronnyai from "../Images/ronnyai.png";
+import { useAuth } from "./AuthProvider";
+import { MAX_MISSES } from "../lib/hangman-core.js";
+
+const KEYS = "abcdefghijklmnopqrstuvwxyz".split("");
 
 const Keyboard = ({
   activeLetters,
@@ -16,41 +18,13 @@ const Keyboard = ({
   Loser,
   disablehint1 = false,
   disablehint2 = false,
+  missesLeft = MAX_MISSES,
+  onPlayAgain,
+  scoreMessage = "",
 }) => {
-  const KEYS = [
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
-  ];
-
-  // console.log("activeLetters", activeLetters);
-  // console.log("inactiveLetters", inactiveLetters);
-
   const [isFlipped, setIsFlipped] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     let delayTimeout;
@@ -66,85 +40,28 @@ const Keyboard = ({
     return () => clearTimeout(delayTimeout);
   }, [Winner, Loser]);
 
-  const handleRefresh = () => {
-    window.location.reload();
-  };
-
-  const handleNavigate = () => {
-    navigate("/hall-of-fame");
-  };
-
-  // return (
-  //   <div className="keyboardcontainer">
-  //     <div className="keyboardhints">
-  //       <button id="hint1" onClick={setHint1}>
-  //         Hint 1
-  //       </button>
-  //       <button id="hint2" onClick={setHint2}>
-  //         Hint 2
-  //       </button>
-  //       <button id="tips" onClick={setInstructions}>
-  //         INSTRUCTIONS & TIPS
-  //       </button>
-  //     </div>
-  //     <div className="keyboardronny">
-  //       <img
-  //         src={ronny}
-  //         alt={`painting by ChatGPT`}
-  //         title={`painting by ChatGPT`}
-  //         width={200}
-  //       />
-  //     </div>
-  //     <div
-  //       style={{
-  //         display: "grid",
-  //         gridTemplateColumns: "repeat(auto-fit, minmax(60px, 1fr))",
-  //         gap: "7px",
-  //         maxWidth: "900px",
-  //       }}
-  //     >
-  //       {KEYS.map((key) => {
-  //         const isActive = activeLetters.includes(key);
-  //         const isInactive = inactiveLetters.includes(key);
-  //         return (
-  //           <button
-  //             onClick={() => addChosenLetter(key)}
-  //             // className="keyboardbtn"
-  //             className={`keyboardbtn ${isActive ? "active" : ""} ${
-  //               isInactive ? "inactive" : ""
-  //             }`}
-  //             disabled={isInactive || isActive || disabled}
-  //             key={key}
-  //           >
-  //             {key}
-  //           </button>
-  //         );
-  //       })}
-  //     </div>
-  //   </div>
-  // );
   return (
     <div className={`keyboardcontainer ${isFlipped ? "flipped" : ""}`}>
       <div className="keyboardcontainer-inner">
         <div className="keyboard-front">
-          <div className="keyboardhints">
-            <button
-              id="hint1"
-              onClick={setHint1}
-              disabled={disablehint1 || disabled}
-            >
-              Hint 1
-            </button>
-            <button
-              id="hint2"
-              onClick={setHint2}
-              disabled={disablehint2 || disabled}
-            >
-              Hint 2
-            </button>
-            <button id="tips" onClick={setInstructions} disabled={false}>
-              INSTRUCTIONS & TIPS
-            </button>
+          <div className="keyboardtoolbar">
+            <div className="keyboardhints">
+              <button id="hint1" onClick={setHint1} disabled={disablehint1 || disabled}>
+                Hint 1
+              </button>
+              <button id="hint2" onClick={setHint2} disabled={disablehint2 || disabled}>
+                Hint 2
+              </button>
+              <button id="tips" onClick={setInstructions} disabled={false}>
+                Instructions & tips
+              </button>
+            </div>
+            <div className="keyboardcells" role="img" aria-label={`${missesLeft} of ${MAX_MISSES} attempts left`}>
+              <span className="hm-label">Attempts left</span>
+              <div className="hm-cells">
+                {Array.from({ length: MAX_MISSES }, (_, index) => <span key={index} className={index < missesLeft ? "on" : ""} />)}
+              </div>
+            </div>
           </div>
           <div className="keyboardronny">
             <img
@@ -152,22 +69,18 @@ const Keyboard = ({
               src={ronnyai}
               width={170}
               height={204}
-              alt="painting by ChatGPT"
-              title="painting by ChatGPT"
-              // width={200}
+              alt="Professor Han Fastolfe"
+              title="Professor Han Fastolfe"
             />
           </div>
-          <div className='keyboard'>
+          <div className="keyboard">
             {KEYS.map((key) => {
               const isActive = activeLetters.includes(key);
               const isInactive = inactiveLetters.includes(key);
               return (
                 <button
                   onClick={() => addChosenLetter(key)}
-                  // className="keyboardbtn"
-                  className={`keyboardbtn ${isActive ? "active" : ""} ${
-                    isInactive ? "inactive" : ""
-                  }`}
+                  className={`keyboardbtn ${isActive ? "active" : ""} ${isInactive ? "inactive" : ""}`}
                   disabled={isInactive || isActive || disabled}
                   key={key}
                 >
@@ -179,12 +92,21 @@ const Keyboard = ({
         </div>
         <div className="keyboard-back">
           <div className="keyboardreplay">
-            <button id="playagain" onClick={handleRefresh}>
-              Play Again!
-            </button>
-            <button id="checkscore" onClick={handleNavigate}>
-              What's your score?
-            </button>
+            <p className="keyboard-result">{Winner ? "Artsy is back online" : "Artsy is still offline"}</p>
+            {scoreMessage && <p className="keyboard-score" role="status">{scoreMessage}</p>}
+            {Winner && !user && (
+              <p className="keyboard-score">
+                <Link to="/login" state={{ from: "/hangman" }}>Sign in</Link> to earn 100 points for your next rescue.
+              </p>
+            )}
+            <div className="keyboard-replay-actions">
+              <button id="playagain" className="hm-button primary" onClick={onPlayAgain}>
+                Play again
+              </button>
+              <button id="checkscore" className="hm-button" onClick={() => navigate("/hall-of-fame")}>
+                Hall of Fame
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -192,4 +114,4 @@ const Keyboard = ({
   );
 };
 
-export default Keyboard
+export default Keyboard;

@@ -3,165 +3,35 @@ import artsy from "../Images/artsy.png";
 import defaultpainting from "../Images/painting.webp";
 import gameover from "../Images/gameover.png";
 
-const HEAD = (
-  <div
-    key="head"
-    style={{
-      height: "40px",
-      width: "40px",
-      borderRadius: "100%",
-      border: "solid 10px black",
-      position: "absolute",
-      top: "50px",
-      right: "-25px",
-    }}
-  ></div>
-);
-
-const BODY = (
-  <div
-    key="body"
-    style={{
-      height: "110px",
-      width: "10px",
-      backgroundColor: "black",
-      position: "absolute",
-      top: "110px",
-      right: 0,
-    }}
-  ></div>
-);
-
-const LEFT_ARM = (
-  <div
-    key="leftarm"
-    style={{
-      height: "10px",
-      width: "100px",
-      backgroundColor: "black",
-      position: "absolute",
-      top: "140px",
-      right: "7px",
-      rotate: "14deg",
-      // transformOrigin: "right bottom",
-    }}
-  ></div>
-);
-
-const RIGHT_ARM = (
-  <div
-    key="rightarm"
-    style={{
-      height: "10px",
-      width: "112px",
-      backgroundColor: "black",
-      position: "absolute",
-      top: "125px",
-      right: "-102px",
-      rotate: "330deg",
-    }}
-  ></div>
-);
-
-const LEFT_LEG = (
-  <div
-    key="leftleg"
-    style={{
-      height: "120px",
-      width: "10px",
-      backgroundColor: "black",
-      position: "absolute",
-      top: "220px",
-      right: "1px",
-      rotate: "20deg",
-      transformOrigin: "right top",
-    }}
-  ></div>
-);
-
-const RIGHT_LEG = (
-  <div
-    key="rightleg"
-    style={{
-      height: "128px",
-      width: "10px",
-      backgroundColor: "black",
-      position: "absolute",
-      top: "219px",
-      right: 0,
-      rotate: "-20deg",
-      transformOrigin: "right top",
-    }}
-  ></div>
-);
-
-const BODY_PARTS = [HEAD, BODY, LEFT_ARM, RIGHT_ARM, LEFT_LEG, RIGHT_LEG];
-
-const Figure = ({ painting, Winner = false, Loser = false }) => {
-  // console.log(painting);
-
-  // useEffect(() => {
-  //   setRemaining();
-  // }, [incorrectGuesses]);
-
+// Artsy's pod. His screen shows his reboot progress while the round is on,
+// his painting when the player wins, and the Game Over card on a loss.
+const Figure = ({ painting, progress = 0, Winner = false, Loser = false }) => {
+  const percent = Math.round(progress * 100);
+  const artwork = Winner ? painting || defaultpainting : Loser ? gameover : null;
   return (
     <div className="figurecontainer">
       <div className="figurescreen">
         <div
-          className="figurescreeninner"
-          style={
-            Winner
-              ? painting
-                ? { backgroundImage: `url(${painting})` }
-                : { backgroundImage: `url(${defaultpainting})` }
-              : Loser
-              ? { backgroundImage: `url(${gameover})` }
-              : null
-          }
+          className={`figurescreeninner ${artwork ? "has-art" : ""}`}
+          style={artwork ? { backgroundImage: `url(${artwork})` } : null}
         >
-          {/* <div style={{ position: "relative" }}>
-      {BODY_PARTS.slice(0, incorrectGuesses)}
-      <div
-        style={{
-          height: "40px",
-          width: "10px",
-          backgroundColor: "black",
-          position: "absolute",
-          top: "10px",
-          right: 0,
-        }}
-      ></div>
-      <div
-        style={{
-          height: "10px",
-          width: "200px",
-          backgroundColor: "black",
-          marginLeft: "120px",
-        }}
-      ></div>
-      <div
-        style={{
-          height: "400px",
-          width: "10px",
-          backgroundColor: "black",
-          marginLeft: "120px",
-        }}
-      ></div>
-      <div
-        style={{ height: "10px", width: "250px", backgroundColor: "black" }}
-      ></div>
-        </div> */}
+          {!artwork && (
+            <div className="artsy-status">
+              <span className="artsy-status-name">Artsy</span>
+              <strong className="artsy-status-state">Offline</strong>
+              <span className="hm-label" id="artsy-reboot-label">Reboot</span>
+              <div className="artsy-reboot" role="progressbar" aria-labelledby="artsy-reboot-label"
+                aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>
+                <span style={{ width: `${percent}%` }} />
+              </div>
+              <span className="artsy-reboot-value">{percent}%</span>
+            </div>
+          )}
         </div>
       </div>
+      {Winner && <p className="figure-banner">Back online</p>}
       <div className={`figureartsy ${Winner ? "winner" : ""}`}>
-        <img
-          id="wordartsyimg"
-          src={artsy}
-          width={288}
-          height={250}
-          alt={`The robot Artsy`}
-          // width={250}
-        />
+        <img id="wordartsyimg" src={artsy} width={288} height={250} alt="The robot Artsy" />
       </div>
     </div>
   );

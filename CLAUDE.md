@@ -155,7 +155,7 @@ The account rebuild removed the legacy server, localStorage authentication, disc
 
 Still open:
 
-- The old hangman BODY_PARTS render in `Components/Figure.js` remains commented out. There is deliberately no gallows: the story is rescuing a robot. Do not restore it.
+- There is deliberately no gallows: the story is rescuing a robot. The old BODY_PARTS code was deleted from `Components/Figure.js`; Artsy's screen shows reboot progress instead. Do not restore it.
 - Header/Footer imports and commented render references remain. React StrictMode is still disabled in the app, but the score lifecycle is tested under StrictMode and must not depend on that setting.
 - Game messages remain inline in App.js; the rules come from `hangman-core.js`. Do not widen unrelated slices into a game-engine rewrite.
 - Scores remain forgeable by design. UI duplicate prevention handles ordinary rerenders; it is not server-side win validation or exactly-once delivery.

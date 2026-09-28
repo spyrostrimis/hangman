@@ -133,3 +133,51 @@ describe('/hangman game rules', () => {
     expect(solved.textContent).toContain('puzzle');
   });
 });
+
+describe('/hangman console and rounds', () => {
+  const ATLANTIS = manifest.words.find(record => record.word === 'atlantis');
+
+  it('fills the reboot bar from revealed slots and empties one attempt cell per miss', () => {
+    play();
+    const bar = screen.getByRole('progressbar');
+    expect(bar.getAttribute('aria-valuenow')).toBe('0');
+    expect(screen.getByRole('img', { name: '6 of 6 attempts left' })).toBeTruthy();
+    click('z');
+    expect(bar.getAttribute('aria-valuenow')).toBe('33');
+    // Positive control: a hit leaves the attempts alone, a miss removes one.
+    expect(screen.getByRole('img', { name: '6 of 6 attempts left' })).toBeTruthy();
+    click('a');
+    expect(screen.getByRole('img', { name: '5 of 6 attempts left' })).toBeTruthy();
+    expect(bar.getAttribute('aria-valuenow')).toBe('33');
+  });
+
+  it('plays again in place with a different word and a fresh board', () => {
+    vi.mocked(selectRandomWord).mockReturnValueOnce(PUZZLE).mockReturnValueOnce(PUZZLE).mockReturnValue(ATLANTIS);
+    const { container } = play();
+    'puzle'.split('').forEach(click);
+    expect(panel(container)).toContain('Definition:');
+    fireEvent.click(screen.getByRole('button', { name: 'Play again' }));
+    expect(slots(container)).toHaveLength(8);
+    expect(visible(container)).toBe('________');
+    expect(key('p').disabled).toBe(false);
+    expect(key('p').className).not.toContain('active');
+    expect(panel(container)).not.toContain('Definition:');
+    expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('0');
+    expect(screen.getByRole('img', { name: '6 of 6 attempts left' })).toBeTruthy();
+    click('a');
+    expect(visible(container)).toBe('a__a____');
+  });
+
+  it('shows the saved score to a signed-in winner', async () => {
+    vi.mocked(apiRequest).mockImplementation(async path => {
+      if (path === '/user/me') return { user: { id: 'player-id', username: 'Player', score: 0 } };
+      if (path === '/user/add100') return { score: 100 };
+      throw new Error(`Unexpected request: ${path}`);
+    });
+    play();
+    await screen.findByText('Player');
+    expect(screen.queryByText(/points saved/)).toBeNull();
+    'puzle'.split('').forEach(click);
+    expect(await screen.findByText('100 points saved! Your total is 100.')).toBeTruthy();
+  });
+});

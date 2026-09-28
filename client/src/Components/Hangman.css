@@ -1,0 +1,297 @@
+/* The Hangman page: Artsy's pod, the Professor's notes, the word, and the
+   grey console. Class names are kept from the 2023 page. */
+
+.figurefacts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  justify-items: center;
+  gap: 20px;
+  width: min(960px, calc(100% - 32px));
+  margin-top: 8px;
+}
+
+/* ---------- Artsy's pod ---------- */
+.figurecontainer {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  height: 440px;
+  overflow: hidden;
+  border-bottom: 4px solid #d9d8dbbd;
+  border-radius: 90px;
+  background: radial-gradient(ellipse at 50% 35%, #1d215066, #05071266 70%);
+  box-shadow: inset 0 -80px 32px -34px #d9d8db91;
+}
+.figurescreen {
+  position: absolute;
+  top: 30px;
+  right: 34px;
+  width: 58%;
+  aspect-ratio: 1;
+  padding: 7px;
+  box-sizing: border-box;
+  border: 1px solid rgb(217 216 219 / 50%);
+  border-radius: 5px;
+  background: #00000063;
+  box-shadow: 0 0 2px 2px rgb(217 216 219);
+}
+.figurescreeninner {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #14161c center / cover no-repeat;
+  box-shadow: 0 0 8px 0 #d9d8db;
+}
+.figurescreeninner.has-art { animation: figure-art .8s ease-out; }
+@keyframes figure-art { from { opacity: 0; filter: brightness(2.5); } }
+
+/* Offline status: a dim CRT with faint static. */
+.artsy-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 100%;
+  padding: 0 14px;
+  text-align: center;
+  background:
+    repeating-linear-gradient(to bottom, #ffffff0a 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, #232733, #0b0c10 75%);
+}
+.artsy-status-name { font-family: technoboard; font-size: 24px; color: var(--hm-text); }
+.artsy-status-state { font-family: bruno; font-weight: normal; font-size: 14px; letter-spacing: .2em; text-transform: uppercase; color: #ff4fa6; text-shadow: 0 0 10px var(--hm-magenta); animation: artsy-blink 1.4s steps(2, jump-none) infinite; margin-bottom: 12px; }
+@keyframes artsy-blink { 50% { opacity: .35; } }
+.artsy-reboot { width: 80%; height: 12px; padding: 2px; box-sizing: border-box; border: 1px solid #93939366; border-radius: 3px; }
+.artsy-reboot span {
+  display: block;
+  height: 100%;
+  background: repeating-linear-gradient(to right, var(--hm-green) 0 6px, transparent 6px 8px);
+  filter: drop-shadow(0 0 4px var(--hm-green));
+  transition: width .6s ease;
+}
+.artsy-reboot-value { font-family: bruno; font-size: 13px; color: var(--hm-green); margin-top: 4px; }
+
+.figure-banner {
+  position: absolute;
+  right: 26px;
+  bottom: 30px;
+  margin: 0;
+  font-family: technoboard;
+  font-size: 32px;
+  color: var(--hm-yellow);
+  text-shadow: 0 0 16px var(--hm-yellow);
+  transform: rotate(-6deg);
+  animation: figure-banner .5s steps(2, jump-none) 4;
+}
+@keyframes figure-banner { 50% { opacity: 0; } }
+
+.figureartsy {
+  position: absolute;
+  left: 14px;
+  bottom: 8px;
+  animation: artsy 3s ease-in 1 forwards;
+}
+.figureartsy.winner { animation: artsywinner 1s ease 1 forwards; }
+#wordartsyimg { display: block; width: auto; height: 180px; filter: drop-shadow(0 0 12px #9fd8ff30); }
+@keyframes artsy { from { filter: saturate(1); } to { filter: saturate(.3) brightness(.85); } }
+@keyframes artsywinner { from { filter: saturate(.3) brightness(.85); } to { filter: saturate(1.1); } }
+
+/* ---------- The Professor's notes (same frame as the Observatory screen) ---------- */
+.wordfactscontainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 460px;
+  height: 440px;
+  padding: 8px;
+  box-sizing: border-box;
+  color: var(--hm-text);
+  border: 1px solid rgb(16 207 230 / 50%);
+  border-radius: 5px;
+  background-color: #00000063;
+  box-shadow: 0 0 2px 2px var(--hm-cyan);
+}
+.wordfactscontainer::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, #ffffff08 0 1px, transparent 1px 4px);
+}
+.wordfacts-title {
+  margin: 0;
+  padding: 10px 12px 8px;
+  font-family: technoboard;
+  font-weight: normal;
+  font-size: 22px;
+  color: var(--hm-text);
+  box-shadow: 0 0 8px 0 rgb(16 207 230 / 99%);
+  border-radius: 2px 2px 0 0;
+}
+.wordfactscontainerinner {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px 16px 8px;
+  text-align: left;
+  font-family: monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  border-radius: 0 0 2px 2px;
+  box-shadow: 0 0 8px 0 rgb(16 207 230 / 99%), inset 0 0 119px 41px #d9d8db2e;
+}
+.wordfactscontainerinner h3 { margin: 0 0 12px; font-family: bruno; font-weight: normal; font-size: 22px; letter-spacing: .08em; text-transform: uppercase; color: var(--hm-yellow); text-shadow: 0 0 10px #edee0288; }
+.wordfactscontainerinner h4 { margin: 4px 0 10px; font-family: technoboard; font-weight: normal; font-size: 20px; text-align: center; }
+.wordfactscontainerinner h5 { margin: 0; font-size: 17px; line-height: 1.5; }
+.wordfactscontainerinner p { margin: 0 0 .75rem; }
+.wordfactscontainerinner b { color: #fff; }
+.wordfactscontainerinner img { width: 32px; vertical-align: middle; cursor: pointer; }
+.wordfactscontainerinner #showlessfacts { color: #c58cf0; cursor: pointer; text-decoration: underline dotted; }
+.example-attribution { display: flex; flex-wrap: wrap; gap: .35rem 1rem; font-size: .9em; color: var(--hm-muted); }
+.mw-attribution { display: flex; align-items: center; gap: 10px; margin-top: 18px; font-size: 13px; }
+/* Merriam-Webster branding: the official logo at exactly 50x50. */
+.wordfactscontainerinner .mw-attribution-logo { width: 50px; height: 50px; flex: 0 0 50px; cursor: default; }
+
+/* ---------- The word ---------- */
+.word {
+  display: flex;
+  justify-content: center;
+  gap: clamp(6px, 1.6vw, 18px);
+  margin: 30px auto 16px;
+  font: 600 2rem monospace;
+  text-transform: uppercase;
+}
+.word > span { min-width: .75em; line-height: 1.3; border-bottom: 3px solid #cdcdcd; }
+.word > span > span.found { display: inline-block; animation: word-flip .5s ease-out; }
+.word > span > span.missed { text-shadow: 0 0 10px #b2007488; }
+@keyframes word-flip { from { transform: rotateX(90deg); color: var(--hm-yellow); } }
+
+/* ---------- Console (the flip card) ---------- */
+.keyboardcontainer {
+  position: relative;
+  width: min(900px, calc(100% - 32px));
+  margin: 6px auto 32px;
+  perspective: 1400px;
+}
+.keyboardcontainer-inner {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform .6s;
+}
+.keyboardcontainer.flipped .keyboardcontainer-inner { transform: rotateY(180deg); }
+.keyboard-front, .keyboard-back {
+  grid-area: 1 / 1;
+  position: relative;
+  padding: 14px 20px 18px;
+  box-sizing: border-box;
+  background: var(--hm-steel);
+  border-radius: 12px 12px 10px 10px / 21px 21px 10px 10px;
+  box-shadow: inset 0 0 8px #434343, 0 1px 0 #383838, 0 4px 0 #171717, 0 10px 30px #111;
+  backface-visibility: hidden;
+}
+.keyboard-back { transform: rotateY(180deg); display: flex; align-items: center; justify-content: center; }
+/* The hidden face also leaves the tab order and accessibility tree. */
+.keyboardcontainer:not(.flipped) .keyboard-back,
+.keyboardcontainer.flipped .keyboard-front { visibility: hidden; transition: visibility 0s .3s; }
+
+.keyboardtoolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-right: 110px;
+}
+.keyboardhints { display: flex; flex-wrap: wrap; gap: 8px; }
+.keyboardhints button {
+  padding: 7px 12px 6px;
+  font-family: bruno;
+  font-size: 12px;
+  font-weight: normal;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #d0d2d5;
+  background: none;
+  border: 1px solid #93939333;
+  border-radius: 4px;
+  box-shadow: 0 0 5px 0 #00ffea;
+  cursor: pointer;
+}
+.keyboardhints button:hover:not(:disabled), .keyboardhints button:focus-visible { color: #11b4ad; }
+.keyboardhints button:disabled { cursor: default; opacity: .5; box-shadow: none; }
+.keyboardcells { text-align: left; }
+
+/* Professor Fastolfe stands on the console's corner. */
+.keyboardronny { position: absolute; right: -30px; bottom: calc(100% - 64px); pointer-events: none; }
+#wordroonyimg { display: block; width: auto; height: 150px; filter: drop-shadow(0 0 10px #9fd8ff30); }
+
+.keyboard { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 6px; }
+.keyboardbtn {
+  min-height: 44px;
+  padding: 0;
+  font-family: bruno;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #c2c2c2;
+  background: none;
+  border: 1px solid #93939333;
+  border-radius: 4px;
+  box-shadow: 0 0 4px 0;
+  cursor: pointer;
+  transition: background-color .15s;
+}
+.keyboardbtn:hover:not(:disabled), .keyboardbtn:focus-visible:not(:disabled) { background-color: #0e9088; color: #fff; }
+.keyboardbtn:focus-visible { outline: 2px solid var(--hm-yellow); outline-offset: 2px; }
+.keyboardbtn:disabled { cursor: default; }
+.keyboardbtn.active { background-color: var(--hm-hit); color: #fff; }
+.keyboardbtn.inactive { color: #ff8fc4; opacity: .4; text-decoration: line-through; }
+
+.keyboardreplay { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 0; }
+.keyboard-result { margin: 0; font-family: technoboard; font-size: 26px; color: var(--hm-text); }
+.keyboard-score { margin: 0; font: 15px monospace; color: var(--hm-cyan); }
+.keyboard-score a { color: var(--hm-yellow); }
+.keyboard-replay-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 12px; }
+
+@media (max-width: 1280px) {
+  .figurecontainer, .wordfactscontainer { max-width: 400px; height: 390px; }
+  #wordartsyimg { height: 150px; }
+  .keyboardcontainer { width: min(760px, calc(100% - 32px)); }
+  #wordroonyimg { height: 124px; }
+  .keyboardronny { right: -20px; bottom: calc(100% - 52px); }
+  .word { font-size: 1.6rem; margin-top: 22px; }
+}
+
+/* Phones (same breakpoint as the route art): stack the panels and fit the
+   word and keyboard to the screen width without horizontal scrolling. */
+@media (max-width: 800px) {
+  .figurefacts { grid-template-columns: minmax(0, 1fr); gap: 12px; width: calc(100% - 24px); }
+  .figurecontainer { max-width: 420px; height: 250px; border-radius: 48px; }
+  .figurescreen { width: auto; height: calc(100% - 40px); top: 16px; right: 24px; }
+  .artsy-status-name { font-size: 18px; }
+  .artsy-status-state { font-size: 12px; margin-bottom: 6px; }
+  #wordartsyimg { height: 96px; }
+  .figureartsy, .figureartsy.winner { left: 6px; bottom: 6px; }
+  .figure-banner { font-size: 22px; right: auto; left: 18px; bottom: 110px; }
+  .wordfactscontainer { max-width: 420px; height: auto; }
+  .wordfactscontainerinner { min-height: 88px; max-height: 340px; }
+  .wordfacts-title { font-size: 18px; padding: 8px 10px 6px; }
+  .word { max-width: calc(100% - 24px); font-size: clamp(1.1rem, 6vw, 1.5rem); gap: clamp(4px, 1.8vw, 13px); margin: 14px auto 8px; }
+  .keyboardcontainer { width: calc(100% - 24px); max-width: 560px; margin-bottom: 24px; }
+  .keyboard-front, .keyboard-back { padding: 10px; }
+  .keyboardtoolbar { flex-direction: column; align-items: flex-start; padding-right: 62px; }
+  .keyboardhints button { font-size: 11px; padding: 7px 10px 6px; }
+  .keyboardronny { right: 2px; bottom: auto; top: -14px; }
+  #wordroonyimg { height: 72px; }
+  .keyboard { grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 5px; }
+  .keyboard-result { font-size: 20px; }
+  .keyboard-replay-actions .hm-button { padding: 12px 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .figurescreeninner.has-art, .figure-banner, .artsy-status-state, .word > span > span.found { animation: none; }
+  .keyboardcontainer-inner { transition: none; }
+}

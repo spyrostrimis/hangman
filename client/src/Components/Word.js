@@ -9,8 +9,9 @@ const Word = ({
   return (
     <div className={`word ${Winner || reveal ? "revealed" : ""}`}>
       {wordToFind.split("").map((letter, index) => (
-        <span style={{ borderBottom: "solid #cdcdcd" }} key={index}>
+        <span key={index}>
           <span
+            className={chosenLetters.includes(letter) ? "found" : reveal ? "missed" : ""}
             style={{
               visibility:
                 chosenLetters.includes(letter) || reveal ? "visible" : "hidden",

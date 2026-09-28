@@ -35,6 +35,7 @@ const Wordfacts = ({
 
   return (
     <div className="wordfactscontainer">
+      <h2 className="wordfacts-title">Professor's notes</h2>
       <div className="wordfactscontainerinner">
         <div>
           {innertext ? (
