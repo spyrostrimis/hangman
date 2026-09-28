@@ -101,9 +101,9 @@ The committed ESDB v2 benchmark uses the actual own-tier fallback and supersedes
 
 | Player word band | Apprentice ≤35 | Scholar ≤50 | Master ≤70 |
 | --- | --- | --- | --- |
-| Common (=35) | 92.8% | 92.6% | 89.0% |
-| Less common (40–50) | 9.8% | 91.8% | 89.6% |
-| Rare (55–70) | 11.0% | 12.8% | 90.4% |
+| Common (=35) | 93.4% | 90.8% | 88.4% |
+| Less common (40–50) | 9.4% | 92.0% | 90.4% |
+| Rare (55–70) | 9.0% | 11.4% | 90.6% |
 
 The full 3–15-letter run covers 11,700 games, with zero Master or in-tier candidate failures. [Method, limitations, and full results](../../tools/ILLUCIA-TIERS.md).
 

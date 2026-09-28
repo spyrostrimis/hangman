@@ -74,17 +74,20 @@ source-size band (100 per length). Values are **Illucia's** win rate:
 
 | Player's word | Apprentice ≤35 | Scholar ≤50 | Master ≤70 |
 | --- | --- | --- | --- |
-| Common (=35) | 92.8% | 92.6% | 89.0% |
-| Less common (40–50) | 9.8% | 91.8% | 89.6% |
-| Rare (55–70) | 11.0% | 12.8% | 90.4% |
+| Common (=35) | 93.4% | 90.8% | 88.4% |
+| Less common (40–50) | 9.4% | 92.0% | 90.4% |
+| Rare (55–70) | 9.0% | 11.4% | 90.6% |
 
 Across the full balanced 3–15-letter sample:
 
 | Tier | Wins / 3,900 | Win rate | Games using fallback | Zero-candidate decisions |
 | --- | --- | --- | --- | --- |
-| Apprentice | 1,541 | 39.51% | 2,196 | 16,766 expected |
-| Scholar | 2,454 | 62.92% | 1,054 | 7,893 expected |
-| Master | 3,353 | 85.97% | 0 | 0 |
+| Apprentice | 1,518 | 38.92% | 2,186 | 16,650 expected |
+| Scholar | 2,438 | 62.51% | 1,069 | 7,887 expected |
+| Master | 3,359 | 86.13% | 0 | 0 |
+
+Regenerated after the lemma-form profanity filter changed the vocabulary
+(see [ILLUCIA-WORDS.md](ILLUCIA-WORDS.md)); the seeded samples changed with it.
 
 There were no in-tier zero-candidate failures. For the lower tiers, all fallback
 events were on words outside their vocabulary. The tier labels describe breadth

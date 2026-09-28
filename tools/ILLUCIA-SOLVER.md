@@ -100,7 +100,8 @@ Expected low-tier events are zero in I3 because it runs only Master. A Master
 invariant failure aborts the benchmark rather than silently reporting a completed
 run. The shared simulator also asserts that in-tier answers never lose all
 candidates. Current reports additionally count out-of-vocabulary games and games
-that enter fallback; the committed I3 report retains its original schema.
+that enter fallback. The committed I3 report was regenerated after the
+lemma-form profanity filter changed the vocabulary, so it uses the current schema.
 
 Tests: `npm test` in `client/` and `tools/`. Coverage includes secret isolation,
 exact repeated-letter positions, whole-word hit counts, ties, policy differences,
@@ -118,17 +119,17 @@ All policies had zero Master invariant failures.
 
 | Policy | Solved / 3,250 | Win rate | Mean misses | Decision p50 / p95 (ms) |
 | --- | --- | --- | --- | --- |
-| Global frequency | 475 | 14.62% | 5.6723 | 1.21 / 5.58 |
-| Count (baseline) | 2,769 | 85.20% | 2.0865 | 1.45 / 10.65 |
-| Entropy | 2,762 | 84.98% | 2.1468 | 1.45 / 13.39 |
-| Risk-adjusted entropy | 2,777 | 85.45% | 2.0615 | 1.44 / 13.16 |
-| Risk + lookahead | 2,774 | 85.35% | 2.0615 | 1.45 / 13.64 |
+| Global frequency | 485 | 14.92% | 5.6680 | 1.18 / 5.53 |
+| Count (baseline) | 2,796 | 86.03% | 2.0554 | 1.39 / 10.28 |
+| Entropy | 2,788 | 85.78% | 2.1052 | 1.40 / 12.46 |
+| Risk-adjusted entropy | 2,799 | 86.12% | 2.0298 | 1.43 / 13.01 |
+| Risk + lookahead | 2,792 | 85.91% | 2.0317 | 1.45 / 13.34 |
 
-Count remains the production choice. The best challenger gained only eight wins
-(0.25 percentage points) on this fixed sample, insufficient evidence of a clear
+Count remains the production choice. The best challenger gained only three wins
+(0.09 percentage points) on this fixed sample, insufficient evidence of a clear
 improvement. No statistical significance or optimality is claimed.
 
-Count's win rates by length 3 through 8 were 22.4%, 42.0%, 66.0%, 84.8%, 93.6%,
-and 98.8%. It solved all 250 sampled words at each length 9 through 15; that is
+Count's win rates by length 3 through 9 were 27.2%, 40.8%, 67.6%, 89.6%, 94.8%,
+98.8% and 99.6%. It solved all 250 sampled words at each length 10 through 15; that is
 sample evidence, not a guarantee for every word. I3b will measure how the lower
 knowledge ceilings change these results with the required fallback.
