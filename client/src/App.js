@@ -378,7 +378,7 @@ function App() {
           <Route path="/illucia-observatory" element={<IlluciaObservatory />} />
           <Route
             path="/hall-of-fame"
-            element={<Halloffame Winner={Winner} />}
+            element={<Halloffame />}
           />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

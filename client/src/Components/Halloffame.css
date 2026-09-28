@@ -1,0 +1,63 @@
+/* Hall of Fame: an arcade high-score screen. */
+.hall { width: min(760px, calc(100% - 32px)); margin: 4px auto 40px; }
+.hall-heading { margin-bottom: 18px; }
+.hall-invite { margin: 0 auto 18px; max-width: 560px; font: 15px/1.5 monospace; color: var(--hm-text); }
+.hall-invite a, .hall-you a { color: var(--hm-yellow); }
+
+.hall-board .hm-screen-inner { padding: 18px 22px 22px; }
+.hall-board h2 { margin: 0 0 6px; font-family: technoboard; font-weight: normal; font-size: 26px; color: var(--hm-text); }
+.hall-you { margin: 0 0 8px; font-size: 15px; color: var(--hm-cyan); }
+.hall-you strong { font-family: bruno; font-weight: normal; color: var(--hm-yellow); }
+
+.hall-status { min-height: 8rem; display: grid; place-content: center; gap: .75rem; font: 16px/1.6 monospace; color: var(--hm-text); }
+.hall-status p { margin: 0; }
+
+#highscores { width: 100%; margin: 6px 0 0; border-collapse: collapse; font-family: bruno; font-size: 17px; }
+#highscores th {
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: normal;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--hm-pink);
+  border-bottom: 1px solid #db3eb155;
+  background: none;
+}
+#highscores td { padding: 9px 10px; color: var(--hm-cyan); background: none; vertical-align: baseline; }
+#highscores th:nth-child(1), #highscores td:nth-child(1) { width: 18%; text-align: right; }
+#highscores th:nth-child(2), #highscores td:nth-child(2) { text-align: left; }
+#highscores th:nth-child(3), #highscores td:nth-child(3) { width: 22%; text-align: right; font-variant-numeric: tabular-nums; }
+#highscores tbody tr { border-bottom: 1px dashed #93939326; }
+#highscores tbody tr:nth-child(even) td { background: #ffffff06; }
+
+/* Podium colours for the top three places. */
+#highscores tr.place-1 td { color: var(--hm-yellow); text-shadow: 0 0 10px #edee0288; font-size: 20px; }
+#highscores tr.place-2 td { color: #e6e6ea; text-shadow: 0 0 8px #ffffff55; }
+#highscores tr.place-3 td { color: #f0a050; text-shadow: 0 0 8px #e1801b77; }
+
+.hall-name { overflow-wrap: anywhere; }
+#highscores tr.is-me td { background: rgb(16 207 230 / 12%); }
+#highscores tr.is-me td:first-child { box-shadow: inset 3px 0 0 var(--hm-cyan); }
+.hall-you-tag {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 1px 6px;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  color: #0b0c10;
+  background: var(--hm-cyan);
+  border-radius: 3px;
+  text-shadow: none;
+}
+
+@media (max-width: 800px) {
+  .hall { width: calc(100% - 24px); }
+  .hall-board .hm-screen-inner { padding: 14px 10px 16px; }
+  #highscores { font-size: 15px; table-layout: fixed; }
+  #highscores tr.place-1 td { font-size: 16px; }
+  #highscores th, #highscores td { padding: 8px 6px; }
+  #highscores th:nth-child(1), #highscores td:nth-child(1) { width: 22%; }
+  #highscores th:nth-child(3), #highscores td:nth-child(3) { width: 26%; }
+}
