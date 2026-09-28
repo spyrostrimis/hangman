@@ -193,6 +193,8 @@
   backface-visibility: hidden;
 }
 .keyboard-back { transform: rotateY(180deg); display: flex; align-items: center; justify-content: center; }
+/* Like the 2023 page: after the flip, the result and buttons float over space. */
+.keyboard-back { background: none; box-shadow: none; }
 /* The hidden face also leaves the tab order and accessibility tree. */
 .keyboardcontainer:not(.flipped) .keyboard-back,
 .keyboardcontainer.flipped .keyboard-front { visibility: hidden; transition: visibility 0s .3s; }
