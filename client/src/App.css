@@ -1616,3 +1616,120 @@ input {
 @media (max-width: 800px) {
   .navbarcustom nav a, .navbarcustom .nav-logout { font-size: 13px; padding: 10px 8px; }
 }
+
+/* Phone layout for /hangman (same breakpoint as the mobile route art):
+   stack the two panels, keep Artsy clear of the painting, and fit the word
+   and keyboard to the screen width without horizontal scrolling. */
+@media (max-width: 800px) {
+  .figurefacts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+    padding: 0 12px;
+    box-sizing: border-box;
+  }
+  .figurecontainer {
+    width: 100%;
+    max-width: 375px;
+    height: 240px;
+    border-radius: 48px;
+  }
+  .figurescreen {
+    width: min(314px, 100%);
+    box-sizing: border-box;
+  }
+  .figureartsy,
+  .figureartsy.winner {
+    left: -2px;
+    bottom: 4px;
+  }
+  #wordartsyimg {
+    width: 80px;
+  }
+  .wordfactscontainer {
+    width: 100%;
+    max-width: 375px;
+    height: auto;
+    box-sizing: border-box;
+  }
+  .wordfactscontainerinner {
+    height: auto;
+    min-height: 88px;
+  }
+  .word,
+  .word.revealed {
+    max-width: calc(100% - 24px);
+    font-size: clamp(1.1rem, 6vw, 1.5rem);
+    gap: clamp(4px, 1.8vw, 13px);
+    margin-top: 14px;
+    margin-bottom: 8px;
+  }
+  .keyboardcontainer {
+    width: 100%;
+    max-width: 560px;
+    height: auto;
+    margin: 8px auto 24px;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  .keyboardcontainer-inner {
+    margin: 0;
+  }
+  /* The front face stays in flow so the flip card takes the keyboard's height. */
+  .keyboard-front {
+    position: relative;
+    height: auto;
+  }
+  .keyboard-back {
+    inset: 0;
+  }
+  .keyboardcontainer.flipped {
+    width: 100%;
+    height: auto;
+  }
+  .keyboardhints {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 6px;
+    padding: 0 64px 10px 0;
+  }
+  #hint1,
+  #hint2 {
+    margin: 0;
+  }
+  .keyboardhints button {
+    font-size: 11px;
+    padding: 7px 10px 6px;
+  }
+  .keyboardronny {
+    bottom: auto;
+    top: -14px;
+    right: 2px;
+  }
+  #wordroonyimg {
+    width: 60px;
+  }
+  .keyboard {
+    width: 100%;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    gap: 5px;
+  }
+  .keyboardbtn {
+    width: auto;
+    min-height: 44px;
+    font-size: 1rem;
+  }
+  .keyboardreplay {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin: 0;
+  }
+  #playagain,
+  #checkscore {
+    margin: 0;
+    padding: 14px 20px;
+  }
+}
