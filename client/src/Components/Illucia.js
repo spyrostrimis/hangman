@@ -1,46 +1,162 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import RegisteredOnly from './RegisteredOnly';
 import { useAuth } from './AuthProvider';
 import { applyGuess, createRound, getPattern, getRemainingMisses, getRoundStatus, MAX_MISSES } from '../lib/hangman-core.js';
-import { ALPHABET, VOCABULARY_TIERS, createKnowledge, isAcceptedWord, parseLexicon } from '../lib/illucia/lexicon.js';
+import { VOCABULARY_TIERS, createKnowledge, isAcceptedWord, parseLexicon } from '../lib/illucia/lexicon.js';
 import { toPublicState } from '../lib/illucia/public-state.js';
 import { filterCandidates } from '../lib/illucia/candidates.js';
-import { analyzeDecision, chooseLetter } from '../lib/illucia/strategy.js';
-import { openingLine, rejectionLine, turnLine } from '../lib/illucia/lines.js';
+import { analyzeDecision } from '../lib/illucia/strategy.js';
+import { rejectionLine } from '../lib/illucia/lines.js';
+import { greetingLine, openingLine } from '../lib/illucia/observatory-lines.js';
+import { REPLIES, askLine, reasonLine, replyLine, solvedLine } from '../lib/illucia/duel-lines.js';
 import './Illucia.css';
+
+// Play vs AI as a conversation that scrolls down: Illucia asks for a letter,
+// the player shows her where it goes (or answers a miss), and she carries on.
+// Game code decides every hit and miss; the player's replies are only words.
+
+const THINK_MS = 1100;
+const TIER_NOTES = {
+  apprentice: 'Common words only.',
+  scholar: 'Everyday and less common words.',
+  master: 'Every word she accepts.',
+};
 
 export default function Illucia() {
   const { user, status, refresh } = useAuth();
   if (status === 'loading') return <p role="status">Checking your session…</p>;
-  if (status === 'error') return <div className="illucia-page"><p>Cannot check your session right now.</p><button onClick={refresh}>Try again</button></div>;
+  if (status === 'error') return <div className="duel-page"><p>Cannot check your session right now.</p><button onClick={refresh}>Try again</button></div>;
   if (!user) return <RegisteredOnly from="/illucia" />;
-  return <IlluciaPage key={user.id} />;
+  return <DuelPage key={user.id} username={user.username} />;
 }
 
-function Portrait() {
-  return <svg className="illucia-portrait" viewBox="0 0 160 160" role="img" aria-label="Illucia, a geometric robot with violet eyes">
-    <circle cx="80" cy="80" r="74" fill="#101d27" stroke="#76ceca" />
-    <path d="M36 115V58L56 32H104L124 58V115L102 135H58Z" fill="#29394c" stroke="#b99cde" strokeWidth="2" />
-    <path d="M43 69L75 75L66 88L45 83M117 69L85 75L94 88L115 83" fill="#c9a6ff" />
-    <path d="M65 111H95M80 44V60M31 77H19M129 77H141" stroke="#76ceca" strokeWidth="3" />
-  </svg>;
+const countWords = (round, knowledge) => filterCandidates(toPublicState(round), knowledge.words).length;
+
+function newDuel(word, entries, tier) {
+  const knowledge = createKnowledge(entries, tier.maxSize);
+  const round = createRound(word);
+  return {
+    round, entries, knowledge, tier, phase: 'thinking', lastGuess: null, lastHit: null,
+    log: [
+      { type: 'player', text: `My word is ready: ${word.length} letters. You get the ${tier.label} vocabulary.` },
+      { type: 'illucia', text: openingLine(word.length, countWords(round, knowledge)) },
+      { type: 'board', pattern: getPattern(round), hidden: [], revealed: [], caption: 'Start' },
+    ],
+  };
 }
 
-function IlluciaSetup({ onStart }) {
+function failed(duel) {
+  return { ...duel, phase: 'error', log: [...duel.log, { type: 'illucia', text: 'Something went wrong in my notes. Let us start again with a new word.' }] };
+}
+
+// Her turn: pick a letter from public state only, then wait for the player.
+function guess(duel) {
+  const state = toPublicState(duel.round);
+  let decision;
+  try { decision = analyzeDecision(state, duel.knowledge); } catch { return failed(duel); }
+  const { letter } = decision;
+  const round = applyGuess(duel.round, letter);
+  if (!letter || round === duel.round) return failed(duel);
+  const before = getPattern(duel.round);
+  const after = getPattern(round);
+  const positions = after.flatMap((value, index) => (value === letter && before[index] === null ? [index] : []));
+  const L = letter.toUpperCase();
+  const share = decision.fallback
+    ? Math.round(duel.knowledge.frequency[letter] / Math.max(1, duel.knowledge.words.length) * 100)
+    : Math.round(decision.hitCount / decision.candidateCount * 100);
+  const note = reasonLine({ letter, share, candidates: decision.candidateCount, fallback: decision.fallback,
+    tierLabel: duel.tier.label, length: state.length });
+  const turn = round.guesses.length;
+  const lastGuess = { letter, positions, share, countBefore: decision.candidateCount, countAfter: countWords(round, duel.knowledge) };
+  const log = [...duel.log, { type: 'illucia', text: askLine(letter, turn, duel.lastHit), note }];
+  if (positions.length) {
+    return { ...duel, round, lastGuess, phase: 'reveal',
+      log: [...log, { type: 'board', pattern: before, letter, hidden: positions, revealed: [], caption: `Turn ${turn} · ${L} · hit` }] };
+  }
+  return { ...duel, round, lastGuess, phase: 'reply', log };
+}
+
+// The player shows her one tile. When every tile is shown, she continues.
+function reveal(duel, index) {
+  const board = duel.log.at(-1);
+  if (duel.phase !== 'reveal' || board.type !== 'board' || !board.hidden.includes(index) || board.revealed.includes(index)) return duel;
+  const updated = { ...board, revealed: [...board.revealed, index] };
+  const log = [...duel.log.slice(0, -1), updated];
+  if (updated.revealed.length < updated.hidden.length) return { ...duel, log };
+  if (getRoundStatus(duel.round) === 'solved') {
+    return { ...duel, phase: 'over', log: [...log, { type: 'illucia', text: solvedLine(duel.round.answer, duel.round.guesses.length) }] };
+  }
+  const { countBefore, countAfter } = duel.lastGuess;
+  return { ...duel, log, phase: 'thinking',
+    lastHit: { positions: updated.hidden.length, single: countAfter === 1 && countBefore > 1 } };
+}
+
+// The player answers a miss; she answers back, and the unchanged row follows.
+function reply(duel, replyId) {
+  const choice = REPLIES.find(value => value.id === replyId);
+  if (duel.phase !== 'reply' || !choice) return duel;
+  const { letter, share, countAfter } = duel.lastGuess;
+  const missesLeft = getRemainingMisses(duel.round);
+  const turn = duel.round.guesses.length;
+  const answer = replyLine(replyId, { letter, turn, count: countAfter, share, length: duel.round.answer.length, missesLeft });
+  const over = getRoundStatus(duel.round) === 'failed';
+  const log = [...duel.log, { type: 'player', text: choice.text }, { type: 'illucia', text: answer },
+    { type: 'board', pattern: getPattern(duel.round), hidden: [], revealed: [], final: over,
+      caption: `Turn ${turn} · ${letter.toUpperCase()} · miss` }];
+  return { ...duel, log, phase: over ? 'over' : 'thinking', lastHit: null };
+}
+
+function Avatar() {
+  return <span className="duel-avatar" aria-hidden="true" />;
+}
+
+function Message({ from, children, note }) {
+  return <div className={`duel-msg from-${from}`}>
+    {from === 'illucia' && <Avatar />}
+    <div className="duel-bubble">
+      <span className="hm-sr">{from === 'illucia' ? 'Illucia: ' : 'You: '}</span>
+      <p>{children}</p>
+      {note && <small>{note}</small>}
+    </div>
+  </div>;
+}
+
+function Board({ entry, answer, active, onReveal }) {
+  const letter = entry.letter?.toUpperCase();
+  const tiles = entry.pattern.map((value, index) => {
+    if (entry.hidden.includes(index)) {
+      if (entry.revealed.includes(index)) return { kind: 'revealed', text: letter };
+      return { kind: 'hidden', text: '' };
+    }
+    if (value) return { kind: 'known', text: value.toUpperCase() };
+    if (entry.final) return { kind: 'missed', text: answer[index].toUpperCase() };
+    return { kind: 'blank', text: '' };
+  });
+  const spoken = tiles.map(tile => (tile.kind === 'hidden' ? 'hidden' : tile.text || 'blank')).join(' ');
+  return <div className={`duel-board ${active ? 'is-active' : ''}`}>
+    <span className="duel-board-caption">{entry.caption}</span>
+    <div className="duel-tiles" style={{ '--len': tiles.length }} role={active ? 'group' : 'img'} aria-label={`Word: ${spoken}`}>
+      {tiles.map((tile, index) => tile.kind === 'hidden'
+        ? <button key={index} type="button" className="duel-tile hidden" disabled={!active}
+          onClick={() => onReveal(index)} aria-label={`Show ${letter} at position ${index + 1}`} />
+        : <span key={index} className={`duel-tile ${tile.kind}`} aria-hidden="true">{tile.text}</span>)}
+    </div>
+    {active && <p className="duel-hint">Show Illucia where {letter} goes: tap the grey {entry.hidden.length - entry.revealed.length === 1 ? 'tile' : 'tiles'}.</p>}
+  </div>;
+}
+
+function Composer({ onStart }) {
   const [secret, setSecret] = useState('');
-  const [tierId, setTierId] = useState('master');
+  const [tierId, setTierId] = useState('scholar');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const pending = useRef(null);
-  useEffect(() => () => {
-    pending.current?.abort();
-    pending.current = null;
-  }, []);
+  useEffect(() => () => { pending.current?.abort(); pending.current = null; }, []);
 
   async function submit(event) {
     event.preventDefault();
     if (pending.current) return;
-    const word = secret.toLowerCase();
+    const word = secret.trim().toLowerCase();
     if (!/^[a-z]{3,15}$/.test(word)) {
       setError('Choose 3–15 letters, A–Z only, with no spaces or punctuation.');
       return;
@@ -60,9 +176,8 @@ function IlluciaSetup({ onStart }) {
         setError(rejectionLine(word.length));
         return;
       }
-      const tier = VOCABULARY_TIERS.find(value => value.id === tierId);
       setSecret('');
-      onStart(createRound(word), createKnowledge(entries, tier.maxSize), tier);
+      onStart(word, entries, VOCABULARY_TIERS.find(value => value.id === tierId));
     } catch {
       if (pending.current === controller) setError('The vocabulary could not load. Please try again.');
     } finally {
@@ -71,106 +186,121 @@ function IlluciaSetup({ onStart }) {
     }
   }
 
-  return <section className="illucia-panel illucia-setup">
-    <Portrait />
-    <h2>Can your word outwit Illucia?</h2>
-    <p>You choose the word. She guesses the letters.<br />Six misses and you win. Hits cost her nothing.</p>
-    <form onSubmit={submit}>
-      <fieldset disabled={loading}>
-        <legend>Choose her vocabulary</legend>
-        <div className="illucia-tiers">{VOCABULARY_TIERS.map(tier => <label key={tier.id}>
-          <input type="radio" name="illucia-tier" value={tier.id} checked={tierId === tier.id} onChange={() => setTierId(tier.id)} />
-          <span>{tier.label}</span>
-        </label>)}</div>
-        <p className="illucia-muted">Apprentice knows common words; Scholar knows more; Master knows every accepted word. All three use the same strategy.</p>
-        <label className="illucia-secret-label" htmlFor="illucia-secret">Your secret word</label>
-        {/* Not type="password": browsers would offer to save and sync the word as a credential. */}
-        <input id="illucia-secret" type="text" autoComplete="off" autoCorrect="off" autoCapitalize="none" spellCheck={false} value={secret} onChange={event => setSecret(event.target.value)} aria-describedby="illucia-trust illucia-validation" aria-invalid={Boolean(error)} />
-        <p id="illucia-trust" className="illucia-muted">Your secret word never leaves your browser.</p>
-        <p id="illucia-validation" role="alert">{error}</p>
-        <button type="submit">Challenge Illucia</button>
-      </fieldset>
-      {loading && <p role="status">Loading this word length…</p>}
-    </form>
+  return <form className="duel-composer" onSubmit={submit}>
+    <fieldset disabled={loading}>
+      <label className="duel-label" htmlFor="duel-secret">Your secret word</label>
+      {/* Not type="password": browsers would offer to save and sync the word as a credential. */}
+      <input id="duel-secret" type="text" autoComplete="off" autoCorrect="off" autoCapitalize="none" spellCheck={false} maxLength={15}
+        value={secret} onChange={event => setSecret(event.target.value)} aria-describedby="duel-trust duel-validation" aria-invalid={Boolean(error)} />
+      <p id="duel-trust" className="duel-muted">{secret.trim() ? `${secret.trim().length} letters · ` : ''}Illucia only ever sees the blanks.</p>
+      <p id="duel-validation" role="alert">{error}</p>
+      <div className="duel-tiers" role="radiogroup" aria-label="Her vocabulary">
+        {VOCABULARY_TIERS.map(tier => <label key={tier.id} className={tierId === tier.id ? 'selected' : ''}>
+          <input type="radio" name="duel-tier" value={tier.id} checked={tierId === tier.id} onChange={() => setTierId(tier.id)} />
+          <b>{tier.label}</b>
+          <small>{TIER_NOTES[tier.id]}</small>
+        </label>)}
+      </div>
+      <button type="submit" className="hm-button primary">Start the duel</button>
+    </fieldset>
+    {loading && <p role="status">Loading her {secret.trim().length}-letter words…</p>}
+  </form>;
+}
+
+function StatusBar({ duel, restart }) {
+  const remaining = getRemainingMisses(duel.round);
+  const current = useMemo(() => countWords(duel.round, duel.knowledge), [duel.round, duel.knowledge]);
+  // Until the player shows her the tiles, she only knows what she knew before the guess.
+  const words = duel.phase === 'reveal' ? duel.lastGuess.countBefore : current;
+  return <div className="duel-status">
+    <div className="duel-status-cells" role="img" aria-label={`Her chances: ${remaining} of ${MAX_MISSES}`}>
+      <span className="hm-label">Her chances</span>
+      <div className="hm-cells">{Array.from({ length: MAX_MISSES }, (_, index) => <span key={index} className={index < remaining ? 'on' : ''} />)}</div>
+    </div>
+    <div className="duel-status-facts">
+      <span className="duel-chip">{duel.tier.label}</span>
+      <span><small>Words in mind</small><b>{words.toLocaleString('en-US')}</b></span>
+      <span className="duel-your-word"><small>Your word</small><b>{duel.round.answer.toUpperCase()}</b></span>
+    </div>
+    <button type="button" className="duel-new" onClick={restart}>New word</button>
+  </div>;
+}
+
+function Result({ duel, restart, rematch }) {
+  const status = getRoundStatus(duel.round);
+  const misses = MAX_MISSES - getRemainingMisses(duel.round);
+  const guesses = duel.round.guesses.length;
+  const nextTier = VOCABULARY_TIERS[VOCABULARY_TIERS.indexOf(duel.tier) + 1];
+  const heading = useRef(null);
+  useEffect(() => { heading.current?.focus(); }, []);
+  return <section className="hm-screen duel-result" aria-labelledby="duel-result-title">
+    <div className="hm-screen-inner">
+      <h2 id="duel-result-title" ref={heading} tabIndex={-1}>{status === 'solved' ? 'Illucia wins' : 'You win'}</h2>
+      <p>The word was <strong>{duel.round.answer.toUpperCase()}</strong>.</p>
+      <p>{guesses} guesses: {guesses - misses} {guesses - misses === 1 ? 'hit' : 'hits'}, {misses} {misses === 1 ? 'miss' : 'misses'}.</p>
+      <p className="duel-muted">Duels with Illucia do not earn Hall of Fame points.</p>
+      <div className="duel-result-actions">
+        <button type="button" className="hm-button primary" onClick={restart}>Play again</button>
+        {status === 'failed' && nextTier && <button type="button" className="hm-button" onClick={() => rematch(nextTier)}>Rematch vs {nextTier.label}</button>}
+      </div>
+    </div>
   </section>;
 }
 
-function IlluciaGame({ game, restart, error }) {
-  const { round, knowledge, tier, turns, line } = game;
-  const status = getRoundStatus(round);
-  const playing = status === 'playing';
-  const candidates = filterCandidates(toPublicState(round), knowledge.words);
-  const remaining = getRemainingMisses(round);
-  const latest = turns.at(-1);
-  const heading = useRef(null);
-  useEffect(() => { heading.current?.focus(); }, [playing]);
+function DuelPage({ username }) {
+  const [duel, setDuel] = useState(null);
+  const bottom = useRef(null);
+  const greeting = useMemo(() => greetingLine(username?.length ?? 0), [username]);
 
-  return <>
-    <div className="illucia-game-grid">
-      <section className="illucia-panel illucia-stage">
-        <Portrait />
-        <h2 ref={heading} tabIndex={-1}>{playing ? `${tier.label} Illucia` : status === 'solved' ? 'Illucia wins' : 'You win!'}</h2>
-        <p className="illucia-mind"><strong>{candidates.length.toLocaleString()}</strong> {candidates.length === 1 ? 'candidate' : 'candidates'} in mind</p>
-        <p className="illucia-commentary">“{line}”</p>
-        <p className="illucia-muted">{playing && !error ? 'Thinking…' : 'Round ended.'}</p>
-      </section>
-      <section className="illucia-panel illucia-board">
-        <h2>The challenge</h2>
-        <div className="illucia-pattern" role="img" style={{ '--word-length': round.answer.length }} aria-label={`Word: ${getPattern(round).map(letter => letter || 'blank').join(' ')}`}>
-          {getPattern(round).map((letter, index) => <span key={index} aria-hidden="true">{letter || '\u00a0'}</span>)}
-        </div>
-        <p>{remaining} of {MAX_MISSES} misses left</p>
-        <div className="illucia-misses" aria-hidden="true">{Array.from({ length: MAX_MISSES }, (_, index) => <span key={index} className={index < remaining ? 'available' : ''} />)}</div>
-        <div className="illucia-letters" role="group" aria-label="Letter history">{[...ALPHABET].map(letter => {
-          const used = round.guesses.includes(letter);
-          const state = used ? (getPattern(round).includes(letter) ? 'hit' : 'miss') : 'unused';
-          return <span key={letter} role="img" className={`${state} ${latest?.letter === letter ? 'latest' : ''}`} aria-label={`${letter.toUpperCase()}: ${state}`}>{letter}<small>{state === 'hit' ? '✓' : state === 'miss' ? '×' : '·'}</small></span>;
-        })}</div>
-        <p role="status" aria-live="polite" aria-atomic="true" className="illucia-announcement">{latest ? `Turn ${turns.length} · ${latest.letter.toUpperCase()} · ${latest.positions ? `HIT · ${latest.positions} ${latest.positions === 1 ? 'position' : 'positions'}` : 'MISS'} · ${remaining} misses left.${!playing ? status === 'solved' ? ' Illucia wins.' : ' You win.' : ''}` : 'The challenge has begun.'}</p>
-        <details className="illucia-analysis">
-          <summary>How Illucia thinks</summary>
-          <p>She chooses the unused letter found in the most remaining words. Each revealed letter must match every position.</p>
-          {latest && <p>{latest.fallback ? `${latest.letter.toUpperCase()} came from letter frequencies in her own vocabulary. No candidates remained; she did not switch tiers.` : `Before that guess, ${latest.letter.toUpperCase()} appeared in ${Math.round(latest.hitCount / latest.candidateCount * 100)}% of her ${latest.candidateCount.toLocaleString()} candidates.`}</p>}
-          <p>Her solver sees the pattern and guesses, never your secret word.</p>
-        </details>
-      </section>
-    </div>
-    {error && <p role="alert" className="illucia-panel">{error}</p>}
-    {!playing && <section className="illucia-panel illucia-result">
-      <h2>The word was <strong>{round.answer.toUpperCase()}</strong></h2>
-      <p>{status === 'solved' ? 'She revealed every letter.' : 'You held out for six misses.'} No Hall of Fame points are awarded in this mode.</p>
-      <p>Final suspects: {candidates.length ? candidates.slice(0, 5).join(', ') : 'none left in her vocabulary'}{candidates.length > 5 ? ` (showing 5 of ${candidates.length})` : ''}.</p>
-    </section>}
-    <button className="illucia-restart" onClick={restart}>{playing ? 'Choose another word' : 'Play again'}</button>
-    {turns.length > 0 && <details className="illucia-panel illucia-log"><summary>Turn log ({turns.length})</summary><ol>{turns.map((turn, index) => <li key={turn.letter}>Turn {index + 1} · {turn.letter.toUpperCase()} · {turn.positions ? `HIT · ${turn.positions} positions` : 'MISS'}</li>)}</ol></details>}
-  </>;
-}
-
-function IlluciaPage() {
-  const [game, setGame] = useState(null);
-  const [error, setError] = useState('');
+  // Her turn runs once per thinking pause. The guess is computed here, not in
+  // a state updater, so StrictMode's double-invoked updaters never run the solver twice.
   useEffect(() => {
-    if (!game || error || getRoundStatus(game.round) !== 'playing') return;
-    const timer = setTimeout(() => {
-      try {
-        const state = toPublicState(game.round);
-        const letter = chooseLetter(state, game.knowledge);
-        const decision = analyzeDecision(state, game.knowledge);
-        const round = applyGuess(game.round, letter);
-        if (round === game.round) throw new Error('No valid move');
-        const positions = getPattern(round).filter(value => value === letter).length;
-        const turns = [...game.turns, { ...decision, letter, positions }];
-        setGame({ ...game, round, turns, line: turnLine(round, positions, game.turns) });
-      } catch {
-        setError('Illucia could not continue this round. Please choose another word.');
-      }
-    }, 1100);
+    if (duel?.phase !== 'thinking') return;
+    const timer = setTimeout(() => setDuel(guess(duel)), THINK_MS);
     return () => clearTimeout(timer);
-  }, [game, error]);
+  }, [duel]);
 
-  return <main className="illucia-page">
-    <header className="illucia-heading"><p>PLAY VS AI</p><h1>Illucia</h1><p>A battle of words and wits</p></header>
-    {game ? <IlluciaGame game={game} error={error} restart={() => { setGame(null); setError(''); }} /> : <IlluciaSetup onStart={(round, knowledge, tier) => setGame({ round, knowledge, tier, turns: [], line: openingLine(round.answer.length) })} />}
-    <p className="illucia-credits">Vocabulary: ESDB/SCOWL · filtered with LDNOOBW. <a href="/illucia/credits.html" target="_blank" rel="noreferrer">Credits &amp; licences</a></p>
-  </main>;
+  // Keep the newest exchange in view as the conversation grows downwards.
+  useEffect(() => {
+    if (!duel) return;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    bottom.current?.scrollIntoView?.({ behavior: reduce ? 'auto' : 'smooth', block: 'end' });
+  }, [duel?.log.length, duel?.phase]);
+
+  const restart = () => setDuel(null);
+  const lastIndex = duel ? duel.log.length - 1 : -1;
+
+  return <div className="duel-page">
+    <header className="duel-heading">
+      <h1 className="hm-title">Illucia</h1>
+      <p className="hm-subtitle">Play vs AI · a duel, letter by letter</p>
+    </header>
+
+    {duel && <StatusBar duel={duel} restart={restart} />}
+
+    <div className="duel-log" role="log" aria-live="polite" aria-relevant="additions">
+      <Message from="illucia">Hello, {username}. {greeting} I guess your secret word one letter at a time.</Message>
+      {!duel && <div className="duel-msg from-player"><Composer onStart={(word, entries, tier) => setDuel(newDuel(word, entries, tier))} /></div>}
+      {duel?.log.map((entry, index) => entry.type === 'board'
+        ? <Board key={index} entry={entry} answer={duel.round.answer} active={index === lastIndex && duel.phase === 'reveal'}
+          onReveal={position => setDuel(current => reveal(current, position))} />
+        : <Message key={index} from={entry.type} note={entry.note}>{entry.text}</Message>)}
+      {duel?.phase === 'thinking' && <div className="duel-msg from-illucia" aria-hidden="true">
+        <Avatar /><div className="duel-bubble duel-typing"><span /><span /><span /></div>
+      </div>}
+      {duel?.phase === 'reply' && <div className="duel-msg from-player">
+        <div className="duel-replies" role="group" aria-label="Your reply">
+          <span className="duel-label">No {duel.lastGuess.letter.toUpperCase()} in your word. Your reply:</span>
+          {REPLIES.map(choice => <button key={choice.id} type="button" onClick={() => setDuel(current => reply(current, choice.id))}>{choice.text}</button>)}
+        </div>
+      </div>}
+      {duel?.phase === 'error' && <div className="duel-result-actions"><button type="button" className="hm-button primary" onClick={restart}>New word</button></div>}
+    </div>
+
+    {duel?.phase === 'over' && <Result duel={duel} restart={restart}
+      rematch={tier => setDuel(newDuel(duel.round.answer, duel.entries, tier))} />}
+
+    <div ref={bottom} className="duel-bottom" />
+    <p className="duel-credits">Vocabulary: ESDB/SCOWL · filtered with LDNOOBW. <a href="/illucia/credits.html" target="_blank" rel="noreferrer">Credits &amp; licences</a></p>
+  </div>;
 }

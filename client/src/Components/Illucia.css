@@ -1,61 +1,227 @@
-.illucia-page { width: min(960px, calc(100% - 32px)); margin: 24px auto 40px; padding: 0; border: 0; background: transparent; color: #f1edf7; font-family: Roboto, sans-serif; }
-.illucia-page * { box-sizing: border-box; }
-.illucia-heading { margin-bottom: 24px; }
-.illucia-heading h1 { font-family: bruno, sans-serif; font-size: clamp(30px, 6vw, 48px); margin: 6px 0; color: #d3b5f4; }
-.illucia-heading p { margin: 6px 0; }
-.illucia-heading > p:first-child { color: #9fdddc; font-size: 12px; letter-spacing: .15em; }
-.illucia-panel { background: rgba(13, 23, 33, .94); border: 1px solid #59657a; border-radius: 18px; padding: 24px; min-width: 0; box-shadow: 0 12px 32px #0004; }
-.illucia-page h2 { font-size: 22px; line-height: 1.4; margin: 12px 0; }
-.illucia-page p { line-height: 1.55; }
-.illucia-page button { min-height: 48px; padding: 10px 22px; border: 1px solid #bc95df; border-radius: 8px; background: #674487; color: #fff; font: inherit; cursor: pointer; }
-.illucia-page button:hover { background: #79509e; }
-.illucia-page button:disabled { opacity: .6; cursor: wait; }
-.illucia-page :focus-visible { outline: 3px solid #8ce5de; outline-offset: 4px; }
-.illucia-portrait { width: 136px; height: 136px; }
-.illucia-setup { max-width: 640px; margin: auto; }
-.illucia-setup fieldset { padding: 0; border: 0; min-width: 0; }
-.illucia-setup legend { float: none; width: 100%; font-size: 16px; margin: 18px 0 8px; }
-.illucia-tiers { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
-.illucia-tiers label { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 8px; border: 1px solid #68778b; border-radius: 8px; cursor: pointer; }
-.illucia-tiers label:has(input:checked) { background: #3d3152; border-color: #d3b5f4; }
-.illucia-tiers input { accent-color: #d3b5f4; width: 18px; height: 18px; min-width: 18px !important; min-height: 18px !important; margin: 0; }
-.illucia-muted, .illucia-credits { color: #bdc9d8; font-size: 14px; }
-.illucia-secret-label { display: block; margin: 16px 0 8px; }
-#illucia-secret { width: min(100%, 320px); min-width: 0 !important; min-height: 48px; border: 1px solid #8695ac; border-radius: 8px; padding: 10px; background: #0b1520; color: white; font-size: 18px; letter-spacing: .15em; }
-#illucia-validation { color: #ffd5ba; }
-#illucia-validation:empty { margin: 0; }
-.illucia-game-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 16px; }
-.illucia-mind strong { display: block; font-size: 32px; color: #a4e1dc; font-variant-numeric: tabular-nums; }
-.illucia-commentary { min-height: 72px; font-size: 18px; color: #dfc6f6; }
-.illucia-pattern { display: grid; grid-template-columns: repeat(var(--word-length), minmax(0, 1fr)); gap: 3px; width: min(100%, calc(var(--word-length) * 32px)); margin: 28px auto 20px; }
-.illucia-pattern span { border-bottom: 2px solid #d3b5f4; font: 600 clamp(14px, calc(220px / var(--word-length)), 24px)/1.6 monospace; text-transform: uppercase; }
-.illucia-misses { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
-.illucia-misses span { width: 28px; height: 8px; border: 1px solid #718096; border-radius: 4px; }
-.illucia-misses .available { background: #8ed3ce; border-color: #8ed3ce; }
-.illucia-letters { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 5px; }
-.illucia-letters > span { border: 1px solid #627287; border-radius: 5px; padding: 6px 0 2px; font-size: 17px; text-transform: uppercase; background: #202e3e; }
-.illucia-letters small { display: block; line-height: 1; font-size: 12px; }
-.illucia-letters .hit { background: #21594f; border-color: #85d9c2; }
-.illucia-letters .miss { background: #593b43; border-color: #edafae; }
-.illucia-letters .latest { animation: illucia-pulse .7s ease-out; }
-@keyframes illucia-pulse { 50% { box-shadow: 0 0 0 3px #dcc4f5; } }
-.illucia-announcement { min-height: 44px; color: #e0c8f6; font-size: 14px; }
-.illucia-page summary { min-height: 44px; padding: 12px 4px; cursor: pointer; color: #a4e1dc; }
-.illucia-analysis { text-align: left; border-top: 1px solid #46556a; font-size: 14px; }
-.illucia-result { margin-top: 16px; overflow-wrap: anywhere; }
-.illucia-restart { margin: 20px 0; }
-.illucia-log { text-align: left; padding: 8px 24px; }
-.illucia-log li { padding: 5px 0; }
-.illucia-credits a { color: #d7baf4; display: inline-block; padding: 12px 0; }
-@media (max-width: 650px) {
-  .illucia-page { width: calc(100% - 24px); margin-top: 16px; }
-  .illucia-panel { padding: 18px 14px; }
-  .illucia-game-grid { grid-template-columns: minmax(0, 1fr); }
-  .illucia-stage .illucia-portrait { width: 88px; height: 88px; }
-  .illucia-stage .illucia-commentary { min-height: 0; }
-  .illucia-stage h2 { margin: 4px 0; }
-  .illucia-mind strong { display: inline; font-size: 24px; }
-  .illucia-tiers { gap: 5px; }
-  .illucia-tiers label { font-size: 14px; }
+/* Play vs AI: a conversation with Illucia that scrolls downwards. Same look
+   as the Observatory: neon title, cyan screens, gunmetal consoles, Bruno
+   controls and monospace speech. */
+.duel-page {
+  width: min(760px, calc(100% - 32px));
+  margin: 4px auto 40px;
+  color: var(--hm-text);
+  font-family: monospace;
+  font-size: 16px;
 }
-@media (prefers-reduced-motion: reduce) { .illucia-letters .latest { animation: none; } }
+.duel-page * { box-sizing: border-box; }
+.duel-page :focus-visible { outline: 2px solid var(--hm-yellow); outline-offset: 3px; }
+.duel-heading { margin-bottom: 16px; }
+.duel-muted { margin: 4px 0; font-size: 13px; color: var(--hm-muted); }
+.duel-label { display: block; font-family: bruno; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--hm-yellow); }
+
+/* ---------- Sticky status bar: stays in view while the duel scrolls ---------- */
+.duel-status {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 18px;
+  margin: 0 0 18px;
+  padding: 10px 16px;
+  background: #0b0d1ae6;
+  border: 1px solid rgb(16 207 230 / 45%);
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 4px 16px -4px rgb(16 207 230 / 60%);
+  backdrop-filter: blur(6px);
+}
+.duel-status .hm-label { margin-bottom: 4px; }
+.duel-status .hm-cells span { width: 11px; height: 20px; }
+.duel-status-facts { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.duel-status-facts > span:not(.duel-chip) { display: flex; flex-direction: column; min-width: 0; text-align: left; }
+.duel-status-facts small { font-family: bruno; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--hm-muted); }
+.duel-status-facts b { font-family: bruno; font-weight: normal; font-size: 16px; color: var(--hm-yellow); font-variant-numeric: tabular-nums; }
+.duel-your-word b { color: var(--hm-cyan); letter-spacing: .12em; overflow-wrap: anywhere; }
+.duel-chip { padding: 3px 9px; font-family: bruno; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; border: 1px solid #93939355; border-radius: 4px; box-shadow: 0 0 5px 0 #00ffea; }
+.duel-new, .duel-replies button {
+  padding: 8px 12px 7px;
+  font-family: bruno;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #d0d2d5;
+  background: none;
+  border: 1px solid #93939333;
+  border-radius: 4px;
+  box-shadow: 0 0 5px 0 #edee02ab;
+  cursor: pointer;
+}
+.duel-new:hover, .duel-replies button:hover { color: #fff; }
+
+/* ---------- The conversation ---------- */
+.duel-log { display: flex; flex-direction: column; gap: 14px; }
+.duel-msg { display: flex; align-items: flex-end; gap: 10px; animation: duel-in .35s ease-out; }
+.duel-msg.from-player { justify-content: flex-end; }
+@keyframes duel-in { from { opacity: 0; transform: translateY(8px); } }
+
+/* Illucia's avatar: her head from the full-figure art. */
+.duel-avatar {
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: url(../Images/illucia.webp) 48% 3% / 175% auto no-repeat, radial-gradient(circle at 50% 35%, #1d2150, #05070f);
+  border: 1px solid rgb(16 207 230 / 60%);
+  box-shadow: 0 0 8px rgb(16 207 230 / 50%);
+}
+
+.duel-bubble {
+  max-width: min(520px, 82%);
+  padding: 10px 14px;
+  text-align: left;
+  line-height: 1.45;
+  background: #07091acc;
+  border: 1px solid rgb(16 207 230 / 60%);
+  border-radius: 14px 14px 14px 4px;
+  box-shadow: 0 0 8px rgb(16 207 230 / 40%);
+}
+.duel-bubble p { margin: 0; font-size: 16px; color: #eef; }
+.duel-bubble small { display: block; margin-top: 6px; font-size: 13px; color: var(--hm-muted); }
+.from-player .duel-bubble { border-color: rgb(237 238 2 / 55%); border-radius: 14px 14px 4px 14px; box-shadow: 0 0 8px #edee0266; }
+.from-player .duel-bubble p { color: #fffde0; }
+
+/* Illucia is thinking: three pulsing dots. */
+.duel-typing { display: flex; gap: 6px; padding: 14px 16px; }
+.duel-typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--hm-cyan); animation: duel-dot 1s ease-in-out infinite; }
+.duel-typing span:nth-child(2) { animation-delay: .15s; }
+.duel-typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes duel-dot { 50% { opacity: .25; transform: translateY(-3px); } }
+
+/* ---------- Word rows: a small console per turn ---------- */
+.duel-board {
+  align-self: center;
+  width: 100%;
+  padding: 10px 14px 12px;
+  background: var(--hm-steel);
+  border-radius: 12px 12px 10px 10px / 21px 21px 10px 10px;
+  box-shadow: inset 0 0 8px #434343, 0 1px 0 #383838, 0 4px 0 #171717, 0 10px 24px #111;
+  animation: duel-in .35s ease-out;
+}
+.duel-board.is-active { box-shadow: inset 0 0 8px #434343, 0 4px 0 #171717, 0 0 18px 2px rgb(16 207 230 / 55%); }
+.duel-board-caption { display: block; margin-bottom: 8px; font-family: bruno; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--hm-muted); }
+.duel-tiles {
+  display: grid;
+  grid-template-columns: repeat(var(--len), minmax(0, 40px));
+  justify-content: center;
+  gap: clamp(3px, 1.2vw, 8px);
+}
+.duel-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  padding: 0;
+  font: 600 clamp(15px, 4.4vw, 26px) monospace;
+  text-transform: uppercase;
+  color: #cdcdcd;
+  background: none;
+  border: 0;
+  border-bottom: 3px solid #cdcdcd;
+}
+.duel-tile.revealed { color: var(--hm-yellow); text-shadow: 0 0 8px #edee0288; animation: duel-flip .45s ease-out; }
+.duel-tile.missed { color: #b20074; text-shadow: 0 0 10px #b2007488; }
+/* The grey tile hiding a letter, waiting for the player to show it. */
+.duel-tile.hidden {
+  border: 1px solid #9aa0aa;
+  border-radius: 4px;
+  background: repeating-linear-gradient(to bottom, #ffffff14 0 1px, transparent 1px 4px), linear-gradient(#7a808b, #5a5f69);
+  cursor: pointer;
+  animation: duel-pulse 1.4s ease-in-out infinite;
+}
+.duel-tile.hidden:hover { background: repeating-linear-gradient(to bottom, #ffffff14 0 1px, transparent 1px 4px), linear-gradient(#8e95a1, #6b717c); }
+.duel-tile.hidden:disabled { cursor: default; animation: none; }
+@keyframes duel-pulse { 50% { box-shadow: 0 0 10px 2px rgb(16 207 230 / 70%); } }
+@keyframes duel-flip { from { transform: rotateX(90deg); } }
+.duel-hint { margin: 10px 0 0; font-size: 14px; color: var(--hm-cyan); }
+
+/* ---------- The player's turn ---------- */
+.duel-composer {
+  width: min(460px, 92%);
+  padding: 14px 16px;
+  text-align: left;
+  background: #07091acc;
+  border: 1px solid rgb(237 238 2 / 55%);
+  border-radius: 14px 14px 4px 14px;
+  box-shadow: 0 0 8px #edee0266;
+}
+.duel-composer fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+#duel-secret {
+  display: block;
+  width: 100%;
+  min-width: 0 !important;
+  min-height: 50px !important;
+  margin-top: 8px;
+  padding: 6px 12px;
+  text-align: center;
+  font: 600 24px/1 monospace;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #05070fd9;
+  border: 0 !important;
+  border-bottom: 3px solid var(--hm-cyan) !important;
+  border-radius: 4px 4px 0 0 !important;
+  caret-color: var(--hm-yellow);
+}
+#duel-validation { margin: 4px 0; font-size: 14px; color: #ffb6c8; }
+#duel-validation:empty { display: none; }
+.duel-tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 10px 0 14px; }
+.duel-tiers label { display: flex; flex-direction: column; gap: 2px; padding: 8px; cursor: pointer; border: 1px solid #93939344; border-radius: 6px; background: #05070f99; }
+.duel-tiers label.selected { border-color: var(--hm-yellow); box-shadow: 0 0 8px #edee0288; }
+.duel-tiers label:has(input:focus-visible) { outline: 2px solid var(--hm-yellow); outline-offset: 3px; }
+.duel-tiers input { position: absolute; opacity: 0; width: 1px; height: 1px; min-width: 0 !important; min-height: 0 !important; }
+.duel-tiers b { font-family: bruno; font-weight: normal; font-size: 13px; }
+.duel-tiers label.selected b { color: var(--hm-yellow); }
+.duel-tiers small { font-size: 12px; line-height: 1.3; color: var(--hm-muted); }
+.duel-composer .hm-button { display: block; margin: 0 auto; }
+
+.duel-replies { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; max-width: 520px; }
+.duel-replies .duel-label { width: 100%; text-align: right; color: var(--hm-muted); }
+
+/* ---------- End of the duel ---------- */
+.duel-result { margin-top: 22px; }
+.duel-result .hm-screen-inner { text-align: center; }
+.duel-result h2 { margin: 0 0 8px; font-family: technoboard; font-weight: normal; font-size: 30px; color: var(--hm-yellow); text-shadow: 0 0 12px #edee0288; outline: none; }
+.duel-result p { margin: 4px 0; }
+.duel-result strong { font-family: bruno; font-weight: normal; letter-spacing: .12em; color: var(--hm-yellow); }
+.duel-result-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 14px; }
+/* Auto-scroll target: the newest exchange lands with room below it. */
+.duel-bottom { height: 1px; scroll-margin-bottom: 32px; }
+.duel-credits { margin-top: 24px; font-size: 13px; color: var(--hm-muted); }
+.duel-credits a { display: inline-block; padding: 8px 0; color: #d6b8ff; }
+
+@media (max-width: 800px) {
+  .duel-page { width: calc(100% - 24px); }
+  /* One slim row on phones, so the sticky bar never hides the conversation:
+     her chances, her word count, and New word. Tier and your word are in the
+     conversation already. */
+  .duel-status { gap: 10px; padding: 6px 10px; }
+  .duel-status .hm-label, .duel-status-facts small, .duel-status .duel-status-facts > span.duel-chip, .duel-status .duel-status-facts > span.duel-your-word { display: none; }
+  .duel-status .hm-cells { gap: 4px; }
+  .duel-status .hm-cells span { width: 9px; height: 18px; }
+  .duel-status-facts { flex: 1; justify-content: center; }
+  .duel-status-facts b { font-size: 14px; }
+  .duel-status-facts b::after { content: " words"; font-size: 11px; color: var(--hm-muted); }
+  .duel-avatar { flex-basis: 38px; width: 38px; height: 38px; }
+  .duel-bubble { max-width: 86%; }
+  .duel-bubble p { font-size: 15px; }
+  .duel-board { padding: 8px 8px 10px; }
+  .duel-tile { height: 40px; }
+  .duel-composer { width: 100%; }
+  .duel-tiers { grid-template-columns: minmax(0, 1fr); }
+  .duel-tiers label { flex-direction: row; align-items: baseline; gap: 10px; }
+  .duel-tiers b { flex: 0 0 92px; }
+  .duel-new, .duel-replies button { min-height: 44px; }
+  .duel-new { padding: 6px 10px; font-size: 11px; letter-spacing: 1px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .duel-msg, .duel-board, .duel-tile.revealed, .duel-tile.hidden, .duel-typing span { animation: none; }
+}

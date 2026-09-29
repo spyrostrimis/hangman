@@ -166,7 +166,7 @@ it('shows guests a registered-only notice on both Illucia pages and admits a sig
     guest.unmount();
   }
   apiRequest.mockResolvedValue({ user: player });
-  render(tree('/illucia')); expect(await screen.findByText('Can your word outwit Illucia?')).toBeTruthy();
+  render(tree('/illucia')); expect(await screen.findByLabelText('Your secret word')).toBeTruthy();
   expect(screen.queryByText(/Only for/)).toBeNull();
 });
 
