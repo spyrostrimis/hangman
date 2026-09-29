@@ -9,6 +9,8 @@ import { filterCandidates } from '../lib/illucia/candidates.js';
 import { analyzeDecision } from '../lib/illucia/strategy.js';
 import { rejectionLine } from '../lib/illucia/lines.js';
 import { greetingLine, openingLine, turnLine } from '../lib/illucia/observatory-lines.js';
+import { isEnglish } from '../lib/illucia/voices.js';
+import { useSpeech } from '../lib/illucia/use-speech.js';
 import './IlluciaObservatory.css';
 
 const STAR_LIMIT = 220;
@@ -92,13 +94,12 @@ function Pod({ children, lit, fading, ambient, count, tier, mood, thinking, turn
   </section>;
 }
 
-function Setup({ username, onStart }) {
+function Setup({ line, onStart }) {
   const [secret, setSecret] = useState('');
   const [tierId, setTierId] = useState('scholar');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const pending = useRef(null);
-  const greeting = useMemo(() => greetingLine(username?.length ?? 0), [username]);
   useEffect(() => () => {
     pending.current?.abort();
     pending.current = null;
@@ -138,7 +139,7 @@ function Setup({ username, onStart }) {
   }
 
   return <div className="obs-grid">
-    <Pod ambient lit={AMBIENT} count={null} mood="idle" line={`Hello, ${username}. ${greeting}`} />
+    <Pod ambient lit={AMBIENT} count={null} mood="idle" line={line} />
     <section className="obs-screen">
       <div className="obs-screen-inner">
         <h2>Challenge Illucia</h2>
@@ -297,14 +298,49 @@ function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch }
   </>;
 }
 
+// Voice on/off, and once on, every voice this browser offers.
+function VoiceControls({ speech }) {
+  if (!speech.supported) return null;
+  const english = speech.voices.filter(isEnglish);
+  const other = speech.voices.filter(voice => !isEnglish(voice));
+  const option = voice => <option key={voice.voiceURI} value={voice.voiceURI}>
+    {voice.name} · {voice.lang}{voice.localService === false ? ' · online' : ''}
+  </option>;
+  return <div className="obs-voice">
+    <button type="button" aria-pressed={speech.enabled} onClick={() => speech.setEnabled(!speech.enabled)}>
+      {speech.enabled ? 'Voice on' : 'Voice off'}
+    </button>
+    {speech.enabled && speech.voices.length > 0 && <label>
+      <span>Her voice</span>
+      <select value={speech.voice?.voiceURI ?? ''} onChange={event => speech.setVoiceURI(event.target.value)}>
+        {english.length > 0 && <optgroup label="English">{english.map(option)}</optgroup>}
+        {other.length > 0 && <optgroup label="Other languages">{other.map(option)}</optgroup>}
+      </select>
+    </label>}
+  </div>;
+}
+
 function ObservatoryPage({ username }) {
   const [game, setGame] = useState(null);
   const [paused, setPaused] = useState(false);
   const [fast, setFast] = useState(false);
   const mind = useMemo(() => game && readMind(game), [game]);
+  const speech = useSpeech();
+  const { enabled: voiceOn, speak, stop } = speech;
+  const greeting = useMemo(() => `Hello, ${username}. ${greetingLine(username?.length ?? 0)}`, [username]);
+  const line = game ? game.line : greeting;
+  const round = game?.round;
+  const voiceURI = speech.voice?.voiceURI;
+
+  // Speak each new line: every turn, a new round, turning the voice on or picking another voice.
+  useEffect(() => {
+    if (voiceOn) speak(line, fast ? 1.4 : 1);
+  }, [voiceOn, line, round, voiceURI, speak]);
+  useEffect(() => { if (paused) stop(); }, [paused, stop]);
 
   useEffect(() => {
-    if (!game || !mind?.decision || paused) return;
+    // She finishes her sentence before she guesses again.
+    if (!game || !mind?.decision || paused || speech.busy) return;
     const delay = game.turns.length === 0 ? 2200 : fast ? 700 : 1700;
     const timer = setTimeout(() => {
       const { letter } = mind.decision;
@@ -322,18 +358,19 @@ function ObservatoryPage({ username }) {
       });
     }, delay);
     return () => clearTimeout(timer);
-  }, [game, mind, paused, fast]);
+  }, [game, mind, paused, fast, speech.busy]);
 
   const restart = () => { setGame(null); setPaused(false); };
   return <main className="obs-page">
     <header className="obs-heading">
       <h1>Illucia</h1>
       <p>Daughter of Professor Han Fastolfe · Aurora</p>
+      <VoiceControls speech={speech} />
     </header>
     {game
       ? <Game game={game} mind={mind} paused={paused} setPaused={setPaused} fast={fast} setFast={setFast} restart={restart}
         rematch={tier => { setPaused(false); setGame(newGame(game.round.answer, game.entries, tier)); }} />
-      : <Setup username={username} onStart={(word, entries, tier) => setGame(newGame(word, entries, tier))} />}
+      : <Setup line={greeting} onStart={(word, entries, tier) => setGame(newGame(word, entries, tier))} />}
     <p className="obs-credits">Vocabulary: ESDB/SCOWL · filtered with LDNOOBW. <a href="/illucia/credits.html" target="_blank" rel="noreferrer">Credits &amp; licences</a></p>
   </main>;
 }

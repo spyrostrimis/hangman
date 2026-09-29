@@ -35,6 +35,36 @@
 }
 .obs-heading p { margin: 2px 0 0; font-family: bruno; font-size: 13px; letter-spacing: .12em; color: #b8b7bb; }
 
+.obs-voice { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 12px; margin-top: 10px; }
+.obs-voice button {
+  min-height: 36px;
+  padding: 7px 12px 6px;
+  font-family: bruno;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #d0d2d5;
+  background: none;
+  border: 1px solid #93939333;
+  border-radius: 4px;
+  box-shadow: 0 0 5px 0 #00ffea;
+  cursor: pointer;
+}
+.obs-voice button:hover, .obs-voice button:focus-visible { color: #11b4ad; }
+.obs-voice button[aria-pressed="true"] { color: var(--obs-yellow); }
+.obs-voice label { display: flex; align-items: center; gap: 8px; min-width: 0; max-width: 100%; font-family: bruno; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #b8b7bb; }
+.obs-voice select {
+  min-width: 0;
+  max-width: min(360px, 100%);
+  min-height: 36px;
+  padding: 4px 8px;
+  font: 14px var(--mdb-font-roboto);
+  color: #d0d2d5;
+  background: #0b0d1ae6;
+  border: 1px solid #93939355;
+  border-radius: 4px;
+}
+
 .obs-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -399,6 +429,9 @@
 @media (max-width: 800px) {
   .obs-page { width: calc(100% - 24px); }
   .obs-heading { margin-bottom: 10px; }
+  .obs-voice button, .obs-voice select { min-height: 44px; }
+  .obs-voice label { width: 100%; justify-content: center; }
+  .obs-voice select { flex: 1; font-size: 16px; }
   .obs-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .obs-pod { max-width: 420px; height: 390px; border-radius: 48px; }
   .obs-hud { top: 18px; left: 26px; right: 26px; }
