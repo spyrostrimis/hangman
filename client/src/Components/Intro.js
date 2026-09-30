@@ -72,8 +72,8 @@ const Intro = () => {
         <p className="hm-subtitle">Rescue Mission</p>
       </header>
 
-      <section className="hm-screen home-brief" aria-labelledby="home-brief-title">
-        <div className="hm-screen-inner">
+      <section className="home-brief" aria-labelledby="home-brief-title">
+        <div className="home-brief-inner">
           <h2 id="home-brief-title">Mission briefing</h2>
           <p>
             Professor Han Fastolfe urgently seeks your assistance. His dear friend

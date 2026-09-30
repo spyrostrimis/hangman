@@ -51,54 +51,51 @@ const Halloffame = () => {
         </p>
       )}
 
-      <section className="hm-screen hall-board" aria-labelledby="hall-board-title">
-        <div className="hm-screen-inner">
-          <h2 id="hall-board-title">High scores</h2>
-          {mine && status === 'ready' && (
-            <p className="hall-you">You are <strong>{ordinal(mine.rank)}</strong> with <strong>{mine.score.toLocaleString('en-US')}</strong> points.</p>
-          )}
-          <div className='halltable' aria-busy={status === 'loading'}>
-            <div aria-live="polite" aria-atomic="true">
-              {status !== 'ready' && (
-                <div className="hall-status">
-                  {status === 'loading' && <p>Loading scores…</p>}
-                  {status === 'empty' && <p>No scores yet.</p>}
-                  {status === 'error' && (
-                    <p>Scores are unavailable right now. Please try again later.</p>
-                  )}
-                </div>
-              )}
-            </div>
-            {status === 'ready' && (
-              <table id="highscores">
-                <thead>
-                  <tr>
-                    <th scope="col">Rank</th>
-                    <th scope="col">Player</th>
-                    <th scope="col">Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ranked.map(entry => {
-                    const isMe = mine?.username === entry.username;
-                    const place = entry.rank <= 3 ? `place-${entry.rank}` : '';
-                    return (
-                      <tr key={entry.username} className={`${place} ${isMe ? 'is-me' : ''}`} aria-current={isMe ? 'true' : undefined}>
-                        <td>{ordinal(entry.rank)}</td>
-                        <td>
-                          <span className="hall-name">{entry.username}</span>
-                          {isMe && <span className="hall-you-tag">You</span>}
-                        </td>
-                        <td>{entry.score.toLocaleString('en-US')}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+      <div className="hall-board">
+        {mine && status === 'ready' && (
+          <p className="hall-you">You are <strong>{ordinal(mine.rank)}</strong> with <strong>{mine.score.toLocaleString('en-US')}</strong> points.</p>
+        )}
+        <div className='halltable' aria-busy={status === 'loading'}>
+          <div aria-live="polite" aria-atomic="true">
+            {status !== 'ready' && (
+              <div className="hall-status">
+                {status === 'loading' && <p>Loading scores…</p>}
+                {status === 'empty' && <p>No scores yet.</p>}
+                {status === 'error' && (
+                  <p>Scores are unavailable right now. Please try again later.</p>
+                )}
+              </div>
             )}
           </div>
+          {status === 'ready' && (
+            <table id="highscores">
+              <thead>
+                <tr>
+                  <th scope="col">Rank</th>
+                  <th scope="col">Player</th>
+                  <th scope="col">Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ranked.map(entry => {
+                  const isMe = mine?.username === entry.username;
+                  const place = entry.rank <= 3 ? `place-${entry.rank}` : '';
+                  return (
+                    <tr key={entry.username} className={`${place} ${isMe ? 'is-me' : ''}`} aria-current={isMe ? 'true' : undefined}>
+                      <td>{ordinal(entry.rank)}</td>
+                      <td>
+                        <span className="hall-name">{entry.username}</span>
+                        {isMe && <span className="hall-you-tag">You</span>}
+                      </td>
+                      <td>{entry.score.toLocaleString('en-US')}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
-      </section>
+      </div>
     </div>
   );
 };

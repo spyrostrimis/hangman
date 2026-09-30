@@ -1,23 +1,17 @@
+/* Guest notice on the Illucia pages: no frame, just type on the stars. */
 .registered-only {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 24px;
   width: min(640px, calc(100% - 32px));
-  margin: 8vh auto 40px;
+  margin: 10vh auto 40px;
+  text-align: center;
+  text-shadow: 0 2px 12px #000000cc;
 }
-.registered-only > img { width: auto; height: 240px; filter: drop-shadow(0 0 14px #9fd8ff40); }
-.registered-only .hm-screen { flex: 1; max-width: 420px; }
-.registered-only .hm-screen-inner { padding: 22px 24px; text-align: center; }
-.registered-only h1 { margin: 0 0 12px; font-family: technoboard; font-weight: normal; font-size: 32px; color: var(--hm-text); }
-.registered-only-note { margin: 0 0 10px; font-family: bruno; font-size: 18px; color: var(--hm-text); }
-.registered-only-help { margin: 0; font: 14px/1.5 monospace; color: var(--hm-muted); }
+.registered-only .hm-title { margin-bottom: 18px; }
+.registered-only-note { margin: 0 0 14px; font-family: bruno; font-size: clamp(22px, 4vw, 32px); line-height: 1.3; color: var(--hm-text); }
+.registered-only-pitch { margin: 0 0 10px; font-family: bruno; font-size: 15px; letter-spacing: .08em; color: var(--hm-cyan); }
+.registered-only-help { margin: 0; font: 15px/1.6 monospace; color: #c9c8cd; }
 .registered-only a { color: var(--hm-yellow); }
+.registered-only a:focus-visible { outline: 2px solid var(--hm-yellow); outline-offset: 3px; }
 
 @media (max-width: 800px) {
-  .registered-only { gap: 10px; width: calc(100% - 24px); margin-top: 16px; }
-  .registered-only > img { height: 150px; }
-  .registered-only .hm-screen-inner { padding: 16px 12px; }
-  .registered-only h1 { font-size: 26px; }
-  .registered-only-note { font-size: 15px; }
+  .registered-only { width: calc(100% - 24px); margin-top: 6vh; }
 }

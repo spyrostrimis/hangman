@@ -163,11 +163,17 @@ it('shows guests a registered-only notice on both Illucia pages and admits a sig
     expect(screen.queryByText('Login gate')).toBeNull();
     expect(screen.queryByLabelText(/secret word/i)).toBeNull();
     expect(screen.getByRole('link', { name: 'registered' }).getAttribute('href')).toBe('/login');
+    // Guests do not see Illucia herself.
+    expect(screen.queryByRole('img', { name: /Illucia/ })).toBeNull();
     guest.unmount();
   }
   apiRequest.mockResolvedValue({ user: player });
-  render(tree('/illucia')); expect(await screen.findByLabelText('Your secret word')).toBeTruthy();
+  const member = render(tree('/illucia')); expect(await screen.findByLabelText('Your secret word')).toBeTruthy();
   expect(screen.queryByText(/Only for/)).toBeNull();
+  member.unmount();
+  // Positive control: a registered player does see her on the Observatory.
+  render(tree('/illucia-observatory'));
+  expect(await screen.findByRole('img', { name: /^Illucia, a white robot/ })).toBeTruthy();
 });
 
 it('renders leaderboard loading, populated, empty and failure states without hanging', async () => {
