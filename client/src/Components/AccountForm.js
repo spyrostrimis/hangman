@@ -3,7 +3,6 @@ import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 import { apiRequest } from '../lib/api.js';
 import { deriveCredential, registrationParameters } from '../lib/credential.js';
-import ronnyai from '../Images/ronnyai.png';
 import './AccountForm.css';
 
 export default function AccountForm({ signup = false }) {
@@ -41,14 +40,8 @@ export default function AccountForm({ signup = false }) {
     finally { busy.current = false; setPending(false); }
   }
   return <div className="account">
-    <aside className="account-pod" aria-hidden="true">
-      <p className="account-bubble">{signup
-        ? 'Welcome aboard! Choose a name for the Hall of Fame.'
-        : 'Welcome back. Artsy has been waiting for you.'}</p>
-      <img src={ronnyai} width={170} height={204} alt="" />
-    </aside>
-    <section className="hm-screen account-screen">
-      <div className="hm-screen-inner">
+    <section className="account-panel">
+      <div className="account-panel-inner">
         <form className="account-form" onSubmit={submit} aria-busy={pending}>
           <h1>{signup ? 'Create account' : 'Sign in'}</h1>
           <label htmlFor="username">Username</label>

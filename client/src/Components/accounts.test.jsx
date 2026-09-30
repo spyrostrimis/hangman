@@ -61,10 +61,13 @@ describe('account forms', () => {
     const signup = form();
     expect(screen.getByLabelText('Username').maxLength).toBe(20);
     expect(screen.getByLabelText('Username').getAttribute('pattern')).toBe('[A-Za-z0-9]{3,20}');
+    // Just the form: no character picture on the account pages (the labelled field above is the positive control).
+    expect(signup.container.querySelector('img')).toBeNull();
     signup.unmount();
-    form(false);
+    const login = form(false);
     expect(screen.getByLabelText('Username').maxLength).toBe(35);
     expect(screen.getByLabelText('Username').getAttribute('pattern')).toBe('[A-Za-z0-9]{3,35}');
+    expect(login.container.querySelector('img')).toBeNull();
   });
   it('fetches parameters before stretching and handles wrong password without navigation', async () => {
     let wrong = true;

@@ -1,55 +1,21 @@
-/* Sign in / Sign up: Professor Fastolfe's pod beside the cyan screen. */
+/* Sign in / Sign up: one frosted-glass panel, like Home's briefing, with a
+   yellow rim along the bottom as a nod to the 2023 sign-up card. */
 .account {
-  display: grid;
-  grid-template-columns: minmax(0, 260px) minmax(0, 440px);
-  justify-content: center;
-  align-items: end;
-  gap: 24px;
-  width: min(760px, calc(100% - 32px));
-  margin: 6vh auto 40px;
+  width: min(460px, calc(100% - 32px));
+  margin: 7vh auto 40px;
 }
 
-.account-pod {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  height: 360px;
-  padding-bottom: 12px;
-  box-sizing: border-box;
-  border-bottom: 4px solid #d9d8dbbd;
-  border-radius: 70px;
-  background: radial-gradient(ellipse at 50% 35%, #1d2150b3, #05071299 70%);
-  box-shadow: inset 0 -80px 32px -34px #d9d8db91;
-}
-.account-pod img { width: auto; height: 190px; filter: drop-shadow(0 0 12px #9fd8ff40); }
-.account-bubble {
-  position: relative;
-  margin: 0 14px 16px;
-  padding: 10px 12px;
-  font: 14px/1.45 monospace;
-  text-align: left;
-  color: #eef;
-  background: #07091acc;
-  border: 1px solid rgb(67 228 64 / 60%);
-  border-radius: 12px;
-  box-shadow: 0 0 8px rgb(67 228 64 / 45%);
-}
-.account-bubble::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -8px;
-  width: 14px;
-  height: 14px;
-  background: #07091a;
-  border-right: 1px solid rgb(67 228 64 / 60%);
-  border-bottom: 1px solid rgb(67 228 64 / 60%);
-  transform: translateX(-50%) rotate(45deg);
+.account-panel-inner {
+  padding: 26px 30px 20px;
+  background: linear-gradient(160deg, rgb(255 255 255 / 12%), rgb(255 255 255 / 3%) 55%, rgb(237 238 2 / 5%));
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-bottom: 4px solid #d8de0d;
+  border-radius: 16px;
+  box-shadow: 0 10px 34px -6px rgb(230 230 230 / 45%), inset 0 1px 0 rgb(255 255 255 / 22%);
+  backdrop-filter: blur(9px) saturate(1.3);
+  -webkit-backdrop-filter: blur(9px) saturate(1.3);
 }
 
-.account-screen .hm-screen-inner { padding: 22px 26px 18px; }
 .account-form { text-align: left; }
 .account-form h1 { margin: 0 0 14px; font-family: technoboard; font-weight: normal; font-size: 30px; text-align: center; color: var(--hm-text); }
 .account-form label { display: block; margin: 14px 0 6px; font-family: bruno; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--hm-yellow); }
@@ -68,19 +34,25 @@
   border-radius: 4px 4px 0 0 !important;
   caret-color: var(--hm-yellow);
 }
+/* Keep browser-autofilled fields dark instead of the browser's pale blue. */
+.account-form input:-webkit-autofill,
+.account-form input:-webkit-autofill:hover,
+.account-form input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0 1000px #05070f inset;
+  box-shadow: 0 0 0 1000px #05070f inset;
+  caret-color: var(--hm-yellow);
+  transition: background-color 9999s ease-out 0s;
+}
 .account-form input:focus-visible { outline: 2px solid var(--hm-yellow); outline-offset: 2px; }
 .account-form input:disabled { opacity: .6; }
-.account-help { margin: 6px 0 0; font: 13px/1.5 monospace; color: var(--hm-muted); }
+.account-help { margin: 6px 0 0; font: 13px/1.5 monospace; color: #b9b8bd; }
 .account-form .account-error { margin: 12px 0 0; }
 .account-form button[type="submit"] { display: block; margin: 22px auto 6px; min-width: 60%; }
 .account-switch { margin: 14px 0 0; text-align: center; font: 14px monospace; color: var(--hm-text); }
 .account-switch a { color: var(--hm-yellow); }
 
 @media (max-width: 800px) {
-  .account { grid-template-columns: minmax(0, 1fr); width: calc(100% - 24px); max-width: 440px; margin-top: 12px; gap: 12px; }
-  .account-pod { flex-direction: row; align-items: flex-end; height: auto; padding: 14px 12px 10px; border-radius: 40px; }
-  .account-pod img { height: 110px; order: -1; }
-  .account-bubble { margin: 0 0 30px 8px; font-size: 13px; }
-  .account-bubble::after { left: -8px; bottom: 16px; transform: rotate(135deg); }
-  .account-screen .hm-screen-inner { padding: 16px 14px; }
+  .account { width: calc(100% - 24px); margin-top: 16px; }
+  .account-panel-inner { padding: 18px 16px 16px; }
 }
