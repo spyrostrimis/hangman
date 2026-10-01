@@ -1,6 +1,6 @@
 import React, { StrictMode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthProvider';
 import AccountForm from './AccountForm';
@@ -24,7 +24,7 @@ beforeEach(() => {
     throw new Error(`Unexpected request: ${path}`);
   });
 });
-afterEach(cleanup);
+afterEach(() => { cleanup(); vi.useRealTimers(); });
 function form(signup = true) {
   return render(<MemoryRouter initialEntries={[signup ? '/signup' : '/login']}><AuthProvider><Routes>
     <Route path="/signup" element={<AccountForm signup />} />
@@ -111,8 +111,70 @@ function Round({ ticket, won }) {
 function roundTree(ticket, won) {
   return <StrictMode><AuthProvider><Round ticket={ticket} won={won} /></AuthProvider></StrictMode>;
 }
-const scoreTicket = () => ({ roundId: crypto.randomUUID(), userId: player.id });
+const scoreTicket = () => ({ roundId: crypto.randomUUID(), userId: player.id, claimNotBefore: performance.now() });
 describe('round score lifecycle', () => {
+  it('holds an early win behind Saving until 5000 ms, then claims once', async () => {
+    vi.mocked(apiRequest).mockImplementation(async path => path === '/user/me' ? { user: player } : { score: 100 });
+    const ticket = scoreTicket();
+    const view = render(roundTree(ticket, false));
+    await screen.findByText('Player');
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'performance'] });
+    ticket.claimNotBefore = performance.now() + 5000;
+    view.rerender(roundTree(ticket, true));
+    expect(screen.getByText('Saving…')).toBeTruthy();
+    const claims = () => apiRequest.mock.calls.filter(([path]) => path === '/user/round/claim');
+    await act(async () => { await vi.advanceTimersByTimeAsync(4999); });
+    expect(claims()).toHaveLength(0);
+    expect(screen.queryByText(/Could not|Retry saving/)).toBeNull();
+    await act(async () => { await vi.advanceTimersByTimeAsync(1); });
+    expect(claims()).toHaveLength(1);
+    expect(screen.getByText('100 points saved! Your total is 100.')).toBeTruthy();
+    view.rerender(roundTree(ticket, true));
+    expect(claims()).toHaveLength(1);
+  });
+
+  it('silently waits and retries the same claim when the server says ROUND_TOO_EARLY', async () => {
+    let calls = 0;
+    vi.mocked(apiRequest).mockImplementation(async path => {
+      if (path === '/user/me') return { user: player };
+      if (++calls === 1) throw new ApiError('Too early', 409, { code: 'ROUND_TOO_EARLY', retryAfterMs: 25 });
+      return { score: 100 };
+    });
+    const ticket = scoreTicket();
+    const view = render(roundTree(ticket, false));
+    await screen.findByText('Player');
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'performance'] });
+    ticket.claimNotBefore = performance.now();
+    await act(async () => { view.rerender(roundTree(ticket, true)); });
+    expect(calls).toBe(1);
+    expect(screen.getByText('Saving…')).toBeTruthy();
+    expect(screen.queryByText(/no longer eligible|Retry saving/)).toBeNull();
+    await act(async () => { await vi.advanceTimersByTimeAsync(24); });
+    expect(calls).toBe(1);
+    await act(async () => { await vi.advanceTimersByTimeAsync(1); });
+    expect(calls).toBe(2);
+    expect(screen.getByText('100 points saved! Your total is 100.')).toBeTruthy();
+    const claims = apiRequest.mock.calls.filter(([path]) => path === '/user/round/claim');
+    expect(claims[1][1].body).toEqual(claims[0][1].body);
+  });
+
+  it('does not send a delayed claim after navigating away', async () => {
+    vi.mocked(apiRequest).mockImplementation(async path => path === '/user/me' ? { user: player } : { score: 100 });
+    const ticket = scoreTicket();
+    const view = render(roundTree(ticket, false));
+    await screen.findByText('Player');
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'performance'] });
+    ticket.claimNotBefore = performance.now() + 5000;
+    view.rerender(roundTree(ticket, true));
+    view.unmount();
+    await act(async () => { await vi.advanceTimersByTimeAsync(5000); });
+    expect(apiRequest.mock.calls.filter(([path]) => path === '/user/round/claim')).toHaveLength(0);
+    // The same ticket still saves when its winning screen is mounted again.
+    await act(async () => { render(roundTree(ticket, true)); });
+    expect(screen.getByText('100 points saved! Your total is 100.')).toBeTruthy();
+    expect(apiRequest.mock.calls.filter(([path]) => path === '/user/round/claim')).toHaveLength(1);
+  });
+
   it('saves once under StrictMode and rerenders, and again for a new round', async () => {
     vi.mocked(apiRequest).mockImplementation(async path => path === '/user/me' ? { user: player } : { score: 100 });
     const round = scoreTicket();

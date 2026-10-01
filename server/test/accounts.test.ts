@@ -1,5 +1,5 @@
 import { env, applyD1Migrations } from 'cloudflare:test';
-import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SignJWT } from 'jose';
 import app from '../src/index';
 import { KDF } from '../../shared/auth-protocol.js';
@@ -29,7 +29,14 @@ async function signup(username = 'Player') {
 beforeAll(async () => { await applyD1Migrations(env.DB, env.TEST_MIGRATIONS); });
 beforeEach(async () => { await env.DB.batch([env.DB.prepare('DELETE FROM rounds'), env.DB.prepare('DELETE FROM scores'), env.DB.prepare('DELETE FROM users')]); });
 
-type Ticket = { roundId: string; word: string; expiresAt: number };
+afterEach(() => { vi.restoreAllMocks(); });
+
+// Mature fixtures keep the existing concurrency/retry tests independent of wall time.
+async function mature(ticket: Ticket) {
+  await env.DB.prepare('UPDATE rounds SET issued_at = ? WHERE id = ?').bind(Date.now() - 5000, ticket.roundId).run();
+  return ticket;
+}
+type Ticket = { roundId: string; word: string; issuedAt: number; expiresAt: number; serverNow: number };
 async function start(cookie: string, previousRoundId?: string) {
   const response = await request('round/start', { method: 'POST', cookie, body: previousRoundId ? { previousRoundId } : {} });
   expect(response.status).toBe(200);
@@ -38,6 +45,42 @@ async function start(cookie: string, previousRoundId?: string) {
 const win = (ticket: Ticket) => [...new Set(ticket.word)];
 const claim = (cookie: string, ticket: Ticket, guesses: unknown = win(ticket)) =>
   request('round/claim', { method: 'POST', cookie, body: { roundId: ticket.roundId, guesses } });
+
+describe('five-second scoring floor', () => {
+  it('rejects at 4999 ms without consuming or awarding, then accepts the same ticket at 5000 ms', async () => {
+    const { cookie } = await signup();
+    const ticket = await start(cookie);
+    expect(ticket.issuedAt).toBe(await env.DB.prepare('SELECT issued_at FROM rounds WHERE id = ?').bind(ticket.roundId).first('issued_at'));
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(ticket.issuedAt + 4999);
+    const early = await claim(cookie, ticket);
+    expect(early.status).toBe(409);
+    expect(await early.json()).toMatchObject({ code: 'ROUND_TOO_EARLY', retryAfterMs: 1 });
+    expect(await env.DB.prepare('SELECT claimed_at, claim_token FROM rounds WHERE id = ?').bind(ticket.roundId).first())
+      .toEqual({ claimed_at: null, claim_token: null });
+    expect(await env.DB.prepare('SELECT total FROM scores').first('total')).toBe(0);
+    clock.mockReturnValue(ticket.issuedAt + 5000);
+    const accepted = await claim(cookie, ticket);
+    expect(accepted.status).toBe(200);
+    expect(await accepted.json()).toEqual({ score: 100 });
+    expect(await (await claim(cookie, ticket)).json()).toEqual({ score: 100 });
+  });
+
+  it('keeps a delayed start after the previous award so parallel requests cannot shorten the account floor', async () => {
+    const { cookie } = await signup();
+    const first = await start(cookie);
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(first.issuedAt + 5000);
+    expect(await (await claim(cookie, first)).json()).toEqual({ score: 100 });
+    // Simulate a start whose clock was sampled before the previous claim committed.
+    clock.mockReturnValue(first.issuedAt);
+    const next = await start(cookie);
+    expect(next.issuedAt).toBe(first.issuedAt + 5000);
+    clock.mockReturnValue(first.issuedAt + 9999);
+    expect(await (await claim(cookie, next)).json()).toMatchObject({ code: 'ROUND_TOO_EARLY', retryAfterMs: 1 });
+    clock.mockReturnValue(first.issuedAt + 10000);
+    const claims = await Promise.all(Array.from({ length: 5 }, () => claim(cookie, next)));
+    for (const response of claims) expect(await response.json()).toEqual({ score: 200 });
+  });
+});
 
 describe('account API with real local D1 and Workers crypto', () => {
   it('creates a zero-score user, stores a verifier rather than credential, and issues a secure session', async () => {
@@ -138,12 +181,13 @@ describe('account API with real local D1 and Workers crypto', () => {
     expect(logout.status).toBe(200); expect(logout.headers.get('Set-Cookie')).toContain('Max-Age=0');
   });
 
-  it('awards immediate wins once under concurrent claims and exposes only safe leaderboard fields', async () => {
+  it('awards mature wins once under concurrent claims and exposes only safe leaderboard fields', async () => {
     expect(await (await request('get-best-scores')).json()).toEqual([]);
     const { cookie } = await signup(); await signup('Other');
     expect((await request('add100', { method: 'PUT', cookie })).status).toBe(404);
     expect((await request('round/start', { method: 'POST' })).status).toBe(401);
     const ticket = await start(cookie);
+    await mature(ticket);
     expect(words).toContain(ticket.word);
     expect(ticket.expiresAt).toBeGreaterThan(Date.now());
     const responses = await Promise.all(Array.from({ length: 5 }, () => claim(cookie, ticket)));
@@ -151,6 +195,7 @@ describe('account API with real local D1 and Workers crypto', () => {
     for (const response of responses) expect(await response.json()).toEqual({ score: 100 });
     // A lost success response can be retried even after the next round starts.
     const next = await start(cookie);
+    await mature(next);
     expect(next.roundId).not.toBe(ticket.roundId);
     expect(await (await claim(cookie, ticket)).json()).toEqual({ score: 100 });
     expect(await (await claim(cookie, next)).json()).toEqual({ score: 200 });
@@ -167,6 +212,7 @@ describe('account API with real local D1 and Workers crypto', () => {
     const tickets = await Promise.all(Array.from({ length: 5 }, () => start(cookie)));
     expect(new Set(tickets.map(ticket => ticket.roundId)).size).toBe(1);
     const foreign = await start(other.cookie);
+    await mature(foreign);
     const same = await start(cookie, foreign.roundId);
     expect(same.roundId).toBe(tickets[0].roundId);
     const replacements = await Promise.all(Array.from({ length: 5 }, () => start(cookie, same.roundId)));
@@ -180,6 +226,7 @@ describe('account API with real local D1 and Workers crypto', () => {
   it('rejects fabricated tickets, invalid histories, extra fields and guesses after game over', async () => {
     const { cookie } = await signup();
     const ticket = await start(cookie);
+    await mature(ticket);
     // Fixed answer makes order-sensitive failures deterministic.
     await env.DB.prepare('UPDATE rounds SET word = ? WHERE id = ?').bind('puzzle', ticket.roundId).run();
     ticket.word = 'puzzle';
@@ -202,6 +249,7 @@ describe('account API with real local D1 and Workers crypto', () => {
     expect((await claim(cookie, expired)).status).toBe(409);
     const ticket = await start(cookie);
     expect(ticket.roundId).not.toBe(expired.roundId);
+    await mature(ticket);
     expect((await claim(cookie, ticket)).status).toBe(200);
     await env.DB.prepare('UPDATE rounds SET expires_at = ? WHERE id = ?').bind(Date.now() - 1, ticket.roundId).run();
     expect(await (await claim(cookie, ticket)).json()).toEqual({ score: 100 });
@@ -214,6 +262,7 @@ describe('account API with real local D1 and Workers crypto', () => {
   it('does not consume a round at the score ceiling and rolls consumption back when the increment fails', async () => {
     const { cookie, data } = await signup();
     const ticket = await start(cookie);
+    await mature(ticket);
     await env.DB.prepare('UPDATE scores SET total = 9007199254740900 WHERE user_id = ?').bind(data.user.id).run();
     expect((await claim(cookie, ticket)).status).toBe(409);
     expect(await env.DB.prepare('SELECT claimed_at FROM rounds WHERE id = ?').bind(ticket.roundId).first('claimed_at')).toBeNull();

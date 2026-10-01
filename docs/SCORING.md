@@ -1,6 +1,6 @@
 # Scored rounds
 
-Approved and deployed 2026-10-01. Migration `0002_rounds.sql`, the Worker and the matching frontend are live; see the production verification below.
+The original round-ticket protocol was deployed 2026-10-01. The five-second floor API was deployed on 2026-10-01; the matching frontend is included in this release. Historical evidence below is identified separately.
 
 ## Guarantees and limits
 
@@ -8,20 +8,20 @@ Signed-in Hangman uses server-issued, account-owned rounds. The server chooses f
 
 A claim must contain 1–26 unique lowercase a–z guesses. Replay must end exactly at a win, with fewer than six misses and no guesses after a win or loss. Ownership, expiry, and successful consumption are checked on the server. The submitted sequence is evidence of a valid result, not evidence that somebody actually played it.
 
-There is deliberately **no minimum round time, award cooldown, or daily cap**. A five-second win counts immediately. Answers are public and a bot can register, sign in, start a round, construct the distinct answer letters, and claim immediately. One outstanding round per account prevents stockpiling live tickets; it does not impose a scoring-speed ceiling. Existing approximate IP request limits provide basic request throttling, not strict global accounting or bot detection. Multiple accounts and distributed traffic remain possible.
+**Answers are public by design.** The server guarantees valid replay, exactly-once awards for successfully claimed tickets, and a **5 s rate floor: at most 12 new awards per minute per account** (1,200 points, measured over half-open 60-second intervals). It does not verify that a human played. A bot can register, sign in, obtain the answer and manufacture a valid history, but must wait until the ticket is at least 5,000 ms old. One outstanding ticket per account prevents parallel stockpiling; a new ticket cannot predate the previous award, including a start request delayed behind that award. Replacing a round invalidates the old ticket and starts a fresh wait. Successful claim retries do not add awards or restart the wait. There is no daily cap. Existing approximate IP limits are additional request throttling, not the source of this account-level guarantee. Multiple accounts can each earn up to this rate.
 
 CAPTCHAs, email verification, daily award caps, per-guess server adjudication and moderation are not implemented. They would add friction, operating work or architectural complexity without proving honest play. Reconsider if actual abuse or stakes justify them. The Hall of Fame remains unsuitable as a trusted competition ranking. Existing totals, including unverified awards from the original endpoint, are preserved.
 
 ## Protocol and concurrency
 
-1. `POST /user/round/start` with `{}` resumes the account's outstanding round, or creates one. It returns `{roundId, word, expiresAt}`; times are Unix milliseconds. Random UUIDs identify tickets. Word selection happens in the Worker.
+1. `POST /user/round/start` with `{}` resumes the account's outstanding round, or creates one. It returns `{roundId, word, issuedAt, expiresAt, serverNow}`; times are Unix milliseconds. Random UUIDs identify tickets. Word selection happens in the Worker. The word remains in the response as the honest consequence of local play.
 2. The browser plays entirely locally. There are no per-guess requests.
 3. A win sends `POST /user/round/claim` with `{roundId, guesses}`. A successful claim or retry returns `{score}`, the cumulative total at the transaction's read. Each round can award 100 at most once.
 4. Play again sends `{previousRoundId}` to start. The database deletes only that account's matching unclaimed ticket, then creates/resumes a round. Losing or abandoning a round therefore needs no separate completion request. A delayed duplicate start referencing the old ID resumes the replacement, rather than replacing it again.
 
 A partial unique index enforces one unclaimed ticket per account, including simultaneous starts. Tabs share this outstanding ticket; claiming in two tabs awards once. Replacing a round in one tab invalidates that round in another tab. An expired unclaimed ticket is removed before starting a new one.
 
-Claims replay against the stored word, then use one D1 batch: conditionally consume the unclaimed/unexpired ticket with a fresh server-only claim nonce; increment the score only if the ticket contains **this attempt's nonce**; read the claim state and total. A zero-row consumption cannot increment the score. A failed increment rolls back consumption. Successful retries use a new nonce, do not increment, and return the current total. The score ceiling is checked before consumption.
+Claims replay against the stored word, then use one D1 batch: conditionally consume the unclaimed/unexpired ticket with a fresh server-only claim nonce; increment the score only if the ticket contains **this attempt's nonce**; read the claim state and total. A zero-row consumption cannot increment the score. A failed increment rolls back consumption. Successful retries use a new nonce, do not increment, and return the current total. The score ceiling and `issued_at <= now - 5000` are checked in the conditional consumption statement. At 4,999 ms, the server responds with HTTP 409 and `{code: "ROUND_TOO_EARLY", retryAfterMs: 1, message: ...}` without consuming the ticket or changing the score. The same ticket is eligible at exactly 5,000 ms. The latest previous claim timestamp is a lower bound on new ticket issuance; migration `0004_round_claim_times.sql` indexes that per-account lookup.
 
 Unclaimed tickets expire after 30 minutes. Claimed tickets remain retryable for at least 24 hours after their original expiry, even when newer rounds have started. Each start prunes at most 100 rows older than that retention window using the expiry index. Cleanup is traffic-driven: inactive periods retain rows longer. Once removed, a ticket is rejected, never re-created by a claim. The server never accepts a caller-chosen new ticket ID.
 
@@ -31,15 +31,32 @@ Unclaimed tickets expire after 30 minutes. Claimed tickets remain retryable for 
 
 The first round waits for session restoration. Guests then play locally without round requests. Signed-in players wait for the start request; failure or a mismatched word manifest starts a visibly unranked local round. A late response cannot replace a newer round or a different page. A guest/unranked win is not upgraded by subsequently signing in.
 
+On an early win the client shows **Saving…** and holds the claim until `issuedAt + 5000`. It converts `issuedAt` and `serverNow` to a monotonic client deadline so a wrong device wall clock cannot skip the wait or add hours. Response transit time can only make this initial wait conservative. A typed `ROUND_TOO_EARLY` response transparently waits its `retryAfterMs` and retries the same ticket; it is never shown as an error to the player. Navigation or an account change during the delay prevents sending a stale claim.
+
 Winning claims suppress ordinary duplicate sends, including React StrictMode. Play again waits for the pending save to finish. An ambiguous failure offers **Retry saving points**, using the same round and guesses; retries are safe even if the first request committed and its response was lost. Starting another round after a failure can abandon an unclaimed ticket. Expired sessions and definitively ineligible rounds show a message rather than promising an award. Score responses cannot update another signed-in account or overwrite a newer round's message.
 
 ## Release and verification
 
-Run the client Node and UI tests and production build; run server type generation, TypeScript check, Workers/D1 integration tests and dry-run build. The tests cover immediate wins, simultaneous claims/starts, safe retries across rounds, account isolation, losing/invalid histories, expiry and cleanup, score ceilings, rollback after a forced write failure, vocabulary parity, guest/unranked play, StrictMode and stale start responses.
+Run the client Node and UI tests and production build; run server type generation, TypeScript check, Workers/D1 integration tests and dry-run build. The tests cover the exact 4,999/5,000 ms boundary, delayed client claims, transparent early-response retries, server-relative timing, simultaneous claims/starts, safe retries across rounds, account isolation, losing/invalid histories, expiry and cleanup, score ceilings, rollback after a forced write failure, vocabulary parity, guest/unranked play, StrictMode and stale start responses.
 
-Local verification on 2026-10-01: 42 client Node tests, 44 UI tests and 14 Workers/D1 integration tests passed. Type generation, TypeScript checking, the client production build and Worker dry-run build passed. Migration `0002_rounds.sql` applied successfully to local D1. A browser smoke test signed in to a disposable local account, completed two rounds and confirmed totals of 100 then 200. The second award was recorded 2,098 ms after ticket issuance, verifying that a sub-five-second win counts. The test account was removed afterward. These are local results only.
+Local verification on 2026-10-01: 42 client Node tests, 44 UI tests and 14 Workers/D1 integration tests passed. Type generation, TypeScript checking, the client production build and Worker dry-run build passed. Migration `0002_rounds.sql` applied successfully to local D1. A browser smoke test signed in to a disposable local account, completed two rounds and confirmed totals of 100 then 200. That historical smoke test predates the floor. Its sub-five-second award check is superseded by the exact-boundary and client-delay tests below. The test account was removed afterward. These are local results only.
 
-Production release sequence (completed 2026-10-01):
+Five-second-floor verification on 2026-10-01: 43 client Node tests, 51 UI tests and 21 Workers/D1 integration tests passed in the shared working tree (including the separately developed account-deletion tests). TypeScript checking, the client production build and Worker dry-run build passed. Existing retry and concurrency coverage remains green. These checks exercise the pending implementation; the five-second UI behavior still needs a manual browser smoke test, and migration `0004_round_claim_times.sql` has not been applied to production.
+
+Each new test was mutation-checked: the deliberate changes below caused the corresponding test to fail, then were restored before the final passing suite. Boundary and rejection checks include successful controls using the same ticket or fixture.
+
+| Deliberate mutation | Test that caught it |
+| --- | --- |
+| Remove the five-second subtraction from the SQL consumption gate | 4,999 ms rejection, unchanged score and unconsumed ticket |
+| Change the inclusive SQL boundary to strict less-than | Same ticket succeeds at exactly 5,000 ms |
+| Remove the latest-award lower bound from ticket issuance | Delayed start cannot shorten the next award interval; concurrent claims award once |
+| Skip the client's initial wait | Early win stays on Saving… through 4,999 ms and saves at 5,000 ms |
+| Surface the early-response error instead of waiting and retrying | Typed early response stays on Saving… and retries successfully |
+| Remove the post-wait mounted/ticket/account guard | Unmounted client sends no delayed claim; remounted fixture saves successfully |
+| Use the device wall clock instead of the server timestamp | Incorrect device time does not change the server-relative deadline |
+| Drop response metadata when constructing ApiError | Early error preserves its code and retry delay; successful response still returns score |
+
+Original protocol production release sequence (completed 2026-10-01):
 
 1. Apply `0002_rounds.sql` to production D1. It adds the rounds table and indexes without changing existing scores.
 2. Deploy the Worker, which removes the legacy endpoint. Old frontend tabs will temporarily fail to save scores; keeping `add100` alive would preserve the bypass. Coordinate the frontend release closely.
@@ -49,4 +66,6 @@ Production verification on 2026-10-01: implementation `f865419` was pushed to `m
 
 If rolling back, preserve D1 and account data. Restoring the old Worker also restores arbitrary score increments; do not present that as retaining the new protections.
 
-The scoring hard rule in `CLAUDE.md` is now SYNC v5. Its separately maintained project-instructions mirror was not found in this checkout and needs the same approved wording when that external configuration is next edited.
+The scoring hard rule in `CLAUDE.md` is now SYNC v6. Its separately maintained project-instructions mirror was not found in this checkout and needs the same approved wording when that external configuration is next edited.
+
+Release verification, five-second floor (2026-10-01): the isolated scoring-only tree passed 43 Node tests, 48 UI tests and 16 Worker tests, TypeScript checking and both builds. A local browser signed in and completed a scored win, showing 100 points; the early-wait boundary remains covered by the automated timer tests. Migration `0004_round_claim_times.sql` was applied remotely and Worker `46a25777-a867-4f59-9773-304c5a3d155d` deployed. A disposable production account received `ROUND_TOO_EARLY`, then the same ticket succeeded after its wait; concurrent retries returned 100 total. The release account was deleted afterward. Production browser verification remains unavailable under the earlier browser permission denial.

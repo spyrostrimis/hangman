@@ -7,10 +7,21 @@ import { useHangmanRound } from './use-hangman-round.js';
 
 vi.mock('./api.js', async original => ({ ...await original(), apiRequest: vi.fn() }));
 const player = { id: 'player-id', username: 'Player', score: 0 };
-const ticket = { roundId: 'ticket', word: 'puzzle', expiresAt: Date.now() + 1800000 };
+const ticket = { roundId: 'ticket', word: 'puzzle', issuedAt: Date.now() - 5000, serverNow: Date.now(), expiresAt: Date.now() + 1800000 };
 const wrapper = ({ children }) => <StrictMode><AuthProvider>{children}</AuthProvider></StrictMode>;
 beforeEach(() => { vi.mocked(apiRequest).mockReset(); });
 afterEach(cleanup);
+
+it('derives the claim deadline from server time even when the device clock is wrong', async () => {
+  vi.spyOn(Date, 'now').mockReturnValue(9000000);
+  vi.spyOn(performance, 'now').mockReturnValue(200);
+  vi.mocked(apiRequest).mockImplementation(async path => path === '/user/me' ? { user: player }
+    : { ...ticket, issuedAt: 100000, serverNow: 101000 });
+  const { result } = renderHook(() => useHangmanRound(true), { wrapper });
+  await waitFor(() => expect(result.current.ticket).not.toBeNull());
+  expect(result.current.ticket.claimNotBefore).toBe(4200);
+  expect(result.current.ticket.word).toBe('puzzle');
+});
 
 it('keeps play available and labels it unranked when session restoration fails', async () => {
   vi.mocked(apiRequest).mockRejectedValue(new Error('Offline'));

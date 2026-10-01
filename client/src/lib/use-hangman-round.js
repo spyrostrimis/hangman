@@ -4,6 +4,7 @@ import manifest from '../data/words.json';
 import { apiRequest } from './api.js';
 import { applyGuess, createRound } from './hangman-core.js';
 import { selectRandomWord } from './word-data.js';
+import { MIN_ROUND_DURATION_MS } from '../../../shared/scoring-protocol.js';
 
 const empty = { selectedWord: null, round: null, ticket: null, note: '', loading: false };
 
@@ -39,8 +40,12 @@ export function useHangmanRound(enabled) {
       if (current !== generation.current) return;
       if (currentAuth.current.user?.id !== userId) { localRound('This round is unranked. Sign in before starting your next game to earn points.'); return; }
       const record = manifest.words.find(record => record.word === ticket.word);
-      if (!record || typeof ticket.roundId !== 'string' || !Number.isFinite(ticket.expiresAt)) throw new Error('Invalid round');
-      setGame({ selectedWord: record, round: createRound(record.word), ticket: { ...ticket, userId }, note: '', loading: false, roundKey: current });
+      if (!record || typeof ticket.roundId !== 'string' || !Number.isFinite(ticket.expiresAt)
+        || !Number.isFinite(ticket.issuedAt) || !Number.isFinite(ticket.serverNow)) throw new Error('Invalid round');
+      // Use server-relative time and a monotonic client clock, not the device's
+      // wall clock. Response transit time only makes this wait conservative.
+      const claimNotBefore = performance.now() + Math.max(0, ticket.issuedAt + MIN_ROUND_DURATION_MS - ticket.serverNow);
+      setGame({ selectedWord: record, round: createRound(record.word), ticket: { ...ticket, userId, claimNotBefore }, note: '', loading: false, roundKey: current });
     } catch (error) {
       if (current !== generation.current) return;
       if (error.status === 401) currentAuth.current.expireSession(userId);

@@ -133,7 +133,7 @@ app.post('/user/round/claim', async c => {
     return failure(c, 'Invalid round claim.', 400);
   }
   const result = await claimRound(c.env.DB, c.get('user').id, input.roundId, input.guesses);
-  if ('error' in result) return failure(c, result.error, result.status);
+  if ('error' in result) return c.json({ message: result.error, code: result.code, retryAfterMs: result.retryAfterMs }, result.status);
   return c.json(result);
 });
 app.notFound(c => c.json({ message: 'Not found.' }, 404));

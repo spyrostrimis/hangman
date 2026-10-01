@@ -172,7 +172,7 @@ describe('/hangman console and rounds', () => {
   it('shows the saved score to a signed-in winner', async () => {
     vi.mocked(apiRequest).mockImplementation(async path => {
       if (path === '/user/me') return { user: { id: 'player-id', username: 'Player', score: 0 } };
-      if (path === '/user/round/start') return { roundId: 'ticket-id', word: 'puzzle', expiresAt: Date.now() + 1800000 };
+      if (path === '/user/round/start') return { roundId: 'ticket-id', word: 'puzzle', issuedAt: Date.now() - 5000, serverNow: Date.now(), expiresAt: Date.now() + 1800000 };
       if (path === '/user/round/claim') return { score: 100 };
       throw new Error(`Unexpected request: ${path}`);
     });

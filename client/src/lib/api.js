@@ -1,5 +1,7 @@
 export class ApiError extends Error {
-  constructor(message, status) { super(message); this.status = status; }
+  constructor(message, status, { code, retryAfterMs } = {}) {
+    super(message); this.status = status; this.code = code; this.retryAfterMs = retryAfterMs;
+  }
 }
 
 export async function apiRequest(path, { method = 'GET', body, signal, timeout = 10000 } = {}) {
@@ -16,7 +18,7 @@ export async function apiRequest(path, { method = 'GET', body, signal, timeout =
     let data;
     try { data = await response.json(); }
     catch { throw new ApiError('The account service returned an unexpected response.', response.status); }
-    if (!response.ok) throw new ApiError(data.message || 'The request failed. Please try again.', response.status);
+    if (!response.ok) throw new ApiError(data.message || 'The request failed. Please try again.', response.status, data);
     return data;
   } catch (error) {
     if (error instanceof ApiError || signal?.aborted) throw error;

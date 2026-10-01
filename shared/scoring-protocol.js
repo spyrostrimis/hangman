@@ -1,0 +1,2 @@
+export const MIN_ROUND_DURATION_MS = 5000;
+export const ROUND_TOO_EARLY = 'ROUND_TOO_EARLY';
