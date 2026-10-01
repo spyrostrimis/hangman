@@ -1,53 +1,58 @@
 # Illucia — Play vs AI: plan (v2, merged)
 
-Version 2, 2026-09-28. This merges Claude's plan (v1, 2026-09-27) with ChatGPT's Phase 4 plan and its review, and with Spyros's decisions. Checked against `main` at `f9d685a`.
+Status: history and measurements. This file records how Illucia was built and what was measured. It does not bind the redesign.
 
-Status legend: ✅ done · ▶ next · ☐ planned · ◇ optional/later · **OPEN** = still needs a decision.
+Version 2, 2026-09-28. This merges Claude's plan (v1, 2026-09-27) with ChatGPT's Phase 4 plan and its review, and with Spyros's decisions. Checked against `main` at `f9d685a`. Status table updated 2026-10-01.
+
+Status legend: ✅ done · ◇ idea, not a commitment · ✗ built and reverted.
 
 ## 0. Where we are
 
-| Slice | What                                                                                                                                                                                | Status                                                                                    |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| I0    | HARD RULES v4 in both mirrored copies                                                                                                                                               | ✅ `2c4317a`                                                                              |
-| I1    | Shared pure game core (`client/src/lib/hangman-core.js`); `/hangman` switched to it; stale keyboard closure, `remainingTries` and the answer `<div>` removed; Caps Lock fix flagged | ✅ `b482b9b` — reviewed: characterization tests first, mutation-checked, browser-verified |
+| Slice | What | Status |
+| ----- | ---- | ------ |
+| I0 | HARD RULES v4 in both mirrored copies (now CONSTRAINTS, SYNC v7) | ✅ `2c4317a` |
+| I1 | Shared pure game core (`client/src/lib/hangman-core.js`); `/hangman` switched to it; stale keyboard closure, `remainingTries` and the answer `<div>` removed; Caps Lock fix flagged | ✅ `b482b9b` — reviewed: characterization tests first, mutation-checked, browser-verified |
 | MOB | Phone pass on existing pages | ✅ confirmed complete by Spyros, 2026-09-28 |
 | I2 | Word-list build tool | ✅ `2fad03f` — pinned, filtered, reproducible ESDB vocabulary |
 | I3 | Solver + benchmark harness | ✅ implemented and locally verified — [results](../../tools/ILLUCIA-SOLVER.md#recorded-i3-result); count retained |
 | I3b | Zero-candidate fallback + tier benchmark | ✅ implemented and locally verified — [11,700-game results](../../tools/ILLUCIA-TIERS.md#recorded-result-and-tier-decision) |
-| I4 | Illucia page v1 | ✅ implemented and locally verified — [evidence](../ILLUCIA-I4.md); production verification pending |
-| I5    | Workers AI commentary                                                                                                                                                               | ◇                                                                                         |
-| I6    | Text-to-speech toggle                                                                                                                                                               | ◇                                                                                         |
-| I7    | "Which Illucia can beat your word?" race experiment                                                                                                                                 | ◇                                                                                         |
+| I4 | Illucia page v1 | ✅ live at `/illucia` — [evidence](../ILLUCIA-I4.md) |
+| — | Observatory page, an alternative Play vs AI design | ✅ live at `/illucia-observatory` (`97f0a24`) |
+| — | Duel rebuilt as a scrolling conversation | ✅ live at `/illucia` (`4148ce2`) |
+| — | Strength measured on both live pages | ✅ [docs/ILLUCIA-STRENGTH.md](../ILLUCIA-STRENGTH.md) (`6acd239`) — pages match the benchmark; tiers invert on common short words |
+| I5 | Workers AI commentary | ◇ idea |
+| I6 | Browser text-to-speech | ✗ built in `21572c6`, reverted in `ec388f5` (Spyros: Illucia and the player will not speak) |
+| I7 | "Which Illucia can beat your word?" race experiment | ◇ idea |
 
 History note: `238db29` shipped a complete, unplanned Illucia (unfiltered ENABLE1 list, "REVEAL WORD" counted as a player win, no browser check). It was reverted in `b6a2fd9`. Nothing from it is carried forward.
 
-## 1. Decisions (agreed 2026-09-28)
+## 1. What v1 does (2026-09-28)
 
-1. **Illucia's moves come from a local solver, never a model.** In-browser, deterministic, tested, $0.
-2. **V1 policy is candidate hit-counting.** Guess the unused letter that appears in the most remaining candidate words. Entropy, risk-adjusted entropy and lookahead must _beat it in the committed benchmark_ before replacing it (§3.3). Changed from ChatGPT's first proposal, on measured evidence.
+1. **Illucia's moves come from a local solver.** In-browser, deterministic, tested, $0.
+2. **The v1 policy is candidate hit-counting.** Illucia guesses the unused letter that appears in the most remaining candidate words. In the committed I3 benchmark, entropy, risk-adjusted entropy and lookahead did not clearly beat it, so it was kept (§3.4). This changed ChatGPT's first proposal, on measured evidence.
 3. **Uniform candidate weights.** The player picks the word to beat her, so "prefer common words" is the wrong assumption.
-4. **A `chooseLetter(publicState, knowledge)` boundary from day one.** A `toPublicState(round)` function is the only way into it, so no strategy can ever receive the answer.
-5. **Difficulty is vocabulary tiers:** Apprentice ≤35 / Scholar ≤50 / Master ≤70, confirmed by Spyros 2026-09-28. I3b measured and retained these ceilings with own-tier zero-candidate fallback ([results](../../tools/ILLUCIA-TIERS.md#recorded-result-and-tier-decision)). Tiers differ in vocabulary, never deliberate random mistakes; success need not increase for every individual word.
+4. **A `chooseLetter(publicState, knowledge)` boundary.** `toPublicState(round)` is the only way into it, so the v1 strategy sees the board (length, pattern, guessed and missed letters, misses left), not the answer.
+5. **Difficulty is vocabulary tiers:** Apprentice ≤35 / Scholar ≤50 / Master ≤70, confirmed by Spyros 2026-09-28. I3b measured and retained these ceilings with own-tier zero-candidate fallback ([results](../../tools/ILLUCIA-TIERS.md#recorded-result-and-tier-decision)). Tiers differ in vocabulary, not in deliberate random mistakes, and success does not rise for every individual word: the [strength measurement](../ILLUCIA-STRENGTH.md) found the tier order inverts on common short words.
 6. **Word list: ESDB/SCOWL v2** (successor to SCOWL). "Is this an accepted word?" and "does this Illucia know it?" are separate questions with separate names in the code.
-7. **Profanity filtering is mandatory**, both from ESDB's own flags and the LDNOOBW blocklist. It happens at build time and matches normalised _whole words_ only (no Scunthorpe problem).
-8. **Words are 3–15 letters.** 20 is revisited only after the board passes the phone check.
-9. **One file per word length**, each word tagged with its tier. Loading the `/illucia` page fetches only the length the player picked.
-10. **The player types the secret word**, validated in the browser. The input is cleared once the round starts. Setup copy: "Your secret word never leaves your browser."
-11. **Commentary layers:** M0 scripted (v1, permanent fallback) → M1 Workers AI _commentary_ (later) → M2 model _picks letters_ (only inside the I7 race experiment) → TTS (optional presentation).
-12. **No Hall of Fame points for Illucia in v1.** She stays for signed-in players only.
-13. **UI reuses the Hangman look, not its components.** New components; `Keyboard.js` isn't reused (it mixes navigation, hints, the flip effect and a page reload).
-14. **No browser background thread (Web Worker) for the solver until profiling on a phone shows it's needed.**
-15. **The phone pass comes before the Illucia page.**
+7. **Profanity filtering** uses both ESDB's own flags and the LDNOOBW blocklist. It happens at build time and matches normalised _whole words_ only (no Scunthorpe problem).
+8. **Words are 3–15 letters.** 20 letters was left for after the phone check.
+9. **One file per word length**, each word tagged with its tier. A round fetches only the length the player picked.
+10. **The player types the secret word**, validated in the browser against the accepted list. The input is cleared once the round starts.
+11. **Commentary:** v1 is scripted (M0). Workers AI commentary (M1) and a model picking letters inside the I7 race experiment (M2) were sketched as later ideas. Text-to-speech was built as I6 and reverted.
+12. **v1 awarded no Hall of Fame points for Illucia**, and she is for signed-in players only. Points for Illucia are being designed.
+13. **The UI reused the Hangman look, not its components.** New components; `Keyboard.js` isn't reused (it mixes navigation, hints, the flip effect and a page reload).
+14. **The solver runs on the main thread, without a Web Worker**, which v1 deferred until phone profiling showed a need. The throttled measurement in [ILLUCIA-STRENGTH §5](../ILLUCIA-STRENGTH.md#5-speed) puts Master's first 8-letter turn at about 160 ms, inside the 1.1 s thinking pause.
+15. **The phone pass (MOB) was completed before the Illucia page.**
 
 **OPEN:** Illucia's art (a CSS/SVG avatar, a derivative of existing art, or new generated art; image-generation model and cost are undecided).
 
 ## 2. Game contract
 
 1. The player enters an English word: A–Z only, lower-cased, 3–15 letters, in the **accepted** list (tier ≤70), not blocked.
-2. The secret lives only in the browser's round state (`createRound(answer)` from `hangman-core`). Strategies see `toPublicState(round)`: length, pattern, guessed letters, missed letters, misses left.
+2. The secret is held in the browser's round state (`createRound(answer)` from `hangman-core`). The v1 strategy sees `toPublicState(round)`: length, pattern, guessed letters, missed letters, misses left.
 3. `applyGuess(round, letter)` is the only way a guess happens, for the human in Hangman and for Illucia here. `MAX_MISSES = 6`.
 4. A hit reveals every occurrence and costs nothing; only a miss costs a chance. All letters revealed → Illucia wins; six misses → the player wins.
-5. Game code adjudicates everything. A model never judges a rule, never sees the secret, and never supplies a letter that code hasn't validated.
+5. Game code adjudicates every hit, miss and result. No model takes part in v1.
 6. Restart resets state without a page reload and cancels any pending "thinking" timer or model request.
 
 ## 3. Illucia's brain
@@ -66,7 +71,7 @@ Hangman reveals _every_ occurrence of a guessed letter. So with `E` guessed and 
 At Master, the secret is always in her candidate set, so zero candidates means a **bug**; test and assert it. At Apprentice or Scholar, a valid rarer word can legitimately leave zero candidates. Then:
 
 - **Fallback:** pick the unused letter most common in _her own tier's_ words of that length (precomputed per length; per-position counts optional). No n-grams or neural models in v1.
-- **Never** quietly widen her vocabulary to a higher tier. That would make the difficulty a lie.
+- Her vocabulary stays at her own tier: the fallback uses her tier's letter counts and does not borrow a higher tier's words.
 - The simulation behind the v1 tier numbers fell back to plain ETAOIN order. That's weaker than this fallback, so those numbers **overstate** how easily rare words beat a low tier. I3b re-measures them.
 
 ### 3.3 Evidence so far (Node simulations, SCOWL v1 via npm `wordlist-english`, ~111k words; re-measure on ESDB v2 in I3)
@@ -134,9 +139,9 @@ Policies: A global frequency · B **count (baseline)** · C entropy · D risk-ad
 | Layer                      | What                                                                                                                                                                                                                                                                                                                                                                                                                             | When                           |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
 | **M0 scripted commentary** | Lines per event (opening, first hit, first miss, three misses, one life left, rare-letter guess, Illucia wins, player wins, blocked word), several variants each; `{letter}`/`{word}` filled in by code                                                                                                                                                                                                                          | v1, and the permanent fallback |
-| M1 Workers AI commentary   | One short line after a move, from public state only (`event, letter, hit, pattern, guessed, missesLeft, tier, candidateCount`). Comments on the guess just made, never announces a next one. Server-side prompt; reply capped, stripped, blocklist-checked; ~2.5 s timeout; per-user cap; scripted fallback. Route under the existing `/user/*`. Lines that name the actual word are code-filled templates, never model-written. | ◇ after v1 feels good          |
-| M2 model picks letters     | Only as an alternative `chooseLetter()` inside the I7 race; validated, one bounded retry, solver fallback                                                                                                                                                                                                                                                                                                                        | ◇ experiment                   |
-| TTS                        | Browser `speechSynthesis`, off by default                                                                                                                                                                                                                                                                                                                                                                                        | ◇                              |
+| M1 Workers AI commentary   | One short line after a move, from public state only (`event, letter, hit, pattern, guessed, missesLeft, tier, candidateCount`). Comments on the guess just made, never announces a next one. Server-side prompt; reply capped, stripped, blocklist-checked; ~2.5 s timeout; per-user cap; scripted fallback. Route under the existing `/user/*`. Lines that name the actual word are code-filled templates, never model-written. | ◇ idea                         |
+| M2 model picks letters     | Only as an alternative `chooseLetter()` inside the I7 race; validated, one bounded retry, solver fallback                                                                                                                                                                                                                                                                                                                        | ◇ idea                         |
+| TTS                        | Browser `speechSynthesis`, off by default                                                                                                                                                                                                                                                                                                                                                                                        | ✗ built (I6), reverted        |
 
 Workers AI facts (verified 2026-09-27):
 
@@ -194,7 +199,7 @@ Why first: Illucia copies the Hangman layout. Fixing Hangman on phones first mea
 - Repeated-letter reveal · hits free · sixth miss ends the round · no repeated guesses · stop after win/loss.
 - Restart cancels pending work.
 - The list rejects non-words and blocked words; whole-word matching (a word that merely contains a blocked string still passes).
-- The secret is cleared from the input and DOM after start.
+- The input is cleared and the setup form unmounts on start ([I4 evidence](../ILLUCIA-I4.md)).
 - Tier numbers are reproduced by the committed harness.
 - The word list is not in the main bundle, and only one length file is fetched per round.
 - 390 px and 360 px with a 15-letter word · `aria-live` · reduced motion.
@@ -204,6 +209,7 @@ Why first: Illucia copies the Hangman layout. Fixing Hangman on phones first mea
 
 - Replace `PLAN-illucia-byCLAUDEchat.md` with this file as `PLAN-illucia.md`.
 - Move `phase-4-illucia-plan-by*.md` and `walkthrough-byANTIGRAVITYgemini.md` to `docs/planning/`.
+- 2026-10-01: those drafts and `PLAN-illucia-byCLAUDEchat.md` now live in [`archive/`](archive/README.md).
 - Delete `state(6).md`. `state.md` lives in the claude.ai Project, and a copy frozen in the public repo will go stale.
 - Point the Phase 4 section of `PLAN-accounts-and-illucia.md` at this file.
 
