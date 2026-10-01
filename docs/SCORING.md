@@ -66,6 +66,6 @@ Production verification on 2026-10-01: implementation `f865419` was pushed to `m
 
 If rolling back, preserve D1 and account data. Restoring the old Worker also restores arbitrary score increments; do not present that as retaining the new protections.
 
-The scoring hard rule in `CLAUDE.md` is now SYNC v6. Its separately maintained project-instructions mirror was not found in this checkout and needs the same approved wording when that external configuration is next edited.
+Scoring is no longer a CONSTRAINT (SYNC v7, 2026-10-01). CLAUDE.md describes the design and links here.
 
 Release verification, five-second floor (2026-10-01): the isolated scoring-only tree passed 43 Node tests, 48 UI tests and 16 Worker tests, TypeScript checking and both builds. A local browser signed in and completed a scored win, showing 100 points; the early-wait boundary remains covered by the automated timer tests. Migration `0004_round_claim_times.sql` was applied remotely and Worker `46a25777-a867-4f59-9773-304c5a3d155d` deployed. A disposable production account received `ROUND_TOO_EARLY`, then the same ticket succeeded after its wait; concurrent retries returned 100 total. The release account was deleted afterward. Production browser verification remains unavailable under the earlier browser permission denial.
