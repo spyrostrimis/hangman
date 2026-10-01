@@ -39,3 +39,11 @@ In this original production release, scores are cumulative and client-authoritat
 - Eleven deliberate mutations failed the relevant assertions: password bypass, cross-account erasure, omitted tombstone, stale-session acceptance, reused identity, missing auth limit, incomplete deletion batch, guest form access, enabled pending submission, missing sign-out and missing expired-session handling. All mutations were restored.
 - Manual localhost browser checks at 1280 px and 390 px: signed-in Account navigation, permanent-deletion warning, incorrect password retaining the account, correct password deleting it and signed-out confirmation. Pending and duplicate submissions are covered by deterministic UI tests.
 - This record is local evidence only. Production migration, deployment and disposable-account verification remain pending. Hourly retention and invocation-log configuration are the next separate commit.
+
+## Privacy: retention (local verification, 2026-10-01)
+
+- Hourly, indexed cleanup: 100 oldest eligible rows per category; claimed rounds 24 hours after claim, unclaimed rounds 24 hours after expiry, tombstones older than seven days. Request-driven global cleanup is removed. Account rows and score totals are untouched.
+- Invocation logs disabled; minimal application errors retained. README records temporary debugging and recovery procedures, Free limits and possible cleanup delays.
+- Five additional D1 tests cover both clocks and boundary controls, tombstone expiry, bounded oldest-first backlog draining, actual query plans and sanitized failure propagation. Five mutations (wrong clock, wrong tombstone cutoff, exceeded bound, missing index and swallowed failure) each failed, then were restored.
+- No production migration or deployment is implied by this local record.
+- Restored verification: 24 Worker/D1 tests pass; TypeScript, Worker dry-run and frontend production builds pass. Desktop (1280 px) and 390 px browser checks confirm the signed-out account gate still renders correctly.

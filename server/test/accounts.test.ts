@@ -334,8 +334,8 @@ describe('account API with real local D1 and Workers crypto', () => {
     expect((await claim(cookie, ticket)).status).toBe(200);
     await env.DB.prepare('UPDATE rounds SET expires_at = ? WHERE id = ?').bind(Date.now() - 1, ticket.roundId).run();
     expect(await (await claim(cookie, ticket)).json()).toEqual({ score: 100 });
-    await env.DB.prepare('UPDATE rounds SET expires_at = ? WHERE id = ?').bind(Date.now() - 25 * 60 * 60 * 1000, ticket.roundId).run();
-    await start(cookie);
+    await env.DB.prepare('UPDATE rounds SET claimed_at = ? WHERE id = ?').bind(Date.now() - 25 * 60 * 60 * 1000, ticket.roundId).run();
+    await app.scheduled({ scheduledTime: Date.now() } as ScheduledController, env);
     expect((await claim(cookie, ticket)).status).toBe(409);
     expect(await env.DB.prepare('SELECT total FROM scores').first('total')).toBe(100);
   });

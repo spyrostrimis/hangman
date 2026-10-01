@@ -13,7 +13,8 @@
     { "name": "IP_LIMIT", "namespace_id": "26092601", "simple": { "limit": 60, "period": 60 } },
     { "name": "AUTH_LIMIT", "namespace_id": "26092602", "simple": { "limit": 10, "period": 60 } }
   ],
-  "observability": { "enabled": true, "head_sampling_rate": 1 },
+  "triggers": { "crons": ["0 * * * *"] },
+  "observability": { "enabled": true, "head_sampling_rate": 1, "logs": { "enabled": true, "invocation_logs": false } },
   "env": {
     "local": {
       "vars": { "APP_ORIGIN": "http://localhost:5173", "LOCAL_DEV": "true" },

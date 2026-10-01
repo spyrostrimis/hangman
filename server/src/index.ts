@@ -4,6 +4,7 @@ import { getCookie, setCookie } from 'hono/cookie';
 import { KDF, SALT_PATTERN, CREDENTIAL_PATTERN, USERNAME_PATTERN, SIGNIN_USERNAME_PATTERN, normalizeUsername } from '../../shared/auth-protocol.js';
 import { checkVerifier, fakeSalt, makeVerifier, sessionToken, sessionUserId, SESSION_SECONDS } from './crypto';
 import { claimRound, isRoundId, startRound } from './rounds';
+import { scheduledRetention } from './retention';
 
 type AppEnv = { Bindings: Env; Variables: { user: PublicUser } };
 type PublicUser = { id: string; username: string; score: number };
@@ -165,4 +166,4 @@ app.onError((_error, c) => {
   console.error(JSON.stringify({ event: 'api_failure', path: c.req.path, method: c.req.method }));
   return failure(c, 'Service unavailable. Please try again later.', 500);
 });
-export default app;
+export default { fetch: app.fetch, scheduled: scheduledRetention };

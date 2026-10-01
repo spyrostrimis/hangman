@@ -3,7 +3,6 @@ import { applyGuess, createRound, getRoundStatus } from '../../shared/hangman-co
 import { MIN_ROUND_DURATION_MS, ROUND_TOO_EARLY } from '../../shared/scoring-protocol.js';
 
 export const ROUND_LIFETIME_MS = 30 * 60 * 1000;
-const RETENTION_MS = 24 * 60 * 60 * 1000;
 export const isRoundId = (value: unknown): value is string =>
   typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(value);
 
@@ -14,9 +13,6 @@ export async function startRound(db: D1Database, userId: string, previousRoundId
   const random = crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
   const word = words[Math.floor(random * words.length)];
   const results = await db.batch([
-    // Bounded, indexed cleanup amortized over starts; no scheduled Worker needed.
-    db.prepare('DELETE FROM rounds WHERE id IN (SELECT id FROM rounds WHERE expires_at <= ? ORDER BY expires_at LIMIT 100)')
-      .bind(now - RETENTION_MS),
     db.prepare('DELETE FROM rounds WHERE user_id = ? AND claimed_at IS NULL AND (expires_at <= ? OR id = ?)')
       .bind(userId, now, previousRoundId),
     // A start request can have sampled its clock before a concurrent claim.
@@ -28,7 +24,7 @@ export async function startRound(db: D1Database, userId: string, previousRoundId
       .bind(crypto.randomUUID(), userId, word, now, now, ROUND_LIFETIME_MS, userId),
     db.prepare('SELECT id AS roundId, word, issued_at AS issuedAt, expires_at AS expiresAt FROM rounds WHERE user_id = ? AND claimed_at IS NULL').bind(userId),
   ]);
-  return { ...results[3].results[0] as Ticket, serverNow: Date.now() };
+  return { ...results[2].results[0] as Ticket, serverNow: Date.now() };
 }
 
 export function isWinningReplay(word: string, guesses: unknown): guesses is string[] {
