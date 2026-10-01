@@ -265,6 +265,7 @@
 .keyboardreplay { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 0; }
 .keyboard-result { margin: 0; font-family: technoboard; font-size: 26px; color: var(--hm-text); }
 .keyboard-score { margin: 0; font: 15px monospace; color: var(--hm-cyan); }
+.round-notice { margin: 8px auto; padding: 0 16px; max-width: 760px; text-align: center; color: var(--hm-cyan); }
 .keyboard-score a { color: var(--hm-yellow); }
 .keyboard-replay-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 12px; }
 

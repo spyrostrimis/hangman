@@ -1,5 +1,7 @@
 # Accounts, Hall of Fame, and Illucia plan
 
+Scoring follow-up approved 2026-10-01: the local implementation replaces the original `add100` API with server-issued round tickets and idempotent, validated claims, without a minimum duration. See [the scoring design](../SCORING.md). The deployed account slice and original scoring decisions recorded below are historical; the new migration/API have not been deployed by this change.
+
 Hangman: Rescue Mission is an English vocabulary game about reviving the robot Artsy by discovering a secret word. Originally a 2023 bootcamp project, it now runs on React/Vite and Cloudflare's Free plan.
 
 ## Pages and games at a glance

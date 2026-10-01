@@ -18,12 +18,10 @@ import Halloffame from "./Components/Halloffame";
 import Footer from './Components/Footer';
 import soundbtn from "./Images/soundbtn.png";
 import mwLogo from "./Images/mw-logo-dark-background.png";
-import manifest from "./data/words.json";
-import { buildAssetUrl, selectRandomWord } from "./lib/word-data.js";
+import { buildAssetUrl } from "./lib/word-data.js";
 import { useRoundScore } from './lib/use-round-score.js';
+import { useHangmanRound } from './lib/use-hangman-round.js';
 import {
-  applyGuess,
-  createRound,
   getCorrectGuesses,
   getIncorrectGuesses,
   getLastGuess,
@@ -33,21 +31,15 @@ import {
   MAX_MISSES,
 } from './lib/hangman-core.js';
 
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
-
-function roundReducer(round, action) {
-  if (action.type === 'start') return createRound(action.answer);
-  if (action.type === 'guess') return round ? applyGuess(round, action.letter) : round;
-  return null;
-}
 
 function App() {
   const location = useLocation();
   const pageArt = getPageArt(location.pathname);
   const isHangPage = location.pathname === "/hangman";
 
-  const [selectedWord, setSelectedWord] = useState(null);
+  const { selectedWord, round, roundKey, ticket, note, loading, startRound, guess: addChosenLetter } = useHangmanRound(isHangPage);
   const wordToFind = selectedWord?.word ?? "";
 
   const [innertext, setInnertext] = useState();
@@ -230,22 +222,14 @@ function App() {
     document.getElementById("hint2").disabled = true;
   }
 
-  const [round, dispatch] = useReducer(roundReducer, null);
   const chosenLetters = round?.guesses ?? [];
   const incorrectGuesses = round ? getIncorrectGuesses(round) : [];
   const status = round ? getRoundStatus(round) : 'playing';
   const Loser = status === 'failed';
   const Winner = status === 'solved';
-  const scoreMessage = useRoundScore(isHangPage ? selectedWord : null, Winner);
+  const score = useRoundScore(isHangPage ? ticket : null, round);
   const revealedSlots = round ? getPattern(round).filter(Boolean).length : 0;
   const rebootProgress = wordToFind ? revealedSlots / wordToFind.length : 0;
-
-  // dispatch is stable and the reducer always sees the latest round, so the
-  // physical-keyboard listener can never act on a stale word.
-  const addChosenLetter = useCallback(
-    (letter) => dispatch({ type: 'guess', letter }),
-    []
-  );
 
   useEffect(() => {
     const lastGuess = round && getLastGuess(round);
@@ -278,32 +262,11 @@ function App() {
     };
   }, [isHangPage, addChosenLetter]);
 
-  // A new round in place: no page reload, so the background, session and
-  // loaded assets stay. Avoids repeating the word just played when possible.
-  const startRound = useCallback((previous = null) => {
-    let record = selectRandomWord(manifest.words);
-    for (let attempt = 0; attempt < 3 && record === previous; attempt++) {
-      record = selectRandomWord(manifest.words);
-    }
-    setSelectedWord(record);
-    dispatch({ type: 'start', answer: record.word });
+  useEffect(() => {
     setInnertext("");
     setDisablehint1(false);
     setDisablehint2(false);
-  }, []);
-
-  useEffect(() => {
-    if (!isHangPage) {
-      dispatch({ type: 'reset' });
-      setInnertext("");
-      setSelectedWord(null);
-      setDisablehint1(false);
-      setDisablehint2(false);
-      return;
-    }
-
-    startRound();
-  }, [isHangPage, startRound]);
+  }, [roundKey, isHangPage]);
 
   const paintingUrl = selectedWord
     ? buildAssetUrl(
@@ -328,6 +291,7 @@ function App() {
             path="/hangman"
             element={
               <>
+                {note && <p className="round-notice" role="status">{note}</p>}
                 {/* <Header /> */}
                 <div className="figurefacts">
                   <Figure
@@ -351,7 +315,7 @@ function App() {
                   Winner={Winner}
                 />
                 <Keyboard
-                  disabled={Winner || Loser}
+                  disabled={Winner || Loser || loading || !round}
                   activeLetters={round ? getCorrectGuesses(round) : []}
                   inactiveLetters={incorrectGuesses}
                   addChosenLetter={addChosenLetter}
@@ -363,8 +327,10 @@ function App() {
                   disablehint1={disablehint1}
                   disablehint2={disablehint2}
                   missesLeft={round ? getRemainingMisses(round) : MAX_MISSES}
-                  onPlayAgain={() => startRound(selectedWord)}
-                  scoreMessage={scoreMessage}
+                  onPlayAgain={startRound}
+                  scoreMessage={score.message}
+                  scoreSaving={score.saving}
+                  onRetryScore={score.canRetry ? score.retry : null}
                 />
                 {/* {Winner && "Winner! - Refresh and play again"}
                 {Loser && "Arghh... Refresh and play again"} */}

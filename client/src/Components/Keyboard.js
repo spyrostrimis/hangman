@@ -21,6 +21,8 @@ const Keyboard = ({
   missesLeft = MAX_MISSES,
   onPlayAgain,
   scoreMessage = "",
+  scoreSaving = false,
+  onRetryScore = null,
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const navigate = useNavigate();
@@ -94,13 +96,14 @@ const Keyboard = ({
           <div className="keyboardreplay">
             <p className="keyboard-result">{Winner ? "Artsy is back online" : "Artsy is still offline"}</p>
             {scoreMessage && <p className="keyboard-score" role="status">{scoreMessage}</p>}
+            {onRetryScore && <button className="hm-button" onClick={onRetryScore}>Retry saving points</button>}
             {Winner && !user && (
               <p className="keyboard-score">
                 <Link to="/login" state={{ from: "/hangman" }}>Sign in</Link> to earn 100 points for your next rescue.
               </p>
             )}
             <div className="keyboard-replay-actions">
-              <button id="playagain" className="hm-button primary" onClick={onPlayAgain}>
+              <button id="playagain" className="hm-button primary" disabled={scoreSaving} onClick={onPlayAgain}>
                 Play again
               </button>
               <button id="checkscore" className="hm-button" onClick={() => navigate("/hall-of-fame")}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import App from './App';
 import { AuthProvider } from './Components/AuthProvider';
@@ -24,12 +24,13 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
-function play() {
+async function play() {
   const view = render(
     <MemoryRouter initialEntries={['/hangman']}>
       <AuthProvider><App /></AuthProvider>
     </MemoryRouter>
   );
+  await waitFor(() => expect(key('a').disabled).toBe(false));
   return view;
 }
 const key = letter => screen.getByRole('button', { name: letter });
@@ -40,8 +41,8 @@ const visible = container => slots(container).map(slot => slot.style.visibility 
 const panel = container => container.querySelector('.wordfactscontainerinner').textContent;
 
 describe('/hangman game rules', () => {
-  it('reveals every occurrence of a hit and marks the key as used', () => {
-    const { container } = play();
+  it('reveals every occurrence of a hit and marks the key as used', async () => {
+    const { container } = await play();
     expect(visible(container)).toBe('______');
     click('z');
     expect(visible(container)).toBe('__zz__');
@@ -51,8 +52,8 @@ describe('/hangman game rules', () => {
     expect(key('p').disabled).toBe(false);
   });
 
-  it('counts down remaining tries on misses and leaves the message alone on hits', () => {
-    const { container } = play();
+  it('counts down remaining tries on misses and leaves the message alone on hits', async () => {
+    const { container } = await play();
     click('a');
     expect(panel(container)).toBe('You have 5 tries remaining...');
     click('p');
@@ -64,8 +65,8 @@ describe('/hangman game rules', () => {
     expect(key('f').className).toContain('inactive');
   });
 
-  it('ends in a loss on the sixth miss: word revealed, keyboard locked, word facts shown', () => {
-    const { container } = play();
+  it('ends in a loss on the sixth miss: word revealed, keyboard locked, word facts shown', async () => {
+    const { container } = await play();
     MISSES.slice(0, 5).forEach(click);
     expect(container.querySelector('.word.revealed')).toBeNull();
     click(MISSES[5]);
@@ -75,8 +76,8 @@ describe('/hangman game rules', () => {
     expect(panel(container)).toContain('Definition:');
   });
 
-  it('ends in a win when every distinct letter is found, then ignores further guesses', () => {
-    const { container } = play();
+  it('ends in a win when every distinct letter is found, then ignores further guesses', async () => {
+    const { container } = await play();
     ['p', 'u', 'z', 'l'].forEach(click);
     expect(container.querySelector('.word.revealed')).toBeNull();
     click('e');
@@ -88,8 +89,8 @@ describe('/hangman game rules', () => {
     expect(key('a').className).not.toContain('inactive');
   });
 
-  it('accepts lowercase guesses from the physical keyboard after the first key', () => {
-    const { container } = play();
+  it('accepts lowercase guesses from the physical keyboard after the first key', async () => {
+    const { container } = await play();
     press('a');
     press('z');
     expect(visible(container)).toBe('__zz__');
@@ -98,8 +99,8 @@ describe('/hangman game rules', () => {
     expect(panel(container)).toBe('You have 4 tries remaining...');
   });
 
-  it('counts a correct first physical key only once and never as a miss', () => {
-    const { container } = play();
+  it('counts a correct first physical key only once and never as a miss', async () => {
+    const { container } = await play();
     press('z');
     expect(visible(container)).toBe('__zz__');
     expect(panel(container)).not.toContain('tries');
@@ -108,8 +109,8 @@ describe('/hangman game rules', () => {
     expect(panel(container)).toBe('You have 5 tries remaining...');
   });
 
-  it('treats an uppercase physical key (Caps Lock) like its lowercase letter', () => {
-    const { container } = play();
+  it('treats an uppercase physical key (Caps Lock) like its lowercase letter', async () => {
+    const { container } = await play();
     press('a');
     press('Z');
     expect(visible(container)).toBe('__zz__');
@@ -121,8 +122,8 @@ describe('/hangman game rules', () => {
     expect(panel(container)).toBe('You have 4 tries remaining...');
   });
 
-  it('keeps the answer out of the page text before it is guessed', () => {
-    const { container } = play();
+  it('keeps the answer out of the page text before it is guessed', async () => {
+    const { container } = await play();
     const readable = container.cloneNode(true);
     readable.querySelectorAll('[style*="visibility: hidden"]').forEach(node => node.remove());
     expect(readable.textContent).not.toContain('puzzle');
@@ -137,8 +138,8 @@ describe('/hangman game rules', () => {
 describe('/hangman console and rounds', () => {
   const ATLANTIS = manifest.words.find(record => record.word === 'atlantis');
 
-  it('fills the reboot bar from revealed slots and empties one attempt cell per miss', () => {
-    play();
+  it('fills the reboot bar from revealed slots and empties one attempt cell per miss', async () => {
+    await play();
     const bar = screen.getByRole('progressbar');
     expect(bar.getAttribute('aria-valuenow')).toBe('0');
     expect(screen.getByRole('img', { name: '6 of 6 attempts left' })).toBeTruthy();
@@ -151,9 +152,9 @@ describe('/hangman console and rounds', () => {
     expect(bar.getAttribute('aria-valuenow')).toBe('33');
   });
 
-  it('plays again in place with a different word and a fresh board', () => {
+  it('plays again in place with a different word and a fresh board', async () => {
     vi.mocked(selectRandomWord).mockReturnValueOnce(PUZZLE).mockReturnValueOnce(PUZZLE).mockReturnValue(ATLANTIS);
-    const { container } = play();
+    const { container } = await play();
     'puzle'.split('').forEach(click);
     expect(panel(container)).toContain('Definition:');
     fireEvent.click(screen.getByRole('button', { name: 'Play again' }));
@@ -171,13 +172,32 @@ describe('/hangman console and rounds', () => {
   it('shows the saved score to a signed-in winner', async () => {
     vi.mocked(apiRequest).mockImplementation(async path => {
       if (path === '/user/me') return { user: { id: 'player-id', username: 'Player', score: 0 } };
-      if (path === '/user/add100') return { score: 100 };
+      if (path === '/user/round/start') return { roundId: 'ticket-id', word: 'puzzle', expiresAt: Date.now() + 1800000 };
+      if (path === '/user/round/claim') return { score: 100 };
       throw new Error(`Unexpected request: ${path}`);
     });
-    play();
+    await play();
     await screen.findByText('Player');
     expect(screen.queryByText(/points saved/)).toBeNull();
     'puzle'.split('').forEach(click);
     expect(await screen.findByText('100 points saved! Your total is 100.')).toBeTruthy();
+    expect(apiRequest).toHaveBeenCalledWith('/user/round/claim', {
+      method: 'POST', body: { roundId: 'ticket-id', guesses: [...'puzle'] },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Play again' }));
+    await waitFor(() => expect(key('p').disabled).toBe(false));
+    expect(apiRequest).toHaveBeenCalledWith('/user/round/start', { method: 'POST', body: { previousRoundId: 'ticket-id' } });
+    expect(screen.queryByText(/points saved/)).toBeNull();
+  });
+
+  it('keeps an API failure playable as an explicitly unranked round and never claims it', async () => {
+    vi.mocked(apiRequest).mockImplementation(async path => {
+      if (path === '/user/me') return { user: { id: 'player-id', username: 'Player', score: 0 } };
+      throw new ApiError('Offline', 0);
+    });
+    await play();
+    expect(screen.getByText(/This round is unranked/)).toBeTruthy();
+    [...'puzle'].forEach(click);
+    expect(apiRequest.mock.calls.filter(([path]) => path === '/user/round/claim')).toHaveLength(0);
   });
 });

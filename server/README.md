@@ -24,11 +24,14 @@ Fake salts and generic errors reduce username enumeration, not eliminate it: reg
 | GET | `/user/me` | Current user or 401 |
 | POST | `/user/logout` | Expired cookie and `{ok: true}` |
 | GET | `/user/get-best-scores` | Top 100 `{username, score}` rows, descending score then ascending user ID |
-| PUT | `/user/add100` | Authenticated increment; body must be `{}`; returns `{score}` |
+| POST | `/user/round/start` | Authenticate; `{}` resumes or creates a round; optional `{previousRoundId}` replaces that owned, unclaimed round; returns `{roundId, word, expiresAt}` |
+| POST | `/user/round/claim` | Authenticate; `{roundId, guesses}` validates a winning sequence and awards once; returns `{score}` on success or a successful retry |
 
 Mutations require JSON and an exact trusted Origin. All responses are `no-store`; request bodies are capped at 2 KiB. Native rate-limit bindings allow 60 requests/IP/minute and 10 signup/login attempts/normalized username/minute. These are approximate, per Cloudflare location, not a global anti-abuse guarantee; shared networks can hit the IP limit. No raw request bodies or exception messages are logged.
 
-Scores remain client-authoritative and forgeable by design. SQL increments are atomic. The frontend prevents ordinary duplicate sends per round, including React StrictMode, but the API does not validate wins or guarantee exactly-once delivery. Ambiguous writes are not automatically retried. Fresh accounts start at zero; no MongoDB migration is performed.
+The round-ticket API replaces `/user/add100` entirely. A server-selected word comes directly from `tools/words.locked.json`; the Worker and browser use `shared/hangman-core.js`. The database enforces one outstanding round per account and at most one award per round, with consumption and increment in one atomic batch. Claims require unique lowercase a–z guesses ending exactly at a win before six misses. Unclaimed rounds expire after 30 minutes; successful claims can be retried until cleanup, at least 24 hours after their original expiry. There is no minimum duration, award interval, or daily cap.
+
+Public answers still permit manufactured wins and bots; neither authentication nor replay validation proves human play. Existing approximate IP limits remain. Starts resume the outstanding round across tabs; explicitly replacing it invalidates it in other tabs. API start failures fall back to visibly unranked local play. Uncertain claim failures offer a manual retry using the same ticket. Guests and Illucia do not earn points. Existing score totals are preserved, including earlier unverified awards. See [scoring design, threat model and release steps](../docs/SCORING.md).
 
 Logout clears the browser cookie; a copied JWT remains valid until expiry. There is no password reset, email recovery, password change, or immediate session revocation UI in this release.
 

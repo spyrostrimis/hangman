@@ -101,54 +101,72 @@ describe('account forms', () => {
   });
 });
 
-function Round({ round, won }) {
-  const message = useRoundScore(round, won);
+function Round({ ticket, won }) {
+  const { message, retry, canRetry } = useRoundScore(ticket, { answer: 'puzzle', guesses: won ? [...'puzle'] : [] });
   const { acceptUser, user } = useAuth();
-  return <><p>{message}</p><p>{user?.username || 'Guest'}</p><button onClick={() => acceptUser(player)}>Set player</button></>;
+  return <><p>{message}</p><p>{user?.username || 'Guest'}</p><button onClick={() => acceptUser(player)}>Set player</button>
+    <button onClick={() => acceptUser({ ...player, id: 'other', username: 'Other' })}>Other account</button>
+    {canRetry && <button onClick={retry}>Retry saving points</button>}</>;
 }
-function roundTree(round, won) {
-  return <StrictMode><AuthProvider><Round round={round} won={won} /></AuthProvider></StrictMode>;
+function roundTree(ticket, won) {
+  return <StrictMode><AuthProvider><Round ticket={ticket} won={won} /></AuthProvider></StrictMode>;
 }
+const scoreTicket = () => ({ roundId: crypto.randomUUID(), userId: player.id });
 describe('round score lifecycle', () => {
   it('saves once under StrictMode and rerenders, and again for a new round', async () => {
     vi.mocked(apiRequest).mockImplementation(async path => path === '/user/me' ? { user: player } : { score: 100 });
-    const round = {};
+    const round = scoreTicket();
     const view = render(roundTree(round, false));
     await screen.findByText('Player');
     view.rerender(roundTree(round, true));
     await screen.findByText('100 points saved! Your total is 100.');
     view.rerender(roundTree(round, true));
-    expect(apiRequest.mock.calls.filter(([path]) => path === '/user/add100')).toHaveLength(1);
-    view.rerender(roundTree({}, true));
-    await waitFor(() => expect(apiRequest.mock.calls.filter(([path]) => path === '/user/add100')).toHaveLength(2));
+    expect(apiRequest.mock.calls.filter(([path]) => path === '/user/round/claim')).toHaveLength(1);
+    expect(apiRequest).toHaveBeenCalledWith('/user/round/claim', { method: 'POST', body: { roundId: round.roundId, guesses: [...'puzle'] } });
+    view.rerender(roundTree(scoreTicket(), true));
+    await waitFor(() => expect(apiRequest.mock.calls.filter(([path]) => path === '/user/round/claim')).toHaveLength(2));
   });
   it('does not save guest wins or losses, and does not award a past guest win on login', async () => {
-    const round = {};
+    const round = null;
     const view = render(roundTree(round, false));
     await screen.findByText('Guest');
     view.rerender(roundTree(round, true));
     fireEvent.click(screen.getByText('Set player'));
     await screen.findByText('Player');
-    expect(apiRequest.mock.calls.filter(([path]) => path === '/user/add100')).toHaveLength(0);
+    expect(apiRequest.mock.calls.filter(([path]) => path === '/user/round/claim')).toHaveLength(0);
     apiRequest.mockImplementation(async () => ({ score: 100 }));
-    view.rerender(roundTree({}, true));
+    view.rerender(roundTree(scoreTicket(), true));
     await screen.findByText('100 points saved! Your total is 100.');
-    expect(apiRequest.mock.calls.filter(([path]) => path === '/user/add100')).toHaveLength(1);
+    expect(apiRequest.mock.calls.filter(([path]) => path === '/user/round/claim')).toHaveLength(1);
   });
-  it('shows uncertain save failures without retrying and clears expired sessions', async () => {
+  it('offers a safe retry with the same ticket after a lost response and clears expired sessions', async () => {
     let expired = false;
     vi.mocked(apiRequest).mockImplementation(async path => {
       if (path === '/user/me') return { user: player };
       throw new ApiError('Failure', expired ? 401 : 0);
     });
-    const round = {};
+    const round = scoreTicket();
     const view = render(roundTree(round, false)); await screen.findByText('Player');
     view.rerender(roundTree(round, true));
     await screen.findByText(/Could not confirm/);
     view.rerender(roundTree(round, true));
-    expect(apiRequest.mock.calls.filter(([path]) => path === '/user/add100')).toHaveLength(1);
-    expired = true; view.rerender(roundTree({}, true));
+    expect(apiRequest.mock.calls.filter(([path]) => path === '/user/round/claim')).toHaveLength(1);
+    fireEvent.click(screen.getByText('Retry saving points'));
+    await screen.findByText('Retry saving points');
+    const claims = apiRequest.mock.calls.filter(([path]) => path === '/user/round/claim');
+    expect(claims).toHaveLength(2);
+    expect(claims[1][1].body).toEqual(claims[0][1].body);
+    expired = true; view.rerender(roundTree(scoreTicket(), true));
     await screen.findByText(/Your session expired/); await screen.findByText('Guest');
+  });
+  it('does not send an account-owned claim after switching to another account', async () => {
+    vi.mocked(apiRequest).mockImplementation(async () => ({ user: player }));
+    const ticket = scoreTicket();
+    const view = render(roundTree(ticket, false));
+    await screen.findByText('Player');
+    fireEvent.click(screen.getByText('Other account'));
+    view.rerender(roundTree(ticket, true));
+    expect(apiRequest.mock.calls.filter(([path]) => path === '/user/round/claim')).toHaveLength(0);
   });
 });
 

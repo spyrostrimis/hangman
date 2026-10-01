@@ -4,7 +4,7 @@ PROJECT: Web-based Hangman word game for learning English vocabulary and pronunc
 
 REBUILD, NOT MIGRATION. Most 2023 code is being replaced. Do not preserve or work around code that should simply go. What survives: the game rules, the React components and visual design, the Hall of Fame, the shape of the four auth routes, and the Illucia "Play vs AI" concept.
 
-<!-- ┌─ SYNC v4 · HARD RULES · mirrored in CLAUDE.md + project instructions -->
+<!-- ┌─ SYNC v5 · HARD RULES · mirrored in CLAUDE.md + project instructions -->
 <!-- │  Edit one → edit the other → bump BOTH version numbers. -->
 
 ## HARD RULES
@@ -18,9 +18,9 @@ REBUILD, NOT MIGRATION. Most 2023 code is being replaced. Do not preserve or wor
 - Every deploy is production; there is no staging. A push to `main` publishes the frontend to hangman.spyrostrimis.com, and `wrangler deploy` from `server/` publishes the API immediately. Treat both as deploys to a public URL.
 - Merriam-Webster: use the Collegiate Dictionary API only. Non-commercial only, 1000 queries/day/key. Attribution required in UI and README. Wherever MW content is displayed, MW's official branding guidelines apply and are binding: feature the unmodified official Merriam-Webster logo (PNG on web, at 50×50, 100×100 or 125×125, with the ® kept visible at bottom right), and write the product title out in full as "Merriam-Webster's Collegiate® Dictionary with Audio" — the ® is required on the first use of "Collegiate" on a page. Never "Webster's" alone; always hyphenate Merriam-Webster.
 - Example sentences must be REAL, sourced from Merriam-Webster with attribution. Never LLM-generated quotations attributed to real authors, works, or dates. The 2023 version did this and it was wrong.
-- Scoring is client-authoritative and forgeable. This is a KNOWN, DELIBERATE choice — the Hall of Fame is documented as unverified rather than made authoritative. Do not propose server-authoritative gameplay as a fix; it was considered and rejected.
+- Scoring uses server-issued, account-bound rounds and shared-rule replay validation, with at most one award per round. Gameplay stays local; answers are public and manufactured/bot wins remain possible. No minimum round duration, scoring cooldown or daily cap: fast honest wins must count immediately (approved 2026-10-01). Do not claim that validated submissions prove human or honest play. Per-guess server adjudication remains excluded. See docs/SCORING.md.
 
-<!-- └─ /SYNC v4 · HARD RULES -->
+<!-- └─ /SYNC v5 · HARD RULES -->
 
 ## CURRENT REBUILD STATE
 
@@ -158,7 +158,7 @@ Still open:
 - There is deliberately no gallows: the story is rescuing a robot. The old BODY_PARTS code was deleted from `Components/Figure.js`; Artsy's screen shows reboot progress instead. Do not restore it.
 - Header/Footer imports and commented render references remain. React StrictMode is still disabled in the app, but the score lifecycle is tested under StrictMode and must not depend on that setting.
 - Game messages remain inline in App.js; the rules come from `hangman-core.js`. Do not widen unrelated slices into a game-engine rewrite.
-- Scores remain forgeable by design. UI duplicate prevention handles ordinary rerenders; it is not server-side win validation or exactly-once delivery.
+- The round-ticket scoring update validates submitted wins and makes awards idempotent in D1; bots can still manufacture valid histories. It is implemented locally, not deployed by this change. See docs/SCORING.md for the remaining limitations, migration and coordinated release.
 
 ## WHAT IS LIVE
 
@@ -201,4 +201,4 @@ The reverse game: the player sets a secret word; Illucia guesses one letter at a
 
 ## SCOPE
 
-The account slice is complete and live. Phase 4 (Illucia) is sequenced in `docs/planning/PLAN-illucia.md`: I0–I3b are done; next is I4 (the page), after MOB completion is confirmed. Work only from the specific slice instruction given. HARD RULES v4 is committed; do not start the Workers AI slice (I5) until the relevant decisions are recorded (the plan places it after the v1 page feels good). Do not widen any slice into a React upgrade, dependency cleanup, or unrelated game changes.
+The account slice is complete and live. Phase 4 (Illucia) is sequenced in `docs/planning/PLAN-illucia.md`: I0–I3b are done; next is I4 (the page), after MOB completion is confirmed. Work only from the specific slice instruction given. HARD RULES v5 includes the approved scoring update; do not start the Workers AI slice (I5) until the relevant decisions are recorded (the plan places it after the v1 page feels good). Do not widen any slice into a React upgrade, dependency cleanup, or unrelated game changes.

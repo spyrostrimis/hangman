@@ -1,5 +1,7 @@
 # Account release record
 
+Round-ticket follow-up (2026-10-01): implemented and checked locally; not deployed. Requires migration `0002_rounds.sql` and coordinated Worker/frontend release. See [scoring design and release steps](../docs/SCORING.md). The evidence below records the original account release.
+
 Updated 2026-09-27. Registration, login, cumulative scores, and the Hall of Fame are deployed and verified at https://hangman.spyrostrimis.com.
 
 ## Verified locally
@@ -28,4 +30,4 @@ Cloudflare authentication was refreshed successfully after an expired OAuth call
 - The initial `_redirects` rule did not match domains and was removed. Cloudflare Bulk Redirect list `hangman_canonical` (`e93ee98a0589423e8d81d62881ded5ea`) and enabled rule `207bf44a68fe4e84b1514c04bd11c72d` now perform the canonical redirect, including deployment subdomains. `/signup?check=release` on the Pages hostname returns HTTP 301 to the same path and query on the custom domain.
 - Nested application routes serve the frontend while `/user/*` serves API JSON. Desktop and mobile layouts were checked; slow physical-phone stretching responsiveness remains unmeasured. Local duration is not a substitute for phone measurements.
 
-Scores are cumulative and client-authoritative by design. No password recovery UI, legacy-account migration, or Illucia gameplay is included.
+In this original production release, scores are cumulative and client-authoritative. No password recovery UI, legacy-account migration, or Illucia gameplay is included.

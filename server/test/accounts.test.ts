@@ -5,6 +5,8 @@ import app from '../src/index';
 import { KDF } from '../../shared/auth-protocol.js';
 import { deriveCredential } from '../../client/src/lib/credential.js';
 import { AUDIENCE, ISSUER, makeVerifier, secretBytes } from '../src/crypto';
+import manifest from '../../client/src/data/words.json';
+import words from '../../tools/words.locked.json';
 
 const origin = 'https://hangman.spyrostrimis.com';
 let requestNumber = 0;
@@ -25,7 +27,17 @@ async function signup(username = 'Player') {
   return { cookie: response.headers.get('Set-Cookie')!.split(';')[0], data: await response.json() as { user: { id: string } } };
 }
 beforeAll(async () => { await applyD1Migrations(env.DB, env.TEST_MIGRATIONS); });
-beforeEach(async () => { await env.DB.batch([env.DB.prepare('DELETE FROM scores'), env.DB.prepare('DELETE FROM users')]); });
+beforeEach(async () => { await env.DB.batch([env.DB.prepare('DELETE FROM rounds'), env.DB.prepare('DELETE FROM scores'), env.DB.prepare('DELETE FROM users')]); });
+
+type Ticket = { roundId: string; word: string; expiresAt: number };
+async function start(cookie: string, previousRoundId?: string) {
+  const response = await request('round/start', { method: 'POST', cookie, body: previousRoundId ? { previousRoundId } : {} });
+  expect(response.status).toBe(200);
+  return await response.json() as Ticket;
+}
+const win = (ticket: Ticket) => [...new Set(ticket.word)];
+const claim = (cookie: string, ticket: Ticket, guesses: unknown = win(ticket)) =>
+  request('round/claim', { method: 'POST', cookie, body: { roundId: ticket.roundId, guesses } });
 
 describe('account API with real local D1 and Workers crypto', () => {
   it('creates a zero-score user, stores a verifier rather than credential, and issues a secure session', async () => {
@@ -126,14 +138,93 @@ describe('account API with real local D1 and Workers crypto', () => {
     expect(logout.status).toBe(200); expect(logout.headers.get('Set-Cookie')).toContain('Max-Age=0');
   });
 
-  it('increments only the signed-in player atomically and exposes only safe leaderboard fields', async () => {
+  it('awards immediate wins once under concurrent claims and exposes only safe leaderboard fields', async () => {
     expect(await (await request('get-best-scores')).json()).toEqual([]);
     const { cookie } = await signup(); await signup('Other');
-    expect((await request('add100', { method: 'PUT' })).status).toBe(401);
-    expect((await request('add100', { method: 'PUT', cookie, body: { score: 9999, userId: 'Other' } })).status).toBe(400);
-    const responses = await Promise.all(Array.from({ length: 5 }, () => request('add100', { method: 'PUT', cookie })));
+    expect((await request('add100', { method: 'PUT', cookie })).status).toBe(404);
+    expect((await request('round/start', { method: 'POST' })).status).toBe(401);
+    const ticket = await start(cookie);
+    expect(words).toContain(ticket.word);
+    expect(ticket.expiresAt).toBeGreaterThan(Date.now());
+    const responses = await Promise.all(Array.from({ length: 5 }, () => claim(cookie, ticket)));
     expect(responses.map(r => r.status)).toEqual([200, 200, 200, 200, 200]);
-    expect(await (await request('get-best-scores')).json()).toEqual([{ username: 'Player', score: 500 }, { username: 'Other', score: 0 }]);
+    for (const response of responses) expect(await response.json()).toEqual({ score: 100 });
+    // A lost success response can be retried even after the next round starts.
+    const next = await start(cookie);
+    expect(next.roundId).not.toBe(ticket.roundId);
+    expect(await (await claim(cookie, ticket)).json()).toEqual({ score: 100 });
+    expect(await (await claim(cookie, next)).json()).toEqual({ score: 200 });
+    expect(await (await request('get-best-scores')).json()).toEqual([{ username: 'Player', score: 200 }, { username: 'Other', score: 0 }]);
+  });
+
+  it('keeps the server vocabulary aligned with the browser manifest', () => {
+    expect([...words].sort()).toEqual(manifest.words.map(record => record.word).sort());
+  });
+
+  it('resumes one outstanding round across concurrent starts and replaces only an owned round', async () => {
+    const { cookie } = await signup();
+    const other = await signup('Other');
+    const tickets = await Promise.all(Array.from({ length: 5 }, () => start(cookie)));
+    expect(new Set(tickets.map(ticket => ticket.roundId)).size).toBe(1);
+    const foreign = await start(other.cookie);
+    const same = await start(cookie, foreign.roundId);
+    expect(same.roundId).toBe(tickets[0].roundId);
+    const replacements = await Promise.all(Array.from({ length: 5 }, () => start(cookie, same.roundId)));
+    expect(new Set(replacements.map(ticket => ticket.roundId)).size).toBe(1);
+    expect(replacements[0].roundId).not.toBe(same.roundId);
+    expect((await claim(cookie, same)).status).toBe(409);
+    expect((await claim(cookie, foreign)).status).toBe(409);
+    expect((await claim(other.cookie, foreign)).status).toBe(200);
+  });
+
+  it('rejects fabricated tickets, invalid histories, extra fields and guesses after game over', async () => {
+    const { cookie } = await signup();
+    const ticket = await start(cookie);
+    // Fixed answer makes order-sensitive failures deterministic.
+    await env.DB.prepare('UPDATE rounds SET word = ? WHERE id = ?').bind('puzzle', ticket.roundId).run();
+    ticket.word = 'puzzle';
+    expect((await claim('', ticket)).status).toBe(401);
+    expect((await claim(cookie, { ...ticket, roundId: crypto.randomUUID() })).status).toBe(409);
+    for (const guesses of [null, 'puzle', [], ['p'], ['P', 'u', 'z', 'l', 'e'], ['!'], ['p', 'p', 'u', 'z', 'l', 'e'],
+      [...'abcdfgpuzle'], [...'puzlea'], Array(27).fill('p'), [1]]) {
+      expect((await claim(cookie, ticket, guesses)).status).toBe(400);
+    }
+    expect((await request('round/start', { method: 'POST', cookie, body: { word: 'puzzle' } })).status).toBe(400);
+    expect((await request('round/claim', { method: 'POST', cookie, body: { roundId: ticket.roundId, guesses: win(ticket), score: 9000 } })).status).toBe(400);
+    expect((await claim(cookie, ticket, [...'abcdfpuzle'])).status).toBe(200);
+    expect(await env.DB.prepare('SELECT total FROM scores').first('total')).toBe(100);
+  });
+
+  it('expires unclaimed rounds, retains successful retries, and prunes old tickets without changing totals', async () => {
+    const { cookie } = await signup();
+    const expired = await start(cookie);
+    await env.DB.prepare('UPDATE rounds SET expires_at = ? WHERE id = ?').bind(Date.now() - 1, expired.roundId).run();
+    expect((await claim(cookie, expired)).status).toBe(409);
+    const ticket = await start(cookie);
+    expect(ticket.roundId).not.toBe(expired.roundId);
+    expect((await claim(cookie, ticket)).status).toBe(200);
+    await env.DB.prepare('UPDATE rounds SET expires_at = ? WHERE id = ?').bind(Date.now() - 1, ticket.roundId).run();
+    expect(await (await claim(cookie, ticket)).json()).toEqual({ score: 100 });
+    await env.DB.prepare('UPDATE rounds SET expires_at = ? WHERE id = ?').bind(Date.now() - 25 * 60 * 60 * 1000, ticket.roundId).run();
+    await start(cookie);
+    expect((await claim(cookie, ticket)).status).toBe(409);
+    expect(await env.DB.prepare('SELECT total FROM scores').first('total')).toBe(100);
+  });
+
+  it('does not consume a round at the score ceiling and rolls consumption back when the increment fails', async () => {
+    const { cookie, data } = await signup();
+    const ticket = await start(cookie);
+    await env.DB.prepare('UPDATE scores SET total = 9007199254740900 WHERE user_id = ?').bind(data.user.id).run();
+    expect((await claim(cookie, ticket)).status).toBe(409);
+    expect(await env.DB.prepare('SELECT claimed_at FROM rounds WHERE id = ?').bind(ticket.roundId).first('claimed_at')).toBeNull();
+    await env.DB.prepare('UPDATE scores SET total = 0 WHERE user_id = ?').bind(data.user.id).run();
+    await env.DB.exec("CREATE TRIGGER test_fail_award BEFORE UPDATE ON scores BEGIN SELECT RAISE(ABORT, 'test failure'); END;");
+    try {
+      expect((await claim(cookie, ticket)).status).toBe(500);
+      expect(await env.DB.prepare('SELECT claimed_at FROM rounds WHERE id = ?').bind(ticket.roundId).first('claimed_at')).toBeNull();
+      expect(await env.DB.prepare('SELECT total FROM scores WHERE user_id = ?').bind(data.user.id).first('total')).toBe(0);
+    } finally { await env.DB.exec('DROP TRIGGER test_fail_award;'); }
+    expect(await (await claim(cookie, ticket)).json()).toEqual({ score: 100 });
   });
 
   it('bounds the leaderboard to 100 and orders tied scores deterministically', async () => {

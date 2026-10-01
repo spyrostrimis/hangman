@@ -12,13 +12,13 @@ The game selects from 105 checked-in word records. Paintings are served from Clo
 
 ## Accounts and Hall of Fame
 
-The account rebuild uses a Hono Worker, D1, browser-side password stretching, and expiring HttpOnly cookies. Registered players earn 100 points per reported win; the public Hall of Fame displays the top 100 cumulative scores. Guest play remains available.
+The account rebuild uses a Hono Worker, D1, browser-side password stretching, and expiring HttpOnly cookies. Registered players earn 100 points per validated winning round; the public Hall of Fame displays the top 100 cumulative scores. Guest play remains available.
 
-Accounts and scores are live and browser-verified on the custom domain. Production rollout, test evidence, and initial Free-tier CPU measurements are recorded in [the account release record](server/RELEASE.md).
+The original account/score release is live and browser-verified on the custom domain. The round-ticket scoring update is implemented locally and requires a separate API migration/deploy and frontend release; see [the scoring design](docs/SCORING.md). Production rollout, test evidence, and initial Free-tier CPU measurements are recorded in [the account release record](server/RELEASE.md).
 
 Passwords use PBKDF2-HMAC-SHA-256 (600,000 iterations) in the browser. The server stores an HMAC verifier under a separate secret pepper. [Account protocol, limitations, development and deployment instructions](server/README.md).
 
-Scoring is client-authoritative and forgeable by design. The server authenticates the player and increments the total; it does not verify the game. Password recovery is not available yet. Logout clears the browser cookie; copied tokens expire after 24 hours.
+Scored rounds are issued by the server and submitted guesses are replayed through the shared game rules. Each round can award 100 points at most once, including retries and concurrent claims. There is no minimum playing time or scoring cooldown. Answers remain public: scripts can manufacture valid wins, so the Hall of Fame is not proof of honest or human play. Password recovery is not available yet. Logout clears the browser cookie; copied tokens expire after 24 hours.
 
 Illucia is reverse Hangman for signed-in players: choose an accepted 3–15-letter word and challenge Apprentice, Scholar, or Master. A deterministic local solver guesses letters; six misses wins the round for you. The secret stays in the browser, commentary is scripted, and this mode awards no Hall of Fame points. [I4 implementation and local verification](docs/ILLUCIA-I4.md). Live AI commentary remains a later feature.
 

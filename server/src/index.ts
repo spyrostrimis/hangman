@@ -3,6 +3,7 @@ import { bodyLimit } from 'hono/body-limit';
 import { getCookie, setCookie } from 'hono/cookie';
 import { KDF, SALT_PATTERN, CREDENTIAL_PATTERN, USERNAME_PATTERN, SIGNIN_USERNAME_PATTERN, normalizeUsername } from '../../shared/auth-protocol.js';
 import { checkVerifier, fakeSalt, makeVerifier, sessionToken, sessionUserId, SESSION_SECONDS } from './crypto';
+import { claimRound, isRoundId, startRound } from './rounds';
 
 type AppEnv = { Bindings: Env; Variables: { user: PublicUser } };
 type PublicUser = { id: string; username: string; score: number };
@@ -103,7 +104,7 @@ app.get('/user/get-best-scores', async c => {
   return c.json(results);
 });
 app.use('/user/me', authenticate);
-app.use('/user/add100', authenticate);
+app.use('/user/round/*', authenticate);
 async function authenticate(c: C, next: () => Promise<void>) {
   const token = getCookie(c, cookieName(c));
   if (!token) return failure(c, 'Please sign in.', 401);
@@ -117,13 +118,23 @@ async function authenticate(c: C, next: () => Promise<void>) {
   await next();
 }
 app.get('/user/me', c => c.json({ user: c.get('user') }));
-app.put('/user/add100', async c => {
+app.post('/user/round/start', async c => {
   const input = await readInput(c);
-  if (!input || Object.keys(input).length) return failure(c, 'This endpoint accepts an empty JSON object.', 400);
-  const row = await c.env.DB.prepare(`UPDATE scores SET total = total + 100, updated_at = CURRENT_TIMESTAMP
-    WHERE user_id = ? AND total <= 9007199254740800 RETURNING total AS score`).bind(c.get('user').id).first<{ score: number }>();
-  if (!row) return failure(c, 'Score limit reached.', 409);
-  return c.json(row);
+  if (!input || Object.keys(input).some(key => key !== 'previousRoundId')
+    || (input.previousRoundId !== undefined && !isRoundId(input.previousRoundId))) {
+    return failure(c, 'Invalid round request.', 400);
+  }
+  const previousRoundId = typeof input.previousRoundId === 'string' ? input.previousRoundId : null;
+  return c.json(await startRound(c.env.DB, c.get('user').id, previousRoundId));
+});
+app.post('/user/round/claim', async c => {
+  const input = await readInput(c);
+  if (!input || Object.keys(input).some(key => !['roundId', 'guesses'].includes(key)) || !isRoundId(input.roundId)) {
+    return failure(c, 'Invalid round claim.', 400);
+  }
+  const result = await claimRound(c.env.DB, c.get('user').id, input.roundId, input.guesses);
+  if ('error' in result) return failure(c, result.error, result.status);
+  return c.json(result);
 });
 app.notFound(c => c.json({ message: 'Not found.' }, 404));
 app.onError((_error, c) => {
