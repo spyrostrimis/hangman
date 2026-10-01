@@ -1,0 +1,2752 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-09-30T00:49:23.793Z",
+  "status": "complete",
+  "configuration": {
+    "seed": 20260930,
+    "count": 10,
+    "models": [
+      "@cf/meta/llama-3.1-8b-instruct-fp8-fast"
+    ],
+    "mode": "board-explained",
+    "sampleKind": "five-letter-development",
+    "manifestSha256": "30124c8bc69dc1e901a3be824da53fe9f162e88d21c1bdd5ca3a9a0087fbdefb",
+    "sampleSha256": "815efc8783351f3934b0d46e3993c37392663cc5f95efe1a4be2c51ef14a76e2",
+    "promptVersion": "i7a-dictionary-1",
+    "promptSha256": "4a7b330d05ff7ee6b838df662a09bfb6e5a1a3cbae379350b552f307d4fca613",
+    "systemPrompt": "Play Hangman with six misses allowed. Hits reveal ALL occurrences and cost nothing. Choose an unused letter based on the remaining possible words, not just general English frequency. Consider letters shared by several possibilities instead of committing to one word. Return only a JSON object with exactly two keys: \"reason\" (a short explanation, at most 240 characters) followed by \"letter\" (one ASCII letter A-Z).",
+    "temperature": 0,
+    "maxTokens": 160,
+    "requestTimeoutMs": 10000,
+    "retries": 1,
+    "fallback": "Master count; explicitly assisted",
+    "assistance": "public board only",
+    "resultMeaning": "modelOnly means no fallback letter selection; dictionary mode still has dictionary assistance",
+    "sampling": "DOUBT plus 9 seeded common five-letter words; development smoke test, not held-out evaluation",
+    "neuronRates": {
+      "@cf/meta/llama-3.2-3b-instruct": {
+        "input": 4625,
+        "output": 30475
+      },
+      "@cf/meta/llama-3.1-8b-instruct-fp8-fast": {
+        "input": 4119,
+        "output": 34868
+      }
+    },
+    "pricingChecked": "2026-09-29"
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32"
+  },
+  "sample": [
+    {
+      "word": "doubt",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "twigs",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "sloth",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "saner",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "stump",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "exert",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "heeds",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "cubes",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "saint",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "loops",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    }
+  ],
+  "baseline": [
+    {
+      "word": "doubt",
+      "won": true,
+      "misses": 5,
+      "turns": 10,
+      "guesses": "easoyuhdbt",
+      "milliseconds": [
+        6.553100000000086,
+        3.9096000000001823,
+        2.6342999999999392,
+        2.0189000000000306,
+        1.346599999999853,
+        1.2372000000000298,
+        1.0608999999999469,
+        1.2561000000000604,
+        0.7194000000001779,
+        0.7282000000000153
+      ],
+      "candidateSizes": [
+        8522,
+        4751,
+        2315,
+        1136,
+        199,
+        106,
+        34,
+        18,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "twigs",
+      "won": true,
+      "misses": 5,
+      "turns": 10,
+      "guesses": "easoirtngw",
+      "milliseconds": [
+        6.308299999999917,
+        3.6713999999999487,
+        2.467399999999998,
+        1.7559999999998581,
+        1.4700000000000273,
+        1.2963999999999487,
+        1.0872000000001663,
+        0.7558999999998832,
+        0.7708999999999833,
+        0.7770000000000437
+      ],
+      "candidateSizes": [
+        8522,
+        4751,
+        2315,
+        667,
+        319,
+        42,
+        23,
+        3,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "sloth",
+      "won": true,
+      "misses": 2,
+      "turns": 7,
+      "guesses": "easothl",
+      "milliseconds": [
+        5.260099999999966,
+        3.698699999999917,
+        2.475400000000036,
+        1.019900000000007,
+        0.810399999999845,
+        0.8140000000000782,
+        0.7572999999999865
+      ],
+      "candidateSizes": [
+        8522,
+        4751,
+        2315,
+        213,
+        37,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "saner",
+      "won": true,
+      "misses": 4,
+      "turns": 9,
+      "guesses": "esrabfgkn",
+      "milliseconds": [
+        5.276499999999942,
+        2.2613000000001193,
+        0.8355999999998858,
+        0.8152999999999793,
+        0.7417000000000371,
+        0.7657999999998992,
+        0.7476999999998952,
+        0.7452999999998156,
+        0.7427999999999884
+      ],
+      "candidateSizes": [
+        8522,
+        1307,
+        50,
+        17,
+        8,
+        7,
+        6,
+        5,
+        4
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "stump",
+      "won": false,
+      "misses": 6,
+      "turns": 9,
+      "guesses": "easoiultk",
+      "milliseconds": [
+        5.469299999999976,
+        3.697300000000041,
+        2.5488000000000284,
+        0.8987999999999374,
+        0.8407000000001972,
+        0.8016999999999825,
+        0.7735999999999876,
+        0.7736999999999625,
+        0.8937000000000808
+      ],
+      "candidateSizes": [
+        8522,
+        4751,
+        2315,
+        213,
+        114,
+        44,
+        27,
+        17,
+        6
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "exert",
+      "won": true,
+      "misses": 2,
+      "turns": 6,
+      "guesses": "etrbvx",
+      "milliseconds": [
+        5.305299999999988,
+        0.7248000000001866,
+        0.7211999999999534,
+        0.7099000000000615,
+        0.7123999999998887,
+        0.7190000000000509
+      ],
+      "candidateSizes": [
+        8522,
+        23,
+        9,
+        3,
+        2,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "heeds",
+      "won": true,
+      "misses": 3,
+      "turns": 7,
+      "guesses": "esprdfh",
+      "milliseconds": [
+        5.413400000000138,
+        1.1303000000000338,
+        1.0643999999999778,
+        1.1964000000000397,
+        1.044399999999996,
+        1.0033000000000811,
+        0.9860000000001037
+      ],
+      "candidateSizes": [
+        8522,
+        69,
+        43,
+        32,
+        23,
+        5,
+        4
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "cubes",
+      "won": false,
+      "misses": 6,
+      "turns": 9,
+      "guesses": "esaiouldt",
+      "milliseconds": [
+        5.346499999999878,
+        2.2426000000000386,
+        1.7813000000001011,
+        1.500300000000152,
+        1.437800000000152,
+        1.3007000000000062,
+        1.046100000000024,
+        1.0209999999999582,
+        1.0019999999999527
+      ],
+      "candidateSizes": [
+        8522,
+        1307,
+        357,
+        227,
+        141,
+        59,
+        35,
+        23,
+        17
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "saint",
+      "won": true,
+      "misses": 2,
+      "turns": 7,
+      "guesses": "easihnt",
+      "milliseconds": [
+        5.83179999999993,
+        3.707499999999982,
+        1.5514000000000578,
+        0.7580999999997857,
+        0.7327000000000226,
+        0.8528000000001157,
+        0.7297000000000935
+      ],
+      "candidateSizes": [
+        8522,
+        4751,
+        758,
+        39,
+        3,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "loops",
+      "won": true,
+      "misses": 5,
+      "turns": 9,
+      "guesses": "easolkmnp",
+      "milliseconds": [
+        5.257999999999811,
+        3.716799999999921,
+        2.4669000000001233,
+        1.848700000000008,
+        1.080600000000004,
+        0.714200000000119,
+        0.8170999999999822,
+        0.7182000000000244,
+        0.7142999999998665
+      ],
+      "candidateSizes": [
+        8522,
+        4751,
+        2315,
+        667,
+        53,
+        5,
+        4,
+        3,
+        2
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    }
+  ],
+  "results": {
+    "@cf/meta/llama-3.1-8b-instruct-fp8-fast": {
+      "games": [
+        {
+          "word": "doubt",
+          "status": "failed",
+          "won": false,
+          "misses": 6,
+          "turns": 8,
+          "guesses": "eabdcfgh",
+          "firstIntervention": null,
+          "moves": [
+            {
+              "letter": "e",
+              "assisted": false
+            },
+            {
+              "letter": "a",
+              "assisted": false
+            },
+            {
+              "letter": "b",
+              "assisted": false
+            },
+            {
+              "letter": "d",
+              "assisted": false
+            },
+            {
+              "letter": "c",
+              "assisted": false
+            },
+            {
+              "letter": "f",
+              "assisted": false
+            },
+            {
+              "letter": "g",
+              "assisted": false
+            },
+            {
+              "letter": "h",
+              "assisted": false
+            }
+          ],
+          "attempts": [
+            {
+              "turn": 1,
+              "retry": false,
+              "milliseconds": 436.961,
+              "reason": null,
+              "response": "{\"reason\":\"Letter 'e' is common in many words and has multiple possibilities, so it's a good starting point.\",\"letter\":\"e\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.659700632095337,
+              "explanation": "Letter 'e' is common in many words and has multiple possibilities, so it's a good starting point.",
+              "candidateCount": null,
+              "inputSha256": "094546d8aa431d1b17ca77fc964767e5fb7b6f4bc609c7b804c5b8caf49c89e9",
+              "usage": {
+                "prompt_tokens": 149,
+                "completion_tokens": 30
+              },
+              "estimatedNeurons": 1.659771
+            },
+            {
+              "turn": 2,
+              "retry": false,
+              "milliseconds": 220.83569999999986,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letter among possible words, considering the length and pattern\",\n  \"letter\": \"a\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.592164158821106,
+              "explanation": "Shared letter among possible words, considering the length and pattern",
+              "candidateCount": null,
+              "inputSha256": "424a3722a48714e2c788363e0c33f57925db70ceead287d242df0a896bb20d20",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 27
+              },
+              "estimatedNeurons": 1.592238
+            },
+            {
+              "turn": 3,
+              "retry": false,
+              "milliseconds": 228.43160000000012,
+              "reason": "repeated",
+              "response": "{\n  \"reason\": \"Shared letter in multiple possibilities, considering the length and available letters\",\n  \"letter\": \"e\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6270320415496826,
+              "explanation": "Shared letter in multiple possibilities, considering the length and available letters",
+              "candidateCount": null,
+              "inputSha256": "81aa795994a9db8b970fe59f9f322da4ef1b04afa0826847d6687a9d3124f479",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 28
+              },
+              "estimatedNeurons": 1.627106
+            },
+            {
+              "turn": 3,
+              "retry": true,
+              "milliseconds": 228.58910000000014,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not already guessed or missed.\", \"letter\": \"b\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.4960776567459106,
+              "explanation": "Choose a letter that is not already guessed or missed.",
+              "candidateCount": null,
+              "inputSha256": "0e95c489e63514439619ac60ad706baf39be81a1fa7dbc9aacbaac3a50db2edd",
+              "usage": {
+                "prompt_tokens": 177,
+                "completion_tokens": 22
+              },
+              "estimatedNeurons": 1.496159
+            },
+            {
+              "turn": 4,
+              "retry": false,
+              "milliseconds": 402.87919999999986,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letter in multiple possibilities, considering the pattern and available letters.\",\n  \"letter\": \"d\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6270320415496826,
+              "explanation": "Shared letter in multiple possibilities, considering the pattern and available letters.",
+              "candidateCount": null,
+              "inputSha256": "26e6fcfd14e811d677937b48a2ed218fa75e1ca23cc5e5a0578f3f51ef56f4a1",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 28
+              },
+              "estimatedNeurons": 1.627106
+            },
+            {
+              "turn": 5,
+              "retry": false,
+              "milliseconds": 239.97400000000016,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letter 'c' appears in multiple possibilities\",\n  \"letter\": \"c\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.5224285125732422,
+              "explanation": "Shared letter 'c' appears in multiple possibilities",
+              "candidateCount": null,
+              "inputSha256": "063d123facd2af7dac920e034e333f606f07e76d9c8e280b9534210a94dd77e4",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 25
+              },
+              "estimatedNeurons": 1.522502
+            },
+            {
+              "turn": 6,
+              "retry": false,
+              "milliseconds": 314.6567,
+              "reason": "repeated",
+              "response": "{\n  \"reason\": \"Shared by multiple possibilities, including 'dabber' and 'dabber' is not yet ruled out\",\n  \"letter\": \"B\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.9839472770690918,
+              "explanation": "Shared by multiple possibilities, including 'dabber' and 'dabber' is not yet ruled out",
+              "candidateCount": null,
+              "inputSha256": "7a0d4b9002ccc116723b3ee0611f9a181ed3b889ac026e5184436707077b390f",
+              "usage": {
+                "prompt_tokens": 160,
+                "completion_tokens": 38
+              },
+              "estimatedNeurons": 1.984024
+            },
+            {
+              "turn": 6,
+              "retry": true,
+              "milliseconds": 328.01240000000007,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not yet guessed and is shared by multiple possibilities.\", \"letter\": \"f\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6437861919403076,
+              "explanation": "Choose a letter that is not yet guessed and is shared by multiple possibilities.",
+              "candidateCount": null,
+              "inputSha256": "5437228a8f9879d6f9bd4849707d87f050395349d9377bb9f71e88f0fdd29c1c",
+              "usage": {
+                "prompt_tokens": 179,
+                "completion_tokens": 26
+              },
+              "estimatedNeurons": 1.643869
+            },
+            {
+              "turn": 7,
+              "retry": false,
+              "milliseconds": 206.27480000000014,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letter 'g' in multiple possibilities\",\n  \"letter\": \"g\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.495797872543335,
+              "explanation": "Shared letter 'g' in multiple possibilities",
+              "candidateCount": null,
+              "inputSha256": "87d8d09f3f7dd35498a9f84165256bff6999dc21fd8f1e2b654fc24cbd3ee03f",
+              "usage": {
+                "prompt_tokens": 160,
+                "completion_tokens": 24
+              },
+              "estimatedNeurons": 1.495872
+            },
+            {
+              "turn": 8,
+              "retry": false,
+              "milliseconds": 263.2964999999999,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, especially 'b' and 'd' in the given pattern.\",\n  \"letter\": \"h\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.918330192565918,
+              "explanation": "Consider the shared letters among possible words, especially 'b' and 'd' in the given pattern.",
+              "candidateCount": null,
+              "inputSha256": "ce5851ded4ed2cf94c42fe7ac463b717372d0db10085747f11ba247a2dec2f3d",
+              "usage": {
+                "prompt_tokens": 161,
+                "completion_tokens": 36
+              },
+              "estimatedNeurons": 1.918407
+            }
+          ],
+          "stopReason": null,
+          "modelOnlyStatus": "failed",
+          "size": 35,
+          "length": 5,
+          "band": "common"
+        },
+        {
+          "word": "twigs",
+          "status": "failed",
+          "won": false,
+          "misses": 6,
+          "turns": 6,
+          "guesses": "eabdcf",
+          "firstIntervention": null,
+          "moves": [
+            {
+              "letter": "e",
+              "assisted": false
+            },
+            {
+              "letter": "a",
+              "assisted": false
+            },
+            {
+              "letter": "b",
+              "assisted": false
+            },
+            {
+              "letter": "d",
+              "assisted": false
+            },
+            {
+              "letter": "c",
+              "assisted": false
+            },
+            {
+              "letter": "f",
+              "assisted": false
+            }
+          ],
+          "attempts": [
+            {
+              "turn": 1,
+              "retry": false,
+              "milliseconds": 413.82180000000017,
+              "reason": null,
+              "response": "{\"reason\":\"Consider the shared letters among possible words, especially in the given length and pattern.\",\"letter\":\"e\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.450493574142456,
+              "explanation": "Consider the shared letters among possible words, especially in the given length and pattern.",
+              "candidateCount": null,
+              "inputSha256": "094546d8aa431d1b17ca77fc964767e5fb7b6f4bc609c7b804c5b8caf49c89e9",
+              "usage": {
+                "prompt_tokens": 149,
+                "completion_tokens": 24
+              },
+              "estimatedNeurons": 1.450563
+            },
+            {
+              "turn": 2,
+              "retry": false,
+              "milliseconds": 354.03309999999965,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letter among possible words, considering the length and pattern\",\n  \"letter\": \"a\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.592164158821106,
+              "explanation": "Shared letter among possible words, considering the length and pattern",
+              "candidateCount": null,
+              "inputSha256": "424a3722a48714e2c788363e0c33f57925db70ceead287d242df0a896bb20d20",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 27
+              },
+              "estimatedNeurons": 1.592238
+            },
+            {
+              "turn": 3,
+              "retry": false,
+              "milliseconds": 634.6693000000005,
+              "reason": "invalid",
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, 'e' is already guessed, and 'a' is also present, so let's try 'b' or 'c' or 'd' or 'f' or 'g' or 'h' or 'i' or 'j' or 'k' or 'l' or 'm' or 'n' or 'p' or 'q' or 'r' or 's' or 'w' or 'x' or 'y' or 'z'.\",\n  \"letter\": \"d\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 4.904607772827148,
+              "explanation": null,
+              "candidateCount": null,
+              "inputSha256": "81aa795994a9db8b970fe59f9f322da4ef1b04afa0826847d6687a9d3124f479",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 122
+              },
+              "estimatedNeurons": 4.904698
+            },
+            {
+              "turn": 3,
+              "retry": true,
+              "milliseconds": 247.84569999999985,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not already guessed or missed.\", \"letter\": \"b\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.4960776567459106,
+              "explanation": "Choose a letter that is not already guessed or missed.",
+              "candidateCount": null,
+              "inputSha256": "0e95c489e63514439619ac60ad706baf39be81a1fa7dbc9aacbaac3a50db2edd",
+              "usage": {
+                "prompt_tokens": 177,
+                "completion_tokens": 22
+              },
+              "estimatedNeurons": 1.496159
+            },
+            {
+              "turn": 4,
+              "retry": false,
+              "milliseconds": 1095.9262000000008,
+              "reason": "invalid",
+              "response": "{\n  \"reason\": \"Shared by multiple possibilities, e.g., 'bread', 'braid', 'bride', 'breadth', 'breaded', 'breadth', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 6.23370361328125,
+              "explanation": null,
+              "candidateCount": null,
+              "inputSha256": "a446d46ddc076ec49353b51dd7517278864de920913c81234bae3579205af79b",
+              "usage": {
+                "prompt_tokens": 159,
+                "completion_tokens": 160
+              },
+              "estimatedNeurons": 6.233801
+            },
+            {
+              "turn": 4,
+              "retry": true,
+              "milliseconds": 246.04089999999997,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not already guessed or missed, and is shared by multiple possibilities.\", \"letter\": \"d\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.7442710399627686,
+              "explanation": "Choose a letter that is not already guessed or missed, and is shared by multiple possibilities.",
+              "candidateCount": null,
+              "inputSha256": "c9ec6c231cdcb0c5140d2e187f05e6ce6dc7dd6e86b02b609505ff4343e82311",
+              "usage": {
+                "prompt_tokens": 178,
+                "completion_tokens": 29
+              },
+              "estimatedNeurons": 1.744354
+            },
+            {
+              "turn": 5,
+              "retry": false,
+              "milliseconds": 381.96460000000025,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letter in multiple possibilities, considering the given length and pattern.\",\n  \"letter\": \"C\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.631150484085083,
+              "explanation": "Shared letter in multiple possibilities, considering the given length and pattern.",
+              "candidateCount": null,
+              "inputSha256": "4d48d8fc340e27ae3ccb1c4edaf9c1b3009474b10cf27a14f88017788e36e026",
+              "usage": {
+                "prompt_tokens": 159,
+                "completion_tokens": 28
+              },
+              "estimatedNeurons": 1.631225
+            },
+            {
+              "turn": 6,
+              "retry": false,
+              "milliseconds": 320.20610000000033,
+              "reason": "repeated",
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, e.g., 'e' in 'beach' and 'eagle'.\",\n  \"letter\": \"e\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.0578014850616455,
+              "explanation": "Consider the shared letters among possible words, e.g., 'e' in 'beach' and 'eagle'.",
+              "candidateCount": null,
+              "inputSha256": "461c6faa2287596f134b5bce81b38bd0cc9522a1b61bd72e2c5f698ae6e34d39",
+              "usage": {
+                "prompt_tokens": 161,
+                "completion_tokens": 40
+              },
+              "estimatedNeurons": 2.057879
+            },
+            {
+              "turn": 6,
+              "retry": true,
+              "milliseconds": 260.96679999999924,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not yet guessed and is shared by multiple possibilities.\", \"letter\": \"f\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.647904634475708,
+              "explanation": "Choose a letter that is not yet guessed and is shared by multiple possibilities.",
+              "candidateCount": null,
+              "inputSha256": "2075da4c98c3d697b7ba358a72effb97284bedc6ca90ddcc9ad6faf4b3c4d6c8",
+              "usage": {
+                "prompt_tokens": 180,
+                "completion_tokens": 26
+              },
+              "estimatedNeurons": 1.647988
+            }
+          ],
+          "stopReason": null,
+          "modelOnlyStatus": "failed",
+          "size": 35,
+          "length": 5,
+          "band": "common"
+        },
+        {
+          "word": "sloth",
+          "status": "failed",
+          "won": false,
+          "misses": 6,
+          "turns": 6,
+          "guesses": "eabdcf",
+          "firstIntervention": null,
+          "moves": [
+            {
+              "letter": "e",
+              "assisted": false
+            },
+            {
+              "letter": "a",
+              "assisted": false
+            },
+            {
+              "letter": "b",
+              "assisted": false
+            },
+            {
+              "letter": "d",
+              "assisted": false
+            },
+            {
+              "letter": "c",
+              "assisted": false
+            },
+            {
+              "letter": "f",
+              "assisted": false
+            }
+          ],
+          "attempts": [
+            {
+              "turn": 1,
+              "retry": false,
+              "milliseconds": 363.0499,
+              "reason": null,
+              "response": "{\"reason\":\"Consider the shared letters among possible words, especially in the given length and pattern.\",\"letter\":\"e\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.450493574142456,
+              "explanation": "Consider the shared letters among possible words, especially in the given length and pattern.",
+              "candidateCount": null,
+              "inputSha256": "094546d8aa431d1b17ca77fc964767e5fb7b6f4bc609c7b804c5b8caf49c89e9",
+              "usage": {
+                "prompt_tokens": 149,
+                "completion_tokens": 24
+              },
+              "estimatedNeurons": 1.450563
+            },
+            {
+              "turn": 2,
+              "retry": false,
+              "milliseconds": 368.3559000000005,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letter among possible words, considering the length and pattern\",\n  \"letter\": \"a\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.592164158821106,
+              "explanation": "Shared letter among possible words, considering the length and pattern",
+              "candidateCount": null,
+              "inputSha256": "424a3722a48714e2c788363e0c33f57925db70ceead287d242df0a896bb20d20",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 27
+              },
+              "estimatedNeurons": 1.592238
+            },
+            {
+              "turn": 3,
+              "retry": false,
+              "milliseconds": 658.1567999999988,
+              "reason": "invalid",
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, 'e' is already guessed, and 'a' is also present, so let's try 'b' or 'd' or 'f' or 'g' or 'h' or 'i' or 'j' or 'k' or 'l' or 'm' or 'n' or 'p' or 'q' or 'r' or 's' or 'w' or 'x' or 'y' or 'z'.\",\n  \"letter\": \"h\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 4.76513671875,
+              "explanation": null,
+              "candidateCount": null,
+              "inputSha256": "81aa795994a9db8b970fe59f9f322da4ef1b04afa0826847d6687a9d3124f479",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 118
+              },
+              "estimatedNeurons": 4.765226
+            },
+            {
+              "turn": 3,
+              "retry": true,
+              "milliseconds": 369.47190000000046,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not already guessed or in the pattern\", \"letter\": \"b\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.5658133029937744,
+              "explanation": "Choose a letter that is not already guessed or in the pattern",
+              "candidateCount": null,
+              "inputSha256": "0e95c489e63514439619ac60ad706baf39be81a1fa7dbc9aacbaac3a50db2edd",
+              "usage": {
+                "prompt_tokens": 177,
+                "completion_tokens": 24
+              },
+              "estimatedNeurons": 1.565895
+            },
+            {
+              "turn": 4,
+              "retry": false,
+              "milliseconds": 930.5247999999992,
+              "reason": "invalid",
+              "response": "{\n  \"reason\": \"Shared by multiple possibilities, e.g., 'bread', 'breadth', 'breaded', 'breadier', 'breadiest', 'breadths', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 6.23370361328125,
+              "explanation": null,
+              "candidateCount": null,
+              "inputSha256": "a446d46ddc076ec49353b51dd7517278864de920913c81234bae3579205af79b",
+              "usage": {
+                "prompt_tokens": 159,
+                "completion_tokens": 160
+              },
+              "estimatedNeurons": 6.233801
+            },
+            {
+              "turn": 4,
+              "retry": true,
+              "milliseconds": 332.78679999999986,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not already guessed or missed.\", \"letter\": \"d\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.5001962184906006,
+              "explanation": "Choose a letter that is not already guessed or missed.",
+              "candidateCount": null,
+              "inputSha256": "c9ec6c231cdcb0c5140d2e187f05e6ce6dc7dd6e86b02b609505ff4343e82311",
+              "usage": {
+                "prompt_tokens": 178,
+                "completion_tokens": 22
+              },
+              "estimatedNeurons": 1.500278
+            },
+            {
+              "turn": 5,
+              "retry": false,
+              "milliseconds": 283.2512999999999,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letter 'c' among possible words\",\n  \"letter\": \"c\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.4916791915893555,
+              "explanation": "Shared letter 'c' among possible words",
+              "candidateCount": null,
+              "inputSha256": "4d48d8fc340e27ae3ccb1c4edaf9c1b3009474b10cf27a14f88017788e36e026",
+              "usage": {
+                "prompt_tokens": 159,
+                "completion_tokens": 24
+              },
+              "estimatedNeurons": 1.491753
+            },
+            {
+              "turn": 6,
+              "retry": false,
+              "milliseconds": 436.0751,
+              "reason": "repeated",
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, e.g., 'e' in 'beach' and 'eagle'.\",\n  \"letter\": \"e\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.0578014850616455,
+              "explanation": "Consider the shared letters among possible words, e.g., 'e' in 'beach' and 'eagle'.",
+              "candidateCount": null,
+              "inputSha256": "461c6faa2287596f134b5bce81b38bd0cc9522a1b61bd72e2c5f698ae6e34d39",
+              "usage": {
+                "prompt_tokens": 161,
+                "completion_tokens": 40
+              },
+              "estimatedNeurons": 2.057879
+            },
+            {
+              "turn": 6,
+              "retry": true,
+              "milliseconds": 263.70130000000063,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not yet guessed\", \"letter\": \"f\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.4386976957321167,
+              "explanation": "Choose a letter that is not yet guessed",
+              "candidateCount": null,
+              "inputSha256": "2075da4c98c3d697b7ba358a72effb97284bedc6ca90ddcc9ad6faf4b3c4d6c8",
+              "usage": {
+                "prompt_tokens": 180,
+                "completion_tokens": 20
+              },
+              "estimatedNeurons": 1.43878
+            }
+          ],
+          "stopReason": null,
+          "modelOnlyStatus": "failed",
+          "size": 35,
+          "length": 5,
+          "band": "common"
+        },
+        {
+          "word": "saner",
+          "status": "failed",
+          "won": false,
+          "misses": 6,
+          "turns": 9,
+          "guesses": "esatbdcfg",
+          "firstIntervention": null,
+          "moves": [
+            {
+              "letter": "e",
+              "assisted": false
+            },
+            {
+              "letter": "s",
+              "assisted": false
+            },
+            {
+              "letter": "a",
+              "assisted": false
+            },
+            {
+              "letter": "t",
+              "assisted": false
+            },
+            {
+              "letter": "b",
+              "assisted": false
+            },
+            {
+              "letter": "d",
+              "assisted": false
+            },
+            {
+              "letter": "c",
+              "assisted": false
+            },
+            {
+              "letter": "f",
+              "assisted": false
+            },
+            {
+              "letter": "g",
+              "assisted": false
+            }
+          ],
+          "attempts": [
+            {
+              "turn": 1,
+              "retry": false,
+              "milliseconds": 257.14490000000114,
+              "reason": null,
+              "response": "{\"reason\":\"Consider the shared letters among possible words, especially those with multiple possibilities for the given length.\",\"letter\":\"e\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.5202293395996094,
+              "explanation": "Consider the shared letters among possible words, especially those with multiple possibilities for the given length.",
+              "candidateCount": null,
+              "inputSha256": "094546d8aa431d1b17ca77fc964767e5fb7b6f4bc609c7b804c5b8caf49c89e9",
+              "usage": {
+                "prompt_tokens": 149,
+                "completion_tokens": 26
+              },
+              "estimatedNeurons": 1.520299
+            },
+            {
+              "turn": 2,
+              "retry": false,
+              "milliseconds": 403.52729999999974,
+              "reason": null,
+              "response": "{\"reason\":\"Shared letter in multiple possibilities, e.g., 'house', 'mouse', 'grape', 'space', 'place'.\", \"letter\":\"s\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.8628697395324707,
+              "explanation": "Shared letter in multiple possibilities, e.g., 'house', 'mouse', 'grape', 'space', 'place'.",
+              "candidateCount": null,
+              "inputSha256": "d12812ea3b881140f6f53b660cd2e8a119ea6e398a3e71d11372305acf31e5db",
+              "usage": {
+                "prompt_tokens": 156,
+                "completion_tokens": 35
+              },
+              "estimatedNeurons": 1.862944
+            },
+            {
+              "turn": 3,
+              "retry": false,
+              "milliseconds": 281.40619999999944,
+              "reason": null,
+              "response": "{\"reason\":\"Consider the shared letters among possible words, especially the letter 'a' which appears in multiple possibilities.\", \"letter\":\"a\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6577811241149902,
+              "explanation": "Consider the shared letters among possible words, especially the letter 'a' which appears in multiple possibilities.",
+              "candidateCount": null,
+              "inputSha256": "3c38ce7d1ff989658223643b7c1bfd1c67f2164fdfc0b3aef96399d64a9e8ddc",
+              "usage": {
+                "prompt_tokens": 157,
+                "completion_tokens": 29
+              },
+              "estimatedNeurons": 1.657855
+            },
+            {
+              "turn": 4,
+              "retry": false,
+              "milliseconds": 319.3079999999991,
+              "reason": null,
+              "response": "{\"reason\":\"Consider the shared letters among possible words, especially 's' and 'a' in the given pattern, and the available letters to guess a letter that could be in multiple words.\", \"letter\":\"t\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.2156665325164795,
+              "explanation": "Consider the shared letters among possible words, especially 's' and 'a' in the given pattern, and the available letters to guess a letter that could be in multiple words.",
+              "candidateCount": null,
+              "inputSha256": "42214e9fa10aff90c2cab99e55bfa12d12b90eb7e97acfb84e4cfeaea7cee1eb",
+              "usage": {
+                "prompt_tokens": 157,
+                "completion_tokens": 45
+              },
+              "estimatedNeurons": 2.215743
+            },
+            {
+              "turn": 5,
+              "retry": false,
+              "milliseconds": 443.16640000000007,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, 's' and 'e' are common in many words, 'a' is also present, 'b' is a good choice as it's not in the guessed letters and is present in many words\",\n  \"letter\": \"b\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.9336156845092773,
+              "explanation": "Consider the shared letters among possible words, 's' and 'e' are common in many words, 'a' is also present, 'b' is a good choice as it's not in the guessed letters and is present in many words",
+              "candidateCount": null,
+              "inputSha256": "a065f5253c4943a37e8029dd6a86a7bad6de2f95a06e444ab366d5491e60ed30",
+              "usage": {
+                "prompt_tokens": 162,
+                "completion_tokens": 65
+              },
+              "estimatedNeurons": 2.933698
+            },
+            {
+              "turn": 6,
+              "retry": false,
+              "milliseconds": 284.3071,
+              "reason": "repeated",
+              "response": "{\n  \"reason\": \"Shared by multiple possibilities, considering 'e' and 's' are already present\",\n  \"letter\": \"a\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.78297758102417,
+              "explanation": "Shared by multiple possibilities, considering 'e' and 's' are already present",
+              "candidateCount": null,
+              "inputSha256": "ea381b3443c2956d021d37b32080ad05fa5d2540927f3ce8f8fde490058d36ad",
+              "usage": {
+                "prompt_tokens": 162,
+                "completion_tokens": 32
+              },
+              "estimatedNeurons": 1.783054
+            },
+            {
+              "turn": 6,
+              "retry": true,
+              "milliseconds": 319.21690000000126,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is shared by multiple possibilities\", \"letter\": \"d\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.4776840209960938,
+              "explanation": "Choose a letter that is shared by multiple possibilities",
+              "candidateCount": null,
+              "inputSha256": "306c91dbd8e7f0767d08a6a6f75109916a62313cc4459b9d1053d6a9ec7721d7",
+              "usage": {
+                "prompt_tokens": 181,
+                "completion_tokens": 21
+              },
+              "estimatedNeurons": 1.477767
+            },
+            {
+              "turn": 7,
+              "retry": false,
+              "milliseconds": 457.6391000000003,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, 's' and 'e' are already present, 'a' is also a common letter in many words.\",\n  \"letter\": \"c\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.2752456665039062,
+              "explanation": "Consider the shared letters among possible words, 's' and 'e' are already present, 'a' is also a common letter in many words.",
+              "candidateCount": null,
+              "inputSha256": "b80021d34bc2442ae08d2a7bfca21635c8c554dd573d932343a9f7c48c065671",
+              "usage": {
+                "prompt_tokens": 163,
+                "completion_tokens": 46
+              },
+              "estimatedNeurons": 2.275325
+            },
+            {
+              "turn": 8,
+              "retry": false,
+              "milliseconds": 438.97069999999985,
+              "reason": "repeated",
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, 's' and 'e' are already present, 'a' is also a common letter in many words, and 't' is a common letter in many words, so 'a' is a good choice.\",\n  \"letter\": \"a\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 3.0115885734558105,
+              "explanation": "Consider the shared letters among possible words, 's' and 'e' are already present, 'a' is also a common letter in many words, and 't' is a common letter in many words, so 'a' is a good choice.",
+              "candidateCount": null,
+              "inputSha256": "fc24787727b7090995c5b212a21fc69b7c7bc6a067b2ec213593fa94cffd13ac",
+              "usage": {
+                "prompt_tokens": 164,
+                "completion_tokens": 67
+              },
+              "estimatedNeurons": 3.011672
+            },
+            {
+              "turn": 8,
+              "retry": true,
+              "milliseconds": 257.2634999999991,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is shared by multiple possibilities, considering the given pattern and available letters.\", \"letter\": \"F\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.7648637294769287,
+              "explanation": "Choose a letter that is shared by multiple possibilities, considering the given pattern and available letters.",
+              "candidateCount": null,
+              "inputSha256": "5276420cd7027c4ef1d59b06982a63afd222d95979dab4d4b4780dca5c60743b",
+              "usage": {
+                "prompt_tokens": 183,
+                "completion_tokens": 29
+              },
+              "estimatedNeurons": 1.764949
+            },
+            {
+              "turn": 9,
+              "retry": false,
+              "milliseconds": 392.4856,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, such as 's' and 'e', which appear in multiple words.\",\n  \"letter\": \"g\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.004540205001831,
+              "explanation": "Consider the shared letters among possible words, such as 's' and 'e', which appear in multiple words.",
+              "candidateCount": null,
+              "inputSha256": "e16225d843ab4e16a6d089dfc2634cea8fa6945df7b707840c1230c230d55bd0",
+              "usage": {
+                "prompt_tokens": 165,
+                "completion_tokens": 38
+              },
+              "estimatedNeurons": 2.004619
+            }
+          ],
+          "stopReason": null,
+          "modelOnlyStatus": "failed",
+          "size": 35,
+          "length": 5,
+          "band": "common"
+        },
+        {
+          "word": "stump",
+          "status": "failed",
+          "won": false,
+          "misses": 6,
+          "turns": 6,
+          "guesses": "eabdfc",
+          "firstIntervention": null,
+          "moves": [
+            {
+              "letter": "e",
+              "assisted": false
+            },
+            {
+              "letter": "a",
+              "assisted": false
+            },
+            {
+              "letter": "b",
+              "assisted": false
+            },
+            {
+              "letter": "d",
+              "assisted": false
+            },
+            {
+              "letter": "f",
+              "assisted": false
+            },
+            {
+              "letter": "c",
+              "assisted": false
+            }
+          ],
+          "attempts": [
+            {
+              "turn": 1,
+              "retry": false,
+              "milliseconds": 329.15050000000156,
+              "reason": null,
+              "response": "{\"reason\":\"Letter 'e' is common in many words and has multiple possibilities, so it's a good starting point.\",\"letter\":\"e\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.659700632095337,
+              "explanation": "Letter 'e' is common in many words and has multiple possibilities, so it's a good starting point.",
+              "candidateCount": null,
+              "inputSha256": "094546d8aa431d1b17ca77fc964767e5fb7b6f4bc609c7b804c5b8caf49c89e9",
+              "usage": {
+                "prompt_tokens": 149,
+                "completion_tokens": 30
+              },
+              "estimatedNeurons": 1.659771
+            },
+            {
+              "turn": 2,
+              "retry": false,
+              "milliseconds": 321.95830000000205,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the letter 'a' as it is shared by multiple possible words.\",\n  \"letter\": \"a\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6967675685882568,
+              "explanation": "Consider the letter 'a' as it is shared by multiple possible words.",
+              "candidateCount": null,
+              "inputSha256": "424a3722a48714e2c788363e0c33f57925db70ceead287d242df0a896bb20d20",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 30
+              },
+              "estimatedNeurons": 1.696842
+            },
+            {
+              "turn": 3,
+              "retry": false,
+              "milliseconds": 973.6772999999994,
+              "reason": "invalid",
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, 'e' is already guessed, and 'a' is also present, so let's try 'b' or 'd' or 'f' or 'g' or 'h' or 'i' or 'j' or 'k' or 'l' or 'm' or 'n' or 'p' or 'q' or 'r' or 's' or 'w' or 'x' or 'y' or 'z'.\",\n  \"letter\": \"h\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 4.76513671875,
+              "explanation": null,
+              "candidateCount": null,
+              "inputSha256": "81aa795994a9db8b970fe59f9f322da4ef1b04afa0826847d6687a9d3124f479",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 118
+              },
+              "estimatedNeurons": 4.765226
+            },
+            {
+              "turn": 3,
+              "retry": true,
+              "milliseconds": 231.37419999999838,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not already guessed or in the pattern\", \"letter\": \"b\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.5658133029937744,
+              "explanation": "Choose a letter that is not already guessed or in the pattern",
+              "candidateCount": null,
+              "inputSha256": "0e95c489e63514439619ac60ad706baf39be81a1fa7dbc9aacbaac3a50db2edd",
+              "usage": {
+                "prompt_tokens": 177,
+                "completion_tokens": 24
+              },
+              "estimatedNeurons": 1.565895
+            },
+            {
+              "turn": 4,
+              "retry": false,
+              "milliseconds": 1161.7648000000008,
+              "reason": "invalid",
+              "response": "{\n  \"reason\": \"Shared by multiple possibilities, e.g., 'bread', 'breadth', 'breed', 'breed', 'breadth', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', 'bread', '",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 6.23370361328125,
+              "explanation": null,
+              "candidateCount": null,
+              "inputSha256": "a446d46ddc076ec49353b51dd7517278864de920913c81234bae3579205af79b",
+              "usage": {
+                "prompt_tokens": 159,
+                "completion_tokens": 160
+              },
+              "estimatedNeurons": 6.233801
+            },
+            {
+              "turn": 4,
+              "retry": true,
+              "milliseconds": 238.5142999999989,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not already guessed or missed.\", \"letter\": \"d\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.5001962184906006,
+              "explanation": "Choose a letter that is not already guessed or missed.",
+              "candidateCount": null,
+              "inputSha256": "c9ec6c231cdcb0c5140d2e187f05e6ce6dc7dd6e86b02b609505ff4343e82311",
+              "usage": {
+                "prompt_tokens": 178,
+                "completion_tokens": 22
+              },
+              "estimatedNeurons": 1.500278
+            },
+            {
+              "turn": 5,
+              "retry": false,
+              "milliseconds": 904.3615000000027,
+              "reason": "invalid",
+              "response": "{\n  \"reason\": \"Shared letters among possible words, e.g., 'cat', 'dog', 'hat', 'log', 'mat', 'rat', 'tab', 'tag', 'tad', 'tot', 'tog', 'god', 'had', 'hat', 'log', 'mat', 'rat', 'tab', 'tag', 'tad', 'tot', 'tog', 'god', 'had', 'cat', 'dog', 'tot', 'god', 'cat', 'dog', 'tot', 'god', 'cat', 'dog', 'tot', 'god', 'cat', 'dog', 'tot', 'god', 'cat', 'dog', 'tot', 'god', 'cat', 'dog', 'tot', 'god",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 6.23370361328125,
+              "explanation": null,
+              "candidateCount": null,
+              "inputSha256": "4d48d8fc340e27ae3ccb1c4edaf9c1b3009474b10cf27a14f88017788e36e026",
+              "usage": {
+                "prompt_tokens": 159,
+                "completion_tokens": 160
+              },
+              "estimatedNeurons": 6.233801
+            },
+            {
+              "turn": 5,
+              "retry": true,
+              "milliseconds": 258.2940000000017,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not already guessed or missed, and is shared by multiple possibilities.\", \"letter\": \"f\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.7442710399627686,
+              "explanation": "Choose a letter that is not already guessed or missed, and is shared by multiple possibilities.",
+              "candidateCount": null,
+              "inputSha256": "6d9c05a16ed591995722f5faeaacfade60d0513b26df080e8d8ed5e4f96a2809",
+              "usage": {
+                "prompt_tokens": 178,
+                "completion_tokens": 29
+              },
+              "estimatedNeurons": 1.744354
+            },
+            {
+              "turn": 6,
+              "retry": false,
+              "milliseconds": 420.4804000000004,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared by multiple possibilities, including words of length 5\",\n  \"letter\": \"C\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6045198440551758,
+              "explanation": "Shared by multiple possibilities, including words of length 5",
+              "candidateCount": null,
+              "inputSha256": "f3f730ffa88a828f0451731071bed1d8599610d9eae4239e2259ce1628280f45",
+              "usage": {
+                "prompt_tokens": 161,
+                "completion_tokens": 27
+              },
+              "estimatedNeurons": 1.604595
+            }
+          ],
+          "stopReason": null,
+          "modelOnlyStatus": "failed",
+          "size": 35,
+          "length": 5,
+          "band": "common"
+        },
+        {
+          "word": "exert",
+          "status": "failed",
+          "won": false,
+          "misses": 6,
+          "turns": 8,
+          "guesses": "eadbctfg",
+          "firstIntervention": null,
+          "moves": [
+            {
+              "letter": "e",
+              "assisted": false
+            },
+            {
+              "letter": "a",
+              "assisted": false
+            },
+            {
+              "letter": "d",
+              "assisted": false
+            },
+            {
+              "letter": "b",
+              "assisted": false
+            },
+            {
+              "letter": "c",
+              "assisted": false
+            },
+            {
+              "letter": "t",
+              "assisted": false
+            },
+            {
+              "letter": "f",
+              "assisted": false
+            },
+            {
+              "letter": "g",
+              "assisted": false
+            }
+          ],
+          "attempts": [
+            {
+              "turn": 1,
+              "retry": false,
+              "milliseconds": 438.65010000000257,
+              "reason": null,
+              "response": "{\"reason\":\"Consider the shared letters among possible words, such as 'e' in 'house' and 'mouse'.\", \"letter\":\"e\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.694568395614624,
+              "explanation": "Consider the shared letters among possible words, such as 'e' in 'house' and 'mouse'.",
+              "candidateCount": null,
+              "inputSha256": "094546d8aa431d1b17ca77fc964767e5fb7b6f4bc609c7b804c5b8caf49c89e9",
+              "usage": {
+                "prompt_tokens": 149,
+                "completion_tokens": 31
+              },
+              "estimatedNeurons": 1.694639
+            },
+            {
+              "turn": 2,
+              "retry": false,
+              "milliseconds": 251.07719999999972,
+              "reason": null,
+              "response": "{\"reason\":\"Shared letter in multiple possibilities, considering the pattern and length\", \"letter\":\"a\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.3747200965881348,
+              "explanation": "Shared letter in multiple possibilities, considering the pattern and length",
+              "candidateCount": null,
+              "inputSha256": "e7a13796ad480aa1896f6c5ae0bc46c6ead3f63b08317ba1ac465891bd5c387a",
+              "usage": {
+                "prompt_tokens": 156,
+                "completion_tokens": 21
+              },
+              "estimatedNeurons": 1.374792
+            },
+            {
+              "turn": 3,
+              "retry": false,
+              "milliseconds": 369.5727000000006,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letter 'e' in multiple possibilities, and not yet fully utilized.\",\n  \"letter\": \"d\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6967675685882568,
+              "explanation": "Shared letter 'e' in multiple possibilities, and not yet fully utilized.",
+              "candidateCount": null,
+              "inputSha256": "2613239a8c7da50fc99fc348fad248d3a42e8c2fd4b52d1a7dcc828d000bafe2",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 30
+              },
+              "estimatedNeurons": 1.696842
+            },
+            {
+              "turn": 4,
+              "retry": false,
+              "milliseconds": 792.0537000000004,
+              "reason": "invalid",
+              "response": "{\n  \"reason\": \"Shared by multiple possibilities, e.g., 'beige', 'beech', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'beeps', 'be",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 6.22958517074585,
+              "explanation": null,
+              "candidateCount": null,
+              "inputSha256": "4d78a47be9715f0a0d9b2da0815117b504bba2ba50c35c4dbc19bcb743d9dd43",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 160
+              },
+              "estimatedNeurons": 6.229682
+            },
+            {
+              "turn": 4,
+              "retry": true,
+              "milliseconds": 320.067500000001,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not already guessed or in the pattern\", \"letter\": \"b\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.5658133029937744,
+              "explanation": "Choose a letter that is not already guessed or in the pattern",
+              "candidateCount": null,
+              "inputSha256": "a72ac44d8a2d955e35aa875457360c7200f00f840212b154250da89e3fabe675",
+              "usage": {
+                "prompt_tokens": 177,
+                "completion_tokens": 24
+              },
+              "estimatedNeurons": 1.565895
+            },
+            {
+              "turn": 5,
+              "retry": false,
+              "milliseconds": 371.7415000000001,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letters among possible words, considering the pattern and available letters.\",\n  \"letter\": \"C\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6270320415496826,
+              "explanation": "Shared letters among possible words, considering the pattern and available letters.",
+              "candidateCount": null,
+              "inputSha256": "6e7d95f8e2cd493d82c87bf66913980ea73c4a95debccd27fe216eded1a3e9b4",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 28
+              },
+              "estimatedNeurons": 1.627106
+            },
+            {
+              "turn": 6,
+              "retry": false,
+              "milliseconds": 316.4297000000006,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, 'e' is already present, so try another common letter in 5-letter words.\",\n  \"letter\": \"t\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.084432363510132,
+              "explanation": "Consider the shared letters among possible words, 'e' is already present, so try another common letter in 5-letter words.",
+              "candidateCount": null,
+              "inputSha256": "3d4b83195778136236c5117627fedf852d532e658cfdd3712e4856896515cf3a",
+              "usage": {
+                "prompt_tokens": 159,
+                "completion_tokens": 41
+              },
+              "estimatedNeurons": 2.084509
+            },
+            {
+              "turn": 7,
+              "retry": false,
+              "milliseconds": 565.9339999999975,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the shared 'e' in multiple possibilities, and the word pattern ending in 't'.\",\n  \"letter\": \"f\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.8875811100006104,
+              "explanation": "Consider the shared 'e' in multiple possibilities, and the word pattern ending in 't'.",
+              "candidateCount": null,
+              "inputSha256": "e53bffd0b431141eff1e9f202355c42e1ec0796e4f8a67acb2075fb5dc0597b1",
+              "usage": {
+                "prompt_tokens": 162,
+                "completion_tokens": 35
+              },
+              "estimatedNeurons": 1.887658
+            },
+            {
+              "turn": 8,
+              "retry": false,
+              "milliseconds": 386.01610000000073,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, especially the word length and pattern.\",\n  \"letter\": \"G\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.717360496520996,
+              "explanation": "Consider the shared letters among possible words, especially the word length and pattern.",
+              "candidateCount": null,
+              "inputSha256": "3979f60e0bf4085ab012eb5f8cfa191636f1b62ea37f63e661e89d348ba04f41",
+              "usage": {
+                "prompt_tokens": 163,
+                "completion_tokens": 30
+              },
+              "estimatedNeurons": 1.717437
+            }
+          ],
+          "stopReason": null,
+          "modelOnlyStatus": "failed",
+          "size": 35,
+          "length": 5,
+          "band": "common"
+        },
+        {
+          "word": "heeds",
+          "status": "solved",
+          "won": true,
+          "misses": 3,
+          "turns": 7,
+          "guesses": "easbdfh",
+          "firstIntervention": 3,
+          "moves": [
+            {
+              "letter": "e",
+              "assisted": false
+            },
+            {
+              "letter": "a",
+              "assisted": false
+            },
+            {
+              "letter": "s",
+              "assisted": true
+            },
+            {
+              "letter": "b",
+              "assisted": false
+            },
+            {
+              "letter": "d",
+              "assisted": false
+            },
+            {
+              "letter": "f",
+              "assisted": false
+            },
+            {
+              "letter": "h",
+              "assisted": true
+            }
+          ],
+          "attempts": [
+            {
+              "turn": 1,
+              "retry": false,
+              "milliseconds": 243.56650000000081,
+              "reason": null,
+              "response": "{\"reason\":\"Consider the shared letters among possible words, especially those with multiple possibilities for the given length.\",\"letter\":\"e\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.5202293395996094,
+              "explanation": "Consider the shared letters among possible words, especially those with multiple possibilities for the given length.",
+              "candidateCount": null,
+              "inputSha256": "094546d8aa431d1b17ca77fc964767e5fb7b6f4bc609c7b804c5b8caf49c89e9",
+              "usage": {
+                "prompt_tokens": 149,
+                "completion_tokens": 26
+              },
+              "estimatedNeurons": 1.520299
+            },
+            {
+              "turn": 2,
+              "retry": false,
+              "milliseconds": 906.8483000000015,
+              "reason": "invalid",
+              "response": "{\"reason\":\"Shared by multiple possibilities, e.g. 'house', 'lease', 'globe', 'grade', 'glare', 'glaze', 'gleam', 'glebe', 'gleed', 'glees', 'gleet', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees', 'glees',",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 6.221347808837891,
+              "explanation": null,
+              "candidateCount": null,
+              "inputSha256": "734b705dada5e8b49fc77b8b865e66f03896649a0c3eba295377f247cf64efda",
+              "usage": {
+                "prompt_tokens": 156,
+                "completion_tokens": 160
+              },
+              "estimatedNeurons": 6.221444
+            },
+            {
+              "turn": 2,
+              "retry": true,
+              "milliseconds": 390.2525999999998,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not yet guessed and is shared by multiple possibilities.\", \"letter\": \"a\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6273119449615479,
+              "explanation": "Choose a letter that is not yet guessed and is shared by multiple possibilities.",
+              "candidateCount": null,
+              "inputSha256": "f7d14e2181130dc8d73abf0a2570c171f815b0af0cc7b9ff3a41b19f3b579bbc",
+              "usage": {
+                "prompt_tokens": 175,
+                "completion_tokens": 26
+              },
+              "estimatedNeurons": 1.627393
+            },
+            {
+              "turn": 3,
+              "retry": false,
+              "milliseconds": 375.8824999999997,
+              "reason": "repeated",
+              "response": "{\n  \"reason\": \"Shared by multiple possibilities, including 'beech' and 'geese'\",\n  \"letter\": \"E\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6967675685882568,
+              "explanation": "Shared by multiple possibilities, including 'beech' and 'geese'",
+              "candidateCount": null,
+              "inputSha256": "a9c46df0a61247a647fb4aa1435ec238a64d0879c4691837144cd0ddc7aaca12",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 30
+              },
+              "estimatedNeurons": 1.696842
+            },
+            {
+              "turn": 3,
+              "retry": true,
+              "milliseconds": 324.3465999999971,
+              "reason": "repeated",
+              "response": "{\"reason\": \"Choose a letter that is shared by multiple possibilities\", \"letter\": \"e\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.461209774017334,
+              "explanation": "Choose a letter that is shared by multiple possibilities",
+              "candidateCount": null,
+              "inputSha256": "12de6bb67504aad1ab484d41a8ea3530201d3df075602a58b211bc7e4708a1c7",
+              "usage": {
+                "prompt_tokens": 177,
+                "completion_tokens": 21
+              },
+              "estimatedNeurons": 1.461291
+            },
+            {
+              "turn": 4,
+              "retry": false,
+              "milliseconds": 603.6464000000014,
+              "reason": null,
+              "response": "{\"reason\":\"Shared letters among possibilities, considering 's' and 'e' are already present, and 'e' is already guessed, try 'b' or 'd' as they are common in multiple words ending with 's' and have not been guessed yet\",\"letter\":\"b\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.751039505004883,
+              "explanation": "Shared letters among possibilities, considering 's' and 'e' are already present, and 'e' is already guessed, try 'b' or 'd' as they are common in multiple words ending with 's' and have not been guessed yet",
+              "candidateCount": null,
+              "inputSha256": "5a682f12cbe322ffef394d0391c1be1174b4455226a0847173070579135f1c4d",
+              "usage": {
+                "prompt_tokens": 160,
+                "completion_tokens": 60
+              },
+              "estimatedNeurons": 2.75112
+            },
+            {
+              "turn": 5,
+              "retry": false,
+              "milliseconds": 262.71689999999944,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letter 'd' is present in multiple possibilities\",\n  \"letter\": \"d\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.5655333995819092,
+              "explanation": "Shared letter 'd' is present in multiple possibilities",
+              "candidateCount": null,
+              "inputSha256": "3eed93ad92cdcad3c76de98f24281723ca030eed286322707519c78be9c81ed7",
+              "usage": {
+                "prompt_tokens": 160,
+                "completion_tokens": 26
+              },
+              "estimatedNeurons": 1.565608
+            },
+            {
+              "turn": 6,
+              "retry": false,
+              "milliseconds": 374.35859999999957,
+              "reason": "repeated",
+              "response": "{\n  \"reason\": \"Shared letters in possible words, considering 'e' is already guessed\",\n  \"letter\": \"d\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6701369285583496,
+              "explanation": "Shared letters in possible words, considering 'e' is already guessed",
+              "candidateCount": null,
+              "inputSha256": "581d69127ad3c84ef74c26acbffef45bf27765986b529cc1c95a19f507fe2dfb",
+              "usage": {
+                "prompt_tokens": 160,
+                "completion_tokens": 29
+              },
+              "estimatedNeurons": 1.670212
+            },
+            {
+              "turn": 6,
+              "retry": true,
+              "milliseconds": 261.3633000000009,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not yet guessed and is shared by multiple possibilities.\", \"letter\": \"f\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6437861919403076,
+              "explanation": "Choose a letter that is not yet guessed and is shared by multiple possibilities.",
+              "candidateCount": null,
+              "inputSha256": "be5e1bc9f4cebbd1928f169522461f140c261a94f294dcf46c1bbcc1315fa249",
+              "usage": {
+                "prompt_tokens": 179,
+                "completion_tokens": 26
+              },
+              "estimatedNeurons": 1.643869
+            },
+            {
+              "turn": 7,
+              "retry": false,
+              "milliseconds": 454.6249000000025,
+              "reason": "repeated",
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, especially 's' and 'e' which appear in multiple possibilities.\",\n  \"letter\": \"s\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.9573166370391846,
+              "explanation": "Consider the shared letters among possible words, especially 's' and 'e' which appear in multiple possibilities.",
+              "candidateCount": null,
+              "inputSha256": "9bf7ef5b904fda5db15ac208ecaec78c85aa623c133350ac2a939b650115dee1",
+              "usage": {
+                "prompt_tokens": 162,
+                "completion_tokens": 37
+              },
+              "estimatedNeurons": 1.957394
+            },
+            {
+              "turn": 7,
+              "retry": true,
+              "milliseconds": 242.3074000000015,
+              "reason": "repeated",
+              "response": "{\"reason\": \"Choose a letter shared by multiple possibilities to maximize information gain.\", \"letter\": \"d\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.547419786453247,
+              "explanation": "Choose a letter shared by multiple possibilities to maximize information gain.",
+              "candidateCount": null,
+              "inputSha256": "8647a242936fde95b9f4dc6d3ec885b33ef699e5ef945835774df6f8d8dea7ca",
+              "usage": {
+                "prompt_tokens": 181,
+                "completion_tokens": 23
+              },
+              "estimatedNeurons": 1.547503
+            }
+          ],
+          "stopReason": null,
+          "modelOnlyStatus": "invalid-forfeit",
+          "size": 35,
+          "length": 5,
+          "band": "common"
+        },
+        {
+          "word": "cubes",
+          "status": "failed",
+          "won": false,
+          "misses": 6,
+          "turns": 9,
+          "guesses": "eabdcfghi",
+          "firstIntervention": null,
+          "moves": [
+            {
+              "letter": "e",
+              "assisted": false
+            },
+            {
+              "letter": "a",
+              "assisted": false
+            },
+            {
+              "letter": "b",
+              "assisted": false
+            },
+            {
+              "letter": "d",
+              "assisted": false
+            },
+            {
+              "letter": "c",
+              "assisted": false
+            },
+            {
+              "letter": "f",
+              "assisted": false
+            },
+            {
+              "letter": "g",
+              "assisted": false
+            },
+            {
+              "letter": "h",
+              "assisted": false
+            },
+            {
+              "letter": "i",
+              "assisted": false
+            }
+          ],
+          "attempts": [
+            {
+              "turn": 1,
+              "retry": false,
+              "milliseconds": 334.1190999999999,
+              "reason": null,
+              "response": "{\"reason\":\"Consider the shared letters among possible words, especially those with multiple possibilities for the given length and pattern.\",\"letter\":\"e\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.5899648666381836,
+              "explanation": "Consider the shared letters among possible words, especially those with multiple possibilities for the given length and pattern.",
+              "candidateCount": null,
+              "inputSha256": "094546d8aa431d1b17ca77fc964767e5fb7b6f4bc609c7b804c5b8caf49c89e9",
+              "usage": {
+                "prompt_tokens": 149,
+                "completion_tokens": 28
+              },
+              "estimatedNeurons": 1.590035
+            },
+            {
+              "turn": 2,
+              "retry": false,
+              "milliseconds": 333.6123000000007,
+              "reason": null,
+              "response": "{\"reason\":\"Shared letter in multiple possibilities, considering the word length and pattern\", \"letter\":\"a\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.4095878601074219,
+              "explanation": "Shared letter in multiple possibilities, considering the word length and pattern",
+              "candidateCount": null,
+              "inputSha256": "d12812ea3b881140f6f53b660cd2e8a119ea6e398a3e71d11372305acf31e5db",
+              "usage": {
+                "prompt_tokens": 156,
+                "completion_tokens": 22
+              },
+              "estimatedNeurons": 1.40966
+            },
+            {
+              "turn": 3,
+              "retry": false,
+              "milliseconds": 440.0023000000001,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, 'e' is already guessed, and 'a' is missed, so try 'b' or 'c' which are common in many words.\",\n  \"letter\": \"b\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.498727560043335,
+              "explanation": "Consider the shared letters among possible words, 'e' is already guessed, and 'a' is missed, so try 'b' or 'c' which are common in many words.",
+              "candidateCount": null,
+              "inputSha256": "b5d34502a9c5faa727835738c3a66b71031e1a0e2e23a3bc737c6a2116bfc51b",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 53
+              },
+              "estimatedNeurons": 2.498806
+            },
+            {
+              "turn": 4,
+              "retry": false,
+              "milliseconds": 410.5115000000005,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letter in multiple possibilities, considering the pattern _ _ b e _\",\n  \"letter\": \"d\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6967675685882568,
+              "explanation": "Shared letter in multiple possibilities, considering the pattern _ _ b e _",
+              "candidateCount": null,
+              "inputSha256": "8792a292dce522682939693057d23b129b7eaf66aea36f99e023d527495e017d",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 30
+              },
+              "estimatedNeurons": 1.696842
+            },
+            {
+              "turn": 5,
+              "retry": false,
+              "milliseconds": 397.4261000000006,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared by multiple possibilities, e.g., 'cache', 'beige', 'beech'\",\n  \"letter\": \"C\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.8362388610839844,
+              "explanation": "Shared by multiple possibilities, e.g., 'cache', 'beige', 'beech'",
+              "candidateCount": null,
+              "inputSha256": "8d7381c6c0f562325293f6fce3babccef34ba851e518b38ab4ddba1af3927a04",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 34
+              },
+              "estimatedNeurons": 1.836314
+            },
+            {
+              "turn": 6,
+              "retry": false,
+              "milliseconds": 363.14429999999993,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letters in possible words, considering the pattern and available letters.\",\n  \"letter\": \"f\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.631150484085083,
+              "explanation": "Shared letters in possible words, considering the pattern and available letters.",
+              "candidateCount": null,
+              "inputSha256": "dc3cc0b093e1d07160ff83d71006469043f9cd8458a3532238173cf4f9c4c079",
+              "usage": {
+                "prompt_tokens": 159,
+                "completion_tokens": 28
+              },
+              "estimatedNeurons": 1.631225
+            },
+            {
+              "turn": 7,
+              "retry": false,
+              "milliseconds": 299.09230000000025,
+              "reason": "repeated",
+              "response": "{\n  \"reason\": \"Shared by multiple possibilities, including 'cache' and 'cable'\",\n  \"letter\": \"A\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6660182476043701,
+              "explanation": "Shared by multiple possibilities, including 'cache' and 'cable'",
+              "candidateCount": null,
+              "inputSha256": "3f41623295c2b0926fa0a042f0bd72d19289e96ccf80678b60708700743218a2",
+              "usage": {
+                "prompt_tokens": 159,
+                "completion_tokens": 29
+              },
+              "estimatedNeurons": 1.666093
+            },
+            {
+              "turn": 7,
+              "retry": true,
+              "milliseconds": 331.1811000000016,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is likely to be in the word, considering the pattern and available letters.\", \"letter\": \"g\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.7791388034820557,
+              "explanation": "Choose a letter that is likely to be in the word, considering the pattern and available letters.",
+              "candidateCount": null,
+              "inputSha256": "3b6a1726f002cec9020ff41aca6887c85272ecf0e4b23c42d4d2df4c36bb9d93",
+              "usage": {
+                "prompt_tokens": 178,
+                "completion_tokens": 30
+              },
+              "estimatedNeurons": 1.779222
+            },
+            {
+              "turn": 8,
+              "retry": false,
+              "milliseconds": 544.4665999999997,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letters in possible words are 'h' and 'i', but 'h' is more common in words with the given pattern.\",\n  \"letter\": \"h\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.1234185695648193,
+              "explanation": "Shared letters in possible words are 'h' and 'i', but 'h' is more common in words with the given pattern.",
+              "candidateCount": null,
+              "inputSha256": "da7bac7b0688db29cef0aab1ced986de2a4f97928ad5e3dd6e5c3ae6dee38caa",
+              "usage": {
+                "prompt_tokens": 160,
+                "completion_tokens": 42
+              },
+              "estimatedNeurons": 2.123496
+            },
+            {
+              "turn": 9,
+              "retry": false,
+              "milliseconds": 467.517399999997,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider 'i' as it's shared by multiple possibilities and hasn't been guessed yet.\",\n  \"letter\": \"i\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.8096082210540771,
+              "explanation": "Consider 'i' as it's shared by multiple possibilities and hasn't been guessed yet.",
+              "candidateCount": null,
+              "inputSha256": "e8ca4a9bb00d6f9c12d5b434beed30d7836ba8a9c5e423ffb182d6531be7e86c",
+              "usage": {
+                "prompt_tokens": 160,
+                "completion_tokens": 33
+              },
+              "estimatedNeurons": 1.809684
+            }
+          ],
+          "stopReason": null,
+          "modelOnlyStatus": "failed",
+          "size": 35,
+          "length": 5,
+          "band": "common"
+        },
+        {
+          "word": "saint",
+          "status": "failed",
+          "won": false,
+          "misses": 6,
+          "turns": 9,
+          "guesses": "eadfbsncg",
+          "firstIntervention": 6,
+          "moves": [
+            {
+              "letter": "e",
+              "assisted": false
+            },
+            {
+              "letter": "a",
+              "assisted": false
+            },
+            {
+              "letter": "d",
+              "assisted": false
+            },
+            {
+              "letter": "f",
+              "assisted": false
+            },
+            {
+              "letter": "b",
+              "assisted": false
+            },
+            {
+              "letter": "s",
+              "assisted": true
+            },
+            {
+              "letter": "n",
+              "assisted": false
+            },
+            {
+              "letter": "c",
+              "assisted": false
+            },
+            {
+              "letter": "g",
+              "assisted": false
+            }
+          ],
+          "attempts": [
+            {
+              "turn": 1,
+              "retry": false,
+              "milliseconds": 251.54639999999927,
+              "reason": null,
+              "response": "{\"reason\":\"Consider the shared letters among possible words, especially those with multiple possibilities for the given length.\",\"letter\":\"e\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.5202293395996094,
+              "explanation": "Consider the shared letters among possible words, especially those with multiple possibilities for the given length.",
+              "candidateCount": null,
+              "inputSha256": "094546d8aa431d1b17ca77fc964767e5fb7b6f4bc609c7b804c5b8caf49c89e9",
+              "usage": {
+                "prompt_tokens": 149,
+                "completion_tokens": 26
+              },
+              "estimatedNeurons": 1.520299
+            },
+            {
+              "turn": 2,
+              "retry": false,
+              "milliseconds": 418.5506999999998,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letter among possible words, considering the length and pattern\",\n  \"letter\": \"a\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.592164158821106,
+              "explanation": "Shared letter among possible words, considering the length and pattern",
+              "candidateCount": null,
+              "inputSha256": "424a3722a48714e2c788363e0c33f57925db70ceead287d242df0a896bb20d20",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 27
+              },
+              "estimatedNeurons": 1.592238
+            },
+            {
+              "turn": 3,
+              "retry": false,
+              "milliseconds": 515.7144999999946,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the letter 'a' is already present, and 'e' is already guessed and missed, so try a letter shared by multiple possibilities.\",\n  \"letter\": \"d\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.1849172115325928,
+              "explanation": "Consider the letter 'a' is already present, and 'e' is already guessed and missed, so try a letter shared by multiple possibilities.",
+              "candidateCount": null,
+              "inputSha256": "f3dde22ac3ca0ff4f7da81efc71dcb698f6e1e256dd2390768b9a9d408054d42",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 44
+              },
+              "estimatedNeurons": 2.184994
+            },
+            {
+              "turn": 4,
+              "retry": false,
+              "milliseconds": 349.92780000000494,
+              "reason": null,
+              "response": "{\"reason\":\"Consider the shared letters among possible words, especially 'a' and 'e' are already present, so let's try 'f' which is common in many words and not yet guessed.\", \"letter\":\"f\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.289520740509033,
+              "explanation": "Consider the shared letters among possible words, especially 'a' and 'e' are already present, so let's try 'f' which is common in many words and not yet guessed.",
+              "candidateCount": null,
+              "inputSha256": "5c704f7fce1ff2a7922400b066fa0bbe3977068ce11b776494ff006315857db3",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 47
+              },
+              "estimatedNeurons": 2.289598
+            },
+            {
+              "turn": 5,
+              "retry": false,
+              "milliseconds": 288.23129999999946,
+              "reason": null,
+              "response": "{\"reason\":\"Consider the shared letters among possible words, especially 'a' and 'e' in 5-letter words\", \"letter\":\"b\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.7357540130615234,
+              "explanation": "Consider the shared letters among possible words, especially 'a' and 'e' in 5-letter words",
+              "candidateCount": null,
+              "inputSha256": "862bf478d89562288dc530ef5fd40ae2c1d591321ba49d134a6a0f6b1bffef00",
+              "usage": {
+                "prompt_tokens": 159,
+                "completion_tokens": 31
+              },
+              "estimatedNeurons": 1.735829
+            },
+            {
+              "turn": 6,
+              "retry": false,
+              "milliseconds": 287.8918999999951,
+              "reason": "repeated",
+              "response": "{\n  \"reason\": \"Shared letters among possible words, considering the pattern and available letters.\",\n  \"letter\": \"A\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.631150484085083,
+              "explanation": "Shared letters among possible words, considering the pattern and available letters.",
+              "candidateCount": null,
+              "inputSha256": "d2a20a287df936db10513df18016248f605037b2728855438610ce2b0622ab48",
+              "usage": {
+                "prompt_tokens": 159,
+                "completion_tokens": 28
+              },
+              "estimatedNeurons": 1.631225
+            },
+            {
+              "turn": 6,
+              "retry": true,
+              "milliseconds": 320.04849999999715,
+              "reason": "repeated",
+              "response": "{\"reason\": \"Choose a letter shared by multiple possibilities to maximize chances of hitting a word.\", \"letter\": \"A\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6396675109863281,
+              "explanation": "Choose a letter shared by multiple possibilities to maximize chances of hitting a word.",
+              "candidateCount": null,
+              "inputSha256": "5d598d4900e31e2d633edf64665e4e8d79790081614c205c08e9c1aef68359cc",
+              "usage": {
+                "prompt_tokens": 178,
+                "completion_tokens": 26
+              },
+              "estimatedNeurons": 1.63975
+            },
+            {
+              "turn": 7,
+              "retry": false,
+              "milliseconds": 359.38290000000416,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, 's' is already present, and 'a' is also present, so let's try a letter that is common among many possibilities.\",\n  \"letter\": \"n\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.441347599029541,
+              "explanation": "Consider the shared letters among possible words, 's' is already present, and 'a' is also present, so let's try a letter that is common among many possibilities.",
+              "candidateCount": null,
+              "inputSha256": "7e43e36c7b558d1e4577e124a00808620d6f48e5907aa2af71568fbb1cedc9a0",
+              "usage": {
+                "prompt_tokens": 161,
+                "completion_tokens": 51
+              },
+              "estimatedNeurons": 2.441427
+            },
+            {
+              "turn": 8,
+              "retry": false,
+              "milliseconds": 301.1290999999983,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, such as 's' and 'n', which appear in the given pattern.\",\n  \"letter\": \"c\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.0311708450317383,
+              "explanation": "Consider the shared letters among possible words, such as 's' and 'n', which appear in the given pattern.",
+              "candidateCount": null,
+              "inputSha256": "c8289ba7b22efde70fe111c740cdae31a7729a932ea9a59bfe7299104f0c674b",
+              "usage": {
+                "prompt_tokens": 163,
+                "completion_tokens": 39
+              },
+              "estimatedNeurons": 2.031249
+            },
+            {
+              "turn": 9,
+              "retry": false,
+              "milliseconds": 398.8885999999984,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, such as 's' and 'n', which appear in the given pattern.\",\n  \"letter\": \"g\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.0311708450317383,
+              "explanation": "Consider the shared letters among possible words, such as 's' and 'n', which appear in the given pattern.",
+              "candidateCount": null,
+              "inputSha256": "2f9053406264921dc46ac8ff3e664810b1fd65eafdcf187d4f8c511d31e96bff",
+              "usage": {
+                "prompt_tokens": 163,
+                "completion_tokens": 39
+              },
+              "estimatedNeurons": 2.031249
+            }
+          ],
+          "stopReason": null,
+          "modelOnlyStatus": "invalid-forfeit",
+          "size": 35,
+          "length": 5,
+          "band": "common"
+        },
+        {
+          "word": "loops",
+          "status": "failed",
+          "won": false,
+          "misses": 6,
+          "turns": 7,
+          "guesses": "eabdkof",
+          "firstIntervention": null,
+          "moves": [
+            {
+              "letter": "e",
+              "assisted": false
+            },
+            {
+              "letter": "a",
+              "assisted": false
+            },
+            {
+              "letter": "b",
+              "assisted": false
+            },
+            {
+              "letter": "d",
+              "assisted": false
+            },
+            {
+              "letter": "k",
+              "assisted": false
+            },
+            {
+              "letter": "o",
+              "assisted": false
+            },
+            {
+              "letter": "f",
+              "assisted": false
+            }
+          ],
+          "attempts": [
+            {
+              "turn": 1,
+              "retry": false,
+              "milliseconds": 399.0207999999984,
+              "reason": null,
+              "response": "{\"reason\":\"Consider the shared letters among possible words, especially those with multiple possibilities for the given length and pattern.\",\"letter\":\"e\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.5899648666381836,
+              "explanation": "Consider the shared letters among possible words, especially those with multiple possibilities for the given length and pattern.",
+              "candidateCount": null,
+              "inputSha256": "094546d8aa431d1b17ca77fc964767e5fb7b6f4bc609c7b804c5b8caf49c89e9",
+              "usage": {
+                "prompt_tokens": 149,
+                "completion_tokens": 28
+              },
+              "estimatedNeurons": 1.590035
+            },
+            {
+              "turn": 2,
+              "retry": false,
+              "milliseconds": 271.8726999999999,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the letter 'a' as it is shared by multiple possible words.\",\n  \"letter\": \"a\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6967675685882568,
+              "explanation": "Consider the letter 'a' as it is shared by multiple possible words.",
+              "candidateCount": null,
+              "inputSha256": "424a3722a48714e2c788363e0c33f57925db70ceead287d242df0a896bb20d20",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 30
+              },
+              "estimatedNeurons": 1.696842
+            },
+            {
+              "turn": 3,
+              "retry": false,
+              "milliseconds": 344.11990000000515,
+              "reason": "repeated",
+              "response": "{\n  \"reason\": \"Shared letter in multiple possibilities, considering the length and available letters\",\n  \"letter\": \"e\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.6270320415496826,
+              "explanation": "Shared letter in multiple possibilities, considering the length and available letters",
+              "candidateCount": null,
+              "inputSha256": "81aa795994a9db8b970fe59f9f322da4ef1b04afa0826847d6687a9d3124f479",
+              "usage": {
+                "prompt_tokens": 158,
+                "completion_tokens": 28
+              },
+              "estimatedNeurons": 1.627106
+            },
+            {
+              "turn": 3,
+              "retry": true,
+              "milliseconds": 229.43589999999676,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter not yet guessed\", \"letter\": \"b\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.356606364250183,
+              "explanation": "Choose a letter not yet guessed",
+              "candidateCount": null,
+              "inputSha256": "0e95c489e63514439619ac60ad706baf39be81a1fa7dbc9aacbaac3a50db2edd",
+              "usage": {
+                "prompt_tokens": 177,
+                "completion_tokens": 18
+              },
+              "estimatedNeurons": 1.356687
+            },
+            {
+              "turn": 4,
+              "retry": false,
+              "milliseconds": 1019.6579999999958,
+              "reason": "invalid",
+              "response": "{\n  \"reason\": \"Shared by multiple possibilities, e.g., 'bread', 'braid', 'bride', 'breadth', 'breaded', 'breadth', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier', 'breadiest', 'breadier",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 6.23370361328125,
+              "explanation": null,
+              "candidateCount": null,
+              "inputSha256": "a446d46ddc076ec49353b51dd7517278864de920913c81234bae3579205af79b",
+              "usage": {
+                "prompt_tokens": 159,
+                "completion_tokens": 160
+              },
+              "estimatedNeurons": 6.233801
+            },
+            {
+              "turn": 4,
+              "retry": true,
+              "milliseconds": 346.0691999999981,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not already guessed or missed.\", \"letter\": \"d\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.5001962184906006,
+              "explanation": "Choose a letter that is not already guessed or missed.",
+              "candidateCount": null,
+              "inputSha256": "c9ec6c231cdcb0c5140d2e187f05e6ce6dc7dd6e86b02b609505ff4343e82311",
+              "usage": {
+                "prompt_tokens": 178,
+                "completion_tokens": 22
+              },
+              "estimatedNeurons": 1.500278
+            },
+            {
+              "turn": 5,
+              "retry": false,
+              "milliseconds": 228.3249999999971,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Shared letter in multiple possibilities\",\n  \"letter\": \"K\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.387075662612915,
+              "explanation": "Shared letter in multiple possibilities",
+              "candidateCount": null,
+              "inputSha256": "4d48d8fc340e27ae3ccb1c4edaf9c1b3009474b10cf27a14f88017788e36e026",
+              "usage": {
+                "prompt_tokens": 159,
+                "completion_tokens": 21
+              },
+              "estimatedNeurons": 1.387149
+            },
+            {
+              "turn": 6,
+              "retry": false,
+              "milliseconds": 429.6596999999965,
+              "reason": null,
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, e.g., 'e' in 'house' and 'beach'.\",\n  \"letter\": \"o\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 2.027052402496338,
+              "explanation": "Consider the shared letters among possible words, e.g., 'e' in 'house' and 'beach'.",
+              "candidateCount": null,
+              "inputSha256": "8cf73aaae2d5d71b3b533b7d98fc7b9e923b88a13aa98cc40bed794cd0aa7fcf",
+              "usage": {
+                "prompt_tokens": 162,
+                "completion_tokens": 39
+              },
+              "estimatedNeurons": 2.02713
+            },
+            {
+              "turn": 7,
+              "retry": false,
+              "milliseconds": 287.2832000000053,
+              "reason": "repeated",
+              "response": "{\n  \"reason\": \"Consider the shared letters among possible words, 'o' is a common letter in many words.\",\n  \"letter\": \"o\"\n}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.8568317890167236,
+              "explanation": "Consider the shared letters among possible words, 'o' is a common letter in many words.",
+              "candidateCount": null,
+              "inputSha256": "b73eadbe5069b76f0d13643193846a084794cc09c8d1c659470dc4981706679e",
+              "usage": {
+                "prompt_tokens": 163,
+                "completion_tokens": 34
+              },
+              "estimatedNeurons": 1.856909
+            },
+            {
+              "turn": 7,
+              "retry": true,
+              "milliseconds": 275.8816999999981,
+              "reason": null,
+              "response": "{\"reason\": \"Choose a letter that is not yet guessed and is shared by multiple possibilities.\", \"letter\": \"f\"}",
+              "providerModel": "@cf/meta/llama-3.1-8b-fast-v2",
+              "providerReportedNeurons": 1.656141757965088,
+              "explanation": "Choose a letter that is not yet guessed and is shared by multiple possibilities.",
+              "candidateCount": null,
+              "inputSha256": "f1e4058a58cb50bf085e69e2cd906811c14e0984653a3db6abbda74c9cee01a9",
+              "usage": {
+                "prompt_tokens": 182,
+                "completion_tokens": 26
+              },
+              "estimatedNeurons": 1.656226
+            }
+          ],
+          "stopReason": null,
+          "modelOnlyStatus": "failed",
+          "size": 35,
+          "length": 5,
+          "band": "common"
+        }
+      ],
+      "overall": {
+        "started": 10,
+        "completed": 10,
+        "incomplete": 0,
+        "modelOnly": {
+          "wins": 0,
+          "winRate": 0,
+          "invalidForfeits": 2
+        },
+        "withFallback": {
+          "wins": 1,
+          "winRate": 0.1,
+          "assistedGames": 2,
+          "fallbackMoves": 3
+        },
+        "averageMissesCompleted": 5.7,
+        "averageTurnsCompleted": 7.5,
+        "requests": 98,
+        "retries": 23,
+        "invalidReplies": 10,
+        "repeatedReplies": 16,
+        "requestMilliseconds": {
+          "p50": 344.11990000000515,
+          "p95": 930.5247999999992
+        },
+        "estimatedNeuronsFromReportedTokens": 212.54779299999996,
+        "requestsWithUsage": 98,
+        "requestsWithoutUsage": 0,
+        "estimatedNeuronsPerCompletedGame": 21.254779299999996
+      },
+      "byLength": {
+        "5": {
+          "started": 10,
+          "completed": 10,
+          "incomplete": 0,
+          "modelOnly": {
+            "wins": 0,
+            "winRate": 0,
+            "invalidForfeits": 2
+          },
+          "withFallback": {
+            "wins": 1,
+            "winRate": 0.1,
+            "assistedGames": 2,
+            "fallbackMoves": 3
+          },
+          "averageMissesCompleted": 5.7,
+          "averageTurnsCompleted": 7.5,
+          "requests": 98,
+          "retries": 23,
+          "invalidReplies": 10,
+          "repeatedReplies": 16,
+          "requestMilliseconds": {
+            "p50": 344.11990000000515,
+            "p95": 930.5247999999992
+          },
+          "estimatedNeuronsFromReportedTokens": 212.54779299999996,
+          "requestsWithUsage": 98,
+          "requestsWithoutUsage": 0,
+          "estimatedNeuronsPerCompletedGame": 21.254779299999996
+        }
+      },
+      "byBand": {
+        "common": {
+          "started": 10,
+          "completed": 10,
+          "incomplete": 0,
+          "modelOnly": {
+            "wins": 0,
+            "winRate": 0,
+            "invalidForfeits": 2
+          },
+          "withFallback": {
+            "wins": 1,
+            "winRate": 0.1,
+            "assistedGames": 2,
+            "fallbackMoves": 3
+          },
+          "averageMissesCompleted": 5.7,
+          "averageTurnsCompleted": 7.5,
+          "requests": 98,
+          "retries": 23,
+          "invalidReplies": 10,
+          "repeatedReplies": 16,
+          "requestMilliseconds": {
+            "p50": 344.11990000000515,
+            "p95": 930.5247999999992
+          },
+          "estimatedNeuronsFromReportedTokens": 212.54779299999996,
+          "requestsWithUsage": 98,
+          "requestsWithoutUsage": 0,
+          "estimatedNeuronsPerCompletedGame": 21.254779299999996
+        },
+        "medium": {
+          "started": 0,
+          "completed": 0,
+          "incomplete": 0,
+          "modelOnly": {
+            "wins": 0,
+            "winRate": null,
+            "invalidForfeits": 0
+          },
+          "withFallback": {
+            "wins": 0,
+            "winRate": null,
+            "assistedGames": 0,
+            "fallbackMoves": 0
+          },
+          "averageMissesCompleted": null,
+          "averageTurnsCompleted": null,
+          "requests": 0,
+          "retries": 0,
+          "invalidReplies": 0,
+          "repeatedReplies": 0,
+          "requestMilliseconds": {
+            "p50": null,
+            "p95": null
+          },
+          "estimatedNeuronsFromReportedTokens": 0,
+          "requestsWithUsage": 0,
+          "requestsWithoutUsage": 0,
+          "estimatedNeuronsPerCompletedGame": null
+        },
+        "rare": {
+          "started": 0,
+          "completed": 0,
+          "incomplete": 0,
+          "modelOnly": {
+            "wins": 0,
+            "winRate": null,
+            "invalidForfeits": 0
+          },
+          "withFallback": {
+            "wins": 0,
+            "winRate": null,
+            "assistedGames": 0,
+            "fallbackMoves": 0
+          },
+          "averageMissesCompleted": null,
+          "averageTurnsCompleted": null,
+          "requests": 0,
+          "retries": 0,
+          "invalidReplies": 0,
+          "repeatedReplies": 0,
+          "requestMilliseconds": {
+            "p50": null,
+            "p95": null
+          },
+          "estimatedNeuronsFromReportedTokens": 0,
+          "requestsWithUsage": 0,
+          "requestsWithoutUsage": 0,
+          "estimatedNeuronsPerCompletedGame": null
+        }
+      },
+      "matchedBaseline": {
+        "games": 10,
+        "wins": 8,
+        "winRate": 0.8
+      }
+    }
+  },
+  "finishedAt": "2026-09-30T00:50:02.845Z",
+  "budget": {
+    "day": "2026-09-30",
+    "requests": 288,
+    "reservedNeurons": 4143.983326000001,
+    "maxRequests": 1800,
+    "maxNeurons": 6000,
+    "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
+  }
+}

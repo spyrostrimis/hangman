@@ -1,0 +1,2030 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-09-29T14:11:17.652Z",
+  "status": "baseline-only",
+  "configuration": {
+    "seed": 20260929,
+    "count": 50,
+    "models": [],
+    "manifestSha256": "30124c8bc69dc1e901a3be824da53fe9f162e88d21c1bdd5ca3a9a0087fbdefb",
+    "sampleSha256": "d2587f73e30459f561b84d0510d389cd8b47316c6776b6ce511f1a566f8979f4",
+    "promptVersion": "i7a-1",
+    "promptSha256": "c18107f4502a8ee13cfbe6ee23664174d238d6896f334da2bbde4d127a0aaa79",
+    "systemPrompt": "Play Hangman. Choose one unused English letter to solve the hidden word before six misses. The pattern uses _ for unknown positions. A hit reveals ALL occurrences, so guessed letters cannot occur in blanks. Hits cost nothing; misses cost one chance. Return exactly one ASCII letter A-Z, with no explanation, punctuation or word guess.",
+    "temperature": 0,
+    "maxTokens": 4,
+    "requestTimeoutMs": 10000,
+    "retries": 1,
+    "fallback": "Master count; explicitly assisted",
+    "sampling": "seeded round-robin over shuffled length × rarity strata; pilot, not population-weighted",
+    "neuronRates": {
+      "@cf/meta/llama-3.2-3b-instruct": {
+        "input": 4625,
+        "output": 30475
+      },
+      "@cf/meta/llama-3.1-8b-instruct-fp8-fast": {
+        "input": 4119,
+        "output": 34868
+      }
+    },
+    "pricingChecked": "2026-09-29"
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32"
+  },
+  "sample": [
+    {
+      "word": "mali",
+      "size": 50,
+      "length": 4,
+      "band": "medium"
+    },
+    {
+      "word": "afterthoughts",
+      "size": 35,
+      "length": 13,
+      "band": "common"
+    },
+    {
+      "word": "chattiness",
+      "size": 50,
+      "length": 10,
+      "band": "medium"
+    },
+    {
+      "word": "vinaigrettes",
+      "size": 70,
+      "length": 12,
+      "band": "rare"
+    },
+    {
+      "word": "leticia",
+      "size": 50,
+      "length": 7,
+      "band": "medium"
+    },
+    {
+      "word": "correspondences",
+      "size": 35,
+      "length": 15,
+      "band": "common"
+    },
+    {
+      "word": "swagging",
+      "size": 50,
+      "length": 8,
+      "band": "medium"
+    },
+    {
+      "word": "whimpering",
+      "size": 35,
+      "length": 10,
+      "band": "common"
+    },
+    {
+      "word": "telephoning",
+      "size": 35,
+      "length": 11,
+      "band": "common"
+    },
+    {
+      "word": "rearousing",
+      "size": 70,
+      "length": 10,
+      "band": "rare"
+    },
+    {
+      "word": "disaffiliation",
+      "size": 60,
+      "length": 14,
+      "band": "rare"
+    },
+    {
+      "word": "mps",
+      "size": 50,
+      "length": 3,
+      "band": "medium"
+    },
+    {
+      "word": "interlacing",
+      "size": 50,
+      "length": 11,
+      "band": "medium"
+    },
+    {
+      "word": "neh",
+      "size": 60,
+      "length": 3,
+      "band": "rare"
+    },
+    {
+      "word": "urn",
+      "size": 35,
+      "length": 3,
+      "band": "common"
+    },
+    {
+      "word": "parve",
+      "size": 70,
+      "length": 5,
+      "band": "rare"
+    },
+    {
+      "word": "ciboria",
+      "size": 70,
+      "length": 7,
+      "band": "rare"
+    },
+    {
+      "word": "affirmatively",
+      "size": 40,
+      "length": 13,
+      "band": "medium"
+    },
+    {
+      "word": "doubtlessnesses",
+      "size": 70,
+      "length": 15,
+      "band": "rare"
+    },
+    {
+      "word": "materialized",
+      "size": 35,
+      "length": 12,
+      "band": "common"
+    },
+    {
+      "word": "exhorter",
+      "size": 70,
+      "length": 8,
+      "band": "rare"
+    },
+    {
+      "word": "tonsillectomies",
+      "size": 50,
+      "length": 15,
+      "band": "medium"
+    },
+    {
+      "word": "digestibility",
+      "size": 60,
+      "length": 13,
+      "band": "rare"
+    },
+    {
+      "word": "bloch",
+      "size": 50,
+      "length": 5,
+      "band": "medium"
+    },
+    {
+      "word": "dits",
+      "size": 70,
+      "length": 4,
+      "band": "rare"
+    },
+    {
+      "word": "disciplinarian",
+      "size": 35,
+      "length": 14,
+      "band": "common"
+    },
+    {
+      "word": "approves",
+      "size": 35,
+      "length": 8,
+      "band": "common"
+    },
+    {
+      "word": "apicultural",
+      "size": 70,
+      "length": 11,
+      "band": "rare"
+    },
+    {
+      "word": "buffaloes",
+      "size": 35,
+      "length": 9,
+      "band": "common"
+    },
+    {
+      "word": "point",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "revolutionists",
+      "size": 50,
+      "length": 14,
+      "band": "medium"
+    },
+    {
+      "word": "surf",
+      "size": 35,
+      "length": 4,
+      "band": "common"
+    },
+    {
+      "word": "metamucil",
+      "size": 50,
+      "length": 9,
+      "band": "medium"
+    },
+    {
+      "word": "karnak",
+      "size": 70,
+      "length": 6,
+      "band": "rare"
+    },
+    {
+      "word": "menarches",
+      "size": 70,
+      "length": 9,
+      "band": "rare"
+    },
+    {
+      "word": "failed",
+      "size": 35,
+      "length": 6,
+      "band": "common"
+    },
+    {
+      "word": "ferris",
+      "size": 50,
+      "length": 6,
+      "band": "medium"
+    },
+    {
+      "word": "unfathomable",
+      "size": 50,
+      "length": 12,
+      "band": "medium"
+    },
+    {
+      "word": "obliged",
+      "size": 35,
+      "length": 7,
+      "band": "common"
+    },
+    {
+      "word": "ncos",
+      "size": 50,
+      "length": 4,
+      "band": "medium"
+    },
+    {
+      "word": "retrospecting",
+      "size": 35,
+      "length": 13,
+      "band": "common"
+    },
+    {
+      "word": "tinseltown",
+      "size": 50,
+      "length": 10,
+      "band": "medium"
+    },
+    {
+      "word": "dichotomizes",
+      "size": 70,
+      "length": 12,
+      "band": "rare"
+    },
+    {
+      "word": "actuate",
+      "size": 50,
+      "length": 7,
+      "band": "medium"
+    },
+    {
+      "word": "misappropriates",
+      "size": 35,
+      "length": 15,
+      "band": "common"
+    },
+    {
+      "word": "bugbears",
+      "size": 50,
+      "length": 8,
+      "band": "medium"
+    },
+    {
+      "word": "individual",
+      "size": 35,
+      "length": 10,
+      "band": "common"
+    },
+    {
+      "word": "conventions",
+      "size": 35,
+      "length": 11,
+      "band": "common"
+    },
+    {
+      "word": "unreproved",
+      "size": 70,
+      "length": 10,
+      "band": "rare"
+    },
+    {
+      "word": "mistranslating",
+      "size": 70,
+      "length": 14,
+      "band": "rare"
+    }
+  ],
+  "baseline": [
+    {
+      "word": "mali",
+      "won": false,
+      "misses": 6,
+      "turns": 9,
+      "guesses": "aserlibcd",
+      "milliseconds": [
+        3.4846000000000004,
+        1.1411999999999978,
+        1.0888999999999953,
+        0.8152000000000044,
+        0.7033999999999878,
+        0.5254999999999939,
+        0.5290999999999997,
+        0.49759999999997717,
+        0.49389999999999645
+      ],
+      "candidateSizes": [
+        4240,
+        719,
+        497,
+        367,
+        269,
+        31,
+        7,
+        6,
+        5
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 4,
+      "band": "medium"
+    },
+    {
+      "word": "afterthoughts",
+      "won": true,
+      "misses": 1,
+      "turns": 11,
+      "guesses": "iersafghotu",
+      "milliseconds": [
+        7.102100000000007,
+        2.9935000000000116,
+        1.0345000000000084,
+        0.8903999999999996,
+        0.8236999999999739,
+        0.4668999999999812,
+        0.44370000000000687,
+        0.4514000000000067,
+        0.4422000000000139,
+        0.4473999999999876,
+        0.4602999999999895
+      ],
+      "candidateSizes": [
+        5270,
+        935,
+        15,
+        7,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 13,
+      "band": "common"
+    },
+    {
+      "word": "chattiness",
+      "won": true,
+      "misses": 3,
+      "turns": 11,
+      "guesses": "esnirlhcuat",
+      "milliseconds": [
+        18.40100000000001,
+        5.6609000000000265,
+        4.254300000000001,
+        3.548400000000015,
+        3.0604000000000156,
+        2.6680000000000064,
+        2.4832999999999856,
+        1.9067999999999756,
+        1.59699999999998,
+        1.5582999999999743,
+        1.5749999999999886
+      ],
+      "candidateSizes": [
+        17035,
+        835,
+        140,
+        86,
+        47,
+        23,
+        9,
+        4,
+        4,
+        2,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 10,
+      "band": "medium"
+    },
+    {
+      "word": "vinaigrettes",
+      "won": true,
+      "misses": 0,
+      "turns": 9,
+      "guesses": "esiagnrtv",
+      "milliseconds": [
+        14.724199999999996,
+        3.2124000000000024,
+        3.533799999999985,
+        2.768199999999979,
+        1.7445999999999913,
+        1.073699999999974,
+        0.9689000000000192,
+        0.9660999999999831,
+        0.9440000000000168
+      ],
+      "candidateSizes": [
+        8443,
+        122,
+        18,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 70,
+      "length": 12,
+      "band": "rare"
+    },
+    {
+      "word": "leticia",
+      "won": true,
+      "misses": 0,
+      "turns": 6,
+      "guesses": "eicalt",
+      "milliseconds": [
+        17.686199999999985,
+        3.698100000000011,
+        3.703800000000001,
+        2.8385999999999854,
+        2.4682999999999993,
+        1.5921999999999912
+      ],
+      "candidateSizes": [
+        19355,
+        1307,
+        13,
+        4,
+        2,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 7,
+      "band": "medium"
+    },
+    {
+      "word": "correspondences",
+      "won": true,
+      "misses": 1,
+      "turns": 9,
+      "guesses": "iencdoprs",
+      "milliseconds": [
+        2.536200000000008,
+        0.8466999999999985,
+        0.33950000000004366,
+        0.3069000000000415,
+        0.1671999999999798,
+        0.16739999999998645,
+        0.1734000000000151,
+        0.1590999999999667,
+        0.15919999999999845
+      ],
+      "candidateSizes": [
+        1696,
+        194,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 15,
+      "band": "common"
+    },
+    {
+      "word": "swagging",
+      "won": true,
+      "misses": 4,
+      "turns": 10,
+      "guesses": "einglrashw",
+      "milliseconds": [
+        19.928399999999954,
+        9.896900000000016,
+        5.582899999999995,
+        4.923400000000015,
+        3.612899999999968,
+        3.3561000000000263,
+        3.1866999999999734,
+        2.719600000000014,
+        1.8976000000000113,
+        1.8851999999999975
+      ],
+      "candidateSizes": [
+        21426,
+        7034,
+        1573,
+        675,
+        19,
+        9,
+        3,
+        2,
+        2,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 8,
+      "band": "medium"
+    },
+    {
+      "word": "whimpering",
+      "won": true,
+      "misses": 0,
+      "turns": 9,
+      "guesses": "eingrhwpm",
+      "milliseconds": [
+        18.999599999999987,
+        4.752300000000048,
+        2.56129999999996,
+        2.5352000000000317,
+        2.510600000000011,
+        2.323100000000011,
+        1.940400000000011,
+        1.4873000000000047,
+        1.3915999999999826
+      ],
+      "candidateSizes": [
+        17035,
+        515,
+        31,
+        20,
+        16,
+        13,
+        5,
+        3,
+        2
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 10,
+      "band": "common"
+    },
+    {
+      "word": "telephoning",
+      "won": true,
+      "misses": 0,
+      "turns": 9,
+      "guesses": "einghlopt",
+      "milliseconds": [
+        14.302999999999997,
+        1.7977999999999952,
+        1.684500000000014,
+        1.6433999999999855,
+        1.638400000000047,
+        1.563799999999958,
+        1.495299999999986,
+        1.477700000000027,
+        1.4349000000000274
+      ],
+      "candidateSizes": [
+        12522,
+        110,
+        33,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 11,
+      "band": "common"
+    },
+    {
+      "word": "rearousing",
+      "won": true,
+      "misses": 0,
+      "turns": 9,
+      "guesses": "eingraosu",
+      "milliseconds": [
+        18.10419999999999,
+        3.3467999999999734,
+        2.608699999999999,
+        2.474999999999966,
+        2.452600000000018,
+        1.560100000000034,
+        1.4128999999999792,
+        1.4166999999999916,
+        1.436999999999955
+      ],
+      "candidateSizes": [
+        17035,
+        929,
+        194,
+        74,
+        62,
+        6,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 70,
+      "length": 10,
+      "band": "rare"
+    },
+    {
+      "word": "disaffiliation",
+      "won": true,
+      "misses": 0,
+      "turns": 9,
+      "guesses": "idlsafnot",
+      "milliseconds": [
+        4.286400000000015,
+        0.426400000000001,
+        0.2786000000000399,
+        0.27839999999997644,
+        0.27259999999995443,
+        0.27890000000002146,
+        0.26609999999999445,
+        0.2661000000000513,
+        0.2625000000000455
+      ],
+      "candidateSizes": [
+        2990,
+        3,
+        3,
+        3,
+        3,
+        2,
+        2,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 60,
+      "length": 14,
+      "band": "rare"
+    },
+    {
+      "word": "mps",
+      "won": false,
+      "misses": 6,
+      "turns": 8,
+      "guesses": "aoeiuspb",
+      "milliseconds": [
+        0.5992999999999711,
+        0.5049000000000206,
+        0.42840000000001055,
+        0.484299999999962,
+        0.3066000000000031,
+        0.26329999999995835,
+        0.20100000000002183,
+        0.1716000000000122
+      ],
+      "candidateSizes": [
+        1492,
+        1096,
+        820,
+        582,
+        385,
+        263,
+        42,
+        10
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 3,
+      "band": "medium"
+    },
+    {
+      "word": "interlacing",
+      "won": true,
+      "misses": 1,
+      "turns": 10,
+      "guesses": "einrgtacfl",
+      "milliseconds": [
+        14.344799999999964,
+        2.9383000000000266,
+        1.2040000000000646,
+        1.105199999999968,
+        1.0961999999999534,
+        1.0822000000000571,
+        1.1938000000000102,
+        1.0688000000000102,
+        1.0555000000000518,
+        1.0600000000000591
+      ],
+      "candidateSizes": [
+        12522,
+        436,
+        28,
+        9,
+        7,
+        7,
+        6,
+        3,
+        2,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 11,
+      "band": "medium"
+    },
+    {
+      "word": "neh",
+      "won": true,
+      "misses": 4,
+      "turns": 7,
+      "guesses": "aoednbh",
+      "milliseconds": [
+        0.7083999999999833,
+        0.504099999999994,
+        0.4290999999999485,
+        0.22050000000001546,
+        0.20620000000008076,
+        0.12599999999997635,
+        0.12619999999992615
+      ],
+      "candidateSizes": [
+        1492,
+        1096,
+        820,
+        126,
+        104,
+        5,
+        4
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 60,
+      "length": 3,
+      "band": "rare"
+    },
+    {
+      "word": "urn",
+      "won": false,
+      "misses": 6,
+      "turns": 7,
+      "guesses": "aoeiush",
+      "milliseconds": [
+        0.5996000000000095,
+        0.5054999999999836,
+        0.43450000000007094,
+        0.36369999999999436,
+        0.32339999999999236,
+        0.13900000000001,
+        0.16190000000005966
+      ],
+      "candidateSizes": [
+        1492,
+        1096,
+        820,
+        582,
+        385,
+        19,
+        10
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 3,
+      "band": "common"
+    },
+    {
+      "word": "parve",
+      "won": true,
+      "misses": 5,
+      "turns": 10,
+      "guesses": "earcgbmpsv",
+      "milliseconds": [
+        5.192900000000009,
+        2.2883999999999105,
+        2.1806000000000267,
+        1.0769000000000233,
+        1.041400000000067,
+        1.012200000000007,
+        1.0241999999999507,
+        0.9764999999999873,
+        0.7059000000000424,
+        0.7053999999999405
+      ],
+      "candidateSizes": [
+        8522,
+        729,
+        126,
+        20,
+        15,
+        10,
+        8,
+        6,
+        2,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 70,
+      "length": 5,
+      "band": "rare"
+    },
+    {
+      "word": "ciboria",
+      "won": true,
+      "misses": 1,
+      "turns": 7,
+      "guesses": "eaiocbr",
+      "milliseconds": [
+        15.686799999999948,
+        8.723500000000058,
+        4.163499999999999,
+        2.5815000000000055,
+        2.4594999999999345,
+        1.6210999999999558,
+        1.6210999999999558
+      ],
+      "candidateSizes": [
+        19355,
+        6860,
+        125,
+        7,
+        4,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 70,
+      "length": 7,
+      "band": "rare"
+    },
+    {
+      "word": "affirmatively",
+      "won": true,
+      "misses": 0,
+      "turns": 10,
+      "guesses": "ietaflmrvy",
+      "milliseconds": [
+        7.196000000000026,
+        1.1003000000000611,
+        0.9455000000000382,
+        0.8949999999999818,
+        0.4652999999999565,
+        0.4436000000000604,
+        0.43990000000007967,
+        0.43820000000005166,
+        0.44029999999997926,
+        0.44249999999999545
+      ],
+      "candidateSizes": [
+        5270,
+        20,
+        8,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 40,
+      "length": 13,
+      "band": "medium"
+    },
+    {
+      "word": "doubtlessnesses",
+      "won": true,
+      "misses": 1,
+      "turns": 10,
+      "guesses": "ielbdnostu",
+      "milliseconds": [
+        2.5188000000000557,
+        0.830600000000004,
+        0.36429999999995744,
+        0.34520000000009077,
+        0.2884999999999991,
+        0.147199999999998,
+        0.1490000000000009,
+        0.14629999999999654,
+        0.18610000000001037,
+        0.17220000000008895
+      ],
+      "candidateSizes": [
+        1696,
+        194,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 70,
+      "length": 15,
+      "band": "rare"
+    },
+    {
+      "word": "materialized",
+      "won": true,
+      "misses": 0,
+      "turns": 9,
+      "guesses": "erialmtzd",
+      "milliseconds": [
+        10.601400000000012,
+        1.8700000000000045,
+        1.5900000000000318,
+        1.5144000000000233,
+        1.0591999999999189,
+        0.9932000000000016,
+        0.7009999999999081,
+        0.7055000000000291,
+        0.7010999999999967
+      ],
+      "candidateSizes": [
+        8443,
+        146,
+        46,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 12,
+      "band": "common"
+    },
+    {
+      "word": "exhorter",
+      "won": true,
+      "misses": 2,
+      "turns": 8,
+      "guesses": "esdrotxh",
+      "milliseconds": [
+        19.676899999999932,
+        2.080600000000004,
+        2.11099999999999,
+        1.9162000000000035,
+        1.883299999999963,
+        1.9056000000000495,
+        1.8389000000000806,
+        1.7771999999999935
+      ],
+      "candidateSizes": [
+        21426,
+        202,
+        84,
+        23,
+        5,
+        4,
+        2,
+        2
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 70,
+      "length": 8,
+      "band": "rare"
+    },
+    {
+      "word": "tonsillectomies",
+      "won": true,
+      "misses": 0,
+      "turns": 9,
+      "guesses": "ieclmnost",
+      "milliseconds": [
+        2.534400000000005,
+        0.42480000000000473,
+        0.33559999999999945,
+        0.3038999999999987,
+        0.32349999999996726,
+        0.274599999999964,
+        0.22230000000001837,
+        0.19010000000002947,
+        0.18610000000001037
+      ],
+      "candidateSizes": [
+        1696,
+        16,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 15,
+      "band": "medium"
+    },
+    {
+      "word": "digestibility",
+      "won": true,
+      "misses": 0,
+      "turns": 9,
+      "guesses": "isbdeglty",
+      "milliseconds": [
+        8.088200000000029,
+        0.8001999999999043,
+        0.6464999999999463,
+        0.6452000000000453,
+        0.45660000000009404,
+        0.4492999999999938,
+        0.46849999999994907,
+        0.4973000000001093,
+        0.45859999999993306
+      ],
+      "candidateSizes": [
+        5270,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 60,
+      "length": 13,
+      "band": "rare"
+    },
+    {
+      "word": "bloch",
+      "won": true,
+      "misses": 4,
+      "turns": 9,
+      "guesses": "easorlcbh",
+      "milliseconds": [
+        6.225300000000061,
+        4.396799999999985,
+        2.5062000000000353,
+        1.922900000000027,
+        1.1853999999999587,
+        1.0927000000000362,
+        1.4010999999999285,
+        0.9227000000000771,
+        0.7087999999999965
+      ],
+      "candidateSizes": [
+        8522,
+        4751,
+        2315,
+        1136,
+        100,
+        45,
+        21,
+        3,
+        2
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 5,
+      "band": "medium"
+    },
+    {
+      "word": "dits",
+      "won": false,
+      "misses": 6,
+      "turns": 8,
+      "guesses": "aeoispgn",
+      "milliseconds": [
+        2.059500000000071,
+        1.5421999999999798,
+        1.1982000000000426,
+        0.9008000000000038,
+        0.6218999999999824,
+        0.5346999999999298,
+        0.5168999999999642,
+        0.5096999999999525
+      ],
+      "candidateSizes": [
+        4240,
+        2647,
+        1584,
+        816,
+        256,
+        68,
+        51,
+        38
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 70,
+      "length": 4,
+      "band": "rare"
+    },
+    {
+      "word": "disciplinarian",
+      "won": true,
+      "misses": 0,
+      "turns": 9,
+      "guesses": "iacdlnprs",
+      "milliseconds": [
+        4.4476000000000795,
+        0.4031999999999698,
+        0.3869999999999436,
+        0.36429999999995744,
+        0.26279999999997017,
+        0.27049999999997,
+        0.26279999999997017,
+        0.26319999999998345,
+        0.26269999999999527
+      ],
+      "candidateSizes": [
+        2990,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 14,
+      "band": "common"
+    },
+    {
+      "word": "approves",
+      "won": true,
+      "misses": 1,
+      "turns": 8,
+      "guesses": "esiaorpv",
+      "milliseconds": [
+        19.976099999999974,
+        7.984800000000064,
+        5.595800000000054,
+        4.5663999999999305,
+        1.897299999999973,
+        1.8556999999999562,
+        1.8267999999999347,
+        1.774499999999989
+      ],
+      "candidateSizes": [
+        21426,
+        2964,
+        803,
+        325,
+        11,
+        2,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 8,
+      "band": "common"
+    },
+    {
+      "word": "apicultural",
+      "won": true,
+      "misses": 2,
+      "turns": 10,
+      "guesses": "eioaclprtu",
+      "milliseconds": [
+        16.29379999999992,
+        6.128800000000069,
+        1.945600000000013,
+        1.8082000000000562,
+        1.0698999999999614,
+        1.0842999999999847,
+        1.0598999999999705,
+        1.040399999999977,
+        1.0371999999999844,
+        1.038599999999974
+      ],
+      "candidateSizes": [
+        12522,
+        2901,
+        40,
+        8,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 70,
+      "length": 11,
+      "band": "rare"
+    },
+    {
+      "word": "buffaloes",
+      "won": true,
+      "misses": 1,
+      "turns": 9,
+      "guesses": "esaioubfl",
+      "milliseconds": [
+        21.073999999999955,
+        7.5079999999999245,
+        5.704299999999989,
+        3.5661999999999807,
+        3.138499999999908,
+        2.619899999999916,
+        2.355000000000018,
+        1.678700000000049,
+        1.6710000000000491
+      ],
+      "candidateSizes": [
+        20443,
+        2438,
+        726,
+        31,
+        11,
+        2,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 9,
+      "band": "common"
+    },
+    {
+      "word": "point",
+      "won": false,
+      "misses": 6,
+      "turns": 9,
+      "guesses": "easoyuing",
+      "milliseconds": [
+        5.393199999999979,
+        3.6516000000000304,
+        2.443399999999997,
+        1.9113999999999578,
+        1.1761999999999944,
+        1.1576000000000022,
+        1.2081999999999198,
+        1.0039999999999054,
+        1.0009000000000015
+      ],
+      "candidateSizes": [
+        8522,
+        4751,
+        2315,
+        1136,
+        199,
+        106,
+        56,
+        7,
+        5
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "revolutionists",
+      "won": true,
+      "misses": 1,
+      "turns": 11,
+      "guesses": "isnelotuvdr",
+      "milliseconds": [
+        4.22339999999997,
+        0.9931000000000267,
+        0.8046999999999116,
+        0.6974999999999909,
+        0.41849999999999454,
+        0.38769999999999527,
+        0.3731999999999971,
+        0.3663999999999987,
+        0.36419999999998254,
+        0.3425999999999476,
+        0.32780000000002474
+      ],
+      "candidateSizes": [
+        2990,
+        45,
+        15,
+        8,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 14,
+      "band": "medium"
+    },
+    {
+      "word": "surf",
+      "won": false,
+      "misses": 6,
+      "turns": 8,
+      "guesses": "aeoiusnd",
+      "milliseconds": [
+        2.0575999999999794,
+        1.529100000000085,
+        1.3138999999999896,
+        0.8894999999999982,
+        0.7227000000000317,
+        0.5909000000000333,
+        0.3729999999999336,
+        0.3572000000000344
+      ],
+      "candidateSizes": [
+        4240,
+        2647,
+        1584,
+        816,
+        394,
+        240,
+        11,
+        8
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 4,
+      "band": "common"
+    },
+    {
+      "word": "metamucil",
+      "won": true,
+      "misses": 1,
+      "turns": 9,
+      "guesses": "eiaoclmtu",
+      "milliseconds": [
+        19.811899999999923,
+        3.9565999999999804,
+        2.9478000000000293,
+        2.6539000000000215,
+        2.6707000000000107,
+        2.510499999999979,
+        2.4682999999999993,
+        1.679399999999987,
+        1.684099999999944
+      ],
+      "candidateSizes": [
+        20443,
+        1131,
+        46,
+        13,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 9,
+      "band": "medium"
+    },
+    {
+      "word": "karnak",
+      "won": true,
+      "misses": 5,
+      "turns": 9,
+      "guesses": "easncdfkr",
+      "milliseconds": [
+        12.66680000000008,
+        6.288599999999974,
+        2.0878000000000156,
+        2.01929999999993,
+        1.7637999999999465,
+        1.676900000000046,
+        1.6371000000000322,
+        1.6189999999999145,
+        1.121499999999969
+      ],
+      "candidateSizes": [
+        13955,
+        5642,
+        260,
+        149,
+        6,
+        3,
+        2,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 70,
+      "length": 6,
+      "band": "rare"
+    },
+    {
+      "word": "menarches",
+      "won": true,
+      "misses": 1,
+      "turns": 9,
+      "guesses": "esiarchmn",
+      "milliseconds": [
+        21.503499999999917,
+        3.475400000000036,
+        3.0324000000000524,
+        2.8636000000000195,
+        2.5651000000000295,
+        2.6491000000000895,
+        2.3274999999999864,
+        2.652500000000032,
+        1.718599999999924
+      ],
+      "candidateSizes": [
+        20443,
+        540,
+        178,
+        70,
+        13,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 70,
+      "length": 9,
+      "band": "rare"
+    },
+    {
+      "word": "failed",
+      "won": true,
+      "misses": 2,
+      "turns": 8,
+      "guesses": "erdalibf",
+      "milliseconds": [
+        10.494599999999991,
+        5.414899999999989,
+        3.701999999999998,
+        3.12480000000005,
+        2.2855000000001837,
+        1.764599999999973,
+        1.932800000000043,
+        1.634900000000016
+      ],
+      "candidateSizes": [
+        13955,
+        3153,
+        1671,
+        621,
+        157,
+        17,
+        10,
+        9
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 6,
+      "band": "common"
+    },
+    {
+      "word": "ferris",
+      "won": true,
+      "misses": 1,
+      "turns": 6,
+      "guesses": "erifcs",
+      "milliseconds": [
+        10.423900000000003,
+        2.4056000000000495,
+        1.7473999999999705,
+        1.988299999999981,
+        1.2193999999999505,
+        1.1359999999999673
+      ],
+      "candidateSizes": [
+        13955,
+        941,
+        8,
+        4,
+        2,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 6,
+      "band": "medium"
+    },
+    {
+      "word": "unfathomable",
+      "won": true,
+      "misses": 1,
+      "turns": 12,
+      "guesses": "eiablnfhmotu",
+      "milliseconds": [
+        11.807000000000016,
+        3.1093000000000757,
+        2.210399999999936,
+        1.3075999999998658,
+        1.3053999999999633,
+        1.2427000000000135,
+        0.9812999999999192,
+        0.9601999999999862,
+        0.9519999999999982,
+        0.9083000000000538,
+        0.9134999999998854,
+        0.9230000000000018
+      ],
+      "candidateSizes": [
+        8443,
+        257,
+        49,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 12,
+      "band": "medium"
+    },
+    {
+      "word": "obliged",
+      "won": true,
+      "misses": 2,
+      "turns": 9,
+      "guesses": "esrdlobgi",
+      "milliseconds": [
+        17.89110000000005,
+        6.913699999999835,
+        5.470299999999952,
+        4.496499999999969,
+        3.994799999999941,
+        2.652900000000045,
+        1.6001000000001113,
+        1.5600999999999203,
+        1.5521000000001095
+      ],
+      "candidateSizes": [
+        19355,
+        3787,
+        1809,
+        632,
+        397,
+        18,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 7,
+      "band": "common"
+    },
+    {
+      "word": "ncos",
+      "won": false,
+      "misses": 6,
+      "turns": 8,
+      "guesses": "aeosimru",
+      "milliseconds": [
+        2.078899999999976,
+        1.5369000000000597,
+        1.181100000000015,
+        0.774599999999964,
+        0.5819000000001324,
+        0.5353000000000065,
+        0.5552999999999884,
+        0.5093999999999141
+      ],
+      "candidateSizes": [
+        4240,
+        2647,
+        1584,
+        131,
+        17,
+        13,
+        10,
+        7
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 4,
+      "band": "medium"
+    },
+    {
+      "word": "retrospecting",
+      "won": true,
+      "misses": 0,
+      "turns": 10,
+      "guesses": "iengrcopst",
+      "milliseconds": [
+        7.092499999999973,
+        2.9269000000001597,
+        1.278400000000147,
+        1.0740000000000691,
+        0.8002999999998792,
+        0.4638999999999669,
+        0.4712000000001808,
+        0.4757000000001881,
+        0.6531999999999698,
+        0.4697999999998501
+      ],
+      "candidateSizes": [
+        5270,
+        588,
+        10,
+        5,
+        4,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 13,
+      "band": "common"
+    },
+    {
+      "word": "tinseltown",
+      "won": true,
+      "misses": 0,
+      "turns": 8,
+      "guesses": "esnilotw",
+      "milliseconds": [
+        18.069999999999936,
+        4.470299999999952,
+        2.9975999999999203,
+        2.4567000000001826,
+        1.9943000000000666,
+        2.09050000000002,
+        1.9647999999999683,
+        1.3837000000000899
+      ],
+      "candidateSizes": [
+        17035,
+        773,
+        21,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 10,
+      "band": "medium"
+    },
+    {
+      "word": "dichotomizes",
+      "won": true,
+      "misses": 1,
+      "turns": 11,
+      "guesses": "esiacdhmotz",
+      "milliseconds": [
+        10.569600000000037,
+        3.372899999999845,
+        3.3782000000001062,
+        1.3609000000001288,
+        1.1377999999999702,
+        1.524499999999989,
+        1.2853999999999814,
+        0.9335999999998421,
+        0.7986000000000786,
+        0.8851999999999407,
+        1.0243000000000393
+      ],
+      "candidateSizes": [
+        8443,
+        686,
+        257,
+        4,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 70,
+      "length": 12,
+      "band": "rare"
+    },
+    {
+      "word": "actuate",
+      "won": true,
+      "misses": 1,
+      "turns": 6,
+      "guesses": "eaiuct",
+      "milliseconds": [
+        15.955699999999979,
+        5.9302000000000135,
+        1.735400000000027,
+        1.6959999999999127,
+        1.7143999999998414,
+        1.657699999999977
+      ],
+      "candidateSizes": [
+        19355,
+        1239,
+        13,
+        7,
+        3,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 7,
+      "band": "medium"
+    },
+    {
+      "word": "misappropriates",
+      "won": true,
+      "misses": 0,
+      "turns": 9,
+      "guesses": "isaemoprt",
+      "milliseconds": [
+        2.5389000000000124,
+        0.26789999999982683,
+        0.2219000000000051,
+        0.2074999999999818,
+        0.20470000000000255,
+        0.14970000000016626,
+        0.14879999999993743,
+        0.14829999999983556,
+        0.14889999999991232
+      ],
+      "candidateSizes": [
+        1696,
+        7,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 15,
+      "band": "common"
+    },
+    {
+      "word": "bugbears",
+      "won": true,
+      "misses": 3,
+      "turns": 10,
+      "guesses": "esnadobgru",
+      "milliseconds": [
+        19.1090999999999,
+        5.212700000000041,
+        4.594500000000153,
+        4.092599999999948,
+        4.019500000000107,
+        4.759299999999939,
+        3.136600000000044,
+        1.9253000000001066,
+        1.8105999999997948,
+        2.175899999999956
+      ],
+      "candidateSizes": [
+        21426,
+        683,
+        190,
+        86,
+        18,
+        6,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 50,
+      "length": 8,
+      "band": "medium"
+    },
+    {
+      "word": "individual",
+      "won": true,
+      "misses": 2,
+      "turns": 9,
+      "guesses": "einbadluv",
+      "milliseconds": [
+        22.926699999999983,
+        14.454899999999952,
+        3.072599999999966,
+        2.339200000000119,
+        1.723799999999983,
+        1.7584999999999127,
+        1.5919999999998709,
+        1.5170000000000528,
+        1.4896000000001095
+      ],
+      "candidateSizes": [
+        17035,
+        4222,
+        4,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 10,
+      "band": "common"
+    },
+    {
+      "word": "conventions",
+      "won": true,
+      "misses": 0,
+      "turns": 8,
+      "guesses": "eisncotv",
+      "milliseconds": [
+        18.524000000000115,
+        3.192500000000109,
+        2.46550000000002,
+        2.2549999999998818,
+        1.8215000000000146,
+        1.1277999999999793,
+        1.258299999999963,
+        1.091799999999921
+      ],
+      "candidateSizes": [
+        12522,
+        410,
+        48,
+        18,
+        2,
+        2,
+        2,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 11,
+      "band": "common"
+    },
+    {
+      "word": "unreproved",
+      "won": true,
+      "misses": 0,
+      "turns": 8,
+      "guesses": "erdnopuv",
+      "milliseconds": [
+        18.2034000000001,
+        3.603199999999788,
+        2.5552999999999884,
+        2.506900000000087,
+        2.009999999999991,
+        2.1125999999999294,
+        1.9172000000000935,
+        1.4298000000001139
+      ],
+      "candidateSizes": [
+        17035,
+        314,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 70,
+      "length": 10,
+      "band": "rare"
+    },
+    {
+      "word": "mistranslating",
+      "won": true,
+      "misses": 0,
+      "turns": 9,
+      "guesses": "inaglmrst",
+      "milliseconds": [
+        4.361599999999953,
+        0.6276000000000295,
+        0.5235999999999876,
+        0.40639999999984866,
+        0.4430999999999585,
+        0.5352000000000317,
+        0.26289999999994507,
+        0.2614000000000942,
+        0.2618999999999687
+      ],
+      "candidateSizes": [
+        2990,
+        38,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 70,
+      "length": 14,
+      "band": "rare"
+    }
+  ],
+  "results": {},
+  "finishedAt": "2026-09-29T14:11:17.655Z"
+}

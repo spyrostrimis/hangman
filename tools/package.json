@@ -4,6 +4,7 @@
   "scripts": {
     "benchmark:illucia": "node benchmark-illucia.js",
     "benchmark:illucia-tiers": "node benchmark-illucia-tiers.js",
+    "benchmark:illucia-models": "node benchmark-illucia-models.js",
     "build:illucia": "python build_illucia_words.py",
     "check:illucia": "python build_illucia_words.py --check",
     "collect:mw": "node --env-file=.env collect-mw.js",

@@ -78,6 +78,7 @@ Illucia vocabulary (committed; see `tools/ILLUCIA-WORDS.md`):
 - `tools/build_illucia_words.py`, `tools/test_illucia_words.py` — deterministic build and its tests. A word is blocked if it or its ESDB lemma is a blocked term; `--check` rebuilds and compares byte for byte.
 - `client/public/illucia/words/3.txt` … `15.txt` — sorted `word size` lines (137,389 words), plus `manifest.json` (hashes, counts, policy), `CREDITS.txt` and both licence files. `client/public/illucia/credits.html` is the credits page.
 - `tools/benchmark-illucia.js`, `tools/benchmark-illucia-tiers.js` — seeded I3/I3b harnesses; reports in `tools/benchmarks/`, results in `tools/ILLUCIA-SOLVER.md` and `tools/ILLUCIA-TIERS.md`. Regenerate the reports whenever the word files change.
+- `tools/benchmark-illucia-models.js`, `tools/lib/illucia-model.js`, `tools/lib/illucia-dictionary-model.js` — the I7a model-versus-solver experiments (local research, not wired into any page). The offline run (`npm run benchmark:illucia-models`) needs no account; `--live --free-plan` runs call Workers AI over REST with credentials held in memory and a daily budget ledger and lock in ignored `tools/output/`. Reports in `tools/benchmarks/illucia-i7a*.json`, results in `tools/ILLUCIA-MODELS.md` and `tools/ILLUCIA-DICTIONARY.md`.
 
 Local-only (gitignored, never committed):
 
@@ -118,7 +119,7 @@ How signed-in Hangman scoring works today (full design, release evidence and lim
 
 From `client/`, run `npm run dev` for the Vite development server, `npm run build` for a production build, and `npm run preview` to serve the production build locally. `.claude/launch.json` defines `client-preview` (vite preview on port 4173) for the desktop app's browser pane.
 
-From `tools/`, run `npm test` (185 tests in committed files, 2026-10-01; needs Python 3.12+ on PATH) and `node validate.js ../client/src/data/words.json`. Illucia: `python tools/build_illucia_words.py --check` from the repo root (about a minute), `npm run benchmark:illucia` and `npm run benchmark:illucia-tiers` (several minutes each). The pipeline is local-only and never runs in production.
+From `tools/`, run `npm test` (202 tests, 2026-10-02; needs Python 3.12+ on PATH) and `node validate.js ../client/src/data/words.json`. Illucia: `python tools/build_illucia_words.py --check` from the repo root (about a minute), `npm run benchmark:illucia` and `npm run benchmark:illucia-tiers` (several minutes each). The pipeline is local-only and never runs in production.
 
 From `client/`, run `npm test` (43 Node tests), `npm run test:ui` (54 React component tests), and `npm run build`. From `server/`, run `npm run setup:local`, `npm run types`, `npm run check`, `npm test` (26 Workers/D1 integration tests), and `npm run build` (dry run). User-visible CSS, responsive art, navigation, popovers, forms, and loading states still need manual browser verification in proportion to the change.
 

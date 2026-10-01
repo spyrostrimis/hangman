@@ -1,0 +1,1578 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-09-30T00:45:57.305Z",
+  "status": "invalid-transport",
+  "configuration": {
+    "seed": 20260930,
+    "count": 10,
+    "models": [
+      "@cf/meta/llama-3.1-8b-instruct-fp8-fast"
+    ],
+    "mode": "dictionary-explained",
+    "sampleKind": "five-letter-development",
+    "manifestSha256": "30124c8bc69dc1e901a3be824da53fe9f162e88d21c1bdd5ca3a9a0087fbdefb",
+    "sampleSha256": "815efc8783351f3934b0d46e3993c37392663cc5f95efe1a4be2c51ef14a76e2",
+    "promptVersion": "i7a-dictionary-1",
+    "promptSha256": "0e98a46b96346697807716a2f4f70e69029b0b5df5e9e1087f206ee06324f597",
+    "systemPrompt": "Play Hangman with six misses allowed. Hits reveal ALL occurrences and cost nothing. Choose an unused letter based on the remaining possible words, not just general English frequency. Consider letters shared by several possibilities instead of committing to one word. Return only a JSON object with exactly two keys: \"reason\" (a short explanation, at most 240 characters) followed by \"letter\" (one ASCII letter A-Z). The candidates field contains the COMPLETE alphabetically ordered dictionary consistent with this board. All candidates are equally weighted. No candidate is identified as the answer. Choose the letter yourself; no letter scores or suggested moves are supplied.",
+    "temperature": 0,
+    "maxTokens": 160,
+    "requestTimeoutMs": 10000,
+    "retries": 1,
+    "fallback": "Master count; explicitly assisted",
+    "assistance": "complete public-board candidate list; may include or uniquely identify the answer",
+    "resultMeaning": "modelOnly means no fallback letter selection; dictionary mode still has dictionary assistance",
+    "sampling": "DOUBT plus 9 seeded common five-letter words; development smoke test, not held-out evaluation",
+    "neuronRates": {
+      "@cf/meta/llama-3.2-3b-instruct": {
+        "input": 4625,
+        "output": 30475
+      },
+      "@cf/meta/llama-3.1-8b-instruct-fp8-fast": {
+        "input": 4119,
+        "output": 34868
+      }
+    },
+    "pricingChecked": "2026-09-29"
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32"
+  },
+  "sample": [
+    {
+      "word": "doubt",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "twigs",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "sloth",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "saner",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "stump",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "exert",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "heeds",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "cubes",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "saint",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "loops",
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    }
+  ],
+  "baseline": [
+    {
+      "word": "doubt",
+      "won": true,
+      "misses": 5,
+      "turns": 10,
+      "guesses": "easoyuhdbt",
+      "milliseconds": [
+        8.540299999999661,
+        3.778900000000249,
+        3.0189000000000306,
+        2.4724000000005617,
+        2.1771000000007916,
+        1.9846000000006825,
+        1.3368000000000393,
+        2.3737999999993917,
+        1.4583000000002357,
+        0.99579999999969
+      ],
+      "candidateSizes": [
+        8522,
+        4751,
+        2315,
+        1136,
+        199,
+        106,
+        34,
+        18,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "twigs",
+      "won": true,
+      "misses": 5,
+      "turns": 10,
+      "guesses": "easoirtngw",
+      "milliseconds": [
+        5.46770000000015,
+        4.081400000000031,
+        2.467000000000553,
+        1.7588999999998123,
+        1.589600000000246,
+        1.2120999999997366,
+        1.2310000000006767,
+        0.7236000000002605,
+        0.7285999999994601,
+        1.0212000000001353
+      ],
+      "candidateSizes": [
+        8522,
+        4751,
+        2315,
+        667,
+        319,
+        42,
+        23,
+        3,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "sloth",
+      "won": true,
+      "misses": 2,
+      "turns": 7,
+      "guesses": "easothl",
+      "milliseconds": [
+        5.191400000000613,
+        3.731300000000374,
+        2.510400000000118,
+        0.9530999999997221,
+        0.8087000000004991,
+        0.8373000000001412,
+        0.7615999999998166
+      ],
+      "candidateSizes": [
+        8522,
+        4751,
+        2315,
+        213,
+        37,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "saner",
+      "won": true,
+      "misses": 4,
+      "turns": 9,
+      "guesses": "esrabfgkn",
+      "milliseconds": [
+        5.380900000000111,
+        2.318099999999504,
+        0.8400000000001455,
+        0.8495000000002619,
+        0.7420000000001892,
+        0.8152000000000044,
+        0.7764999999999418,
+        0.7502999999996973,
+        0.7382999999999811
+      ],
+      "candidateSizes": [
+        8522,
+        1307,
+        50,
+        17,
+        8,
+        7,
+        6,
+        5,
+        4
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "stump",
+      "won": false,
+      "misses": 6,
+      "turns": 9,
+      "guesses": "easoiultk",
+      "milliseconds": [
+        5.2249000000001615,
+        3.770400000000336,
+        2.76929999999993,
+        1.3447999999998501,
+        1.3369000000002416,
+        0.8929000000007363,
+        0.7788000000000466,
+        0.7622000000001208,
+        0.7362000000002809
+      ],
+      "candidateSizes": [
+        8522,
+        4751,
+        2315,
+        213,
+        114,
+        44,
+        27,
+        17,
+        6
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "exert",
+      "won": true,
+      "misses": 2,
+      "turns": 6,
+      "guesses": "etrbvx",
+      "milliseconds": [
+        5.391700000000128,
+        0.7447000000001935,
+        0.7150999999994383,
+        0.7163999999993393,
+        0.7322000000003754,
+        0.7060999999994237
+      ],
+      "candidateSizes": [
+        8522,
+        23,
+        9,
+        3,
+        2,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "heeds",
+      "won": true,
+      "misses": 3,
+      "turns": 7,
+      "guesses": "esprdfh",
+      "milliseconds": [
+        5.491700000000492,
+        1.2132000000001426,
+        1.0875999999998385,
+        1.128500000000713,
+        1.0222999999996318,
+        1.012800000000425,
+        0.9743999999991502
+      ],
+      "candidateSizes": [
+        8522,
+        69,
+        43,
+        32,
+        23,
+        5,
+        4
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "cubes",
+      "won": false,
+      "misses": 6,
+      "turns": 9,
+      "guesses": "esaiouldt",
+      "milliseconds": [
+        5.319499999999607,
+        2.6729999999997744,
+        2.3276999999998225,
+        1.875699999999597,
+        2.6827000000002954,
+        2.1959999999999127,
+        1.168800000000374,
+        1.0371000000004642,
+        1.0191999999997279
+      ],
+      "candidateSizes": [
+        8522,
+        1307,
+        357,
+        227,
+        141,
+        59,
+        35,
+        23,
+        17
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "saint",
+      "won": true,
+      "misses": 2,
+      "turns": 7,
+      "guesses": "easihnt",
+      "milliseconds": [
+        9.423399999999674,
+        4.990899999999783,
+        2.389799999999923,
+        1.2824000000000524,
+        1.3890000000001237,
+        1.2081000000007407,
+        0.9092000000000553
+      ],
+      "candidateSizes": [
+        8522,
+        4751,
+        758,
+        39,
+        3,
+        1,
+        1
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    },
+    {
+      "word": "loops",
+      "won": true,
+      "misses": 5,
+      "turns": 9,
+      "guesses": "easolkmnp",
+      "milliseconds": [
+        5.247099999999591,
+        4.294600000000173,
+        2.4439999999995052,
+        1.7596999999996115,
+        1.0684000000001106,
+        0.7129000000004453,
+        0.7101000000002387,
+        0.7169000000003507,
+        0.7129000000004453
+      ],
+      "candidateSizes": [
+        8522,
+        4751,
+        2315,
+        667,
+        53,
+        5,
+        4,
+        3,
+        2
+      ],
+      "maxSize": 70,
+      "inVocabulary": true,
+      "size": 35,
+      "length": 5,
+      "band": "common"
+    }
+  ],
+  "results": {
+    "@cf/meta/llama-3.1-8b-instruct-fp8-fast": {
+      "games": [
+        {
+          "word": "doubt",
+          "status": "solved",
+          "won": true,
+          "misses": 5,
+          "turns": 10,
+          "guesses": "easoyuhdbt",
+          "firstIntervention": 1,
+          "moves": [
+            {
+              "letter": "e",
+              "assisted": true
+            },
+            {
+              "letter": "a",
+              "assisted": true
+            },
+            {
+              "letter": "s",
+              "assisted": true
+            },
+            {
+              "letter": "o",
+              "assisted": true
+            },
+            {
+              "letter": "y",
+              "assisted": true
+            },
+            {
+              "letter": "u",
+              "assisted": true
+            },
+            {
+              "letter": "h",
+              "assisted": true
+            },
+            {
+              "letter": "d",
+              "assisted": true
+            },
+            {
+              "letter": "b",
+              "assisted": true
+            },
+            {
+              "letter": "t",
+              "assisted": true
+            }
+          ],
+          "attempts": [
+            {
+              "turn": 1,
+              "retry": false,
+              "milliseconds": 2341.349,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 8522,
+              "inputSha256": "8f056f184eab3d5abd26cbcab35d3858eb4008dd1094674fea64ed50f27797d1",
+              "usage": {
+                "prompt_tokens": 25470,
+                "completion_tokens": 26
+              },
+              "estimatedNeurons": 105.817498
+            },
+            {
+              "turn": 1,
+              "retry": true,
+              "milliseconds": 1686.6238000000003,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 8522,
+              "inputSha256": "73787c4a7887c19714787ad236d5a25050c47b8befa9744d9d10958b3af84cda",
+              "usage": {
+                "prompt_tokens": 25489,
+                "completion_tokens": 31
+              },
+              "estimatedNeurons": 106.070099
+            },
+            {
+              "turn": 2,
+              "retry": false,
+              "milliseconds": 1099.7283000000007,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 4751,
+              "inputSha256": "e80f6ac73773cbbcd574f0d7b696cb47cd2c2de26a3f16d9612850692676b75b",
+              "usage": {
+                "prompt_tokens": 14505,
+                "completion_tokens": 43
+              },
+              "estimatedNeurons": 61.245419
+            },
+            {
+              "turn": 2,
+              "retry": true,
+              "milliseconds": 514.7551000000003,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 4751,
+              "inputSha256": "a4b4528528a99efe9ecd2c1f73b2278b5e0b128bd29556be8e53f68029ae05e6",
+              "usage": {
+                "prompt_tokens": 14524,
+                "completion_tokens": 31
+              },
+              "estimatedNeurons": 60.905264
+            },
+            {
+              "turn": 3,
+              "retry": false,
+              "milliseconds": 630.0970000000016,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 2315,
+              "inputSha256": "1293d75bea66f5b266ffc0a0200e1b2e468901ddd779e11f6404c1ef07252598",
+              "usage": {
+                "prompt_tokens": 7191,
+                "completion_tokens": 30
+              },
+              "estimatedNeurons": 30.665769
+            },
+            {
+              "turn": 3,
+              "retry": true,
+              "milliseconds": 699.4846999999991,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 2315,
+              "inputSha256": "7cd6ecfe4a6c2b2807eb6c0460e8348abb2f9b9f5f577af97d99f098de900f70",
+              "usage": {
+                "prompt_tokens": 7210,
+                "completion_tokens": 31
+              },
+              "estimatedNeurons": 30.778898
+            },
+            {
+              "turn": 4,
+              "retry": false,
+              "milliseconds": 485.3006999999998,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 1136,
+              "inputSha256": "33dd04699019c80411b2ea7ca1741cb5a165ca957df9bd7a6c0fba850bfee7b0",
+              "usage": {
+                "prompt_tokens": 3637,
+                "completion_tokens": 35
+              },
+              "estimatedNeurons": 16.201183
+            },
+            {
+              "turn": 4,
+              "retry": true,
+              "milliseconds": 330.8702000000012,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 1136,
+              "inputSha256": "f60d0d50a3d20e9129b6f40376011adc660e839dd6b95d1006bac65710fb6155",
+              "usage": {
+                "prompt_tokens": 3656,
+                "completion_tokens": 29
+              },
+              "estimatedNeurons": 16.070236
+            },
+            {
+              "turn": 5,
+              "retry": false,
+              "milliseconds": 299.7358999999997,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 199,
+              "inputSha256": "b2d247e4efe5d66a6d3b418d8113c0cd500c3f9260d84dc0f611ed5b7b9a8f77",
+              "usage": {
+                "prompt_tokens": 813,
+                "completion_tokens": 20
+              },
+              "estimatedNeurons": 4.046107
+            },
+            {
+              "turn": 5,
+              "retry": true,
+              "milliseconds": 480.3762999999999,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 199,
+              "inputSha256": "dedda07b727ea87056bf88fcb7f862c6951556e114455607f7f903beaf8d4e89",
+              "usage": {
+                "prompt_tokens": 832,
+                "completion_tokens": 33
+              },
+              "estimatedNeurons": 4.577652
+            },
+            {
+              "turn": 6,
+              "retry": false,
+              "milliseconds": 422.1232,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 106,
+              "inputSha256": "78f9e326920da0b50304091f17d40f4872595b5a529711d4615b6ffa525c9e9b",
+              "usage": {
+                "prompt_tokens": 515,
+                "completion_tokens": 62
+              },
+              "estimatedNeurons": 4.283101
+            },
+            {
+              "turn": 6,
+              "retry": true,
+              "milliseconds": 413.4308000000001,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 106,
+              "inputSha256": "8d673b25ddff6f5e1ae1e9365fcba573e589b813091b93aaac0c1b671106cd32",
+              "usage": {
+                "prompt_tokens": 534,
+                "completion_tokens": 29
+              },
+              "estimatedNeurons": 3.210718
+            },
+            {
+              "turn": 7,
+              "retry": false,
+              "milliseconds": 374.46540000000095,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 34,
+              "inputSha256": "3a6c8b18f02d9f8bba03b84ac68335407a21f4f9f0f0f40020d272d835dbfb94",
+              "usage": {
+                "prompt_tokens": 302,
+                "completion_tokens": 27
+              },
+              "estimatedNeurons": 2.185374
+            },
+            {
+              "turn": 7,
+              "retry": true,
+              "milliseconds": 325.9261999999999,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 34,
+              "inputSha256": "ac4f59fec8f07229935b1b84a5128cfa5eb86576fe71e039b6b5f2a3fd54d52d",
+              "usage": {
+                "prompt_tokens": 321,
+                "completion_tokens": 29
+              },
+              "estimatedNeurons": 2.333371
+            },
+            {
+              "turn": 8,
+              "retry": false,
+              "milliseconds": 376.0136000000002,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 18,
+              "inputSha256": "ce457d85bb5f245b935cf5a11f71d28ab2db78be1d7ef9e300a663dd4fd488ea",
+              "usage": {
+                "prompt_tokens": 259,
+                "completion_tokens": 30
+              },
+              "estimatedNeurons": 2.112861
+            },
+            {
+              "turn": 8,
+              "retry": true,
+              "milliseconds": 377.59469999999965,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 18,
+              "inputSha256": "b395af43b1c3c8531c55c183572ca92489fedf8126badaacdd4f27d14f42f6f5",
+              "usage": {
+                "prompt_tokens": 278,
+                "completion_tokens": 25
+              },
+              "estimatedNeurons": 2.016782
+            },
+            {
+              "turn": 9,
+              "retry": false,
+              "milliseconds": 294.6238000000012,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 1,
+              "inputSha256": "56e20fcdc710092ccab13d46db3d717279cef219ccde9ccee8eb7364f9f1c609",
+              "usage": {
+                "prompt_tokens": 215,
+                "completion_tokens": 30
+              },
+              "estimatedNeurons": 1.931625
+            },
+            {
+              "turn": 9,
+              "retry": true,
+              "milliseconds": 344.83940000000075,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 1,
+              "inputSha256": "4878b98b50c7ddec8409c805d4c9c4f2d8d2f2f480dcee3420f39bd56739e455",
+              "usage": {
+                "prompt_tokens": 234,
+                "completion_tokens": 24
+              },
+              "estimatedNeurons": 1.800678
+            },
+            {
+              "turn": 10,
+              "retry": false,
+              "milliseconds": 278.4501999999993,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 1,
+              "inputSha256": "6c100b5d56f6b6dfdec1d6e5c2282bed14b2fd6088245c1f18d4ac6ab35eb532",
+              "usage": {
+                "prompt_tokens": 214,
+                "completion_tokens": 21
+              },
+              "estimatedNeurons": 1.613694
+            },
+            {
+              "turn": 10,
+              "retry": true,
+              "milliseconds": 274.26230000000214,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 1,
+              "inputSha256": "5731f050cee8a7a76122a279baae5f73d15cbcfdbeee59de8c0b5bc410c53b9d",
+              "usage": {
+                "prompt_tokens": 233,
+                "completion_tokens": 25
+              },
+              "estimatedNeurons": 1.831427
+            }
+          ],
+          "stopReason": null,
+          "modelOnlyStatus": "invalid-forfeit",
+          "size": 35,
+          "length": 5,
+          "band": "common"
+        },
+        {
+          "word": "twigs",
+          "status": "solved",
+          "won": true,
+          "misses": 5,
+          "turns": 10,
+          "guesses": "easoirtngw",
+          "firstIntervention": 1,
+          "moves": [
+            {
+              "letter": "e",
+              "assisted": true
+            },
+            {
+              "letter": "a",
+              "assisted": true
+            },
+            {
+              "letter": "s",
+              "assisted": true
+            },
+            {
+              "letter": "o",
+              "assisted": true
+            },
+            {
+              "letter": "i",
+              "assisted": true
+            },
+            {
+              "letter": "r",
+              "assisted": true
+            },
+            {
+              "letter": "t",
+              "assisted": true
+            },
+            {
+              "letter": "n",
+              "assisted": true
+            },
+            {
+              "letter": "g",
+              "assisted": true
+            },
+            {
+              "letter": "w",
+              "assisted": true
+            }
+          ],
+          "attempts": [
+            {
+              "turn": 1,
+              "retry": false,
+              "milliseconds": 1582.7511999999988,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 8522,
+              "inputSha256": "8f056f184eab3d5abd26cbcab35d3858eb4008dd1094674fea64ed50f27797d1",
+              "usage": {
+                "prompt_tokens": 25470,
+                "completion_tokens": 27
+              },
+              "estimatedNeurons": 105.852366
+            },
+            {
+              "turn": 1,
+              "retry": true,
+              "milliseconds": 719.0084000000024,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 8522,
+              "inputSha256": "73787c4a7887c19714787ad236d5a25050c47b8befa9744d9d10958b3af84cda",
+              "usage": {
+                "prompt_tokens": 25489,
+                "completion_tokens": 32
+              },
+              "estimatedNeurons": 106.104967
+            },
+            {
+              "turn": 2,
+              "retry": false,
+              "milliseconds": 1370.4006000000008,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 4751,
+              "inputSha256": "e80f6ac73773cbbcd574f0d7b696cb47cd2c2de26a3f16d9612850692676b75b",
+              "usage": {
+                "prompt_tokens": 14505,
+                "completion_tokens": 43
+              },
+              "estimatedNeurons": 61.245419
+            },
+            {
+              "turn": 2,
+              "retry": true,
+              "milliseconds": 512.2593000000015,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 4751,
+              "inputSha256": "a4b4528528a99efe9ecd2c1f73b2278b5e0b128bd29556be8e53f68029ae05e6",
+              "usage": {
+                "prompt_tokens": 14524,
+                "completion_tokens": 31
+              },
+              "estimatedNeurons": 60.905264
+            },
+            {
+              "turn": 3,
+              "retry": false,
+              "milliseconds": 1379.3518000000004,
+              "reason": "invalid",
+              "response": "{\n  \"reason\": \"The letter 'o' is a good choice because it is shared by several possibilities, including 'bibbs', 'biddy', 'biffs', 'bifid', 'bight', 'bigot', 'bijou', 'bikol', 'bilbo', 'bilks', 'bills', 'billy', 'bimbo', 'bindi', 'binds', 'bingo', 'binis', 'bioko', 'bipod', 'birch', 'birds', 'birls', 'biros', 'birrs', 'birth', 'bisks', 'bison', 'bitts', 'bitty', 'bjork', 'bligh', 'blimp', 'blind', '",
+              "explanation": null,
+              "candidateCount": 2315,
+              "inputSha256": "1293d75bea66f5b266ffc0a0200e1b2e468901ddd779e11f6404c1ef07252598",
+              "usage": {
+                "prompt_tokens": 7191,
+                "completion_tokens": 160
+              },
+              "estimatedNeurons": 35.198609
+            },
+            {
+              "turn": 3,
+              "retry": true,
+              "milliseconds": 534.7955999999976,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 2315,
+              "inputSha256": "7cd6ecfe4a6c2b2807eb6c0460e8348abb2f9b9f5f577af97d99f098de900f70",
+              "usage": {
+                "prompt_tokens": 7210,
+                "completion_tokens": 32
+              },
+              "estimatedNeurons": 30.813766
+            },
+            {
+              "turn": 4,
+              "retry": false,
+              "milliseconds": 906.7813000000024,
+              "reason": "invalid",
+              "response": "{\n  \"reason\": \"The letter 'B' is shared by several possibilities, including 'bibbs', 'biffs', 'bilks', 'bills', 'binds', 'binis', 'birds', 'birls', 'biros', 'birrs', 'bitts', 'blips', 'blobs', 'blocs', 'blogs', 'blois', 'blots', 'blows', 'blubs', 'blurs', 'bogus', 'boils', 'bolls', 'bolos', 'bolts', 'bolus', 'bombs', 'bonds', 'bongs', 'bonks', 'bonus', 'books', 'booms', 'boons', 'boors', 'boots",
+              "explanation": null,
+              "candidateCount": 667,
+              "inputSha256": "a91130bcc03d31e7d8288ff213b3372e8e97d513e9227566c1f3d43900ca5c6d",
+              "usage": {
+                "prompt_tokens": 2220,
+                "completion_tokens": 160
+              },
+              "estimatedNeurons": 14.72306
+            },
+            {
+              "turn": 4,
+              "retry": true,
+              "milliseconds": 454.435300000001,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 667,
+              "inputSha256": "4b949787399afcb1fee8f8a6f7e8836a3dc5f8cb2a18b6d7cc1f5e7a5b00f0fa",
+              "usage": {
+                "prompt_tokens": 2239,
+                "completion_tokens": 32
+              },
+              "estimatedNeurons": 10.338217
+            },
+            {
+              "turn": 5,
+              "retry": false,
+              "milliseconds": 237.90440000000308,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 319,
+              "inputSha256": "5a07cda657260a7fb23642e14264b984a49b59d4aea3e664bfdd9b9ed7a000f0",
+              "usage": {
+                "prompt_tokens": 1181,
+                "completion_tokens": 17
+              },
+              "estimatedNeurons": 5.457295
+            },
+            {
+              "turn": 5,
+              "retry": true,
+              "milliseconds": 299.51090000000113,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 319,
+              "inputSha256": "fd82ffee2619ac13ae3f47d73d6ddad8af5cc498ba096a29914068aeb830ed07",
+              "usage": {
+                "prompt_tokens": 1200,
+                "completion_tokens": 29
+              },
+              "estimatedNeurons": 5.953972
+            },
+            {
+              "turn": 6,
+              "retry": false,
+              "milliseconds": 226.10680000000139,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 42,
+              "inputSha256": "9fc08af6b29dac2264ef64af3b671c208b3cfb8916f69b1ed33dc4aad800eec9",
+              "usage": {
+                "prompt_tokens": 337,
+                "completion_tokens": 21
+              },
+              "estimatedNeurons": 2.120331
+            },
+            {
+              "turn": 6,
+              "retry": true,
+              "milliseconds": 275.21870000000126,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 42,
+              "inputSha256": "63eab2cbfaf09f30977b79863186fdc2952d44257895e97a331369159cbe5d70",
+              "usage": {
+                "prompt_tokens": 356,
+                "completion_tokens": 25
+              },
+              "estimatedNeurons": 2.338064
+            },
+            {
+              "turn": 7,
+              "retry": false,
+              "milliseconds": 411.1775999999991,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 23,
+              "inputSha256": "4a77f6d51f7e5b743ae0df3b3dcd521a544e921878b6102791b502239cd3d18f",
+              "usage": {
+                "prompt_tokens": 278,
+                "completion_tokens": 27
+              },
+              "estimatedNeurons": 2.086518
+            },
+            {
+              "turn": 7,
+              "retry": true,
+              "milliseconds": 282.08450000000084,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 23,
+              "inputSha256": "b465b93b457930cadf2feb2a4c19fa5376d28a0ef2c4b82b7d22083113297a40",
+              "usage": {
+                "prompt_tokens": 297,
+                "completion_tokens": 29
+              },
+              "estimatedNeurons": 2.234515
+            },
+            {
+              "turn": 8,
+              "retry": false,
+              "milliseconds": 392.16839999999866,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 3,
+              "inputSha256": "fe8e1e0a02406288b3ccc62cdf041bfb7162ce35c5da8fbbbba7ede348c8207b",
+              "usage": {
+                "prompt_tokens": 219,
+                "completion_tokens": 34
+              },
+              "estimatedNeurons": 2.087573
+            },
+            {
+              "turn": 8,
+              "retry": true,
+              "milliseconds": 361.17429999999877,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 3,
+              "inputSha256": "9fb9186818eaadddbc0d52d242f71e6cca261f68eb27c01a4e11233fe9ba44dd",
+              "usage": {
+                "prompt_tokens": 238,
+                "completion_tokens": 25
+              },
+              "estimatedNeurons": 1.852022
+            },
+            {
+              "turn": 9,
+              "retry": false,
+              "milliseconds": 404.8878000000004,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 1,
+              "inputSha256": "9b0105a7dfdbc8ef9917ffe9f18ca656b51d57d5423de3cc75968178ca38207e",
+              "usage": {
+                "prompt_tokens": 213,
+                "completion_tokens": 38
+              },
+              "estimatedNeurons": 2.202331
+            },
+            {
+              "turn": 9,
+              "retry": true,
+              "milliseconds": 272.51620000000185,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 1,
+              "inputSha256": "de86c61aff8a7902d1c53d53b3286e9d446d8c13bec7dc22ee80f97f54f94df3",
+              "usage": {
+                "prompt_tokens": 232,
+                "completion_tokens": 25
+              },
+              "estimatedNeurons": 1.827308
+            },
+            {
+              "turn": 10,
+              "retry": false,
+              "milliseconds": 408.03340000000026,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 1,
+              "inputSha256": "67c75b1cee1eaa252888b0bbf70ec5a7cc325495b6757c45be76ca4ed5138675",
+              "usage": {
+                "prompt_tokens": 213,
+                "completion_tokens": 30
+              },
+              "estimatedNeurons": 1.923387
+            },
+            {
+              "turn": 10,
+              "retry": true,
+              "milliseconds": 364.27200000000084,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 1,
+              "inputSha256": "5711a19931f0db21ccc9891e9b6c72ea1600d227699f5f1703923894a368b5a4",
+              "usage": {
+                "prompt_tokens": 232,
+                "completion_tokens": 27
+              },
+              "estimatedNeurons": 1.897044
+            }
+          ],
+          "stopReason": null,
+          "modelOnlyStatus": "invalid-forfeit",
+          "size": 35,
+          "length": 5,
+          "band": "common"
+        },
+        {
+          "word": "sloth",
+          "status": "solved",
+          "won": true,
+          "misses": 2,
+          "turns": 7,
+          "guesses": "easothl",
+          "firstIntervention": 1,
+          "moves": [
+            {
+              "letter": "e",
+              "assisted": true
+            },
+            {
+              "letter": "a",
+              "assisted": true
+            },
+            {
+              "letter": "s",
+              "assisted": true
+            },
+            {
+              "letter": "o",
+              "assisted": true
+            },
+            {
+              "letter": "t",
+              "assisted": true
+            },
+            {
+              "letter": "h",
+              "assisted": true
+            },
+            {
+              "letter": "l",
+              "assisted": true
+            }
+          ],
+          "attempts": [
+            {
+              "turn": 1,
+              "retry": false,
+              "milliseconds": 1371.5607999999993,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 8522,
+              "inputSha256": "8f056f184eab3d5abd26cbcab35d3858eb4008dd1094674fea64ed50f27797d1",
+              "usage": {
+                "prompt_tokens": 25470,
+                "completion_tokens": 27
+              },
+              "estimatedNeurons": 105.852366
+            },
+            {
+              "turn": 1,
+              "retry": true,
+              "milliseconds": 1445.5329999999994,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 8522,
+              "inputSha256": "73787c4a7887c19714787ad236d5a25050c47b8befa9744d9d10958b3af84cda",
+              "usage": {
+                "prompt_tokens": 25489,
+                "completion_tokens": 32
+              },
+              "estimatedNeurons": 106.104967
+            },
+            {
+              "turn": 2,
+              "retry": false,
+              "milliseconds": 822.3610999999983,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 4751,
+              "inputSha256": "e80f6ac73773cbbcd574f0d7b696cb47cd2c2de26a3f16d9612850692676b75b",
+              "usage": {
+                "prompt_tokens": 14505,
+                "completion_tokens": 43
+              },
+              "estimatedNeurons": 61.245419
+            },
+            {
+              "turn": 2,
+              "retry": true,
+              "milliseconds": 1021.1578999999983,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 4751,
+              "inputSha256": "a4b4528528a99efe9ecd2c1f73b2278b5e0b128bd29556be8e53f68029ae05e6",
+              "usage": {
+                "prompt_tokens": 14524,
+                "completion_tokens": 31
+              },
+              "estimatedNeurons": 60.905264
+            },
+            {
+              "turn": 3,
+              "retry": false,
+              "milliseconds": 560.7220000000016,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 2315,
+              "inputSha256": "1293d75bea66f5b266ffc0a0200e1b2e468901ddd779e11f6404c1ef07252598",
+              "usage": {
+                "prompt_tokens": 7191,
+                "completion_tokens": 43
+              },
+              "estimatedNeurons": 31.119053
+            },
+            {
+              "turn": 3,
+              "retry": true,
+              "milliseconds": 416.9308000000019,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 2315,
+              "inputSha256": "7cd6ecfe4a6c2b2807eb6c0460e8348abb2f9b9f5f577af97d99f098de900f70",
+              "usage": {
+                "prompt_tokens": 7210,
+                "completion_tokens": 31
+              },
+              "estimatedNeurons": 30.778898
+            },
+            {
+              "turn": 4,
+              "retry": false,
+              "milliseconds": 886.6506999999983,
+              "reason": "invalid",
+              "response": "{\"reason\":\"Letter 'T' is shared by multiple candidates, including 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'scout', 'sc",
+              "explanation": null,
+              "candidateCount": 213,
+              "inputSha256": "6b876f506e827cf0a10afc01853662e35f6d823a0a8f8910d65f517a9b4af412",
+              "usage": {
+                "prompt_tokens": 841,
+                "completion_tokens": 160
+              },
+              "estimatedNeurons": 9.042959
+            },
+            {
+              "turn": 4,
+              "retry": true,
+              "milliseconds": 266.4748000000036,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 213,
+              "inputSha256": "8044e8e2c1768d7a623f58d72d0de620a6f0652951eee1ef35ad6b8896700307",
+              "usage": {
+                "prompt_tokens": 860,
+                "completion_tokens": 29
+              },
+              "estimatedNeurons": 4.553512
+            },
+            {
+              "turn": 5,
+              "retry": false,
+              "milliseconds": 406.7191000000021,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 37,
+              "inputSha256": "516d71a61ff7352a0c7bb1cae873902370e8e34e3e44bcb99a7825ee713536b3",
+              "usage": {
+                "prompt_tokens": 310,
+                "completion_tokens": 27
+              },
+              "estimatedNeurons": 2.218326
+            },
+            {
+              "turn": 5,
+              "retry": true,
+              "milliseconds": 472.75599999999395,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 37,
+              "inputSha256": "54bcfaa0800daf234deb0d3515b93d0b1dd62c43ee8e23d78c778a4b9ca8480b",
+              "usage": {
+                "prompt_tokens": 329,
+                "completion_tokens": 29
+              },
+              "estimatedNeurons": 2.366323
+            },
+            {
+              "turn": 6,
+              "retry": false,
+              "milliseconds": 366.16680000000633,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 1,
+              "inputSha256": "c1f8dcb1ef40634900f0e545b515c633d791c3ec1f726ff5928a69ac0b3da022",
+              "usage": {
+                "prompt_tokens": 212,
+                "completion_tokens": 27
+              },
+              "estimatedNeurons": 1.814664
+            },
+            {
+              "turn": 6,
+              "retry": true,
+              "milliseconds": 372.9939999999988,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 1,
+              "inputSha256": "d4374975604aea8b16ede124f5d41e27c273d55cc4d76dfe63964232ec26532e",
+              "usage": {
+                "prompt_tokens": 231,
+                "completion_tokens": 28
+              },
+              "estimatedNeurons": 1.927793
+            },
+            {
+              "turn": 7,
+              "retry": false,
+              "milliseconds": 266.1602999999959,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 1,
+              "inputSha256": "24d73c3adb9b8fab277e0dd67bbe7779bc8b09d86d6e8bf3390f0128c3dceca1",
+              "usage": {
+                "prompt_tokens": 212,
+                "completion_tokens": 27
+              },
+              "estimatedNeurons": 1.814664
+            },
+            {
+              "turn": 7,
+              "retry": true,
+              "milliseconds": 379.4799000000057,
+              "reason": "invalid",
+              "response": null,
+              "explanation": null,
+              "candidateCount": 1,
+              "inputSha256": "dbdd7aecb75449589cb133fe31e10cdc15f3fdcb10f2702aaa01e14185f33035",
+              "usage": {
+                "prompt_tokens": 231,
+                "completion_tokens": 25
+              },
+              "estimatedNeurons": 1.823189
+            }
+          ],
+          "stopReason": null,
+          "modelOnlyStatus": "invalid-forfeit",
+          "size": 35,
+          "length": 5,
+          "band": "common"
+        }
+      ],
+      "overall": {
+        "started": 3,
+        "completed": 3,
+        "incomplete": 0,
+        "modelOnly": {
+          "wins": 0,
+          "winRate": 0,
+          "invalidForfeits": 3
+        },
+        "withFallback": {
+          "wins": 3,
+          "winRate": 1,
+          "assistedGames": 3,
+          "fallbackMoves": 27
+        },
+        "averageMissesCompleted": 4,
+        "averageTurnsCompleted": 9,
+        "requests": 54,
+        "retries": 27,
+        "invalidReplies": 54,
+        "repeatedReplies": 0,
+        "requestMilliseconds": {
+          "p50": 408.03340000000026,
+          "p95": 1582.7511999999988
+        },
+        "estimatedNeuronsFromReportedTokens": 1338.4271810000002,
+        "requestsWithUsage": 54,
+        "requestsWithoutUsage": 0,
+        "estimatedNeuronsPerCompletedGame": 446.14239366666675
+      },
+      "byLength": {
+        "5": {
+          "started": 3,
+          "completed": 3,
+          "incomplete": 0,
+          "modelOnly": {
+            "wins": 0,
+            "winRate": 0,
+            "invalidForfeits": 3
+          },
+          "withFallback": {
+            "wins": 3,
+            "winRate": 1,
+            "assistedGames": 3,
+            "fallbackMoves": 27
+          },
+          "averageMissesCompleted": 4,
+          "averageTurnsCompleted": 9,
+          "requests": 54,
+          "retries": 27,
+          "invalidReplies": 54,
+          "repeatedReplies": 0,
+          "requestMilliseconds": {
+            "p50": 408.03340000000026,
+            "p95": 1582.7511999999988
+          },
+          "estimatedNeuronsFromReportedTokens": 1338.4271810000002,
+          "requestsWithUsage": 54,
+          "requestsWithoutUsage": 0,
+          "estimatedNeuronsPerCompletedGame": 446.14239366666675
+        }
+      },
+      "byBand": {
+        "common": {
+          "started": 3,
+          "completed": 3,
+          "incomplete": 0,
+          "modelOnly": {
+            "wins": 0,
+            "winRate": 0,
+            "invalidForfeits": 3
+          },
+          "withFallback": {
+            "wins": 3,
+            "winRate": 1,
+            "assistedGames": 3,
+            "fallbackMoves": 27
+          },
+          "averageMissesCompleted": 4,
+          "averageTurnsCompleted": 9,
+          "requests": 54,
+          "retries": 27,
+          "invalidReplies": 54,
+          "repeatedReplies": 0,
+          "requestMilliseconds": {
+            "p50": 408.03340000000026,
+            "p95": 1582.7511999999988
+          },
+          "estimatedNeuronsFromReportedTokens": 1338.4271810000002,
+          "requestsWithUsage": 54,
+          "requestsWithoutUsage": 0,
+          "estimatedNeuronsPerCompletedGame": 446.14239366666675
+        },
+        "medium": {
+          "started": 0,
+          "completed": 0,
+          "incomplete": 0,
+          "modelOnly": {
+            "wins": 0,
+            "winRate": null,
+            "invalidForfeits": 0
+          },
+          "withFallback": {
+            "wins": 0,
+            "winRate": null,
+            "assistedGames": 0,
+            "fallbackMoves": 0
+          },
+          "averageMissesCompleted": null,
+          "averageTurnsCompleted": null,
+          "requests": 0,
+          "retries": 0,
+          "invalidReplies": 0,
+          "repeatedReplies": 0,
+          "requestMilliseconds": {
+            "p50": null,
+            "p95": null
+          },
+          "estimatedNeuronsFromReportedTokens": 0,
+          "requestsWithUsage": 0,
+          "requestsWithoutUsage": 0,
+          "estimatedNeuronsPerCompletedGame": null
+        },
+        "rare": {
+          "started": 0,
+          "completed": 0,
+          "incomplete": 0,
+          "modelOnly": {
+            "wins": 0,
+            "winRate": null,
+            "invalidForfeits": 0
+          },
+          "withFallback": {
+            "wins": 0,
+            "winRate": null,
+            "assistedGames": 0,
+            "fallbackMoves": 0
+          },
+          "averageMissesCompleted": null,
+          "averageTurnsCompleted": null,
+          "requests": 0,
+          "retries": 0,
+          "invalidReplies": 0,
+          "repeatedReplies": 0,
+          "requestMilliseconds": {
+            "p50": null,
+            "p95": null
+          },
+          "estimatedNeuronsFromReportedTokens": 0,
+          "requestsWithUsage": 0,
+          "requestsWithoutUsage": 0,
+          "estimatedNeuronsPerCompletedGame": null
+        }
+      },
+      "matchedBaseline": {
+        "games": 3,
+        "wins": 3,
+        "winRate": 1
+      }
+    }
+  },
+  "budget": {
+    "day": "2026-09-30",
+    "requests": 54,
+    "reservedNeurons": 1338.4271810000007,
+    "maxRequests": 1800,
+    "maxNeurons": 6000,
+    "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
+  },
+  "stopReason": "stopped manually: inspect unsupported response envelope"
+}

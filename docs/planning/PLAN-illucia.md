@@ -22,7 +22,10 @@ Status legend: ✅ done · ◇ idea, not a commitment · ✗ built and reverted.
 | — | Strength measured on both live pages | ✅ [docs/ILLUCIA-STRENGTH.md](../ILLUCIA-STRENGTH.md) (`6acd239`) — pages match the benchmark; tiers invert on common short words |
 | I5 | Workers AI commentary | ◇ idea |
 | I6 | Browser text-to-speech | ✗ built in `21572c6`, reverted in `ec388f5` (Spyros: Illucia and the player will not speak) |
-| I7 | "Which Illucia can beat your word?" race experiment | ◇ idea |
+| I7a | Local model-versus-solver pilot | ✅ implemented and live pilot completed 2026-09-29 — solver 43/50; both tested models 0/50 unassisted; [method and results](../../tools/ILLUCIA-MODELS.md) |
+| I7b | "Which Illucia can beat your word?" race interface | ◇ decision after I7a; independent contestant boards, no model vocabulary-tier labels |
+
+I7a follow-up (2026-09-30): [dictionary-assisted development comparison](../../tools/ILLUCIA-DICTIONARY.md) completed. On ten common five-letter words, the local solver won 8/10; Llama 8B with candidates won 0/10 without fallback moves and 5/10 with fallback, versus 0/10 and 1/10 for the matched board-only control. I7b remains open; this setup is not yet a reliable model-controlled contestant.
 
 History note: `238db29` shipped a complete, unplanned Illucia (unfiltered ENABLE1 list, "REVEAL WORD" counted as a player win, no browser check). It was reverted in `b6a2fd9`. Nothing from it is carried forward.
 
