@@ -84,7 +84,7 @@ it('falls back inside a low tier, ends after six misses and offers a rematch at 
   for (let index = 1; index < 6; index++) await tick();
   expect(screen.getByRole('heading', { name: 'You win!' })).toBeTruthy();
   expect(screen.getByRole('img', { name: '0 of 6 misses left' })).toBeTruthy();
-  expect(screen.getByText(/do not earn Hall of Fame points/)).toBeTruthy();
+  expect(screen.getByText(/Duels don't earn Hall of Fame points yet/)).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: 'Rematch vs Scholar' }));
   expect(screen.getByText('Scholar')).toBeTruthy();
   expect(tape(view)).toEqual([]);

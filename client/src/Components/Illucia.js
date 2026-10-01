@@ -192,7 +192,7 @@ function Composer({ onStart }) {
       {/* Not type="password": browsers would offer to save and sync the word as a credential. */}
       <input id="duel-secret" type="text" autoComplete="off" autoCorrect="off" autoCapitalize="none" spellCheck={false} maxLength={15}
         value={secret} onChange={event => setSecret(event.target.value)} aria-describedby="duel-trust duel-validation" aria-invalid={Boolean(error)} />
-      <p id="duel-trust" className="duel-muted">{secret.trim() ? `${secret.trim().length} letters · ` : ''}Illucia only ever sees the blanks.</p>
+      <p id="duel-trust" className="duel-muted">{secret.trim() ? `${secret.trim().length} letters · ` : ''}Illucia plays blind, from the blanks alone.</p>
       <p id="duel-validation" role="alert">{error}</p>
       <div className="duel-tiers" role="radiogroup" aria-label="Her vocabulary">
         {VOCABULARY_TIERS.map(tier => <label key={tier.id} className={tierId === tier.id ? 'selected' : ''}>
@@ -238,7 +238,7 @@ function Result({ duel, restart, rematch }) {
       <h2 id="duel-result-title" ref={heading} tabIndex={-1}>{status === 'solved' ? 'Illucia wins' : 'You win'}</h2>
       <p>The word was <strong>{duel.round.answer.toUpperCase()}</strong>.</p>
       <p>{guesses} guesses: {guesses - misses} {guesses - misses === 1 ? 'hit' : 'hits'}, {misses} {misses === 1 ? 'miss' : 'misses'}.</p>
-      <p className="duel-muted">Duels with Illucia do not earn Hall of Fame points.</p>
+      <p className="duel-muted">Duels don't earn Hall of Fame points yet.</p>
       <div className="duel-result-actions">
         <button type="button" className="hm-button primary" onClick={restart}>Play again</button>
         {status === 'failed' && nextTier && <button type="button" className="hm-button" onClick={() => rematch(nextTier)}>Rematch vs {nextTier.label}</button>}

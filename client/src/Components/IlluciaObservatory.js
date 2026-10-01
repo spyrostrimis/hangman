@@ -149,7 +149,7 @@ function Setup({ username, onStart }) {
             {/* Not type="password": browsers would offer to save and sync the word as a credential. */}
             <input id="obs-secret" type="text" autoComplete="off" autoCorrect="off" autoCapitalize="none" spellCheck={false} maxLength={15}
               value={secret} onChange={event => setSecret(event.target.value)} aria-describedby="obs-trust obs-validation" aria-invalid={Boolean(error)} />
-            <p id="obs-trust" className="obs-muted">{secret.trim() ? `${secret.trim().length} letters · ` : ''}Your word stays in this browser. Illucia only sees the blanks.</p>
+            <p id="obs-trust" className="obs-muted">{secret.trim() ? `${secret.trim().length} letters · ` : ''}Illucia plays blind, from the blanks alone.</p>
             <p id="obs-validation" role="alert">{error}</p>
             <div className="obs-tiers" role="radiogroup" aria-label="Her vocabulary">
               {VOCABULARY_TIERS.map(tier => <label key={tier.id} className={tierId === tier.id ? 'selected' : ''}>
@@ -258,7 +258,7 @@ function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch }
           {status !== 'playing' && <div className="obs-summary">
             <p>{status === 'solved' ? `She solved it in ${turns.length} guesses with ${remaining} ${remaining === 1 ? 'miss' : 'misses'} to spare.` : `You held out for six misses. She guessed ${turns.length - MAX_MISSES} letters right.`}</p>
             <p>Final suspects: {mind.candidates.length ? mind.candidates.slice(0, 5).join(', ') : `none left in her ${tier.label} vocabulary`}{mind.candidates.length > 5 ? ` (5 of ${mind.candidates.length})` : ''}.</p>
-            <p className="obs-muted">Duels with Illucia do not earn Hall of Fame points.</p>
+            <p className="obs-muted">Duels don't earn Hall of Fame points yet.</p>
           </div>}
           {status === 'playing' && shortlist && shortlist.length > 0 && <p className="obs-shortlist">On her shortlist: {shortlist.join(' · ')}</p>}
         </div>

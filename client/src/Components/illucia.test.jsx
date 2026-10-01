@@ -66,7 +66,7 @@ it('sends only the length, hides her hits until the player shows them, and plays
     if (tile) fireEvent.click(tile); else await think();
   }
   expect(boards(view.container).at(-1)).toBe('EERIE');
-  expect(screen.getByText(/Duels with Illucia do not earn Hall of Fame points/)).toBeTruthy();
+  expect(screen.getByText(/Duels don't earn Hall of Fame points yet/)).toBeTruthy();
   const calls = analyzeDecision.mock.calls.length;
   await think();
   expect(analyzeDecision.mock.calls.length).toBe(calls);
