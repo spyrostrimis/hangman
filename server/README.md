@@ -23,6 +23,7 @@ Fake salts and generic errors reduce username enumeration, not eliminate it: reg
 | POST | `/user/login` | Session cookie and `{user: {id, username, score}}` |
 | GET | `/user/me` | Current user or 401 |
 | POST | `/user/logout` | Expired cookie and `{ok: true}` |
+| POST | `/user/delete-account` | Session plus `{credential}` from the existing login derivation; deletes account-linked rows, expires cookie, returns `{ok: true}` |
 | GET | `/user/get-best-scores` | Top 100 `{username, score}` rows, descending score then ascending user ID |
 | POST | `/user/round/start` | Authenticate; `{}` resumes or creates a round; optional `{previousRoundId}` replaces that owned, unclaimed round; returns `{roundId, word, issuedAt, expiresAt, serverNow}` |
 | POST | `/user/round/claim` | Authenticate; `{roundId, guesses}` validates a winning sequence and awards once; returns `{score}` on success or a successful retry |
@@ -33,7 +34,29 @@ The round-ticket API replaces `/user/add100` entirely. A server-selected word co
 
 Public answers still permit manufactured wins and bots; neither authentication nor replay validation proves human play. Existing approximate IP limits remain. Starts resume the outstanding round across tabs; explicitly replacing it invalidates it in other tabs. API start failures fall back to visibly unranked local play. Uncertain claim failures offer a manual retry using the same ticket. Guests and Illucia do not earn points. Existing score totals are preserved, including earlier unverified awards. See [scoring design, threat model and release steps](../docs/SCORING.md).
 
-Logout clears the browser cookie; a copied JWT remains valid until expiry. There is no password reset, email recovery, password change, or immediate session revocation UI in this release.
+Logout clears the browser cookie; a copied JWT remains valid until expiry unless the account is deleted. There is no password reset, email recovery or password change UI.
+
+## Account deletion
+
+Signed-in players open **Account** beside their username and re-enter their password. The client obtains `/user/auth-params` for that username and uses the exact login derivation. The Worker takes the target account from the authenticated cookie, not from a submitted username or ID. Deletion shares the IP limit, normalized-username auth limit, exact-Origin check, JSON requirement, 2 KiB body limit and `no-store` responses. Wrong proof returns 403; a missing/deleted session returns 401.
+
+One atomic D1 batch records `deleted_accounts(id, deleted_at)` and removes that UUID's rounds, score and user. The tombstone contains only the UUID and deletion time, for reapplying erasure after recovery. No word-usage statistics are created or changed. Success expires the session cookie. All protected routes look up the account in D1, so copied tokens stop authenticating after deletion; round foreign keys also prevent an in-flight start from recreating orphan records. Public endpoints remain public. There is no account recovery through the product.
+
+IDs already use `TEXT PRIMARY KEY` and `crypto.randomUUID()`; no integer-ID migration was needed. Re-registering the same username creates a different identity. Regression tests cover this and all protected routes.
+
+### Restore without resurrecting deleted accounts
+
+D1 Time Travel also rewinds the tombstone table. **Never rely only on tombstones inside the restored snapshot.** Before any restore:
+
+1. Put the account API into maintenance (block reads and writes, including login/signup/deletion/rounds), pause its Cron Trigger, and wait for in-flight requests to finish. Keep this barrier in place until verification is complete.
+2. Export the current `deleted_accounts` table to a restricted local recovery file with `wrangler d1 export DB --remote --table deleted_accounts --output <restricted-path>`. Confirm the export succeeded before restoring. Keep the original deletion timestamps; never print this data in release logs or commit it.
+3. Restore the chosen point within the seven-day Free recovery window. Reapply migrations if the snapshot predates the tombstone schema. Merge preserved tombstones by UUID, keeping the earlier deletion time on duplicates. Also retain tombstones already present in the restored snapshot. Do not run cleanup before reapplying deletions.
+4. In one D1 batch, execute `DELETE FROM rounds WHERE user_id IN (SELECT id FROM deleted_accounts)`, `DELETE FROM scores WHERE user_id IN (SELECT id FROM deleted_accounts)`, then `DELETE FROM users WHERE id IN (SELECT id FROM deleted_accounts)`. If any statement fails, keep maintenance enabled and resolve it before reopening.
+5. Verify that no user, score or round matches a tombstoned UUID. Check stale-session rejection and an unaffected account. Resume the hourly schedule and API only after these checks. Delete the temporary recovery export after successful verification.
+
+If current tombstones cannot be recovered, do not restore an older snapshot into service: it could revive erased accounts. Escalate recovery to the operator. Keeping seven days of tombstones protects the supported seven-day restore window; longer-lived exports are not a supported restore source. D1 recovery copies may retain deleted account data for up to seven days; historical tombstone copies may also persist after their live purge.
+
+References: [D1 batch atomicity](https://developers.cloudflare.com/d1/worker-api/d1-database/), [Time Travel](https://developers.cloudflare.com/d1/reference/time-travel/), [Free recovery limits](https://developers.cloudflare.com/d1/platform/limits/).
 
 ## Local development
 

@@ -105,6 +105,7 @@ app.get('/user/get-best-scores', async c => {
 });
 app.use('/user/me', authenticate);
 app.use('/user/round/*', authenticate);
+app.use('/user/delete-account', authenticate);
 async function authenticate(c: C, next: () => Promise<void>) {
   const token = getCookie(c, cookieName(c));
   if (!token) return failure(c, 'Please sign in.', 401);
@@ -118,6 +119,29 @@ async function authenticate(c: C, next: () => Promise<void>) {
   await next();
 }
 app.get('/user/me', c => c.json({ user: c.get('user') }));
+app.post('/user/delete-account', async c => {
+  const user = c.get('user');
+  const key = normalizeUsername(user.username);
+  if (!await accountLimit(c, key)) return failure(c, 'Too many attempts. Please try again in a minute.', 429);
+  const input = await readInput(c);
+  if (!input || Object.keys(input).some(key => key !== 'credential')
+    || typeof input.credential !== 'string' || !CREDENTIAL_PATTERN.test(input.credential)) {
+    return failure(c, 'Invalid deletion details.', 400);
+  }
+  const row = await c.env.DB.prepare('SELECT id, username, salt, verifier FROM users WHERE id = ?').bind(user.id).first<Account>();
+  if (!row) return failure(c, 'Please sign in.', 401);
+  if (!await checkVerifier(c.env.AUTH_PEPPER, key, row.salt, input.credential, row.verifier)) {
+    return failure(c, 'Incorrect password. Your account has not been deleted.', 403);
+  }
+  await c.env.DB.batch([
+    c.env.DB.prepare('INSERT INTO deleted_accounts (id, deleted_at) VALUES (?, ?) ON CONFLICT(id) DO NOTHING').bind(user.id, Date.now()),
+    c.env.DB.prepare('DELETE FROM rounds WHERE user_id = ?').bind(user.id),
+    c.env.DB.prepare('DELETE FROM scores WHERE user_id = ?').bind(user.id),
+    c.env.DB.prepare('DELETE FROM users WHERE id = ?').bind(user.id),
+  ]);
+  setCookie(c, cookieName(c), '', { ...cookieOptions(c), maxAge: 0 });
+  return c.json({ ok: true });
+});
 app.post('/user/round/start', async c => {
   const input = await readInput(c);
   if (!input || Object.keys(input).some(key => key !== 'previousRoundId')

@@ -31,6 +31,7 @@ export default function Navbar() {
             <span className="nav-player-name">{user.username}</span>
             <span className="nav-player-score">{(user.score ?? 0).toLocaleString('en-US')} pts</span>
           </span>
+          <NavLink to="/account">Account</NavLink>
           <button type="button" className="nav-logout" onClick={signOut} disabled={pending}>{pending ? 'Signing out…' : 'Logout'}</button>
         </> : status === 'loading'
           ? <span className="session-loading">Checking session…</span>

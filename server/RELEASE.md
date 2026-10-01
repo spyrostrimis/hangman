@@ -31,3 +31,11 @@ Cloudflare authentication was refreshed successfully after an expired OAuth call
 - Nested application routes serve the frontend while `/user/*` serves API JSON. Desktop and mobile layouts were checked; slow physical-phone stretching responsiveness remains unmeasured. Local duration is not a substitute for phone measurements.
 
 In this original production release, scores are cumulative and client-authoritative. No password recovery UI, legacy-account migration, or Illucia gameplay is included.
+
+## Privacy: account deletion (local verification, 2026-10-01)
+
+- Added password-confirmed account deletion, atomic account-linked erasure and a UUID/time recovery tombstone. Existing UUID identities already prevent rowid reuse; no identity migration was needed.
+- Restored suites: 19 Worker/D1 tests, 47 React tests and 42 client logic tests pass. Type checking and both production builds pass.
+- Eleven deliberate mutations failed the relevant assertions: password bypass, cross-account erasure, omitted tombstone, stale-session acceptance, reused identity, missing auth limit, incomplete deletion batch, guest form access, enabled pending submission, missing sign-out and missing expired-session handling. All mutations were restored.
+- Manual localhost browser checks at 1280 px and 390 px: signed-in Account navigation, permanent-deletion warning, incorrect password retaining the account, correct password deleting it and signed-out confirmation. Pending and duplicate submissions are covered by deterministic UI tests.
+- This record is local evidence only. Production migration, deployment and disposable-account verification remain pending. Hourly retention and invocation-log configuration are the next separate commit.

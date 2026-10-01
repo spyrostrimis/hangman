@@ -27,7 +27,7 @@ async function signup(username = 'Player') {
   return { cookie: response.headers.get('Set-Cookie')!.split(';')[0], data: await response.json() as { user: { id: string } } };
 }
 beforeAll(async () => { await applyD1Migrations(env.DB, env.TEST_MIGRATIONS); });
-beforeEach(async () => { await env.DB.batch([env.DB.prepare('DELETE FROM rounds'), env.DB.prepare('DELETE FROM scores'), env.DB.prepare('DELETE FROM users')]); });
+beforeEach(async () => { await env.DB.batch([env.DB.prepare('DELETE FROM rounds'), env.DB.prepare('DELETE FROM scores'), env.DB.prepare('DELETE FROM users'), env.DB.prepare('DELETE FROM deleted_accounts')]); });
 
 afterEach(() => { vi.restoreAllMocks(); });
 
@@ -45,6 +45,7 @@ async function start(cookie: string, previousRoundId?: string) {
 const win = (ticket: Ticket) => [...new Set(ticket.word)];
 const claim = (cookie: string, ticket: Ticket, guesses: unknown = win(ticket)) =>
   request('round/claim', { method: 'POST', cookie, body: { roundId: ticket.roundId, guesses } });
+
 
 describe('five-second scoring floor', () => {
   it('rejects at 4999 ms without consuming or awarding, then accepts the same ticket at 5000 ms', async () => {
@@ -79,6 +80,86 @@ describe('five-second scoring floor', () => {
     clock.mockReturnValue(first.issuedAt + 10000);
     const claims = await Promise.all(Array.from({ length: 5 }, () => claim(cookie, next)));
     for (const response of claims) expect(await response.json()).toEqual({ score: 200 });
+  });
+});
+
+describe('account deletion', () => {
+  const remove = (cookie: string, credential = registration().credential) => request('delete-account', { method: 'POST', cookie, body: { credential } });
+  const snapshot = async () => Promise.all(['users', 'scores', 'rounds', 'deleted_accounts'].map(async table =>
+    (await env.DB.prepare(`SELECT * FROM ${table} ORDER BY 1`).all()).results));
+
+  it('wrong proof changes nothing; correct proof removes only the authenticated account and records its tombstone', async () => {
+    const owner = await signup(); const other = await signup('Other');
+    await claim(owner.cookie, await mature(await start(owner.cookie))); await start(owner.cookie);
+    await claim(other.cookie, await mature(await start(other.cookie))); await start(other.cookie);
+    const before = await snapshot();
+    expect((await remove(owner.cookie, '00'.repeat(32))).status).toBe(403);
+    expect(await snapshot()).toEqual(before);
+    const response = await remove(owner.cookie);
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(response.headers.get('Set-Cookie')).toContain('__Host-hangman_session=;');
+    expect(response.headers.get('Set-Cookie')).toContain('Max-Age=0');
+    const after = await snapshot();
+    expect(after[0]).toEqual(before[0].filter(row => row.id === other.data.user.id));
+    expect(after[1]).toEqual(before[1].filter(row => row.user_id === other.data.user.id));
+    expect(after[2]).toEqual(before[2].filter(row => row.user_id === other.data.user.id));
+    expect(after[3]).toEqual([{ id: owner.data.user.id, deleted_at: expect.any(Number) }]);
+    expect(await (await request('get-best-scores')).json()).toEqual([{ username: 'Other', score: 100 }]);
+  });
+
+  it('rejects a stale token on every protected route without recreating rows', async () => {
+    const owner = await signup(); const ticket = await start(owner.cookie);
+    expect((await request('me', { cookie: owner.cookie })).status).toBe(200);
+    expect((await remove(owner.cookie)).status).toBe(200);
+    const before = await snapshot();
+    expect((await request('me', { cookie: owner.cookie })).status).toBe(401);
+    expect((await request('round/start', { method: 'POST', cookie: owner.cookie })).status).toBe(401);
+    expect((await claim(owner.cookie, ticket)).status).toBe(401);
+    expect((await remove(owner.cookie)).status).toBe(401);
+    expect(await snapshot()).toEqual(before);
+  });
+
+  it('re-registering the deleted username gets a fresh UUID and never revives its old cookie', async () => {
+    const old = await signup();
+    expect((await remove(old.cookie)).status).toBe(200);
+    const replacement = await signup();
+    expect(replacement.data.user.id).not.toBe(old.data.user.id);
+    expect((await request('me', { cookie: old.cookie })).status).toBe(401);
+    expect((await request('me', { cookie: replacement.cookie })).status).toBe(200);
+    expect((await remove(old.cookie)).status).toBe(401);
+    expect((await request('me', { cookie: replacement.cookie })).status).toBe(200);
+  });
+
+  it('requires cookie, exact Origin, bounded JSON and both rate limits before deleting', async () => {
+    const owner = await signup(); const before = await snapshot();
+    const options = { method: 'POST', cookie: owner.cookie, body: { credential: registration().credential } };
+    expect((await request('delete-account', { ...options, cookie: undefined })).status).toBe(401);
+    expect((await request('delete-account', { ...options, origin: 'https://attacker.example' })).status).toBe(403);
+    expect((await request('delete-account', { ...options, headers: { 'Content-Type': 'text/plain' } })).status).toBe(415);
+    expect((await request('delete-account', { ...options, body: { credential: 'x'.repeat(3000) } })).status).toBe(413);
+    expect((await request('delete-account', { ...options, body: { credential: 'invalid' } })).status).toBe(400);
+    const deny = { limit: async () => ({ success: false }) };
+    for (const binding of ['IP_LIMIT', 'AUTH_LIMIT']) {
+      const blocked = await request('delete-account', { ...options, bindings: { [binding]: deny } });
+      expect(blocked.status).toBe(429); expect(blocked.headers.get('Retry-After')).toBe('60');
+    }
+    let limitedKey = '';
+    expect((await request('delete-account', { ...options, bindings: { AUTH_LIMIT: { limit: async ({ key }: { key: string }) => { limitedKey = key; return { success: false }; } } } })).status).toBe(429);
+    expect(limitedKey).toBe('auth:player');
+    expect(await snapshot()).toEqual(before);
+    expect((await remove(owner.cookie)).status).toBe(200);
+  });
+
+  it('rolls back the tombstone and all deletes when any batch statement fails', async () => {
+    const owner = await signup(); await start(owner.cookie); const before = await snapshot();
+    await env.DB.exec("CREATE TRIGGER fail_deletion BEFORE DELETE ON users BEGIN SELECT RAISE(ABORT, 'test failure'); END");
+    try {
+      expect((await remove(owner.cookie)).status).toBe(500);
+      expect(await snapshot()).toEqual(before);
+    } finally { await env.DB.exec('DROP TRIGGER fail_deletion'); }
+    expect((await remove(owner.cookie)).status).toBe(200);
+
   });
 });
 
