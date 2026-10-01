@@ -1,6 +1,6 @@
 # Scored rounds
 
-Approved 2026-10-01. Implemented locally; this change does not deploy the Worker, migrate production D1, or publish the frontend.
+Approved and deployed 2026-10-01. Migration `0002_rounds.sql`, the Worker and the matching frontend are live; see the production verification below.
 
 ## Guarantees and limits
 
@@ -39,12 +39,14 @@ Run the client Node and UI tests and production build; run server type generatio
 
 Local verification on 2026-10-01: 42 client Node tests, 44 UI tests and 14 Workers/D1 integration tests passed. Type generation, TypeScript checking, the client production build and Worker dry-run build passed. Migration `0002_rounds.sql` applied successfully to local D1. A browser smoke test signed in to a disposable local account, completed two rounds and confirmed totals of 100 then 200. The second award was recorded 2,098 ms after ticket issuance, verifying that a sub-five-second win counts. The test account was removed afterward. These are local results only.
 
-For a later authorized production release:
+Production release sequence (completed 2026-10-01):
 
 1. Apply `0002_rounds.sql` to production D1. It adds the rounds table and indexes without changing existing scores.
 2. Deploy the Worker, which removes the legacy endpoint. Old frontend tabs will temporarily fail to save scores; keeping `add100` alive would preserve the bypass. Coordinate the frontend release closely.
 3. Publish the matching frontend and verify a fast win, retry, guest play and persisted Hall of Fame total in a real browser. Check deployed CPU and D1 usage; local results do not establish production capacity.
 
-The recorded local commit is not production verification. If rolling back, preserve D1 and account data. Restoring the old Worker also restores arbitrary score increments; do not present that as retaining the new protections.
+Production verification on 2026-10-01: implementation `f865419` was pushed to `main`; Pages deployment `6ce48bc8-0425-429c-ab0a-db15e93d8dba` served the new `/assets/index--FThfoVR.js` bundle on the custom domain. Worker version `1c27f227-b974-4517-aaf4-115df6ab8dde` was deployed after applying migration `0002_rounds.sql` to production D1. A disposable release account verified guest rejection (401), concurrent starts resuming the same ticket, invalid replay rejection (400), three simultaneous winning claims returning 100 total, and removal of the legacy endpoint (404). The account and its cascading score/round records were removed by exact account ID afterward. Production browser verification was attempted but denied by the browser permission layer; deployed CPU/D1 load measurements remain unverified. The local browser evidence above remains separate.
+
+If rolling back, preserve D1 and account data. Restoring the old Worker also restores arbitrary score increments; do not present that as retaining the new protections.
 
 The scoring hard rule in `CLAUDE.md` is now SYNC v5. Its separately maintained project-instructions mirror was not found in this checkout and needs the same approved wording when that external configuration is next edited.

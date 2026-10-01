@@ -158,7 +158,7 @@ Still open:
 - There is deliberately no gallows: the story is rescuing a robot. The old BODY_PARTS code was deleted from `Components/Figure.js`; Artsy's screen shows reboot progress instead. Do not restore it.
 - Header/Footer imports and commented render references remain. React StrictMode is still disabled in the app, but the score lifecycle is tested under StrictMode and must not depend on that setting.
 - Game messages remain inline in App.js; the rules come from `hangman-core.js`. Do not widen unrelated slices into a game-engine rewrite.
-- The round-ticket scoring update validates submitted wins and makes awards idempotent in D1; bots can still manufacture valid histories. It is implemented locally, not deployed by this change. See docs/SCORING.md for the remaining limitations, migration and coordinated release.
+- The round-ticket scoring update validates submitted wins and makes awards idempotent in D1; bots can still manufacture valid histories. Deployed 2026-10-01 with production API checks passed; production browser verification was blocked by browser permissions. See docs/SCORING.md for evidence and remaining limitations.
 
 ## WHAT IS LIVE
 

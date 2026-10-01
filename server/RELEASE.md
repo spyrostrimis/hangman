@@ -1,6 +1,6 @@
 # Account release record
 
-Round-ticket follow-up (2026-10-01): implemented and checked locally; not deployed. Requires migration `0002_rounds.sql` and coordinated Worker/frontend release. See [scoring design and release steps](../docs/SCORING.md). The evidence below records the original account release.
+Round-ticket follow-up (2026-10-01): deployed after applying production migration `0002_rounds.sql`. Worker `1c27f227-b974-4517-aaf4-115df6ab8dde`; implementation commit `f865419`; Pages deployment `6ce48bc8-0425-429c-ab0a-db15e93d8dba`. Production API checks passed for guest rejection, invalid replay rejection, concurrent start/claim idempotency and legacy endpoint removal. The disposable test account was removed. Production browser verification was denied by the browser permission layer; fresh deployed CPU measurements remain unverified. See [scoring design and release steps](../docs/SCORING.md). The evidence below records the original account release.
 
 Updated 2026-09-27. Registration, login, cumulative scores, and the Hall of Fame are deployed and verified at https://hangman.spyrostrimis.com.
 

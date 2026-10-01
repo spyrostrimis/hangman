@@ -14,7 +14,7 @@ The game selects from 105 checked-in word records. Paintings are served from Clo
 
 The account rebuild uses a Hono Worker, D1, browser-side password stretching, and expiring HttpOnly cookies. Registered players earn 100 points per validated winning round; the public Hall of Fame displays the top 100 cumulative scores. Guest play remains available.
 
-The original account/score release is live and browser-verified on the custom domain. The round-ticket scoring update is implemented locally and requires a separate API migration/deploy and frontend release; see [the scoring design](docs/SCORING.md). Production rollout, test evidence, and initial Free-tier CPU measurements are recorded in [the account release record](server/RELEASE.md).
+The original account/score release is live and browser-verified on the custom domain. The round-ticket scoring update was deployed on 2026-10-01 and passed production API checks; its production browser check was blocked by browser permissions. See [the scoring design and release evidence](docs/SCORING.md). Production rollout, test evidence, and initial Free-tier CPU measurements are recorded in [the account release record](server/RELEASE.md).
 
 Passwords use PBKDF2-HMAC-SHA-256 (600,000 iterations) in the browser. The server stores an HMAC verifier under a separate secret pepper. [Account protocol, limitations, development and deployment instructions](server/README.md).
 
