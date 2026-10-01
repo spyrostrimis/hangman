@@ -1,0 +1,16 @@
+/* Reading page: the sign-in panel, widened for prose. */
+.privacy.account { width: min(760px, calc(100% - 32px)); margin-top: 4vh; }
+.privacy h1 { margin: 0 0 14px; font-family: technoboard; font-weight: normal; font-size: 30px; text-align: center; color: var(--hm-text); }
+.privacy h2 { margin: 24px 0 8px; font-family: bruno; font-weight: normal; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--hm-yellow); }
+.privacy p, .privacy li { font: 15px/1.6 monospace; color: var(--hm-text); text-align: left; }
+.privacy p { margin: 0 0 10px; }
+.privacy ul { margin: 0 0 10px; padding-left: 20px; }
+.privacy li { margin-bottom: 6px; }
+.privacy .privacy-lead { color: #b9b8bd; }
+.privacy a { color: var(--hm-yellow); }
+.privacy code { overflow-wrap: anywhere; font-size: 14px; color: var(--hm-cyan); }
+
+@media (max-width: 800px) {
+  .privacy.account { width: calc(100% - 24px); margin-top: 16px; }
+  .privacy p, .privacy li { font-size: 14px; }
+}

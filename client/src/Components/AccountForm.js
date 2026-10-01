@@ -48,7 +48,7 @@ export default function AccountForm({ signup = false }) {
           <input id="username" name="username" type="text" required autoComplete="username" autoCapitalize="none"
             spellCheck={false} pattern={`[A-Za-z0-9]{3,${maxName}}`} minLength={3} maxLength={maxName} disabled={pending}
             title={`Use 3–${maxName} letters or numbers.`} aria-describedby={signup ? 'username-help' : undefined} />
-          {signup && <p id="username-help" className="account-help">3–20 letters or numbers. It appears in the Hall of Fame.</p>}
+          {signup && <p id="username-help" className="account-help">3–20 letters or numbers. Your username is shown publicly in the Hall of Fame (<Link to="/privacy">Privacy</Link>).</p>}
           <label htmlFor="password">Password</label>
           <input id="password" name="password" type="password" required maxLength={128} minLength={signup ? 15 : 1}
             autoComplete={signup ? 'new-password' : 'current-password'} disabled={pending} aria-describedby={signup ? 'password-help' : undefined} />

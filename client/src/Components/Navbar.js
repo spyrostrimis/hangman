@@ -9,6 +9,7 @@ const LINKS = [
   { to: '/illucia', label: 'Play vs AI' },
   { to: '/illucia-observatory', label: 'Illucia' },
   { to: '/hall-of-fame', label: 'Hall of Fame' },
+  { to: '/privacy', label: 'Privacy' },
 ];
 
 export default function Navbar() {

@@ -47,6 +47,7 @@
 .account-form input:focus-visible { outline: 2px solid var(--hm-yellow); outline-offset: 2px; }
 .account-form input:disabled { opacity: .6; }
 .account-help { margin: 6px 0 0; font: 13px/1.5 monospace; color: #b9b8bd; }
+.account-help a { color: var(--hm-yellow); }
 .account-form .account-error { margin: 12px 0 0; }
 .account-form button[type="submit"] { display: block; margin: 22px auto 6px; min-width: 60%; }
 .account-switch { margin: 14px 0 0; text-align: center; font: 14px monospace; color: var(--hm-text); }

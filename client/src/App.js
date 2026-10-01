@@ -20,6 +20,7 @@ import soundbtn from "./Images/soundbtn.png";
 import mwLogo from "./Images/mw-logo-dark-background.png";
 import { buildAssetUrl } from "./lib/word-data.js";
 import Account from './Components/Account';
+import Privacy from './Components/Privacy';
 import { useRoundScore } from './lib/use-round-score.js';
 import { useHangmanRound } from './lib/use-hangman-round.js';
 import {
@@ -350,6 +351,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/account" element={<Account />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

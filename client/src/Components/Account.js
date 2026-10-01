@@ -31,7 +31,7 @@ export default function Account() {
       setError(failure.message);
     } finally { busy.current = false; setPending(false); }
   }
-  return <main className="account"><section className="account-panel-inner account-form">
+  return <div className="account"><section className="account-panel-inner account-form">
     <h1>Account</h1>
     {deleted ? <p role="status">Your account has been deleted. You are signed out.</p>
       : status === 'loading' ? <p role="status">Checking session…</p>
@@ -47,5 +47,5 @@ export default function Account() {
       </form>}
     {error && <p className="account-error" role="alert">{error}</p>}
     {deleted && <p><Link to="/hangman">Play as a guest</Link></p>}
-  </section></main>;
+  </section></div>;
 }
