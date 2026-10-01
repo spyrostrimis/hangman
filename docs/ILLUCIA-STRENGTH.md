@@ -144,6 +144,7 @@ response headers included). The decoded sizes equal the committed files.
 cd tools
 node benchmark-illucia.js --output <tmp>/i3.json          # then compare with benchmarks/illucia-i3.json
 node benchmark-illucia-tiers.js --output <tmp>/i3b.json   # then compare with benchmarks/illucia-i3b.json
+node benchmarks/check-illucia-reproduction.js <tmp>/i3.json <tmp>/i3b.json   # compares both, ignoring timing and environment
 node benchmark-illucia-strength.js                        # sets a–d, feel, page parity (~4.5 min)
 # with `vite preview` of a fresh build on :4173 and Edge installed:
 node benchmark-illucia-strength.js --speed                # 30 throttled Master rounds (~6 min)
