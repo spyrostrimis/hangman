@@ -1,0 +1,387 @@
+{
+  "schemaVersion": 1,
+  "phase": "run",
+  "startedAt": "2026-10-02T23:45:35.072Z",
+  "status": "stopped",
+  "configuration": {
+    "models": [
+      "@cf/openai/gpt-oss-120b"
+    ],
+    "modes": [
+      "invent",
+      "sort"
+    ],
+    "promptVersion": "d1-1",
+    "prompts": {
+      "invent": "You help Illucia, a Hangman player, narrow down a hidden English word by its MEANING. The user message is a JSON object whose \"candidates\" field lists every word the hidden word could be.\n1. Invent ONE yes/no question about what the word can mean: what kind of thing, action or quality it is. Start it with \"Can your word mean\" and end it with \"?\". It must not be about letters, spelling, sounds, rhymes or length.\n2. A word is YES if ANY of its meanings fits, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n3. Choose a question that puts roughly half of the candidates in YES and half in NO.\n4. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"question\": \"...\", \"yes\": [\"...\"], \"no\": [\"...\"]}",
+      "sort": "Sort English words by MEANING. The user message is a JSON object with a yes/no \"question\" and a \"candidates\" list.\n1. A word is YES if ANY of its meanings fits the question, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n2. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"yes\": [\"...\"], \"no\": [\"...\"]}"
+    },
+    "promptSha256": "1b85eda7ffdac6d528d315e22cc412da16cc78ad908d179233edb4585023a2d2",
+    "statesSha256": "4ddaee886368cbe7f44bde2512a66f443a0b33d7429bb4a973a17fcbf09d68e1",
+    "temperature": 0,
+    "seed": 20261002,
+    "maxTokens": 2048,
+    "modelOptions": {
+      "@cf/qwen/qwen3-30b-a3b-fp8": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/google/gemma-4-26b-a4b-it": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/zai-org/glm-4.7-flash": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/openai/gpt-oss-20b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/openai/gpt-oss-120b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/qwen/qwen3.8-27b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/nvidia/nemotron-3-120b-a12b": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      }
+    },
+    "requestTimeoutMs": 60000,
+    "stateIds": [
+      "9-scholar",
+      "10-apprentice"
+    ],
+    "retries": 0,
+    "timeoutsBeforeSkip": 3,
+    "evenSplit": [
+      0.25,
+      0.75
+    ],
+    "blockedTerms": 421,
+    "neuronRates": {
+      "@cf/openai/gpt-oss-120b": {
+        "input": 31818,
+        "output": 68182
+      }
+    },
+    "pricingChecked": "2026-10-02",
+    "maxRunNeurons": 380
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32"
+  },
+  "requests": [
+    {
+      "state": "9-scholar",
+      "model": "@cf/openai/gpt-oss-120b",
+      "mode": "invent",
+      "milliseconds": 25053.614599999997,
+      "inputSha256": "b5a9a862061b07acdaf7e74fc31ef3334e196d7e9590348e73111db1d1b50fb3",
+      "outcome": "rejected-question",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word refer to a tangible, physical object or entity?",
+      "problems": [
+        "wrong-opening"
+      ],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "dubrovnik",
+        "hobgoblin",
+        "hydrofoil",
+        "kropotkin",
+        "oxycontin",
+        "portfolio",
+        "proboscis",
+        "troopship"
+      ],
+      "no": [
+        "courtship",
+        "mongoloid",
+        "monotonic",
+        "nonprofit",
+        "prognosis",
+        "psychosis",
+        "psychotic",
+        "symphonic"
+      ],
+      "yesShare": 0.5,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/openai/gpt-oss-120b",
+      "usage": {
+        "prompt_tokens": 344,
+        "completion_tokens": 1486,
+        "reasoning_tokens": null,
+        "neurons": 112.26354217529297
+      },
+      "estimatedNeurons": 112.263844,
+      "providerReportedNeurons": 112.26354217529297,
+      "reasoningChars": 5201,
+      "visibleChars": 296,
+      "response": "{\n  \"question\": \"Can your word refer to a tangible, physical object or entity?\",\n  \"yes\": [\"dubrovnik\",\"hobgoblin\",\"hydrofoil\",\"kropotkin\",\"oxycontin\",\"portfolio\",\"proboscis\",\"troopship\"],\n  \"no\": [\"courtship\",\"monotonic\",\"nonprofit\",\"mongoloid\",\"prognosis\",\"psychosis\",\"psychotic\",\"symphonic\"]\n}"
+    },
+    {
+      "state": "9-scholar",
+      "model": "@cf/openai/gpt-oss-120b",
+      "mode": "sort",
+      "milliseconds": 6587.201899999996,
+      "inputSha256": "2b63939dc313f5620121617a64285a64b1747c55473297bf33c266a23f139221",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "kropotkin",
+        "mongoloid",
+        "psychotic"
+      ],
+      "no": [
+        "courtship",
+        "dubrovnik",
+        "hobgoblin",
+        "hydrofoil",
+        "monotonic",
+        "nonprofit",
+        "oxycontin",
+        "portfolio",
+        "proboscis",
+        "prognosis",
+        "psychosis",
+        "symphonic",
+        "troopship"
+      ],
+      "yesShare": 0.1875,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/openai/gpt-oss-120b",
+      "usage": {
+        "prompt_tokens": 267,
+        "completion_tokens": 501,
+        "reasoning_tokens": null,
+        "neurons": 42.65448760986328
+      },
+      "estimatedNeurons": 42.654588,
+      "providerReportedNeurons": 42.65448760986328,
+      "reasoningChars": 1541,
+      "visibleChars": 225,
+      "response": "{\"yes\": [\"kropotkin\", \"mongoloid\", \"psychotic\"], \"no\": [\"courtship\", \"dubrovnik\", \"hobgoblin\", \"hydrofoil\", \"monotonic\", \"nonprofit\", \"oxycontin\", \"portfolio\", \"proboscis\", \"prognosis\", \"psychosis\", \"symphonic\", \"troopship\"]}"
+    },
+    {
+      "state": "10-apprentice",
+      "model": "@cf/openai/gpt-oss-120b",
+      "mode": "invent",
+      "milliseconds": 6947.351600000002,
+      "inputSha256": "b2e19300646ab26bcae3b4f60995ed370ac4a378b00d1d22113d5b755b736026",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean an action (a verb)?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "illustrate",
+        "inaugurate"
+      ],
+      "no": [
+        "immaculate",
+        "impassable",
+        "implacable",
+        "importance",
+        "improbable",
+        "inaccurate",
+        "inflatable",
+        "invaluable"
+      ],
+      "yesShare": 0.2,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/openai/gpt-oss-120b",
+      "usage": {
+        "prompt_tokens": 319,
+        "completion_tokens": 1144,
+        "reasoning_tokens": null,
+        "neurons": 88.14991760253906
+      },
+      "estimatedNeurons": 88.15015,
+      "providerReportedNeurons": 88.14991760253906,
+      "reasoningChars": 4491,
+      "visibleChars": 219,
+      "response": "{\n  \"question\": \"Can your word mean an action (a verb)?\",\n  \"yes\": [\"illustrate\", \"inaugurate\"],\n  \"no\": [\"immaculate\", \"impassable\", \"implacable\", \"importance\", \"improbable\", \"inaccurate\", \"inflatable\", \"invaluable\"]\n}"
+    }
+  ],
+  "stopReason": "run-budget",
+  "finishedAt": "2026-10-02T23:46:13.667Z",
+  "budget": {
+    "day": "2026-10-02",
+    "requests": 320,
+    "reservedNeurons": 9863.613191965074,
+    "adjustment": "2026-10-02 23:27 UTC, owner decision: reservations for 7 requests with unknown usage (6 timeouts, 1 killed in flight) dropped, 909.0 neurons; owner dashboard showed 7.8k used before the Llama 3.3 70B run.",
+    "maxRequests": 1800,
+    "maxNeurons": 10000,
+    "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
+  },
+  "mappingSha256": "698911e1fe00163d16bbc7d2af03a79fafb12819aef507451aa8f6453a49972f",
+  "summary": {
+    "@cf/openai/gpt-oss-120b": {
+      "invent": {
+        "requests": 2,
+        "sent": 2,
+        "outcomes": {
+          "rejected-question": 1,
+          "uneven": 1
+        },
+        "acceptedRate": 0,
+        "strictJsonRate": 1,
+        "validListsRate": 1,
+        "invalidRate": 0,
+        "split": {
+          "meanYesShare": 0.35,
+          "meanDistanceFromHalf": 0.15,
+          "inBand": 1,
+          "withValidLists": 2
+        },
+        "accuracy": {
+          "scoredRequests": 0,
+          "unmappedQuestions": 2,
+          "labelled": 0,
+          "correct": 0,
+          "falseYes": 0,
+          "falseNo": 0,
+          "wordnetYes": 0,
+          "wordnetNo": 0,
+          "accuracy": null,
+          "falseYesRate": null,
+          "falseNoRate": null,
+          "answerChecked": 0,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 6947.3516,
+          "p95": 25053.6146,
+          "max": 25053.6146,
+          "within3s": 0,
+          "within5s": 0,
+          "within8s": 0.5,
+          "acceptedWithin3s": 0,
+          "acceptedWithin8s": 0
+        },
+        "tokens": {
+          "requestsWithUsage": 2,
+          "meanPrompt": 331.5,
+          "meanCompletion": 1315,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 1229,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 200.414,
+          "estimatedPerRequest": 100.207,
+          "providerReportedTotal": 200.4135,
+          "requestsWithoutUsage": 0
+        },
+        "perState": []
+      },
+      "sort": {
+        "requests": 1,
+        "sent": 1,
+        "outcomes": {
+          "uneven": 1
+        },
+        "acceptedRate": 0,
+        "strictJsonRate": 1,
+        "validListsRate": 1,
+        "invalidRate": 0,
+        "split": {
+          "meanYesShare": 0.1875,
+          "meanDistanceFromHalf": 0.3125,
+          "inBand": 0,
+          "withValidLists": 1
+        },
+        "accuracy": {
+          "scoredRequests": 1,
+          "unmappedQuestions": 0,
+          "labelled": 13,
+          "correct": 12,
+          "falseYes": 0,
+          "falseNo": 1,
+          "wordnetYes": 3,
+          "wordnetNo": 10,
+          "accuracy": 0.9231,
+          "falseYesRate": 0,
+          "falseNoRate": 0.3333,
+          "answerChecked": 1,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 6587.2019,
+          "p95": 6587.2019,
+          "max": 6587.2019,
+          "within3s": 0,
+          "within5s": 0,
+          "within8s": 1,
+          "acceptedWithin3s": 0,
+          "acceptedWithin8s": 0
+        },
+        "tokens": {
+          "requestsWithUsage": 1,
+          "meanPrompt": 267,
+          "meanCompletion": 501,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 426,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 42.6546,
+          "estimatedPerRequest": 42.6546,
+          "providerReportedTotal": 42.6545,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "9-scholar",
+            "codes": [
+              "a"
+            ],
+            "labelled": 13,
+            "unlabelled": 3,
+            "correct": 12,
+            "falseYes": 0,
+            "falseNo": 1,
+            "wordnetYes": 3,
+            "wordnetNo": 10,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": [
+              "-hobgoblin"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

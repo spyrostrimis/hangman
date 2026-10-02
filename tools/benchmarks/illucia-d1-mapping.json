@@ -1,7 +1,7 @@
 {
   "judgedBy": "Claude (Opus 5.5), 2026-10-02, after the run and before computing accuracy; for Spyros to review",
   "rule": "A question is scored only if it asks the same thing as one B1 category or a union of them. Close but wider or narrower questions are not scored; their notes say why.",
-  "run": "benchmarks/illucia-d1.json, illucia-d1-r1-invent.json, illucia-d1-round2.json, illucia-d1-llama70b.json, illucia-d1-llama70b-part2.json, illucia-d1-nemotron-*.json",
+  "run": "benchmarks/illucia-d1.json, illucia-d1-r1-invent.json, illucia-d1-round2.json, illucia-d1-llama70b.json, illucia-d1-llama70b-part2.json, illucia-d1-nemotron-*.json, illucia-d1-gptoss120b-part2.json",
   "questions": {
     "can your word mean a type of bird?": {
       "codes": [
@@ -446,6 +446,14 @@
     "can your word mean a country?": {
       "codes": null,
       "note": "Narrower than y (a place)."
+    },
+    "can your word refer to a tangible, physical object or entity?": {
+      "codes": null,
+      "note": "Wider than o (a man-made object): natural objects and entities count too."
+    },
+    "can your word mean an action (a verb)?": {
+      "codes": null,
+      "note": "A part-of-speech question; B1 has verb categories but no general verb one."
     }
   }
 }

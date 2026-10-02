@@ -254,6 +254,20 @@ easier boards it matches Gemma's accuracy and is faster, at about 4× Gemma's co
 (~20 neurons, so ~1,000 a day at the planned 50 requests). Four boards cannot separate it
 from Gemma. The full 21-state run below did, and Llama 3.3 70B won.
 
+### gpt-oss-120b completed (243 neurons)
+
+The last of the day's budget finished gpt-oss-120b's five states
+(`illucia-d1-gptoss120b-part2.json`: the `9-scholar` sort and `10-apprentice` invent; the
+ceiling refused the `10-apprentice` sort). It also re-ran the `9-scholar` invent, which gave
+a *different* question than in round two. The settings were the same (temperature 0, fixed
+seed), so hosted runs are not fully repeatable. Over all five states:
+- **Invents:** 1 of 5 usable. Four of its six invents broke the required "Can your word
+  mean …" wording, and one more split too narrowly. They took 2.1–25.1 s and 36–112
+  neurons.
+- **Sorts:** 4 of 5 had valid lists.
+
+The verdict stands: sensible questions, wrong wording, too slow.
+
 ### Nemotron 3 120B A12B (added late, 321 neurons)
 
 `@cf/nvidia/nemotron-3-120b-a12b` (45,455 / 136,364 neurons per M tokens), run at the end of
@@ -323,8 +337,8 @@ The second round then spent a further 4,937 measured neurons (R1 2,450, the othe
 
 The full Llama 3.3 70B run added 1,500 measured neurons. Before its second part the ledger
 dropped the 909 neurons reserved for requests with unknown usage (owner decision, matching
-the Cloudflare dashboard). After the Llama run the day stood at 9,299 measured neurons. The Nemotron runs added 321, ending
-the day at 9,620, under the 10,000 free allowance and the ledger's ceiling, which was raised to
+the Cloudflare dashboard). After the Llama run the day stood at 9,299 measured neurons. The Nemotron runs added 321 and gpt-oss-120b's
+completion 243, ending the day at 9,863 measured, under the 10,000 free allowance and the ledger's ceiling, which was raised to
 10,000 that evening.
 
 ## What this means for D2 (not decided here)
