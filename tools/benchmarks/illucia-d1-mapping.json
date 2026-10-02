@@ -1,7 +1,7 @@
 {
   "judgedBy": "Claude (Opus 5.5), 2026-10-02, after the run and before computing accuracy; for Spyros to review",
   "rule": "A question is scored only if it asks the same thing as one B1 category or a union of them. Close but wider or narrower questions are not scored; their notes say why.",
-  "run": "benchmarks/illucia-d1.json, illucia-d1-r1-invent.json, illucia-d1-round2.json",
+  "run": "benchmarks/illucia-d1.json, illucia-d1-r1-invent.json, illucia-d1-round2.json, illucia-d1-llama70b.json, illucia-d1-llama70b-part2.json",
   "questions": {
     "can your word mean a type of bird?": {
       "codes": [
@@ -385,6 +385,47 @@
     "can your word refer to a mental health condition or disorder?": {
       "codes": null,
       "note": "Narrower than E (an illness)."
+    },
+    "can your word mean a person or an animal?": {
+      "codes": [
+        "a",
+        "b"
+      ],
+      "note": "Union of a (a person or a kind of person) and b (an animal)."
+    },
+    "can your word mean something that can be held in your hand?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a form of deception or trickery?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean an adverb?": {
+      "codes": null,
+      "note": "A grammar question, not a meaning; B1 has no adverb category."
+    },
+    "can your word mean something related to a living thing?": {
+      "codes": null,
+      "note": "\"Related to\" is wider than a+b+g."
+    },
+    "can your word mean something related to removal or deletion?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean something describing a quality or state?": {
+      "codes": null,
+      "note": "Close to O (an adjective), but nouns of quality or state would also fit."
+    },
+    "can your word mean a type of plant?": {
+      "codes": [
+        "g"
+      ],
+      "note": "Same as g."
+    },
+    "can your word mean something that happens or is done to a thing or substance?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
     }
   }
 }

@@ -1,0 +1,1677 @@
+{
+  "schemaVersion": 1,
+  "phase": "run",
+  "startedAt": "2026-10-02T23:25:07.946Z",
+  "status": "stopped",
+  "configuration": {
+    "models": [
+      "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+    ],
+    "modes": [
+      "invent",
+      "sort"
+    ],
+    "promptVersion": "d1-1",
+    "prompts": {
+      "invent": "You help Illucia, a Hangman player, narrow down a hidden English word by its MEANING. The user message is a JSON object whose \"candidates\" field lists every word the hidden word could be.\n1. Invent ONE yes/no question about what the word can mean: what kind of thing, action or quality it is. Start it with \"Can your word mean\" and end it with \"?\". It must not be about letters, spelling, sounds, rhymes or length.\n2. A word is YES if ANY of its meanings fits, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n3. Choose a question that puts roughly half of the candidates in YES and half in NO.\n4. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"question\": \"...\", \"yes\": [\"...\"], \"no\": [\"...\"]}",
+      "sort": "Sort English words by MEANING. The user message is a JSON object with a yes/no \"question\" and a \"candidates\" list.\n1. A word is YES if ANY of its meanings fits the question, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n2. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"yes\": [\"...\"], \"no\": [\"...\"]}"
+    },
+    "promptSha256": "1b85eda7ffdac6d528d315e22cc412da16cc78ad908d179233edb4585023a2d2",
+    "statesSha256": "4ddaee886368cbe7f44bde2512a66f443a0b33d7429bb4a973a17fcbf09d68e1",
+    "temperature": 0,
+    "seed": 20261002,
+    "maxTokens": 2048,
+    "modelOptions": {
+      "@cf/qwen/qwen3-30b-a3b-fp8": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/google/gemma-4-26b-a4b-it": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/zai-org/glm-4.7-flash": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/openai/gpt-oss-20b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/openai/gpt-oss-120b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/qwen/qwen3.8-27b": {
+        "reasoning_effort": "low"
+      }
+    },
+    "requestTimeoutMs": 30000,
+    "stateIds": "all",
+    "retries": 0,
+    "timeoutsBeforeSkip": 3,
+    "evenSplit": [
+      0.25,
+      0.75
+    ],
+    "blockedTerms": 421,
+    "neuronRates": {
+      "@cf/meta/llama-3.3-70b-instruct-fp8-fast": {
+        "input": 26668,
+        "output": 204805
+      }
+    },
+    "pricingChecked": "2026-10-02",
+    "maxRunNeurons": 3000
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32"
+  },
+  "requests": [
+    {
+      "state": "4-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 1795.8462000000009,
+      "inputSha256": "63f4b2c9b1cd87453724ae04ffa7a1489e446e717d7dd473765127ccd8e131d5",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a bird?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bowl",
+        "fowl",
+        "howl",
+        "yowl"
+      ],
+      "no": [
+        "boil",
+        "coil",
+        "foil",
+        "foul",
+        "toil"
+      ],
+      "yesShare": 0.4444444444444444,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 276,
+        "completion_tokens": 52,
+        "reasoning_tokens": null,
+        "neurons": 18.010154724121094
+      },
+      "estimatedNeurons": 18.010228,
+      "providerReportedNeurons": 18.010154724121094,
+      "reasoningChars": 0,
+      "visibleChars": 131,
+      "response": "{\"question\": \"Can your word mean a bird?\", \"yes\": [\"bowl\", \"fowl\", \"yowl\", \"howl\"], \"no\": [\"boil\", \"coil\", \"foil\", \"foul\", \"toil\"]}"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 802.5131000000001,
+      "inputSha256": "105bc4d2d8107f956251e6fea958ac76f1b4e98140ef38cb570f3e5b0fe1f9ea",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bowl",
+        "coil",
+        "foil"
+      ],
+      "no": [
+        "boil",
+        "foul",
+        "fowl",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.3333333333333333,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 195,
+        "completion_tokens": 41,
+        "reasoning_tokens": null,
+        "neurons": 13.597213745117188
+      },
+      "estimatedNeurons": 13.597265,
+      "providerReportedNeurons": 13.597213745117188,
+      "reasoningChars": 0,
+      "visibleChars": 89,
+      "response": "{\"yes\": [\"bowl\", \"coil\", \"foil\"], \"no\": [\"boil\", \"foul\", \"fowl\", \"howl\", \"toil\", \"yowl\"]}"
+    },
+    {
+      "state": "4-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 2794.5298999999995,
+      "inputSha256": "aabc00e01325e1d142b53595073984f24488fdc9a80422c197ef4f29f8c9edeb",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a person or an animal?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "apes",
+        "foes",
+        "hies",
+        "hoes",
+        "lies",
+        "ones",
+        "toes",
+        "yves"
+      ],
+      "no": [
+        "aces",
+        "ages",
+        "ales",
+        "ares",
+        "awes",
+        "axes",
+        "ayes",
+        "byes",
+        "cues",
+        "dies",
+        "does",
+        "dues",
+        "dyes",
+        "goes",
+        "hues",
+        "ices",
+        "ides",
+        "ines",
+        "ives",
+        "odes",
+        "ores",
+        "owes",
+        "pies",
+        "roes",
+        "rues",
+        "ties",
+        "vies",
+        "woes"
+      ],
+      "yesShare": 0.2222222222222222,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 342,
+        "completion_tokens": 148,
+        "reasoning_tokens": null,
+        "neurons": 39.43153381347656
+      },
+      "estimatedNeurons": 39.431596,
+      "providerReportedNeurons": 39.43153381347656,
+      "reasoningChars": 0,
+      "visibleChars": 362,
+      "response": "{\"question\": \"Can your word mean a person or an animal?\", \"yes\": [\"apes\", \"foes\", \"hies\", \"hoes\", \"lies\", \"ones\", \"toes\", \"yves\"], \"no\": [\"aces\", \"ages\", \"ales\", \"ares\", \"awes\", \"axes\", \"ayes\", \"byes\", \"cues\", \"dies\", \"does\", \"dues\", \"dyes\", \"goes\", \"hues\", \"ices\", \"ides\", \"ines\", \"ives\", \"odes\", \"ores\", \"owes\", \"pies\", \"roes\", \"rues\", \"ties\", \"vies\", \"woes\"]}"
+    },
+    {
+      "state": "4-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 1920.5248999999985,
+      "inputSha256": "c0fb301c7fe704cc38cabdafa039c7112465d6a7921e880818a4032625d9a005",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "axes",
+        "cues",
+        "dies",
+        "dues",
+        "hies",
+        "hoes",
+        "ices",
+        "ides",
+        "ives",
+        "ties",
+        "toes"
+      ],
+      "no": [
+        "aces",
+        "ages",
+        "ales",
+        "apes",
+        "ares",
+        "awes",
+        "ayes",
+        "byes",
+        "does",
+        "dyes",
+        "foes",
+        "goes",
+        "hues",
+        "ines",
+        "lies",
+        "odes",
+        "ones",
+        "ores",
+        "owes",
+        "pies",
+        "roes",
+        "rues",
+        "vies",
+        "woes",
+        "yves"
+      ],
+      "yesShare": 0.3055555555555556,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 261,
+        "completion_tokens": 134,
+        "reasoning_tokens": null,
+        "neurons": 34.4041748046875
+      },
+      "estimatedNeurons": 34.404218,
+      "providerReportedNeurons": 34.4041748046875,
+      "reasoningChars": 0,
+      "visibleChars": 305,
+      "response": "{\"yes\": [\"axes\", \"cues\", \"dies\", \"dues\", \"hies\", \"hoes\", \"ices\", \"ides\", \"ives\", \"ties\", \"toes\"], \"no\": [\"aces\", \"ages\", \"ales\", \"apes\", \"ares\", \"awes\", \"ayes\", \"byes\", \"does\", \"dyes\", \"foes\", \"goes\", \"hues\", \"ines\", \"lies\", \"odes\", \"ones\", \"ores\", \"owes\", \"pies\", \"roes\", \"rues\", \"vies\", \"woes\", \"yves\"]}"
+    },
+    {
+      "state": "4-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 2236.507099999999,
+      "inputSha256": "d24579150eca22533ce37bd3cffaad8f52fb77d9cb60392803f305cf8945d7fe",
+      "outcome": "wrong-lists",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a place?",
+      "problems": [],
+      "sets": {
+        "missing": [
+          "form",
+          "gory",
+          "lory"
+        ],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": null,
+      "no": null,
+      "yesShare": null,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 371,
+        "completion_tokens": 173,
+        "reasoning_tokens": null,
+        "neurons": 45.32502746582031
+      },
+      "estimatedNeurons": 45.325093,
+      "providerReportedNeurons": 45.32502746582031,
+      "reasoningChars": 0,
+      "visibleChars": 404,
+      "response": "{\"question\": \"Can your word mean a place?\", \"yes\": [\"borg\", \"born\", \"boru\", \"cord\", \"cork\", \"corn\", \"dork\", \"dorm\", \"dorp\", \"ford\", \"fork\", \"fort\", \"gorp\", \"horn\", \"kory\", \"lord\", \"lori\", \"lorn\", \"morn\", \"mort\", \"nori\", \"norm\", \"norw\", \"pork\", \"port\", \"tori\", \"torn\", \"tort\", \"tory\", \"word\", \"work\", \"worm\", \"worn\", \"wort\", \"york\", \"zorn\"], \"no\": [\"bork\", \"bort\", \"corf\", \"corm\", \"cory\", \"dory\", \"forb\"]}"
+    },
+    {
+      "state": "4-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 2787.1719999999987,
+      "inputSha256": "93c0e272b8e7393637d9d9cc5318d5498fbed7fd3bb148cd7c1b5c5865660d1a",
+      "outcome": "wrong-lists",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": [
+          "gorp"
+        ]
+      },
+      "yes": null,
+      "no": null,
+      "yesShare": null,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 290,
+        "completion_tokens": 177,
+        "reasoning_tokens": null,
+        "neurons": 43.98416519165039
+      },
+      "estimatedNeurons": 43.984205,
+      "providerReportedNeurons": 43.98416519165039,
+      "reasoningChars": 0,
+      "visibleChars": 393,
+      "response": "{\"yes\": [\"borg\", \"bork\", \"cord\", \"cork\", \"corm\", \"corn\", \"dork\", \"dorm\", \"dorp\", \"fork\", \"form\", \"fort\", \"gorp\", \"horn\", \"lord\", \"pork\", \"port\", \"tort\", \"tory\", \"work\", \"worm\", \"wort\", \"york\", \"zorn\"], \"no\": [\"born\", \"bort\", \"boru\", \"corf\", \"cory\", \"dory\", \"forb\", \"ford\", \"gorp\", \"gory\", \"kory\", \"lori\", \"lorn\", \"lory\", \"morn\", \"mort\", \"nori\", \"norm\", \"norw\", \"tori\", \"torn\", \"word\", \"worn\"]}"
+    },
+    {
+      "state": "5-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 4751.8328,
+      "inputSha256": "71513d2fda616ccf5ff0378b80b759193da64772b95cf5d73b3593c9141576c4",
+      "outcome": "wrong-lists",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean something that can be held in your hand?",
+      "problems": [],
+      "sets": {
+        "missing": [
+          "heady",
+          "rears"
+        ],
+        "extra": [],
+        "duplicated": [
+          "leaps"
+        ]
+      },
+      "yes": null,
+      "no": null,
+      "yesShare": null,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 464,
+        "completion_tokens": 310,
+        "reasoning_tokens": null,
+        "neurons": 75.86344909667969
+      },
+      "estimatedNeurons": 75.863502,
+      "providerReportedNeurons": 75.86344909667969,
+      "reasoningChars": 0,
+      "visibleChars": 776,
+      "response": "{\"question\": \"Can your word mean something that can be held in your hand?\", \"yes\": [\"beach\", \"beads\", \"beady\", \"beaks\", \"beans\", \"beard\", \"deals\", \"dealt\", \"deans\", \"death\", \"fears\", \"feast\", \"gears\", \"heads\", \"heals\", \"heaps\", \"heard\", \"hears\", \"heart\", \"heath\", \"jeans\", \"leach\", \"leads\", \"leafs\", \"leafy\", \"leaks\", \"leaky\", \"leans\", \"leaps\", \"leapt\", \"learn\", \"leash\", \"least\", \"meals\", \"mealy\", \"means\", \"meant\", \"meats\", \"nears\", \"peach\", \"peaks\", \"peals\", \"pearl\", \"pears\", \"reads\", \"ready\", \"realm\", \"reals\", \"reams\", \"reaps\", \"seals\", \"seams\", \"sears\", \"teach\", \"teaks\", \"teams\", \"tears\", \"teats\", \"weans\", \"wears\", \"weary\", \"yeast\"], \"no\": [\"beams\", \"bears\", \"beast\", \"beats\", \"dears\", \"feats\", \"heats\", \"heavy\", \"leaps\", \"reach\", \"react\", \"seats\", \"yearn\", \"years\"]}"
+    },
+    {
+      "state": "5-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 3963.0885000000017,
+      "inputSha256": "53d8fafe27c59b43ef8195480b810e43e69aac9706a61ea790c5ed33e6c94bec",
+      "outcome": "wrong-lists",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [
+          "reach"
+        ],
+        "extra": [
+          "teary"
+        ],
+        "duplicated": []
+      },
+      "yes": null,
+      "no": null,
+      "yesShare": null,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 383,
+        "completion_tokens": 298,
+        "reasoning_tokens": null,
+        "neurons": 71.2457046508789
+      },
+      "estimatedNeurons": 71.245734,
+      "providerReportedNeurons": 71.2457046508789,
+      "reasoningChars": 0,
+      "visibleChars": 710,
+      "response": "{\"yes\": [\"beads\", \"beams\", \"beans\", \"deals\", \"gears\", \"heads\", \"heaps\", \"jeans\", \"leads\", \"leaks\", \"meals\", \"means\", \"peals\", \"pears\", \"seals\", \"seams\", \"sears\", \"seats\", \"teaks\", \"teams\", \"tears\", \"teats\", \"wears\", \"yeast\"], \"no\": [\"beach\", \"beady\", \"beaks\", \"beard\", \"bears\", \"beast\", \"beats\", \"dealt\", \"deans\", \"dears\", \"death\", \"fears\", \"feast\", \"feats\", \"heady\", \"heals\", \"heard\", \"hears\", \"heart\", \"heath\", \"heats\", \"heavy\", \"leach\", \"leafs\", \"leafy\", \"leaky\", \"leans\", \"leaps\", \"leapt\", \"learn\", \"leash\", \"least\", \"mealy\", \"meant\", \"meats\", \"nears\", \"peach\", \"peaks\", \"pearl\", \"react\", \"reads\", \"ready\", \"realm\", \"reals\", \"reams\", \"reaps\", \"rears\", \"teach\", \"teary\", \"weans\", \"weary\", \"yearn\", \"years\"]}"
+    },
+    {
+      "state": "5-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 3842.3901000000005,
+      "inputSha256": "d807b7bb6225e75f458a20c6dfcba999ac9a488319e5a9dd175806c8388196cb",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a person?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "basie",
+        "dante",
+        "harte",
+        "jaime",
+        "jamie",
+        "janie",
+        "jayne",
+        "katie",
+        "madge",
+        "mamie",
+        "marie",
+        "maude",
+        "padre",
+        "paige",
+        "paine",
+        "payne",
+        "sadie",
+        "taine",
+        "vance",
+        "waite",
+        "wayne"
+      ],
+      "no": [
+        "badge",
+        "baize",
+        "barge",
+        "baste",
+        "bathe",
+        "cache",
+        "cadge",
+        "cadre",
+        "canoe",
+        "carve",
+        "caste",
+        "cause",
+        "dance",
+        "farce",
+        "gaffe",
+        "gauge",
+        "gauze",
+        "hague",
+        "haste",
+        "maine",
+        "maize",
+        "mange",
+        "manse",
+        "marge",
+        "marne",
+        "matte",
+        "mauve",
+        "maybe",
+        "nacre",
+        "naive",
+        "parse",
+        "paste",
+        "pause",
+        "raise",
+        "range",
+        "sabre",
+        "sauce",
+        "tahoe",
+        "taste",
+        "taupe",
+        "vague",
+        "waive",
+        "waste",
+        "zaire"
+      ],
+      "yesShare": 0.3230769230769231,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 437,
+        "completion_tokens": 269,
+        "reasoning_tokens": null,
+        "neurons": 66.74640655517578
+      },
+      "estimatedNeurons": 66.746461,
+      "providerReportedNeurons": 66.74640655517578,
+      "reasoningChars": 0,
+      "visibleChars": 646,
+      "response": "{\"question\": \"Can your word mean a person?\", \"yes\": [\"basie\", \"dante\", \"harte\", \"jaime\", \"jamie\", \"janie\", \"jayne\", \"katie\", \"madge\", \"mamie\", \"marie\", \"maude\", \"padre\", \"paige\", \"paine\", \"payne\", \"sadie\", \"taine\", \"vance\", \"waite\", \"wayne\"], \"no\": [\"badge\", \"baize\", \"barge\", \"baste\", \"bathe\", \"cache\", \"cadge\", \"cadre\", \"canoe\", \"carve\", \"caste\", \"cause\", \"dance\", \"farce\", \"gaffe\", \"gauge\", \"gauze\", \"hague\", \"haste\", \"maine\", \"maize\", \"mange\", \"manse\", \"marge\", \"marne\", \"matte\", \"mauve\", \"maybe\", \"nacre\", \"naive\", \"parse\", \"paste\", \"pause\", \"raise\", \"range\", \"sabre\", \"sauce\", \"tahoe\", \"taste\", \"taupe\", \"vague\", \"waive\", \"waste\", \"zaire\"]}"
+    },
+    {
+      "state": "5-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 3523.7618999999977,
+      "inputSha256": "1f9dd010b63d31cfe3c4cbb08015722abf290933790bddf41c4df7efdeeb8130",
+      "outcome": "wrong-lists",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [
+          "gauze",
+          "pause"
+        ],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": null,
+      "no": null,
+      "yesShare": null,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 356,
+        "completion_tokens": 250,
+        "reasoning_tokens": null,
+        "neurons": 60.69502258300781
+      },
+      "estimatedNeurons": 60.695058,
+      "providerReportedNeurons": 60.69502258300781,
+      "reasoningChars": 0,
+      "visibleChars": 584,
+      "response": "{\"yes\": [\"badge\", \"barge\", \"cache\", \"cadge\", \"canoe\", \"gaffe\", \"gauge\", \"hague\", \"padre\", \"paige\", \"paste\", \"sabre\", \"sauce\", \"vance\", \"waite\"], \"no\": [\"baize\", \"basie\", \"baste\", \"bathe\", \"cadre\", \"carve\", \"caste\", \"cause\", \"dance\", \"dante\", \"farce\", \"harte\", \"haste\", \"jaime\", \"jamie\", \"janie\", \"jayne\", \"katie\", \"madge\", \"maine\", \"maize\", \"mamie\", \"mange\", \"manse\", \"marge\", \"marie\", \"marne\", \"matte\", \"maude\", \"mauve\", \"maybe\", \"nacre\", \"naive\", \"parse\", \"paine\", \"payne\", \"raise\", \"range\", \"sadie\", \"tahoe\", \"taine\", \"taste\", \"taupe\", \"vague\", \"waive\", \"waste\", \"wayne\", \"zaire\"]}"
+    },
+    {
+      "state": "5-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 2212.3297999999995,
+      "inputSha256": "59f1f250becc5497a9e8a17970075c5c2e5959485c55055c3b0127585ac22ffd",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a group of people?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bands",
+        "bangs",
+        "gangs",
+        "hands",
+        "hangs",
+        "janis",
+        "yanks"
+      ],
+      "no": [
+        "bancs",
+        "banks",
+        "bants",
+        "cants",
+        "dangs",
+        "fangs",
+        "hanks",
+        "janus",
+        "pangs",
+        "pants",
+        "tangs",
+        "tanks",
+        "vangs",
+        "wands",
+        "wants"
+      ],
+      "yesShare": 0.3181818181818182,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 314,
+        "completion_tokens": 105,
+        "reasoning_tokens": null,
+        "neurons": 29.87820816040039
+      },
+      "estimatedNeurons": 29.878277,
+      "providerReportedNeurons": 29.87820816040039,
+      "reasoningChars": 0,
+      "visibleChars": 268,
+      "response": "{\"question\": \"Can your word mean a group of people?\", \"yes\": [\"bands\", \"gangs\", \"yanks\", \"bangs\", \"hands\", \"hangs\", \"janis\"], \"no\": [\"bancs\", \"bants\", \"cants\", \"dangs\", \"fangs\", \"banks\", \"hanks\", \"janus\", \"pangs\", \"pants\", \"tangs\", \"tanks\", \"vangs\", \"wands\", \"wants\"]}"
+    },
+    {
+      "state": "5-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 2231.991600000001,
+      "inputSha256": "7dd4b3f023b1a3929f3e36ff3886a12a64aeb864d7d44e1e5853b5d31e30e6e0",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bands",
+        "banks",
+        "bants",
+        "cants",
+        "dangs",
+        "fangs",
+        "gangs",
+        "hands",
+        "hangs",
+        "hanks",
+        "pangs",
+        "pants",
+        "tangs",
+        "tanks",
+        "vangs",
+        "wands",
+        "yanks"
+      ],
+      "no": [
+        "bancs",
+        "bangs",
+        "janis",
+        "janus",
+        "wants"
+      ],
+      "yesShare": 0.7727272727272727,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 233,
+        "completion_tokens": 92,
+        "reasoning_tokens": null,
+        "neurons": 25.05565643310547
+      },
+      "estimatedNeurons": 25.055704,
+      "providerReportedNeurons": 25.05565643310547,
+      "reasoningChars": 0,
+      "visibleChars": 215,
+      "response": "{\"yes\": [\"bands\", \"banks\", \"bants\", \"cants\", \"dangs\", \"fangs\", \"gangs\", \"hands\", \"hangs\", \"hanks\", \"pangs\", \"pants\", \"tangs\", \"tanks\", \"vangs\", \"wands\", \"yanks\"], \"no\": [\"bancs\", \"bangs\", \"janis\", \"janus\", \"wants\"]}"
+    },
+    {
+      "state": "6-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 2040.4600999999966,
+      "inputSha256": "2768f9cd54b17ebae1addb1a4c60f7092255c526887d2fb900a86a543ea44b9c",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a form of deception or trickery?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bluing",
+        "duping",
+        "luring",
+        "prying",
+        "spying"
+      ],
+      "no": [
+        "busing",
+        "buying",
+        "cluing",
+        "crying",
+        "cubing",
+        "curing",
+        "drying",
+        "duding",
+        "during",
+        "flying",
+        "frying",
+        "fuming",
+        "fusing",
+        "musing",
+        "muting",
+        "plying",
+        "puking",
+        "ruling",
+        "shying",
+        "skying",
+        "spring",
+        "string",
+        "truing",
+        "trying",
+        "tubing",
+        "typing",
+        "upping"
+      ],
+      "yesShare": 0.15625,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 345,
+        "completion_tokens": 149,
+        "reasoning_tokens": null,
+        "neurons": 39.716339111328125
+      },
+      "estimatedNeurons": 39.716405,
+      "providerReportedNeurons": 39.716339111328125,
+      "reasoningChars": 0,
+      "visibleChars": 404,
+      "response": "{\"question\": \"Can your word mean a form of deception or trickery?\", \"yes\": [\"bluing\", \"duping\", \"luring\", \"prying\", \"spying\"], \"no\": [\"busing\", \"buying\", \"cluing\", \"crying\", \"cubing\", \"curing\", \"drying\", \"duding\", \"during\", \"flying\", \"frying\", \"fuming\", \"fusing\", \"musing\", \"muting\", \"plying\", \"puking\", \"ruling\", \"shying\", \"skying\", \"spring\", \"string\", \"truing\", \"trying\", \"tubing\", \"typing\", \"upping\"]}"
+    },
+    {
+      "state": "6-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 2116.830799999996,
+      "inputSha256": "062c60c4593f0d71571657d572b491f049690a299516e51973adb81ba84b20fb",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bluing",
+        "busing",
+        "buying",
+        "cluing",
+        "crying",
+        "cubing",
+        "curing",
+        "drying",
+        "duding",
+        "duping",
+        "during",
+        "flying",
+        "frying",
+        "fuming",
+        "fusing",
+        "luring",
+        "musing",
+        "muting",
+        "plying",
+        "prying",
+        "puking",
+        "ruling",
+        "shying",
+        "skying",
+        "spring",
+        "spying",
+        "string",
+        "truing",
+        "trying",
+        "tubing",
+        "typing",
+        "upping"
+      ],
+      "no": [],
+      "yesShare": 1,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 264,
+        "completion_tokens": 135,
+        "reasoning_tokens": null,
+        "neurons": 34.68898391723633
+      },
+      "estimatedNeurons": 34.689027,
+      "providerReportedNeurons": 34.68898391723633,
+      "reasoningChars": 0,
+      "visibleChars": 339,
+      "response": "{\"yes\": [\"bluing\", \"busing\", \"buying\", \"cluing\", \"crying\", \"cubing\", \"curing\", \"drying\", \"duding\", \"duping\", \"during\", \"flying\", \"frying\", \"fuming\", \"fusing\", \"luring\", \"musing\", \"muting\", \"plying\", \"prying\", \"puking\", \"ruling\", \"shying\", \"skying\", \"spring\", \"spying\", \"string\", \"truing\", \"trying\", \"tubing\", \"typing\", \"upping\"], \"no\": []}"
+    },
+    {
+      "state": "6-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 1132.2013000000006,
+      "inputSha256": "3f68783d23ad911eeed5e462d5db29cfe329d4cfb1977c24c85b65638c2a6885",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a person?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "edison",
+        "elijah",
+        "elinor",
+        "elisha",
+        "ericka"
+      ],
+      "no": [
+        "edicts",
+        "editor",
+        "enigma",
+        "evicts",
+        "evilly",
+        "exists"
+      ],
+      "yesShare": 0.45454545454545453,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 284,
+        "completion_tokens": 62,
+        "reasoning_tokens": null,
+        "neurons": 20.271549224853516
+      },
+      "estimatedNeurons": 20.271622,
+      "providerReportedNeurons": 20.271549224853516,
+      "reasoningChars": 0,
+      "visibleChars": 171,
+      "response": "{\"question\": \"Can your word mean a person?\", \"yes\": [\"edison\", \"elijah\", \"elinor\", \"elisha\", \"ericka\"], \"no\": [\"edicts\", \"editor\", \"enigma\", \"evicts\", \"evilly\", \"exists\"]}"
+    },
+    {
+      "state": "6-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 1273.5241999999998,
+      "inputSha256": "e04bc2253fa611ce7202cba4621aa882ab2c3a835814fd984a0fe5697330c5cf",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "edison",
+        "editor",
+        "elijah",
+        "elinor",
+        "elisha",
+        "ericka"
+      ],
+      "no": [
+        "edicts",
+        "enigma",
+        "evicts",
+        "evilly",
+        "exists"
+      ],
+      "yesShare": 0.5454545454545454,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 206,
+        "completion_tokens": 51,
+        "reasoning_tokens": null,
+        "neurons": 15.93861198425293
+      },
+      "estimatedNeurons": 15.938663,
+      "providerReportedNeurons": 15.93861198425293,
+      "reasoningChars": 0,
+      "visibleChars": 127,
+      "response": "{\"yes\": [\"editor\", \"elijah\", \"elinor\", \"elisha\", \"ericka\", \"edison\"], \"no\": [\"edicts\", \"enigma\", \"evicts\", \"evilly\", \"exists\"]}"
+    },
+    {
+      "state": "6-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 1482.7940000000017,
+      "inputSha256": "9ea21f6366e3e80c71b34ca45cfe6f41b07a74bdf2550661f5cae80fb87a38be",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean an adverb?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "becalm",
+        "behalf",
+        "deafly",
+        "deftly",
+        "dewily",
+        "featly",
+        "weakly"
+      ],
+      "no": [
+        "behold",
+        "cecily",
+        "deadly",
+        "dekalb",
+        "fecula",
+        "megilp",
+        "pebbly",
+        "pedalo"
+      ],
+      "yesShare": 0.4666666666666667,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 302,
+        "completion_tokens": 85,
+        "reasoning_tokens": null,
+        "neurons": 25.46208953857422
+      },
+      "estimatedNeurons": 25.462161,
+      "providerReportedNeurons": 25.46208953857422,
+      "reasoningChars": 0,
+      "visibleChars": 212,
+      "response": "{\"question\": \"Can your word mean an adverb?\", \"yes\": [\"becalm\", \"behalf\", \"deafly\", \"deftly\", \"dewily\", \"featly\", \"weakly\"], \"no\": [\"behold\", \"cecily\", \"deadly\", \"dekalb\", \"fecula\", \"megilp\", \"pebbly\", \"pedalo\"]}"
+    },
+    {
+      "state": "6-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 1106.9338999999964,
+      "inputSha256": "67fc5e57d22db2fd02e7452da4b8069079bfd7f21107d4dc7381390b1de6658c",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "dekalb",
+        "fecula",
+        "megilp",
+        "pebbly"
+      ],
+      "no": [
+        "becalm",
+        "behalf",
+        "behold",
+        "cecily",
+        "deadly",
+        "deafly",
+        "deftly",
+        "dewily",
+        "featly",
+        "pedalo",
+        "weakly"
+      ],
+      "yesShare": 0.26666666666666666,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 221,
+        "completion_tokens": 73,
+        "reasoning_tokens": null,
+        "neurons": 20.844345092773438
+      },
+      "estimatedNeurons": 20.844393,
+      "providerReportedNeurons": 20.844345092773438,
+      "reasoningChars": 0,
+      "visibleChars": 167,
+      "response": "{\"yes\": [\"fecula\", \"megilp\", \"pebbly\", \"dekalb\"], \"no\": [\"becalm\", \"behalf\", \"behold\", \"cecily\", \"deadly\", \"deafly\", \"deftly\", \"dewily\", \"featly\", \"pedalo\", \"weakly\"]}"
+    },
+    {
+      "state": "7-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 1542.1512000000002,
+      "inputSha256": "6646e99464fb48772edfb7ca9a2f73605a84de95c57aef86dce5c5c907634a03",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean something related to a living thing?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "digests",
+        "infests",
+        "ingests",
+        "molests",
+        "priests"
+      ],
+      "no": [
+        "arrests",
+        "attests",
+        "divests",
+        "forests",
+        "invests"
+      ],
+      "yesShare": 0.5,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 283,
+        "completion_tokens": 64,
+        "reasoning_tokens": null,
+        "neurons": 20.654491424560547
+      },
+      "estimatedNeurons": 20.654564,
+      "providerReportedNeurons": 20.654491424560547,
+      "reasoningChars": 0,
+      "visibleChars": 198,
+      "response": "{\"question\": \"Can your word mean something related to a living thing?\", \"yes\": [\"digests\", \"ingests\", \"infests\", \"molests\", \"priests\"], \"no\": [\"arrests\", \"attests\", \"divests\", \"forests\", \"invests\"]}"
+    },
+    {
+      "state": "7-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 1371.3443999999945,
+      "inputSha256": "c0d73c48b9322411afc4a17af76c98bb7f67c6a76841758c737381256a4d2bc7",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "priests"
+      ],
+      "no": [
+        "arrests",
+        "attests",
+        "digests",
+        "divests",
+        "forests",
+        "infests",
+        "ingests",
+        "invests",
+        "molests"
+      ],
+      "yesShare": 0.1,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 205,
+        "completion_tokens": 41,
+        "reasoning_tokens": null,
+        "neurons": 13.863890647888184
+      },
+      "estimatedNeurons": 13.863945,
+      "providerReportedNeurons": 13.863890647888184,
+      "reasoningChars": 0,
+      "visibleChars": 119,
+      "response": "{\"yes\": [\"priests\"], \"no\": [\"arrests\",\"attests\",\"digests\",\"divests\",\"forests\",\"infests\",\"ingests\",\"invests\",\"molests\"]}"
+    },
+    {
+      "state": "7-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 3738.3809000000037,
+      "inputSha256": "103e9333dd33e7584d59a5f776b460bb6ad62e762bf72bbd663a9e2be07a881f",
+      "outcome": "wrong-lists",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a living thing?",
+      "problems": [],
+      "sets": {
+        "missing": [
+          "arbutus"
+        ],
+        "extra": [
+          "arbutos"
+        ],
+        "duplicated": [
+          "affront",
+          "amorous",
+          "anchovy",
+          "anybody",
+          "apology"
+        ]
+      },
+      "yes": null,
+      "no": null,
+      "yesShare": null,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 404,
+        "completion_tokens": 239,
+        "reasoning_tokens": null,
+        "neurons": 59.72221374511719
+      },
+      "estimatedNeurons": 59.722267,
+      "providerReportedNeurons": 59.72221374511719,
+      "reasoningChars": 0,
+      "visibleChars": 639,
+      "response": "{\"question\": \"Can your word mean a living thing?\", \"yes\": [\"abducts\", \"abscond\", \"accosts\", \"adjourn\", \"adjunct\", \"adjusts\", \"affords\", \"affront\", \"aground\", \"alcohol\", \"alfonso\", \"alfonzo\", \"allyson\", \"almonds\", \"amorous\", \"amounts\", \"anchors\", \"anchovy\", \"anthony\", \"anybody\", \"apology\", \"apropos\", \"arduous\", \"armfuls\", \"arnulfo\", \"artwork\", \"assorts\", \"astound\", \"asylums\", \"atropos\", \"attucks\", \"audubon\", \"augusts\", \"authors\", \"autopsy\", \"autumns\"], \"no\": [\"abounds\", \"absorbs\", \"accords\", \"account\", \"acronym\", \"affront\", \"alumnus\", \"amorous\", \"anchovy\", \"antonym\", \"anybody\", \"apology\", \"arbutos\", \"arroyos\", \"atrophy\", \"awfully\"]}"
+    },
+    {
+      "state": "7-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 3785.186600000001,
+      "inputSha256": "d3eef6c70cf2b4fdc9e532b0ecc5788907cb93470f7bf7db45c92de7dd7d61ec",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "account",
+        "adjunct",
+        "alfonso",
+        "alfonzo",
+        "allyson",
+        "alumnus",
+        "anthony",
+        "anybody",
+        "arnulfo",
+        "attucks",
+        "audubon",
+        "authors"
+      ],
+      "no": [
+        "abducts",
+        "abounds",
+        "abscond",
+        "absorbs",
+        "accords",
+        "accosts",
+        "acronym",
+        "adjourn",
+        "adjusts",
+        "affords",
+        "affront",
+        "aground",
+        "alcohol",
+        "almonds",
+        "amorous",
+        "amounts",
+        "anchors",
+        "anchovy",
+        "antonym",
+        "apology",
+        "apropos",
+        "arbutus",
+        "arduous",
+        "armfuls",
+        "arroyos",
+        "artwork",
+        "assorts",
+        "astound",
+        "asylums",
+        "atrophy",
+        "atropos",
+        "augusts",
+        "autopsy",
+        "autumns",
+        "awfully"
+      ],
+      "yesShare": 0.2553191489361702,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 326,
+        "completion_tokens": 207,
+        "reasoning_tokens": null,
+        "neurons": 51.08836364746094
+      },
+      "estimatedNeurons": 51.088403,
+      "providerReportedNeurons": 51.08836364746094,
+      "reasoningChars": 0,
+      "visibleChars": 534,
+      "response": "{\"yes\": [\"account\", \"adjunct\", \"alumnus\", \"alfonso\", \"alfonzo\", \"allyson\", \"anthony\", \"arnulfo\", \"attucks\", \"audubon\", \"authors\", \"anybody\"], \"no\": [\"abducts\", \"abounds\", \"abscond\", \"absorbs\", \"accords\", \"accosts\", \"acronym\", \"adjourn\", \"adjusts\", \"affords\", \"affront\", \"aground\", \"alcohol\", \"almonds\", \"amorous\", \"amounts\", \"anchors\", \"anchovy\", \"antonym\", \"apology\", \"apropos\", \"arbutus\", \"arduous\", \"armfuls\", \"arroyos\", \"artwork\", \"assorts\", \"astound\", \"asylums\", \"atrophy\", \"atropos\", \"augusts\", \"autopsy\", \"autumns\", \"awfully\"]}"
+    }
+  ],
+  "stopReason": "local-budget",
+  "finishedAt": "2026-10-02T23:26:00.433Z",
+  "budget": {
+    "day": "2026-10-02",
+    "requests": 285,
+    "reservedNeurons": 9534.541956000003,
+    "maxRequests": 1800,
+    "maxNeurons": 10000,
+    "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
+  },
+  "mappingSha256": "90a97fb466cb9c3ef1547faaf9b386163beea65f065d438dfe420061b4d7f20d",
+  "summary": {
+    "@cf/meta/llama-3.3-70b-instruct-fp8-fast": {
+      "invent": {
+        "requests": 11,
+        "sent": 11,
+        "outcomes": {
+          "accepted": 6,
+          "uneven": 2,
+          "wrong-lists": 3
+        },
+        "acceptedRate": 0.5455,
+        "strictJsonRate": 1,
+        "validListsRate": 0.7273,
+        "invalidRate": 0.2727,
+        "split": {
+          "meanYesShare": 0.3607,
+          "meanDistanceFromHalf": 0.1393,
+          "inBand": 6,
+          "withValidLists": 8
+        },
+        "accuracy": {
+          "scoredRequests": 4,
+          "unmappedQuestions": 4,
+          "labelled": 88,
+          "correct": 76,
+          "falseYes": 7,
+          "falseNo": 5,
+          "wordnetYes": 10,
+          "wordnetNo": 78,
+          "accuracy": 0.8636,
+          "falseYesRate": 0.0897,
+          "falseNoRate": 0.5,
+          "answerChecked": 3,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 2212.3298,
+          "p95": 4751.8328,
+          "max": 4751.8328,
+          "within3s": 0.7273,
+          "within5s": 1,
+          "within8s": 1,
+          "acceptedWithin3s": 0.4545,
+          "acceptedWithin8s": 0.5455
+        },
+        "tokens": {
+          "requestsWithUsage": 11,
+          "meanPrompt": 347.4545,
+          "meanCompletion": 150.5455,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 22.8182,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 441.0822,
+          "estimatedPerRequest": 40.0984,
+          "providerReportedTotal": 441.0815,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "4-apprentice",
+            "codes": [
+              "c"
+            ],
+            "labelled": 9,
+            "unlabelled": 0,
+            "correct": 6,
+            "falseYes": 3,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 8,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": [
+              "+bowl",
+              "+howl",
+              "+yowl"
+            ]
+          },
+          {
+            "state": "4-scholar",
+            "codes": [
+              "a",
+              "b"
+            ],
+            "labelled": 32,
+            "unlabelled": 4,
+            "correct": 24,
+            "falseYes": 4,
+            "falseNo": 4,
+            "wordnetYes": 7,
+            "wordnetNo": 25,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": [
+              "+hies",
+              "+lies",
+              "+ones",
+              "+toes",
+              "-aces",
+              "-does",
+              "-pies",
+              "-roes"
+            ]
+          },
+          {
+            "state": "5-scholar",
+            "codes": [
+              "a"
+            ],
+            "labelled": 41,
+            "unlabelled": 24,
+            "correct": 41,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 40,
+            "answer": null,
+            "disagreements": []
+          },
+          {
+            "state": "6-scholar",
+            "codes": [
+              "a"
+            ],
+            "labelled": 6,
+            "unlabelled": 5,
+            "correct": 5,
+            "falseYes": 0,
+            "falseNo": 1,
+            "wordnetYes": 1,
+            "wordnetNo": 5,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": [
+              "-editor"
+            ]
+          }
+        ]
+      },
+      "sort": {
+        "requests": 11,
+        "sent": 11,
+        "outcomes": {
+          "accepted": 5,
+          "wrong-lists": 3,
+          "uneven": 3
+        },
+        "acceptedRate": 0.4545,
+        "strictJsonRate": 1,
+        "validListsRate": 0.7273,
+        "invalidRate": 0.2727,
+        "split": {
+          "meanYesShare": 0.4474,
+          "meanDistanceFromHalf": 0.2572,
+          "inBand": 5,
+          "withValidLists": 8
+        },
+        "accuracy": {
+          "scoredRequests": 8,
+          "unmappedQuestions": 0,
+          "labelled": 150,
+          "correct": 108,
+          "falseYes": 37,
+          "falseNo": 5,
+          "wordnetYes": 34,
+          "wordnetNo": 116,
+          "accuracy": 0.72,
+          "falseYesRate": 0.319,
+          "falseNoRate": 0.1471,
+          "answerChecked": 6,
+          "answerMisfiled": 2
+        },
+        "latencyMs": {
+          "p50": 2116.8308,
+          "p95": 3963.0885,
+          "max": 3963.0885,
+          "within3s": 0.7273,
+          "within5s": 1,
+          "within8s": 1,
+          "acceptedWithin3s": 0.3636,
+          "acceptedWithin8s": 0.4545
+        },
+        "tokens": {
+          "requestsWithUsage": 11,
+          "meanPrompt": 267.2727,
+          "meanCompletion": 136.2727,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 27.4545,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 385.4066,
+          "estimatedPerRequest": 35.037,
+          "providerReportedTotal": 385.4061,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "4-apprentice",
+            "codes": [
+              "o"
+            ],
+            "labelled": 9,
+            "unlabelled": 0,
+            "correct": 9,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 3,
+            "wordnetNo": 6,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": []
+          },
+          {
+            "state": "4-scholar",
+            "codes": [
+              "o"
+            ],
+            "labelled": 32,
+            "unlabelled": 4,
+            "correct": 25,
+            "falseYes": 3,
+            "falseNo": 4,
+            "wordnetYes": 11,
+            "wordnetNo": 21,
+            "answer": {
+              "wordnet": true,
+              "said": false,
+              "misfiled": true
+            },
+            "disagreements": [
+              "+dues",
+              "+hies",
+              "+ides",
+              "-aces",
+              "-goes",
+              "-pies",
+              "-rues"
+            ]
+          },
+          {
+            "state": "5-master",
+            "codes": [
+              "o"
+            ],
+            "labelled": 16,
+            "unlabelled": 6,
+            "correct": 11,
+            "falseYes": 5,
+            "falseNo": 0,
+            "wordnetYes": 9,
+            "wordnetNo": 7,
+            "answer": {
+              "wordnet": true,
+              "said": true,
+              "misfiled": false
+            },
+            "disagreements": [
+              "+fangs",
+              "+hangs",
+              "+pangs",
+              "+tangs",
+              "+yanks"
+            ]
+          },
+          {
+            "state": "6-apprentice",
+            "codes": [
+              "o"
+            ],
+            "labelled": 30,
+            "unlabelled": 2,
+            "correct": 3,
+            "falseYes": 27,
+            "falseNo": 0,
+            "wordnetYes": 3,
+            "wordnetNo": 27,
+            "answer": {
+              "wordnet": false,
+              "said": true,
+              "misfiled": true
+            },
+            "disagreements": [
+              "+bluing",
+              "+busing",
+              "+buying",
+              "+cluing",
+              "+crying",
+              "+cubing",
+              "+curing",
+              "+drying",
+              "+duping",
+              "+flying",
+              "+frying",
+              "+fuming",
+              "+fusing",
+              "+luring",
+              "+musing",
+              "+muting",
+              "+plying",
+              "+prying",
+              "+puking",
+              "+ruling",
+              "+shying",
+              "+skying",
+              "+spying",
+              "+truing",
+              "+trying",
+              "+typing",
+              "+upping"
+            ]
+          },
+          {
+            "state": "6-scholar",
+            "codes": [
+              "a"
+            ],
+            "labelled": 6,
+            "unlabelled": 5,
+            "correct": 6,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 5,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": []
+          },
+          {
+            "state": "6-master",
+            "codes": [
+              "x"
+            ],
+            "labelled": 9,
+            "unlabelled": 6,
+            "correct": 8,
+            "falseYes": 1,
+            "falseNo": 0,
+            "wordnetYes": 2,
+            "wordnetNo": 7,
+            "answer": null,
+            "disagreements": [
+              "+pebbly"
+            ]
+          },
+          {
+            "state": "7-apprentice",
+            "codes": [
+              "a"
+            ],
+            "labelled": 10,
+            "unlabelled": 0,
+            "correct": 10,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 9,
+            "answer": {
+              "wordnet": true,
+              "said": true,
+              "misfiled": false
+            },
+            "disagreements": []
+          },
+          {
+            "state": "7-scholar",
+            "codes": [
+              "a"
+            ],
+            "labelled": 38,
+            "unlabelled": 9,
+            "correct": 36,
+            "falseYes": 1,
+            "falseNo": 1,
+            "wordnetYes": 4,
+            "wordnetNo": 34,
+            "answer": null,
+            "disagreements": [
+              "+account",
+              "-anchors"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

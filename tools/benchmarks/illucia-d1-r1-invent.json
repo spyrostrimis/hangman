@@ -206,7 +206,7 @@
     "maxNeurons": 9000,
     "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
   },
-  "mappingSha256": "76d1bebf17fb83a7230d23f2f087c4da82af981f456766453c477a9d3acb2e7f",
+  "mappingSha256": "90a97fb466cb9c3ef1547faaf9b386163beea65f065d438dfe420061b4d7f20d",
   "summary": {
     "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b": {
       "invent": {

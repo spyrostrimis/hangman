@@ -1,0 +1,1637 @@
+{
+  "schemaVersion": 1,
+  "phase": "run",
+  "startedAt": "2026-10-02T23:27:10.108Z",
+  "status": "complete",
+  "configuration": {
+    "models": [
+      "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+    ],
+    "modes": [
+      "invent",
+      "sort"
+    ],
+    "promptVersion": "d1-1",
+    "prompts": {
+      "invent": "You help Illucia, a Hangman player, narrow down a hidden English word by its MEANING. The user message is a JSON object whose \"candidates\" field lists every word the hidden word could be.\n1. Invent ONE yes/no question about what the word can mean: what kind of thing, action or quality it is. Start it with \"Can your word mean\" and end it with \"?\". It must not be about letters, spelling, sounds, rhymes or length.\n2. A word is YES if ANY of its meanings fits, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n3. Choose a question that puts roughly half of the candidates in YES and half in NO.\n4. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"question\": \"...\", \"yes\": [\"...\"], \"no\": [\"...\"]}",
+      "sort": "Sort English words by MEANING. The user message is a JSON object with a yes/no \"question\" and a \"candidates\" list.\n1. A word is YES if ANY of its meanings fits the question, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n2. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"yes\": [\"...\"], \"no\": [\"...\"]}"
+    },
+    "promptSha256": "1b85eda7ffdac6d528d315e22cc412da16cc78ad908d179233edb4585023a2d2",
+    "statesSha256": "4ddaee886368cbe7f44bde2512a66f443a0b33d7429bb4a973a17fcbf09d68e1",
+    "temperature": 0,
+    "seed": 20261002,
+    "maxTokens": 2048,
+    "modelOptions": {
+      "@cf/qwen/qwen3-30b-a3b-fp8": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/google/gemma-4-26b-a4b-it": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/zai-org/glm-4.7-flash": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/openai/gpt-oss-20b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/openai/gpt-oss-120b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/qwen/qwen3.8-27b": {
+        "reasoning_effort": "low"
+      }
+    },
+    "requestTimeoutMs": 30000,
+    "stateIds": [
+      "7-master",
+      "8-apprentice",
+      "8-scholar",
+      "8-master",
+      "9-apprentice",
+      "9-scholar",
+      "9-master",
+      "10-apprentice",
+      "10-scholar",
+      "10-master"
+    ],
+    "retries": 0,
+    "timeoutsBeforeSkip": 3,
+    "evenSplit": [
+      0.25,
+      0.75
+    ],
+    "blockedTerms": 421,
+    "neuronRates": {
+      "@cf/meta/llama-3.3-70b-instruct-fp8-fast": {
+        "input": 26668,
+        "output": 204805
+      }
+    },
+    "pricingChecked": "2026-10-02",
+    "maxRunNeurons": 1300
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32"
+  },
+  "requests": [
+    {
+      "state": "7-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 4385.3266,
+      "inputSha256": "6a6f0bae3e4a18231a63cea95a01c5ba34bcec136e25a1b2dca8c936a178de4a",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean something related to food or eating?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bobbled",
+        "bottled",
+        "broiled",
+        "gobbled",
+        "kibbled",
+        "nibbled",
+        "pickled",
+        "pimpled",
+        "vittled"
+      ],
+      "no": [
+        "bingled",
+        "boggled",
+        "circled",
+        "cobbled",
+        "coffled",
+        "fizzled",
+        "footled",
+        "foozled",
+        "giggled",
+        "goggled",
+        "googled",
+        "growled",
+        "higgled",
+        "hobbled",
+        "hoppled",
+        "jiggled",
+        "jingled",
+        "joggled",
+        "kittled",
+        "mingled",
+        "mizzled",
+        "mottled",
+        "niggled",
+        "nobbled",
+        "pootled",
+        "poppled",
+        "prowled",
+        "riffled",
+        "rimpled",
+        "rippled",
+        "tickled",
+        "tingled",
+        "tinkled",
+        "tippled",
+        "toggled",
+        "tootled",
+        "toppled",
+        "trifled",
+        "tripled",
+        "twirled",
+        "whirled",
+        "whorled",
+        "wiggled",
+        "wimpled",
+        "winkled",
+        "wobbled"
+      ],
+      "yesShare": 0.16363636363636364,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 443,
+        "completion_tokens": 269,
+        "reasoning_tokens": null,
+        "neurons": 66.90641021728516
+      },
+      "estimatedNeurons": 66.906469,
+      "providerReportedNeurons": 66.90641021728516,
+      "reasoningChars": 0,
+      "visibleChars": 693,
+      "response": "{\"question\": \"Can your word mean something related to food or eating?\", \"yes\": [\"bobbled\", \"bottled\", \"broiled\", \"gobbled\", \"kibbled\", \"nibbled\", \"pickled\", \"pimpled\", \"vittled\"], \"no\": [\"bingled\", \"boggled\", \"circled\", \"cobbled\", \"coffled\", \"fizzled\", \"footled\", \"foozled\", \"giggled\", \"goggled\", \"googled\", \"growled\", \"higgled\", \"hobbled\", \"hoppled\", \"jiggled\", \"jingled\", \"joggled\", \"kittled\", \"mingled\", \"mizzled\", \"mottled\", \"niggled\", \"nobbled\", \"pootled\", \"poppled\", \"prowled\", \"riffled\", \"rimpled\", \"rippled\", \"tickled\", \"tingled\", \"tinkled\", \"tippled\", \"toggled\", \"tootled\", \"toppled\", \"trifled\", \"tripled\", \"twirled\", \"whirled\", \"whorled\", \"wiggled\", \"wimpled\", \"winkled\", \"wobbled\"]}"
+    },
+    {
+      "state": "7-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 3566.1094000000003,
+      "inputSha256": "faacb2e17a62f4f1b01d1528f49ca80f76766e14bed14984f6e661dc7ad7ac5f",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "circled",
+        "hobbled",
+        "joggled",
+        "toggled",
+        "twirled",
+        "whirled",
+        "wiggled",
+        "wobbled"
+      ],
+      "no": [
+        "bingled",
+        "bobbled",
+        "boggled",
+        "bottled",
+        "broiled",
+        "cobbled",
+        "coffled",
+        "fizzled",
+        "footled",
+        "foozled",
+        "giggled",
+        "gobbled",
+        "goggled",
+        "googled",
+        "growled",
+        "higgled",
+        "hoppled",
+        "jiggled",
+        "jingled",
+        "kibbled",
+        "kittled",
+        "mingled",
+        "mizzled",
+        "mottled",
+        "nibbled",
+        "niggled",
+        "nobbled",
+        "pickled",
+        "pimpled",
+        "pootled",
+        "poppled",
+        "prowled",
+        "riffled",
+        "rimpled",
+        "rippled",
+        "tickled",
+        "tingled",
+        "tinkled",
+        "tippled",
+        "tootled",
+        "toppled",
+        "trifled",
+        "tripled",
+        "vittled",
+        "whorled",
+        "wimpled",
+        "winkled"
+      ],
+      "yesShare": 0.14545454545454545,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 362,
+        "completion_tokens": 254,
+        "reasoning_tokens": null,
+        "neurons": 61.67424774169922
+      },
+      "estimatedNeurons": 61.674286,
+      "providerReportedNeurons": 61.67424774169922,
+      "reasoningChars": 0,
+      "visibleChars": 622,
+      "response": "{\"yes\": [\"circled\", \"hobbled\", \"joggled\", \"toggled\", \"twirled\", \"whirled\", \"wobbled\", \"wiggled\"], \"no\": [\"bingled\", \"bobbled\", \"boggled\", \"bottled\", \"broiled\", \"cobbled\", \"coffled\", \"fizzled\", \"footled\", \"foozled\", \"giggled\", \"gobbled\", \"goggled\", \"googled\", \"growled\", \"higgled\", \"hoppled\", \"jiggled\", \"jingled\", \"kibbled\", \"kittled\", \"mingled\", \"mizzled\", \"mottled\", \"nibbled\", \"niggled\", \"nobbled\", \"pickled\", \"pimpled\", \"pootled\", \"poppled\", \"prowled\", \"riffled\", \"rimpled\", \"rippled\", \"tickled\", \"tingled\", \"tinkled\", \"tippled\", \"tootled\", \"toppled\", \"trifled\", \"tripled\", \"vittled\", \"whorled\", \"wimpled\", \"winkled\"]}"
+    },
+    {
+      "state": "8-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 3377.112799999999,
+      "inputSha256": "91ec41249483094d00915b2b1cd26929752e37de36b7aade012bebc73063e2b0",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a person?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "analyzer",
+        "attacker",
+        "cavalier",
+        "chattier",
+        "commuter",
+        "compiler",
+        "computer",
+        "follower",
+        "lawmaker",
+        "milliner",
+        "onlooker",
+        "pacifier",
+        "taxpayer",
+        "thatcher",
+        "villager"
+      ],
+      "no": [
+        "awfuller",
+        "bubblier",
+        "catchier",
+        "chalkier",
+        "chillier",
+        "choppier",
+        "chubbier",
+        "chummier",
+        "chunkier",
+        "clammier",
+        "commoner",
+        "cucumber",
+        "faultier",
+        "filthier",
+        "flabbier",
+        "floppier",
+        "fluffier",
+        "gloomier",
+        "guiltier",
+        "hangover",
+        "hollower",
+        "jauntier",
+        "knottier",
+        "laughter",
+        "manpower",
+        "mightier",
+        "pimplier",
+        "pullover",
+        "quainter",
+        "touchier",
+        "wobblier",
+        "woollier"
+      ],
+      "yesShare": 0.3191489361702128,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 411,
+        "completion_tokens": 225,
+        "reasoning_tokens": null,
+        "neurons": 57.04161071777344
+      },
+      "estimatedNeurons": 57.041673,
+      "providerReportedNeurons": 57.04161071777344,
+      "reasoningChars": 0,
+      "visibleChars": 625,
+      "response": "{\"question\": \"Can your word mean a person?\", \"yes\": [\"analyzer\", \"attacker\", \"cavalier\", \"chattier\", \"commuter\", \"compiler\", \"computer\", \"follower\", \"lawmaker\", \"milliner\", \"onlooker\", \"pacifier\", \"taxpayer\", \"thatcher\", \"villager\"], \"no\": [\"awfuller\", \"bubblier\", \"catchier\", \"chalkier\", \"chillier\", \"choppier\", \"chubbier\", \"chummier\", \"chunkier\", \"clammier\", \"commoner\", \"cucumber\", \"faultier\", \"filthier\", \"flabbier\", \"floppier\", \"fluffier\", \"gloomier\", \"guiltier\", \"hangover\", \"hollower\", \"jauntier\", \"knottier\", \"laughter\", \"manpower\", \"mightier\", \"pimplier\", \"pullover\", \"quainter\", \"touchier\", \"wobblier\", \"woollier\"]}"
+    },
+    {
+      "state": "8-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 3903.2715000000007,
+      "inputSha256": "1949fbb1c87a026f56ef692c6fcb6511e4ef17a5f785e81958c99ce751ba00ba",
+      "outcome": "wrong-lists",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [
+          "touchier"
+        ],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": null,
+      "no": null,
+      "yesShare": null,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 333,
+        "completion_tokens": 210,
+        "reasoning_tokens": null,
+        "neurons": 51.88945388793945
+      },
+      "estimatedNeurons": 51.889494,
+      "providerReportedNeurons": 51.88945388793945,
+      "reasoningChars": 0,
+      "visibleChars": 569,
+      "response": "{\"yes\": [\"attacker\", \"cavalier\", \"commoner\", \"commuter\", \"compiler\", \"computer\", \"follower\", \"lawmaker\", \"manpower\", \"milliner\", \"onlooker\", \"pacifier\", \"taxpayer\", \"thatcher\", \"villager\"], \"no\": [\"analyzer\", \"awfuller\", \"bubblier\", \"catchier\", \"chalkier\", \"chattier\", \"chillier\", \"choppier\", \"chubbier\", \"chummier\", \"chunkier\", \"clammier\", \"cucumber\", \"faultier\", \"filthier\", \"flabbier\", \"floppier\", \"fluffier\", \"gloomier\", \"guiltier\", \"hangover\", \"hollower\", \"jauntier\", \"knottier\", \"laughter\", \"mightier\", \"pimplier\", \"pullover\", \"quainter\", \"wobblier\", \"woollier\"]}"
+    },
+    {
+      "state": "8-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 1128.7671999999984,
+      "inputSha256": "6d32935a14d8fd030fd9fd2a065e9178c47945d71252a2d23a1f6319f0a4de21",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean something related to removal or deletion?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "excising",
+        "excision",
+        "expiring"
+      ],
+      "no": [
+        "emailing",
+        "enticing",
+        "envision",
+        "exciting",
+        "exhibits"
+      ],
+      "yesShare": 0.375,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 276,
+        "completion_tokens": 55,
+        "reasoning_tokens": null,
+        "neurons": 18.624568939208984
+      },
+      "estimatedNeurons": 18.624643,
+      "providerReportedNeurons": 18.624568939208984,
+      "reasoningChars": 0,
+      "visibleChars": 189,
+      "response": "{\"question\": \"Can your word mean something related to removal or deletion?\", \"yes\": [\"excising\", \"excision\", \"expiring\"], \"no\": [\"emailing\", \"enticing\", \"envision\", \"exciting\", \"exhibits\"]}"
+    },
+    {
+      "state": "8-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 1133.8770999999979,
+      "inputSha256": "e50fd8471814cbfa15f83b56312e4fa69733f82cc9dc1427dbae3301ac5b8df5",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "emailing",
+        "enticing",
+        "exciting",
+        "exhibits"
+      ],
+      "no": [
+        "envision",
+        "excising",
+        "excision",
+        "expiring"
+      ],
+      "yesShare": 0.5,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 197,
+        "completion_tokens": 40,
+        "reasoning_tokens": null,
+        "neurons": 13.445743560791016
+      },
+      "estimatedNeurons": 13.445796,
+      "providerReportedNeurons": 13.445743560791016,
+      "reasoningChars": 0,
+      "visibleChars": 113,
+      "response": "{\"yes\": [\"emailing\", \"enticing\", \"exciting\", \"exhibits\"], \"no\": [\"envision\", \"excising\", \"excision\", \"expiring\"]}"
+    },
+    {
+      "state": "8-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 1361.203999999998,
+      "inputSha256": "539e89737187141a3119cb25cee5c4b6ad62b04185ce84d6b0ae19f474aff43e",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a place?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "boltonia",
+        "colombia",
+        "columbia",
+        "fostoria",
+        "mongolia",
+        "monrovia",
+        "suburbia"
+      ],
+      "no": [
+        "dyslogia",
+        "dystonia",
+        "dystopia",
+        "myotonia",
+        "photopia",
+        "scotopia",
+        "strontia",
+        "syncytia"
+      ],
+      "yesShare": 0.4666666666666667,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 309,
+        "completion_tokens": 91,
+        "reasoning_tokens": null,
+        "neurons": 26.877593994140625
+      },
+      "estimatedNeurons": 26.877667,
+      "providerReportedNeurons": 26.877593994140625,
+      "reasoningChars": 0,
+      "visibleChars": 240,
+      "response": "{\"question\": \"Can your word mean a place?\", \"yes\": [\"colombia\", \"columbia\", \"fostoria\", \"monrovia\", \"mongolia\", \"boltonia\", \"suburbia\"], \"no\": [\"dyslogia\", \"dystonia\", \"dystopia\", \"myotonia\", \"photopia\", \"scotopia\", \"strontia\", \"syncytia\"]}"
+    },
+    {
+      "state": "8-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 1780.8947000000007,
+      "inputSha256": "5bb5a4d4813408e669054a2790427c30ecb9bec02c9e334022df6da86ea62d76",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "boltonia",
+        "colombia",
+        "columbia",
+        "dystopia",
+        "fostoria",
+        "mongolia",
+        "monrovia",
+        "scotopia",
+        "suburbia"
+      ],
+      "no": [
+        "dyslogia",
+        "dystonia",
+        "myotonia",
+        "photopia",
+        "strontia",
+        "syncytia"
+      ],
+      "yesShare": 0.6,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 226,
+        "completion_tokens": 80,
+        "reasoning_tokens": null,
+        "neurons": 22.411319732666016
+      },
+      "estimatedNeurons": 22.411368,
+      "providerReportedNeurons": 22.411319732666016,
+      "reasoningChars": 0,
+      "visibleChars": 197,
+      "response": "{\"yes\": [\"colombia\", \"columbia\", \"dystopia\", \"fostoria\", \"mongolia\", \"monrovia\", \"scotopia\", \"suburbia\", \"boltonia\"], \"no\": [\"dyslogia\", \"dystonia\", \"myotonia\", \"photopia\", \"strontia\", \"syncytia\"]}"
+    },
+    {
+      "state": "9-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 2238.9473,
+      "inputSha256": "38ac3ab634157410ad3b4e2ea1059dcae25266a9c0db22887e5bcc388aadb7bb",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a living thing?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "beautiful",
+        "ferocious",
+        "geraniums",
+        "headfirst",
+        "melodious",
+        "tenacious",
+        "weaklings",
+        "yearlings"
+      ],
+      "no": [
+        "behaviors",
+        "certainly",
+        "certainty",
+        "delusions",
+        "demotions",
+        "devotions",
+        "headlight",
+        "memorials",
+        "negations",
+        "reactions",
+        "relations",
+        "restricts",
+        "teachings",
+        "technical",
+        "vexations",
+        "yearnings"
+      ],
+      "yesShare": 0.3333333333333333,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 326,
+        "completion_tokens": 118,
+        "reasoning_tokens": null,
+        "neurons": 32.860687255859375
+      },
+      "estimatedNeurons": 32.860758,
+      "providerReportedNeurons": 32.860687255859375,
+      "reasoningChars": 0,
+      "visibleChars": 379,
+      "response": "{\"question\": \"Can your word mean a living thing?\", \"yes\": [\"beautiful\", \"ferocious\", \"geraniums\", \"headfirst\", \"melodious\", \"tenacious\", \"weaklings\", \"yearlings\"], \"no\": [\"behaviors\", \"certainly\", \"certainty\", \"delusions\", \"demotions\", \"devotions\", \"headlight\", \"memorials\", \"negations\", \"reactions\", \"relations\", \"restricts\", \"teachings\", \"technical\", \"vexations\", \"yearnings\"]}"
+    },
+    {
+      "state": "9-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 1638.0568999999996,
+      "inputSha256": "09e8d3b97f457fa95433f1748915c37130fa45ab26301db7b43d382935b18b51",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "weaklings",
+        "yearlings"
+      ],
+      "no": [
+        "beautiful",
+        "behaviors",
+        "certainly",
+        "certainty",
+        "delusions",
+        "demotions",
+        "devotions",
+        "ferocious",
+        "geraniums",
+        "headfirst",
+        "headlight",
+        "melodious",
+        "memorials",
+        "negations",
+        "reactions",
+        "relations",
+        "restricts",
+        "teachings",
+        "technical",
+        "tenacious",
+        "vexations",
+        "yearnings"
+      ],
+      "yesShare": 0.08333333333333333,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 248,
+        "completion_tokens": 106,
+        "reasoning_tokens": null,
+        "neurons": 28.322948455810547
+      },
+      "estimatedNeurons": 28.322994,
+      "providerReportedNeurons": 28.322948455810547,
+      "reasoningChars": 0,
+      "visibleChars": 329,
+      "response": "{\"yes\": [\"weaklings\", \"yearlings\"], \"no\": [\"beautiful\", \"behaviors\", \"certainly\", \"certainty\", \"delusions\", \"demotions\", \"devotions\", \"ferocious\", \"geraniums\", \"headfirst\", \"headlight\", \"melodious\", \"memorials\", \"negations\", \"reactions\", \"relations\", \"restricts\", \"teachings\", \"technical\", \"tenacious\", \"vexations\", \"yearnings\"]}"
+    },
+    {
+      "state": "9-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 3076.0781000000025,
+      "inputSha256": "5023f88d0f376a001921a7012c33f7078b2d31c29ef70ebc1153bc100fc445e6",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a medical term?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "mongoloid",
+        "monotonic",
+        "oxycontin",
+        "proboscis",
+        "prognosis",
+        "psychosis",
+        "psychotic"
+      ],
+      "no": [
+        "courtship",
+        "dubrovnik",
+        "hobgoblin",
+        "hydrofoil",
+        "kropotkin",
+        "nonprofit",
+        "portfolio",
+        "symphonic",
+        "troopship"
+      ],
+      "yesShare": 0.4375,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 309,
+        "completion_tokens": 93,
+        "reasoning_tokens": null,
+        "neurons": 27.28720474243164
+      },
+      "estimatedNeurons": 27.287277,
+      "providerReportedNeurons": 27.28720474243164,
+      "reasoningChars": 0,
+      "visibleChars": 275,
+      "response": "{\"question\": \"Can your word mean a medical term?\", \"yes\": [\"mongoloid\", \"monotonic\", \"oxycontin\", \"proboscis\", \"prognosis\", \"psychosis\", \"psychotic\"], \"no\": [\"courtship\", \"dubrovnik\", \"hobgoblin\", \"hydrofoil\", \"kropotkin\", \"nonprofit\", \"portfolio\", \"symphonic\", \"troopship\"]}"
+    },
+    {
+      "state": "9-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 1308.8849999999984,
+      "inputSha256": "8ca2c0099fef37e057a6645fe26837f7c3593ef1a0a119116eaf1e54744e0141",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "hobgoblin",
+        "kropotkin",
+        "mongoloid"
+      ],
+      "no": [
+        "courtship",
+        "dubrovnik",
+        "hydrofoil",
+        "monotonic",
+        "nonprofit",
+        "oxycontin",
+        "portfolio",
+        "proboscis",
+        "prognosis",
+        "psychosis",
+        "psychotic",
+        "symphonic",
+        "troopship"
+      ],
+      "yesShare": 0.1875,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 231,
+        "completion_tokens": 81,
+        "reasoning_tokens": null,
+        "neurons": 22.749462127685547
+      },
+      "estimatedNeurons": 22.749513,
+      "providerReportedNeurons": 22.749462127685547,
+      "reasoningChars": 0,
+      "visibleChars": 225,
+      "response": "{\"yes\": [\"kropotkin\", \"mongoloid\", \"hobgoblin\"], \"no\": [\"courtship\", \"dubrovnik\", \"hydrofoil\", \"monotonic\", \"nonprofit\", \"oxycontin\", \"portfolio\", \"proboscis\", \"prognosis\", \"psychosis\", \"psychotic\", \"symphonic\", \"troopship\"]}"
+    },
+    {
+      "state": "9-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 3636.081299999998,
+      "inputSha256": "cddd6d766bc970f4bca4475ad51eea6c94f6a6081efc69c430f7befb7499b5f7",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a living thing?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "abraxases",
+        "acariases",
+        "ananiases",
+        "antabuses",
+        "arbutuses",
+        "caritases",
+        "chlamyses",
+        "cutpurses",
+        "cyathuses",
+        "czardases",
+        "famuluses",
+        "grampuses",
+        "incubuses",
+        "jugginses",
+        "katharses",
+        "linctuses",
+        "lithiases",
+        "lychnises",
+        "marquises",
+        "minibuses",
+        "mugginses",
+        "mydriases",
+        "parulises"
+      ],
+      "no": [
+        "anacruses",
+        "anaphases",
+        "appraises",
+        "bauhauses",
+        "calamuses",
+        "catabases",
+        "catalases",
+        "catalyses",
+        "catharses",
+        "databases",
+        "diapauses",
+        "diaphyses",
+        "katabases",
+        "minimuses",
+        "parabases",
+        "paradises",
+        "paralyses",
+        "purchases",
+        "rhachises",
+        "thalluses"
+      ],
+      "yesShare": 0.5348837209302325,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 426,
+        "completion_tokens": 237,
+        "reasoning_tokens": null,
+        "neurons": 59.8992919921875
+      },
+      "estimatedNeurons": 59.899353,
+      "providerReportedNeurons": 59.8992919921875,
+      "reasoningChars": 0,
+      "visibleChars": 626,
+      "response": "{\"question\": \"Can your word mean a living thing?\", \"yes\": [\"abraxases\", \"acariases\", \"ananiases\", \"antabuses\", \"arbutuses\", \"caritases\", \"chlamyses\", \"cutpurses\", \"cyathuses\", \"czardases\", \"famuluses\", \"grampuses\", \"incubuses\", \"jugginses\", \"katharses\", \"linctuses\", \"lithiases\", \"lychnises\", \"marquises\", \"minibuses\", \"mugginses\", \"mydriases\", \"parulises\"], \"no\": [\"anacruses\", \"anaphases\", \"appraises\", \"bauhauses\", \"calamuses\", \"catabases\", \"catalases\", \"catalyses\", \"catharses\", \"databases\", \"diapauses\", \"diaphyses\", \"katabases\", \"minimuses\", \"parabases\", \"paradises\", \"paralyses\", \"purchases\", \"rhachises\", \"thalluses\"]}"
+    },
+    {
+      "state": "9-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 2994.9818000000014,
+      "inputSha256": "9f203e8a96da2c232c71c403e0567022c3813b83a63d76a5261b46e36e9d7ed2",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "cutpurses",
+        "jugginses",
+        "marquises",
+        "mugginses"
+      ],
+      "no": [
+        "abraxases",
+        "acariases",
+        "anacruses",
+        "ananiases",
+        "anaphases",
+        "antabuses",
+        "appraises",
+        "arbutuses",
+        "bauhauses",
+        "calamuses",
+        "caritases",
+        "catabases",
+        "catalases",
+        "catalyses",
+        "catharses",
+        "chlamyses",
+        "cyathuses",
+        "czardases",
+        "databases",
+        "diapauses",
+        "diaphyses",
+        "famuluses",
+        "grampuses",
+        "incubuses",
+        "katabases",
+        "katharses",
+        "linctuses",
+        "lithiases",
+        "lychnises",
+        "minibuses",
+        "minimuses",
+        "mydriases",
+        "parabases",
+        "paradises",
+        "paralyses",
+        "parulises",
+        "purchases",
+        "rhachises",
+        "thalluses"
+      ],
+      "yesShare": 0.09302325581395349,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 348,
+        "completion_tokens": 225,
+        "reasoning_tokens": null,
+        "neurons": 55.361549377441406
+      },
+      "estimatedNeurons": 55.361589,
+      "providerReportedNeurons": 55.361549377441406,
+      "reasoningChars": 0,
+      "visibleChars": 576,
+      "response": "{\"yes\": [\"cutpurses\", \"mugginses\", \"jugginses\", \"marquises\"], \"no\": [\"abraxases\", \"acariases\", \"anacruses\", \"ananiases\", \"anaphases\", \"antabuses\", \"appraises\", \"arbutuses\", \"bauhauses\", \"calamuses\", \"caritases\", \"catabases\", \"catalases\", \"catalyses\", \"catharses\", \"chlamyses\", \"cyathuses\", \"czardases\", \"databases\", \"diapauses\", \"diaphyses\", \"famuluses\", \"grampuses\", \"incubuses\", \"katabases\", \"katharses\", \"linctuses\", \"lithiases\", \"lychnises\", \"minibuses\", \"minimuses\", \"mydriases\", \"parabases\", \"paradises\", \"paralyses\", \"parulises\", \"purchases\", \"rhachises\", \"thalluses\"]}"
+    },
+    {
+      "state": "10-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 1407.6742000000013,
+      "inputSha256": "cd75f207bcddfae82be0a796077ed595d54bb42b3f7ad4920f544f1d329f8ac2",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean something describing a quality or state?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "immaculate",
+        "impassable",
+        "implacable",
+        "improbable",
+        "inaccurate",
+        "inflatable",
+        "invaluable"
+      ],
+      "no": [
+        "illustrate",
+        "importance",
+        "inaugurate"
+      ],
+      "yesShare": 0.7,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 289,
+        "completion_tokens": 70,
+        "reasoning_tokens": null,
+        "neurons": 22.0433292388916
+      },
+      "estimatedNeurons": 22.043402,
+      "providerReportedNeurons": 22.0433292388916,
+      "reasoningChars": 0,
+      "visibleChars": 232,
+      "response": "{\"question\": \"Can your word mean something describing a quality or state?\", \"yes\": [\"immaculate\", \"impassable\", \"implacable\", \"improbable\", \"inaccurate\", \"inflatable\", \"invaluable\"], \"no\": [\"illustrate\", \"importance\", \"inaugurate\"]}"
+    },
+    {
+      "state": "10-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 1159.7407999999996,
+      "inputSha256": "41479028cdaaa96a06d4d35de90c573b73aa985403fe2232710c3b9714583f24",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "immaculate",
+        "impassable",
+        "implacable",
+        "improbable",
+        "inaccurate",
+        "inflatable",
+        "invaluable"
+      ],
+      "no": [
+        "illustrate",
+        "importance",
+        "inaugurate"
+      ],
+      "yesShare": 0.7,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 210,
+        "completion_tokens": 55,
+        "reasoning_tokens": null,
+        "neurons": 16.864503860473633
+      },
+      "estimatedNeurons": 16.864555,
+      "providerReportedNeurons": 16.864503860473633,
+      "reasoningChars": 0,
+      "visibleChars": 157,
+      "response": "{\"yes\": [\"immaculate\", \"impassable\", \"implacable\", \"improbable\", \"inaccurate\", \"inflatable\", \"invaluable\"], \"no\": [\"illustrate\", \"importance\", \"inaugurate\"]}"
+    },
+    {
+      "state": "10-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 1343.4233999999997,
+      "inputSha256": "22c57691e3f65586a02d7f5b9bbd4abf625a5952b5a732bef6c357f471c75a10",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a type of plant?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "archetypes",
+        "grapevines",
+        "grotesques",
+        "promenaded",
+        "promenades",
+        "prosecuted",
+        "prosecutes",
+        "travestied",
+        "travesties"
+      ],
+      "no": [
+        "arabesques",
+        "proselyted",
+        "proselytes"
+      ],
+      "yesShare": 0.75,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 304,
+        "completion_tokens": 85,
+        "reasoning_tokens": null,
+        "neurons": 25.515424728393555
+      },
+      "estimatedNeurons": 25.515497,
+      "providerReportedNeurons": 25.515424728393555,
+      "reasoningChars": 0,
+      "visibleChars": 236,
+      "response": "{\"question\": \"Can your word mean a type of plant?\", \"yes\": [\"archetypes\", \"grapevines\", \"grotesques\", \"promenaded\", \"promenades\", \"prosecuted\", \"prosecutes\", \"travestied\", \"travesties\"], \"no\": [\"arabesques\", \"proselyted\", \"proselytes\"]}"
+    },
+    {
+      "state": "10-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 996.8523000000059,
+      "inputSha256": "b21417a3fbfc8e45940cee85b2fe0220296056798c11430c7902e0a7744c1228",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "archetypes",
+        "grotesques",
+        "travesties"
+      ],
+      "no": [
+        "arabesques",
+        "grapevines",
+        "promenaded",
+        "promenades",
+        "prosecuted",
+        "prosecutes",
+        "proselyted",
+        "proselytes",
+        "travestied"
+      ],
+      "yesShare": 0.25,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 223,
+        "completion_tokens": 72,
+        "reasoning_tokens": null,
+        "neurons": 20.692874908447266
+      },
+      "estimatedNeurons": 20.692924,
+      "providerReportedNeurons": 20.692874908447266,
+      "reasoningChars": 0,
+      "visibleChars": 185,
+      "response": "{\"yes\": [\"archetypes\", \"grotesques\", \"travesties\"], \"no\": [\"arabesques\", \"grapevines\", \"promenaded\", \"promenades\", \"prosecuted\", \"prosecutes\", \"proselyted\", \"proselytes\", \"travestied\"]}"
+    },
+    {
+      "state": "10-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 1681.3106999999945,
+      "inputSha256": "5c1e6f0b31e5f754b320ddf80376e51b0453d50eb8286897746328bb7dc29746",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean something that happens or is done to a thing or substance?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "elaborated",
+        "elaborates",
+        "eradicated",
+        "eradicates",
+        "evaginated",
+        "evaginates",
+        "evaporated",
+        "evaporates"
+      ],
+      "no": [
+        "ejaculated",
+        "ejaculates",
+        "exarchates"
+      ],
+      "yesShare": 0.7272727272727273,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 296,
+        "completion_tokens": 83,
+        "reasoning_tokens": null,
+        "neurons": 24.892471313476562
+      },
+      "estimatedNeurons": 24.892543,
+      "providerReportedNeurons": 24.892471313476562,
+      "reasoningChars": 0,
+      "visibleChars": 264,
+      "response": "{\"question\": \"Can your word mean something that happens or is done to a thing or substance?\", \"yes\": [\"evaporated\", \"evaporates\", \"eradicated\", \"eradicates\", \"evaginated\", \"evaginates\", \"elaborated\", \"elaborates\"], \"no\": [\"ejaculated\", \"ejaculates\", \"exarchates\"]}"
+    },
+    {
+      "state": "10-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 1025.5005999999994,
+      "inputSha256": "ae6c9ca6542453c7c32310c5f2be8d637626d9601c9176ca720aa81d55525ffe",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "exarchates"
+      ],
+      "no": [
+        "ejaculated",
+        "ejaculates",
+        "elaborated",
+        "elaborates",
+        "eradicated",
+        "eradicates",
+        "evaginated",
+        "evaginates",
+        "evaporated",
+        "evaporates"
+      ],
+      "yesShare": 0.09090909090909091,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 213,
+        "completion_tokens": 63,
+        "reasoning_tokens": null,
+        "neurons": 18.582948684692383
+      },
+      "estimatedNeurons": 18.582999,
+      "providerReportedNeurons": 18.582948684692383,
+      "reasoningChars": 0,
+      "visibleChars": 171,
+      "response": "{\"yes\": [\"exarchates\"], \"no\": [\"ejaculated\", \"ejaculates\", \"elaborated\", \"elaborates\", \"eradicated\", \"eradicates\", \"evaginated\", \"evaginates\", \"evaporated\", \"evaporates\"]}"
+    }
+  ],
+  "finishedAt": "2026-10-02T23:27:53.284Z",
+  "budget": {
+    "day": "2026-10-02",
+    "requests": 305,
+    "reservedNeurons": 9299.451836965074,
+    "adjustment": "2026-10-02 23:27 UTC, owner decision: reservations for 7 requests with unknown usage (6 timeouts, 1 killed in flight) dropped, 909.0 neurons; owner dashboard showed 7.8k used before the Llama 3.3 70B run.",
+    "maxRequests": 1800,
+    "maxNeurons": 10000,
+    "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
+  },
+  "mappingSha256": "90a97fb466cb9c3ef1547faaf9b386163beea65f065d438dfe420061b4d7f20d",
+  "summary": {
+    "@cf/meta/llama-3.3-70b-instruct-fp8-fast": {
+      "invent": {
+        "requests": 10,
+        "sent": 10,
+        "outcomes": {
+          "uneven": 1,
+          "accepted": 9
+        },
+        "acceptedRate": 0.9,
+        "strictJsonRate": 1,
+        "validListsRate": 1,
+        "invalidRate": 0,
+        "split": {
+          "meanYesShare": 0.4807,
+          "meanDistanceFromHalf": 0.1617,
+          "inBand": 9,
+          "withValidLists": 10
+        },
+        "accuracy": {
+          "scoredRequests": 3,
+          "unmappedQuestions": 7,
+          "labelled": 63,
+          "correct": 51,
+          "falseYes": 10,
+          "falseNo": 2,
+          "wordnetYes": 17,
+          "wordnetNo": 46,
+          "accuracy": 0.8095,
+          "falseYesRate": 0.2174,
+          "falseNoRate": 0.1176,
+          "answerChecked": 3,
+          "answerMisfiled": 1
+        },
+        "latencyMs": {
+          "p50": 1681.3107,
+          "p95": 4385.3266,
+          "max": 4385.3266,
+          "within3s": 0.6,
+          "within5s": 1,
+          "within8s": 1,
+          "acceptedWithin3s": 0.6,
+          "acceptedWithin8s": 0.9
+        },
+        "tokens": {
+          "requestsWithUsage": 10,
+          "meanPrompt": 338.9,
+          "meanCompletion": 132.6,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 10,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 361.9493,
+          "estimatedPerRequest": 36.1949,
+          "providerReportedTotal": 361.9486,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "8-apprentice",
+            "codes": [
+              "a"
+            ],
+            "labelled": 47,
+            "unlabelled": 0,
+            "correct": 43,
+            "falseYes": 2,
+            "falseNo": 2,
+            "wordnetYes": 15,
+            "wordnetNo": 32,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": [
+              "+analyzer",
+              "+chattier",
+              "-commoner",
+              "-hangover"
+            ]
+          },
+          {
+            "state": "8-master",
+            "codes": [
+              "y"
+            ],
+            "labelled": 5,
+            "unlabelled": 10,
+            "correct": 5,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 4,
+            "answer": {
+              "wordnet": true,
+              "said": true,
+              "misfiled": false
+            },
+            "disagreements": []
+          },
+          {
+            "state": "10-scholar",
+            "codes": [
+              "g"
+            ],
+            "labelled": 11,
+            "unlabelled": 1,
+            "correct": 3,
+            "falseYes": 8,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 10,
+            "answer": {
+              "wordnet": false,
+              "said": true,
+              "misfiled": true
+            },
+            "disagreements": [
+              "+archetypes",
+              "+grotesques",
+              "+promenaded",
+              "+promenades",
+              "+prosecuted",
+              "+prosecutes",
+              "+travestied",
+              "+travesties"
+            ]
+          }
+        ]
+      },
+      "sort": {
+        "requests": 10,
+        "sent": 10,
+        "outcomes": {
+          "uneven": 5,
+          "wrong-lists": 1,
+          "accepted": 4
+        },
+        "acceptedRate": 0.4,
+        "strictJsonRate": 1,
+        "validListsRate": 0.9,
+        "invalidRate": 0.1,
+        "split": {
+          "meanYesShare": 0.2945,
+          "meanDistanceFromHalf": 0.2722,
+          "inBand": 4,
+          "withValidLists": 9
+        },
+        "accuracy": {
+          "scoredRequests": 9,
+          "unmappedQuestions": 0,
+          "labelled": 155,
+          "correct": 137,
+          "falseYes": 6,
+          "falseNo": 12,
+          "wordnetYes": 38,
+          "wordnetNo": 117,
+          "accuracy": 0.8839,
+          "falseYesRate": 0.0513,
+          "falseNoRate": 0.3158,
+          "answerChecked": 8,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 1308.885,
+          "p95": 3903.2715,
+          "max": 3903.2715,
+          "within3s": 0.8,
+          "within5s": 1,
+          "within8s": 1,
+          "acceptedWithin3s": 0.4,
+          "acceptedWithin8s": 0.4
+        },
+        "tokens": {
+          "requestsWithUsage": 10,
+          "meanPrompt": 259.1,
+          "meanCompletion": 118.6,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 13.9,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 311.9955,
+          "estimatedPerRequest": 31.1996,
+          "providerReportedTotal": 311.9951,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "7-master",
+            "codes": [
+              "F"
+            ],
+            "labelled": 45,
+            "unlabelled": 10,
+            "correct": 38,
+            "falseYes": 1,
+            "falseNo": 6,
+            "wordnetYes": 13,
+            "wordnetNo": 32,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": [
+              "+toggled",
+              "-boggled",
+              "-jiggled",
+              "-prowled",
+              "-riffled",
+              "-rippled",
+              "-toppled"
+            ]
+          },
+          {
+            "state": "8-scholar",
+            "codes": [
+              "G"
+            ],
+            "labelled": 8,
+            "unlabelled": 0,
+            "correct": 6,
+            "falseYes": 2,
+            "falseNo": 0,
+            "wordnetYes": 2,
+            "wordnetNo": 6,
+            "answer": {
+              "wordnet": true,
+              "said": true,
+              "misfiled": false
+            },
+            "disagreements": [
+              "+exciting",
+              "+exhibits"
+            ]
+          },
+          {
+            "state": "8-master",
+            "codes": [
+              "y"
+            ],
+            "labelled": 5,
+            "unlabelled": 10,
+            "correct": 4,
+            "falseYes": 1,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 4,
+            "answer": {
+              "wordnet": true,
+              "said": true,
+              "misfiled": false
+            },
+            "disagreements": [
+              "+dystopia"
+            ]
+          },
+          {
+            "state": "9-apprentice",
+            "codes": [
+              "a"
+            ],
+            "labelled": 24,
+            "unlabelled": 0,
+            "correct": 23,
+            "falseYes": 0,
+            "falseNo": 1,
+            "wordnetYes": 3,
+            "wordnetNo": 21,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": [
+              "-relations"
+            ]
+          },
+          {
+            "state": "9-scholar",
+            "codes": [
+              "a"
+            ],
+            "labelled": 13,
+            "unlabelled": 3,
+            "correct": 12,
+            "falseYes": 0,
+            "falseNo": 1,
+            "wordnetYes": 3,
+            "wordnetNo": 10,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": [
+              "-psychotic"
+            ]
+          },
+          {
+            "state": "9-master",
+            "codes": [
+              "a"
+            ],
+            "labelled": 30,
+            "unlabelled": 13,
+            "correct": 28,
+            "falseYes": 0,
+            "falseNo": 2,
+            "wordnetYes": 5,
+            "wordnetNo": 25,
+            "answer": null,
+            "disagreements": [
+              "-famuluses",
+              "-incubuses"
+            ]
+          },
+          {
+            "state": "10-apprentice",
+            "codes": [
+              "O"
+            ],
+            "labelled": 10,
+            "unlabelled": 0,
+            "correct": 10,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 7,
+            "wordnetNo": 3,
+            "answer": {
+              "wordnet": true,
+              "said": true,
+              "misfiled": false
+            },
+            "disagreements": []
+          },
+          {
+            "state": "10-scholar",
+            "codes": [
+              "o"
+            ],
+            "labelled": 11,
+            "unlabelled": 1,
+            "correct": 7,
+            "falseYes": 2,
+            "falseNo": 2,
+            "wordnetYes": 3,
+            "wordnetNo": 8,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": [
+              "+archetypes",
+              "+travesties",
+              "-arabesques",
+              "-promenades"
+            ]
+          },
+          {
+            "state": "10-master",
+            "codes": [
+              "y"
+            ],
+            "labelled": 9,
+            "unlabelled": 2,
+            "correct": 9,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 8,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": []
+          }
+        ]
+      }
+    }
+  }
+}

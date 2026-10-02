@@ -10,7 +10,9 @@ fewer), can a free-allowance Workers AI model (1) invent one yes/no question abo
 not letters, and (2) sort every candidate into YES or NO, well enough for code to check it
 and use it?
 
-**Short answer:** sometimes. The best model, Gemma 4 26B A4B with reasoning switched off,
+**Short answer:** often, with the right model. Llama 3.3 70B (tested in a later round, see
+"Full run" below) gave a usable question on 15 of 21 boards, every one within 4.8 seconds, at
+about 38 neurons a request. Round one's best, Gemma 4 26B A4B with reasoning switched off,
 produced a usable question (valid lists, 25–75% split) for 10 of 21 boards. It was back
 within 8 seconds on all 10, and within 3 seconds on 8. Its sorts under a given WordNet
 question were valid every time and agreed with WordNet on 90% of the words. With reasoning
@@ -164,6 +166,40 @@ costs about 6–7 neurons a request. **The pick is `@cf/google/gemma-4-26b-a4b-i
 reasoning off.** At the planned ~50 requests a day it would use about 350 neurons, 3.5% of
 the 10,000 free allowance.
 
+## Full run: Llama 3.3 70B on all 21 states
+
+Run 2026-10-02, 23:25–23:28 UTC, with the same settings as Gemma's scored run (both tasks,
+30 s timeout, 2,048-token ceiling). The first part (`illucia-d1-llama70b.json`) stopped at
+the local ledger after 11 states. The ledger still held about 909 neurons reserved for the
+7 earlier requests with unknown usage, and the owner's Cloudflare dashboard showed less
+real usage. By owner decision those reservations were dropped (recorded in the ledger's
+`adjustment` field), and the other 10 states ran as `illucia-d1-llama70b-part2.json`.
+Together: 42 requests, no timeouts, 1,500 measured neurons.
+
+| | Gemma 4 26B A4B | **Llama 3.3 70B** |
+|---|---:|---:|
+| Invent: usable questions | 10/21 | **15/21** |
+| Usable within 3 s / 8 s | 8 / 10 | **11 / 15** |
+| Invent latency p50 / p95 / max | 2.7 / 7.9 / 10.2 s | **2.2 / 4.4 / 4.8 s** |
+| Invent: mean YES share (valid lists) | 26% | **43%** |
+| Invented sorts scorable / agree with WordNet | 1 / 5 of 5 | 7 / 127 of 151 (84%) |
+| Sort: valid lists | **21/21** | 17/21 |
+| Sort: agrees with WordNet | **90.2%** (500 words) | 80.3% (305) |
+| Sort: false YES / false NO | 2.9% / 30.2% | 18.5% / 23.6% |
+| Real word on the wrong side (sort) | **1/17** | 2/14 |
+| Neurons per request | **~6–7** | ~33–38 |
+
+**By the rule fixed before the run, the pick is now Llama 3.3 70B.** Its usable rate (71%)
+is more than 10 points above Gemma's (48%). Its p95 latency is 4.4 s, and it costs about
+38 neurons a request, under the ~50 limit. Its questions split the candidates far more
+evenly and were all back within 4.8 s.
+
+The trade-off: it sorts less carefully than Gemma (80% against 90% agreement with WordNet,
+more false YES, 4 sorts with missing or repeated words), and it costs about 5.5 times as
+much. At ~50 requests a day it would use about 1,900 neurons, 19% of the free allowance,
+so D2's daily cap should be set in neurons. The soft filter recommended below matters more
+with Llama than with Gemma.
+
 ## Second round: four bigger or reasoning models
 
 Requested 2026-10-02 after round one, run the same day: Llama 3.3 70B, gpt-oss-120b and
@@ -216,7 +252,7 @@ cost per request. gpt-oss-120b's quality is promising, but it needs a wording fi
 still too slow at its lowest effort. **Llama 3.3 70B is the only new contender.** On these
 easier boards it matches Gemma's accuracy and is faster, at about 4× Gemma's cost
 (~20 neurons, so ~1,000 a day at the planned 50 requests). Four boards cannot separate it
-from Gemma. A full 21-state run of Llama 3.3 70B (about 1,000 neurons, next UTC day) would.
+from Gemma. The full 21-state run below did, and Llama 3.3 70B won.
 
 ## Stopped run: reasoning on (`benchmarks/illucia-d1-reasoning-on.json`)
 
@@ -264,6 +300,11 @@ stayed under its agreed 3,000-neuron ceiling (`--max-run-neurons`).
 The second round then spent a further 4,937 measured neurons (R1 2,450, the other three
 2,487). That brings the day to about 7,800 measured, and the ledger to 8,708 of the raised
 9,000 cap.
+
+The full Llama 3.3 70B run added 1,500 measured neurons. Before its second part the ledger
+dropped the 909 neurons reserved for requests with unknown usage (owner decision, matching
+the Cloudflare dashboard). The day ended at 9,299 measured neurons, under the 10,000 free
+allowance and the ledger's ceiling, which was raised to 10,000 that evening.
 
 ## What this means for D2 (not decided here)
 
