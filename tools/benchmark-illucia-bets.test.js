@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { simulate } from './benchmark-illucia.js';
-import { ANSWER_RULES, ARMS, MULTIPLIERS, PREVIOUS_MULTIPLIERS, askStats, hindsight, loadQuestions, paired, play, pricing,
-  versus } from './benchmark-illucia-bets.js';
+import { ANSWER_RULES, ARMS, MULTIPLIERS, PREVIOUS_MULTIPLIERS, SEEDS_PER_WORD, TEMPERAMENT_ARMS, askStats, hindsight,
+  loadQuestions, paired, play, pricing, versus } from './benchmark-illucia-bets.js';
 import { createKnowledge } from '../client/src/lib/illucia/lexicon.js';
 import { parseCategories, parseLabels } from '../client/src/lib/illucia/questions.js';
 
@@ -151,4 +151,63 @@ test('the published labels load with their checksums, and broad means a whole le
   assert.deepEqual(Object.keys(labelsByLength).map(Number), [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
   assert.ok(broad.has('artifact') && broad.has('person') && broad.has('describe'));
   assert.ok(!broad.has('bird') && !broad.has('fruit'));
+});
+
+test('temperament arms: B2 rules against her current ones, with selective players', () => {
+  assert.deepEqual(TEMPERAMENT_ARMS.map(value => value.id), ['decline', 'b2-1', 'b2-2', 'v2-1', 'v2-2', 'v2-long', 'v2-early']);
+  assert.ok(TEMPERAMENT_ARMS.every(value => value.earliestTurn === 2 && value.kinds.join() === 'noun'));
+  assert.equal(SEEDS_PER_WORD, 8);
+});
+
+test('with a round seed she plays her temperament, and the current rules hold broad questions late', () => {
+  const tArm = id => TEMPERAMENT_ARMS.find(value => value.id === id);
+  for (const word of KNOWLEDGE.words) {
+    for (let seed = 1; seed <= 5; seed++) {
+      const declined = play(word, KNOWLEDGE, LABELS, CATEGORIES, tArm('decline'), seed);
+      assert.equal(declined.guesses, simulate(word, KNOWLEDGE, { seed }, () => 0).guesses);
+      assert.equal(declined.seed, seed);
+    }
+  }
+  // Rhyming words make her miss, so rounds reach 2 misses left.
+  const words = ['bill', 'dill', 'fill', 'gill', 'hill', 'kill', 'mill', 'pill', 'till', 'will'];
+  const labels = parseLabels('bill ob\ndill -\nfill o\ngill b\nhill -\nkill -\nmill ob\npill o\ntill ob\nwill b\n', 4, CATEGORIES);
+  const knowledge = createKnowledge(words.map(word => ({ word, size: 35 })), 70);
+  const offers = arm => words.flatMap(word => Array.from({ length: 20 }, (_, i) =>
+    play(word, knowledge, labels, CATEGORIES, tArm(arm), i + 1).asked).flat());
+  const current = offers('v2-2');
+  const late = current.filter(offer => offer.tag === 'late-broad');
+  assert.ok(late.length > 0 && late.every(offer => offer.missesLeft <= 2));
+  assert.ok(current.every(offer => offer.tag === 'late-broad' || offer.tag === 'early-narrow'));
+  // The round seed reaches her question: which broad question comes late varies by seed.
+  assert.deepEqual([...new Set(late.map(offer => offer.key))].sort(), ['animal', 'artifact']);
+  // The round seed reaches her question. Two narrow categories within 10 points of each other
+  // after her two hits (i, l): bird 30 of 93 (32.3%), fish 23 of 93 (24.7%; will is rarer).
+  const two = parseCategories({ categories: [
+    { code: 'c', key: 'bird', kind: 'noun', question: 'q', kindOf: { 'oewn-1-n': 'bird' } },
+    { code: 'e', key: 'fish', kind: 'noun', question: 'q', kindOf: { 'oewn-2-n': 'fish' } }] });
+  const fishy = parseLabels('bill c\ndill c\nfill c\ngill e\nhill e\nkill -\nmill -\npill -\ntill -\nwill e\n', 4, two);
+  const weighted = createKnowledge(words.map(word => ({ word, size: word === 'will' ? 50 : 35 })), 70);
+  const firsts = arm => Array.from({ length: 40 }, (_, i) =>
+    play('kill', weighted, fishy, two, tArm(arm), i + 1).asked[0]);
+  const seeded = firsts('v2-2');
+  assert.deepEqual([...new Set(seeded.map(offer => offer.key))].sort(), ['bird', 'fish']);
+  assert.ok(seeded.some(offer => !offer.choseBest));
+  // Control: B2's rules need 25% from fish too, so she always asks the bird question.
+  assert.ok(firsts('b2-2').every(offer => offer.key === 'bird' && offer.choseBest));
+  // Positive control: B2's rules ask broad questions early, tagged as such.
+  assert.ok(offers('b2-2').some(offer => offer.tag === 'early-broad' && offer.missesLeft > 2));
+});
+
+test('ask statistics count tags and the variety of each word\'s first question', () => {
+  const asked = (key, tag) => [{ key, tag, turn: 2, candidates: 5, answer: 'no' }];
+  const games = [game('aaaa', true, 1, { asked: asked('bird', 'early-narrow') }),
+    game('aaaa', true, 1, { asked: asked('fish', 'early-narrow') }),
+    game('aaaa', true, 1, { asked: asked('bird', 'early-narrow') }),
+    game('bbbb', true, 1, { asked: asked('artifact', 'late-broad') }),
+    game('bbbb', true, 1, { asked: asked('artifact', 'late-broad') }),
+    game('cccc', true, 1, { asked: asked('person', 'late-broad') })];
+  const stats = askStats(games, new Set(['artifact', 'person']));
+  assert.deepEqual(stats.tags, { 'early-narrow': 3, 'late-broad': 3 });
+  assert.equal(stats.distinctFirstQuestionsPerWord, 1.5);  // aaaa: 2 kinds, bbbb: 1; cccc asked once
+  assert.equal(stats.broadFirstShare, 0.5);
 });

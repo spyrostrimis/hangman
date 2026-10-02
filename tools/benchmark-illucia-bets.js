@@ -12,8 +12,8 @@ import { toPublicState } from '../client/src/lib/illucia/public-state.js';
 import { filterCandidates } from '../client/src/lib/illucia/candidates.js';
 import { MIN_WORD_LENGTH, VOCABULARY_TIERS, createKnowledge } from '../client/src/lib/illucia/lexicon.js';
 import { analyzeDecision } from '../client/src/lib/illucia/strategy.js';
-import { B2_RULES, KINDS, checkAnswer, chooseQuestion, narrowKnowledge, parseCategories, parseLabels } from '../client/src/lib/illucia/questions.js';
-import { DEFAULT_SEED, loadLexicons, simulate } from './benchmark-illucia.js';
+import { B2_RULES, KINDS, QUESTION_RULES, checkAnswer, chooseQuestion, narrowKnowledge, parseCategories, parseLabels } from '../client/src/lib/illucia/questions.js';
+import { DEFAULT_SEED, loadLexicons, perWord, roundSeed, simulate } from './benchmark-illucia.js';
 import { gateCells, wordSets } from './benchmark-illucia-strength.js';
 import { WORD_BANDS } from './benchmark-illucia-tiers.js';
 import { binomialUpperTail, tierGate } from './lib/illucia-gate.js';
@@ -47,6 +47,17 @@ export const ARMS = Object.freeze([
     categories: 'noun', kinds: Object.freeze(['noun']), answers: 2, answerIf: rule })),
 ]);
 
+// Her A2 temperament (--brain temperament): B2's first rules against her current ones
+// (narrow first, broad held late, seeded variety), nouns, not before her third guess.
+export const SEEDS_PER_WORD = 8;
+export const TEMPERAMENT_ARMS = Object.freeze([
+  { id: 'decline', answers: 0 },
+  { id: 'b2-1', rules: 'b2', answers: 1 }, { id: 'b2-2', rules: 'b2', answers: 2 },
+  { id: 'v2-1', rules: 'v2', answers: 1 }, { id: 'v2-2', rules: 'v2', answers: 2 },
+  ...Object.keys(ANSWER_RULES).map(rule => ({ id: `v2-${rule}`, rules: 'v2', answers: 2, answerIf: rule })),
+].map(arm => Object.freeze({ timing: 'third', earliestTurn: 2, categories: 'noun', kinds: Object.freeze(['noun']), ...arm })));
+const armsFor = brain => (brain === 'temperament' ? TEMPERAMENT_ARMS : ARMS);
+
 export async function loadQuestions() {
   const categoryBytes = await readFile(resolve(LABELS, 'categories.json'));
   const spec = JSON.parse(categoryBytes);
@@ -67,8 +78,9 @@ export async function loadQuestions() {
 
 // One round. The player is honest: a question is answered with the word's true label,
 // up to arm.answers times, and declined when WordNet doesn't know the word (no bonus
-// is possible). She sees only the public board and the offers so far.
-export function play(word, knowledge, labels, categories, arm) {
+// is possible). She sees only the public board, the offers so far and her round seed.
+// Without a seed she plays the strict 'count' policy (A1); with one, her temperament.
+export function play(word, knowledge, labels, categories, arm, seed = null) {
   const inVocabulary = knowledge.words.includes(word);
   if (knowledge.maxSize === 70 && !inVocabulary) throw new Error('Master invariant: answer is outside the vocabulary.');
   let round = createRound(word);
@@ -81,20 +93,22 @@ export function play(word, knowledge, labels, categories, arm) {
     const state = toPublicState(round);
     if (arm.answers > 0) {
       const question = chooseQuestion(state, pool, labels, categories, offers,
-        { ...B2_RULES, kinds: arm.kinds, earliestTurn: arm.earliestTurn });
+        { ...(arm.rules === 'v2' ? QUESTION_RULES : B2_RULES), kinds: arm.kinds, earliestTurn: arm.earliestTurn,
+          ...(seed === null ? {} : { seed }) });
       if (question) {
         const truth = checkAnswer(labels, word, question.code);
         const answered = offers.filter(offer => offer.answer !== 'declined').length;
         const willing = !arm.answerIf || ANSWER_RULES[arm.answerIf](word, state);
         const answer = truth !== null && answered < arm.answers && willing ? truth : 'declined';
         offers.push(Object.freeze({ code: question.code, answer }));
-        asked.push({ key: question.key, turn: state.guessedLetters.length,
+        asked.push({ key: question.key, tag: question.tag, choseBest: question.choseBest, turn: state.guessedLetters.length,
+          missesLeft: state.missesLeft,
           revealed: state.pattern.filter(letter => letter !== null).length,
           candidates: question.candidateCount, answer });
         pool = narrowKnowledge(pool, labels, [offers.at(-1)], categories);
       }
     }
-    const decision = analyzeDecision(state, pool, 'count');
+    const decision = analyzeDecision(state, pool, seed === null ? 'count' : { seed });
     if (decision.candidateCount === 0 && inVocabulary) throw new Error(`Known-word invariant: no candidates for ${word}.`);
     round = applyGuess(round, decision.letter);
     if (round.guesses.length > 26) throw new Error('Solver made no legal progress.');
@@ -102,7 +116,7 @@ export function play(word, knowledge, labels, categories, arm) {
       pool = Object.freeze({ ...pool, words: Object.freeze(filterCandidates(toPublicState(round), pool.words)) });
     }
   }
-  return { word, won: getRoundStatus(round) === 'solved', misses: getIncorrectGuesses(round).length,
+  return { word, seed, won: getRoundStatus(round) === 'solved', misses: getIncorrectGuesses(round).length,
     guesses: round.guesses.join(''), inVocabulary, labelled: labels.has(word), asked,
     answered: asked.filter(offer => offer.answer !== 'declined').length };
 }
@@ -196,6 +210,12 @@ export function askStats(games, broad) {
     broadFirstShare: round4(firsts.filter(offer => broad.has(offer.key)).length / (firsts.length || 1)),
     firstCategories: count(firsts.map(offer => offer.key)),
     categories: count(offers.map(offer => offer.key)),
+    tags: count(offers.map(offer => offer.tag ?? 'none')),
+    // Seeded variety: distinct first questions per word, over words asked in 2+ of their rounds.
+    distinctFirstQuestionsPerWord: round4(mean([...games.reduce((byWord, game) => {
+      if (game.asked.length) byWord.set(game.word, [...(byWord.get(game.word) ?? []), game.asked[0].key]);
+      return byWord;
+    }, new Map()).values()].filter(keys => keys.length > 1).map(keys => new Set(keys).size))),
   };
 }
 
@@ -351,16 +371,93 @@ export async function questionsBenchmark({ seed = DEFAULT_SEED, seeds = 3, quick
   };
 }
 
+// Her A2 temperament: one word sample, SEEDS_PER_WORD seeded games per word, the same seeds
+// (roundSeed) in every arm and tier. Statistics pool games; the gate uses per-word win
+// fractions, like A2's strength benchmark.
+export async function temperamentBenchmark({ seed = DEFAULT_SEED, seedsPerWord = SEEDS_PER_WORD, quick = false } = {}) {
+  const { entriesByLength, manifestSha256 } = await loadLexicons();
+  const { categories, labelsByLength, broad, categoriesSha256, labelsManifestSha256 } = await loadQuestions();
+  const band = bandOf(entriesByLength);
+  let { sets } = await wordSets(entriesByLength, seed);
+  if (quick) sets = Object.fromEntries(Object.entries(sets).map(([key, set]) =>
+    [key, { ...set, words: key === 'b' || key === 'd' ? set.words.filter((_, index) => index % 10 === 0) : set.words }]));
+  const started = performance.now();
+  const words = Object.fromEntries(Object.entries(sets).map(([key, set]) => [key, set.words]));
+  const jobs = [...TEMPERAMENT_ARMS.map(arm => arm.id), CONTROL].flatMap(arm => VOCABULARY_TIERS.map(tier =>
+    ({ arm, tier: tier.id, sets: words, brain: 'temperament', seedsPerWord, baseSeed: seed })));
+  const results = await runJobs(jobs);
+  const games = {};
+  jobs.forEach((job, index) => ((games[job.arm] ??= {})[job.tier] = results[index]));
+  let compared = 0;
+  for (const tier of VOCABULARY_TIERS) {
+    for (const key of Object.keys(sets)) {
+      games.decline[tier.id][key].forEach((game, index) => {
+        if (game.guesses !== games[CONTROL][tier.id][key][index].guesses) {
+          throw new Error(`Decline arm differs from her seeded play: ${tier.id} ${game.word} seed ${game.seed}.`);
+        }
+        compared++;
+      });
+    }
+  }
+  delete games[CONTROL];
+  const perWordGames = armId => Object.fromEntries(VOCABULARY_TIERS.map(tier => [tier.id,
+    Object.fromEntries(Object.entries(games[armId][tier.id]).map(([key, list]) => [key, perWord(list)]))]));
+  const gates = quick ? null : Object.fromEntries(['decline', 'b2-2', 'v2-2'].map(armId => {
+    const gate = tierGate(gateCells(perWordGames(armId), band));
+    return [armId, { passed: gate.passed, comparisons: gate.comparisons, failures: gate.failures,
+      nearMisses: gate.nearMisses, lowerTierAhead: gate.lowerTierAhead }];
+  }));
+  console.error(`temperament: ${Object.values(words).reduce((n, list) => n + list.length, 0)} words x ${seedsPerWord} seeds x ` +
+    `${VOCABULARY_TIERS.length} tiers x ${TEMPERAMENT_ARMS.length} arms in ${((performance.now() - started) / 60000).toFixed(1)} min`);
+  const setKeys = ['a', 'b', 'c', 'd'];
+  const answerArms = TEMPERAMENT_ARMS.filter(arm => arm.answers);
+  const report = {};
+  for (const tier of VOCABULARY_TIERS) {
+    const pick = (armId, key) => (games[armId][tier.id][key] ?? []).filter(inStats);
+    const all = armId => setKeys.flatMap(key => pick(armId, key));
+    const summarize = select => Object.fromEntries(answerArms.map(arm => [arm.id, {
+      paired: paired(select('decline'), select(arm.id)), asked: askStats(select(arm.id), broad),
+      pricing: pricing(select('decline'), select(arm.id), seed),
+      pricingPrevious: pricing(select('decline'), select(arm.id), seed, PREVIOUS_MULTIPLIERS) }]));
+    report[tier.id] = {
+      all: summarize(all),
+      sets: Object.fromEntries(setKeys.map(key => [key, summarize(armId => pick(armId, key))])),
+      byLength: Object.fromEntries(Array.from({ length: STATS_LENGTHS[1] - STATS_LENGTHS[0] + 1 }, (_, i) => STATS_LENGTHS[0] + i)
+        .map(length => [length, Object.fromEntries(answerArms.map(arm => [arm.id,
+          paired(all('decline').filter(game => game.word.length === length), all(arm.id).filter(game => game.word.length === length))]))])),
+      // Her strength under the new rules against B2's, same answers.
+      rules: { one: versus(all('b2-1'), all('v2-1'), ['b2', 'v2']), both: versus(all('b2-2'), all('v2-2'), ['b2', 'v2']) },
+      hindsight: Object.fromEntries([['all', all], ...setKeys.map(key => [key, armId => pick(armId, key)])].map(([name, select]) =>
+        [name, { current: hindsight(select('decline'), [select('v2-1'), select('v2-2')]),
+          previous: hindsight(select('decline'), [select('v2-1'), select('v2-2')], PREVIOUS_MULTIPLIERS) }])),
+    };
+  }
+  return {
+    configuration: { brain: 'A2: her temperament, seeded per game (roundSeed)', seed, seedsPerWord, quick,
+      statsLengths: STATS_LENGTHS, arms: TEMPERAMENT_ARMS, questionRules: QUESTION_RULES, b2Rules: B2_RULES,
+      multipliers: MULTIPLIERS, previousMultipliers: PREVIOUS_MULTIPLIERS,
+      player: 'honest: true WordNet label; declines when WordNet does not know the word',
+      pairing: 'games are paired by word and seed; a word\'s seeds are not independent, so game-level p-values are approximate',
+      manifestSha256, categoriesSha256, labelsManifestSha256 },
+    environment: { node: process.version, platform: process.platform, architecture: process.arch },
+    control: { games: compared, matches: compared }, gates, results: report,
+  };
+}
+
 // Every (arm, tier) pair is an independent, deterministic job, so the results do not
 // depend on how jobs are spread over worker threads.
-function playJob({ arm: armId, tier: tierId, sets }, { entriesByLength, labelsByLength, categories }) {
+function playJob({ arm: armId, tier: tierId, sets, brain = 'strict', seedsPerWord = 1, baseSeed = DEFAULT_SEED },
+  { entriesByLength, labelsByLength, categories }) {
   const tier = VOCABULARY_TIERS.find(value => value.id === tierId);
-  const arm = ARMS.find(value => value.id === armId);
+  const arm = armsFor(brain).find(value => value.id === armId);
   const knowledge = {};
   const know = word => (knowledge[word.length] ??= createKnowledge(entriesByLength[word.length], tier.maxSize));
-  return Object.fromEntries(Object.entries(sets).map(([key, words]) => [key, words.map(word => armId === CONTROL
-    ? simulate(word, know(word), 'count', () => 0)
-    : play(word, know(word), labelsByLength[word.length], categories, arm))]));
+  const seedsOf = word => (brain === 'temperament'
+    ? Array.from({ length: seedsPerWord }, (_, index) => roundSeed(baseSeed, word, index)) : [null]);
+  return Object.fromEntries(Object.entries(sets).map(([key, words]) => [key, words.flatMap(word => seedsOf(word).map(seed =>
+    armId === CONTROL
+      ? { ...simulate(word, know(word), seed === null ? 'count' : { seed }, () => 0), seed }
+      : play(word, know(word), labelsByLength[word.length], categories, arm, seed)))]));
 }
 
 async function runJobs(jobs) {
@@ -409,16 +506,23 @@ async function main() {
   for (let i = 2; i < process.argv.length; i++) {
     const flag = process.argv[i];
     if (flag === '--quick') { options.quick = true; options.seeds = 1; continue; }
+    if (flag === '--brain') {
+      options.brain = process.argv[++i];
+      if (!['strict', 'temperament'].includes(options.brain)) throw new Error('--brain is strict or temperament');
+      continue;
+    }
     const value = process.argv[++i];
     if (value === undefined) throw new Error(`Missing value for ${flag}`);
     if (flag === '--seed') options.seed = Number(value);
     else if (flag === '--seeds') options.seeds = Number(value);
+    else if (flag === '--seeds-per-word') options.seedsPerWord = Number(value);
     else if (flag === '--output') output = resolve(value);
     else throw new Error(`Unknown option ${flag}`);
   }
   if (options.quick && !output) throw new Error('--quick needs --output, so it never replaces the committed report.');
-  output ??= fileURLToPath(new URL('benchmarks/illucia-bets.json', import.meta.url));
-  const report = await questionsBenchmark(options);
+  const temperament = options.brain === 'temperament';
+  output ??= fileURLToPath(new URL(temperament ? 'benchmarks/illucia-bets-a2.json' : 'benchmarks/illucia-bets.json', import.meta.url));
+  const report = temperament ? await temperamentBenchmark(options) : await questionsBenchmark(options);
   await mkdir(dirname(output), { recursive: true });
   await writeFile(output, JSON.stringify(report, null, 2) + '\n');
   console.log(`Report: ${output}`);
