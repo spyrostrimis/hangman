@@ -53,10 +53,14 @@ type OpenRound = {
 
 export async function startIlluciaRound(db: D1Database, userId: string, { word, tier, experimental, previousRoundId }: StartInput) {
   const now = Date.now();
-  const seed = crypto.getRandomValues(new Uint32Array(1))[0];
+  const [seed, personalitySeed] = crypto.getRandomValues(new Uint32Array(2));
   const mode = experimental ? 1 : 0;
+  const ticketId = crypto.randomUUID();
+  // Only a ticket created by this request, in normal mode, is counted into the history.
+  const createdHere = 'EXISTS (SELECT 1 FROM illucia_rounds WHERE id = ? AND counted = 1)';
   const results = await db.batch([
-    db.prepare('INSERT INTO illucia_players (user_id) VALUES (?) ON CONFLICT(user_id) DO NOTHING').bind(userId),
+    db.prepare('INSERT INTO illucia_players (user_id, personality_seed) VALUES (?, ?) ON CONFLICT(user_id) DO NOTHING')
+      .bind(userId, personalitySeed),
     // The same word, tier and mode resumes the open round (reloads, retries, tabs).
     // Anything else abandons it, as does naming it as the round being left.
     db.prepare(`DELETE FROM illucia_rounds WHERE user_id = ? AND claimed_at IS NULL
@@ -65,18 +69,24 @@ export async function startIlluciaRound(db: D1Database, userId: string, { word, 
     db.prepare(`UPDATE illucia_players SET round_seq = round_seq + 1 WHERE user_id = ?
       AND NOT EXISTS (SELECT 1 FROM illucia_rounds WHERE user_id = ? AND claimed_at IS NULL)`).bind(userId, userId),
     // As in Hangman, never issue a ticket earlier than this account's last Illucia award.
-    db.prepare(`INSERT INTO illucia_rounds (id, user_id, seq, word, tier, seed, experimental, issued_at, expires_at)
-      SELECT ?, ?, (SELECT round_seq FROM illucia_players WHERE user_id = ?), ?, ?, ?, ?,
+    db.prepare(`INSERT INTO illucia_rounds (id, user_id, seq, word, tier, seed, experimental, counted, issued_at, expires_at)
+      SELECT ?, ?, (SELECT round_seq FROM illucia_players WHERE user_id = ?), ?, ?, ?, ?, ?,
         MAX(?, COALESCE(MAX(claimed_at), 0)), MAX(?, COALESCE(MAX(claimed_at), 0)) + ?
       FROM illucia_rounds WHERE user_id = ?
       ON CONFLICT(user_id) WHERE claimed_at IS NULL DO NOTHING`)
-      .bind(crypto.randomUUID(), userId, userId, word, tier, seed, mode, now, now, ROUND_LIFETIME_MS, userId),
+      .bind(ticketId, userId, userId, word, tier, seed, mode, 1 - mode, now, now, ROUND_LIFETIME_MS, userId),
+    db.prepare(`INSERT INTO illucia_player_words (user_id, word, plays) SELECT ?, ?, 1 WHERE ${createdHere}
+      ON CONFLICT(user_id, word) DO UPDATE SET plays = plays + 1`).bind(userId, word, ticketId),
+    db.prepare(`INSERT INTO word_counts (word, count) SELECT ?, 1 WHERE ${createdHere}
+      ON CONFLICT(word) DO UPDATE SET count = count + 1`).bind(word, ticketId),
+    db.prepare(`INSERT INTO illucia_tier_stats (user_id, tier, games) SELECT ?, ?, 1 WHERE ${createdHere}
+      ON CONFLICT(user_id, tier) DO UPDATE SET games = games + 1`).bind(userId, tier, ticketId),
     db.prepare(`SELECT id AS roundId, word, tier, seed, experimental, issued_at AS issuedAt, expires_at AS expiresAt, seq,
         (SELECT points FROM illucia_beaten_words WHERE user_id = illucia_rounds.user_id AND word = illucia_rounds.word) AS paidPoints,
         ladder_rung, ladder_length, ladder_seq
       FROM illucia_rounds JOIN illucia_players USING (user_id) WHERE user_id = ? AND claimed_at IS NULL`).bind(userId),
   ]);
-  const round = results[4].results[0] as OpenRound;
+  const round = results[7].results[0] as OpenRound;
   return {
     roundId: round.roundId, word: round.word, tier: round.tier, experimental: round.experimental === 1, seed: round.seed,
     issuedAt: round.issuedAt, expiresAt: round.expiresAt, serverNow: Date.now(),
@@ -143,6 +153,10 @@ export async function claimIlluciaRound(db: D1Database, userId: string, roundId:
       .bind(userId, ticket.word, stump, stump > 0 ? roundId : null, now, ticket.experimental, roundId, userId, claimToken),
     db.prepare(`UPDATE scores SET total = total + ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ? AND ? > 0 AND ${consumed}`)
       .bind(award, userId, award, roundId, userId, claimToken),
+    // Every counted round that she lost is a win in the player's stats, paid or not.
+    db.prepare(`UPDATE illucia_tier_stats SET wins = wins + 1 WHERE user_id = ? AND tier = ?
+      AND EXISTS (SELECT 1 FROM illucia_rounds WHERE id = ? AND user_id = ? AND claim_token = ? AND counted = 1)`)
+      .bind(userId, ticket.tier, roundId, userId, claimToken),
     db.prepare(`SELECT illucia_rounds.claimed_at, illucia_rounds.issued_at, illucia_rounds.expires_at, illucia_rounds.stump_points,
         illucia_rounds.ladder_points, illucia_rounds.award_reason, scores.total AS score,
         illucia_players.round_seq, illucia_players.ladder_rung, illucia_players.ladder_length, illucia_players.ladder_seq
@@ -150,7 +164,7 @@ export async function claimIlluciaRound(db: D1Database, userId: string, roundId:
       JOIN illucia_players ON illucia_players.user_id = illucia_rounds.user_id
       WHERE illucia_rounds.id = ? AND illucia_rounds.user_id = ?`).bind(roundId, userId),
   ]);
-  const saved = results[4].results[0] as {
+  const saved = results[5].results[0] as {
     claimed_at: number | null; issued_at: number; expires_at: number; stump_points: number | null;
     ladder_points: number | null; award_reason: string | null; score: number; round_seq: number;
   } & LadderRow | undefined;

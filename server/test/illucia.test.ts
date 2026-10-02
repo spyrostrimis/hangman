@@ -37,7 +37,8 @@ const openRounds = async () => (await env.DB.prepare('SELECT id, user_id, seq, w
 
 beforeAll(async () => { await applyD1Migrations(env.DB, env.TEST_MIGRATIONS); });
 beforeEach(async () => {
-  await env.DB.batch(['illucia_beaten_words', 'illucia_rounds', 'illucia_players', 'rounds', 'scores', 'users', 'deleted_accounts']
+  await env.DB.batch(['illucia_beaten_words', 'illucia_player_words', 'illucia_tier_stats', 'word_counts', 'illucia_rounds',
+    'illucia_players', 'rounds', 'scores', 'users', 'deleted_accounts']
     .map(table => env.DB.prepare(`DELETE FROM ${table}`)));
 });
 afterEach(() => { vi.restoreAllMocks(); });
@@ -391,6 +392,88 @@ describe('Illucia ladder', () => {
     expect(await total(id)).toBe(360);
     expect(await env.DB.prepare('SELECT ladder_rung, ladder_length, ladder_seq FROM illucia_players WHERE user_id = ?').bind(id).first())
       .toEqual({ ladder_rung: 0, ladder_length: null, ladder_seq: null });
+  });
+});
+
+describe('Illucia memory: counting', () => {
+  const plays = async (id: string) => (await env.DB.prepare('SELECT word, plays FROM illucia_player_words WHERE user_id = ? ORDER BY word').bind(id).all()).results;
+  const global = async () => (await env.DB.prepare('SELECT word, count FROM word_counts ORDER BY word').all()).results;
+  const tiers = async (id: string) => (await env.DB.prepare('SELECT tier, games, wins FROM illucia_tier_stats WHERE user_id = ? ORDER BY tier').bind(id).all()).results;
+  const counted = async (roundId: string) => env.DB.prepare('SELECT counted FROM illucia_rounds WHERE id = ?').bind(roundId).first('counted');
+
+  it('counts a new normal-mode ticket once, never a resume or an experimental round, and again for a replay', async () => {
+    const { cookie, id } = await signup();
+    const first = await Promise.all(Array.from({ length: 4 }, () => start(cookie, { word: 'jazz', tier: 'master' })));
+    expect(new Set(first.map(ticket => ticket.roundId)).size).toBe(1);
+    expect(await counted(first[0].roundId)).toBe(1);
+    await start(cookie, { word: 'jazz', tier: 'master' });
+    expect(await plays(id)).toEqual([{ word: 'jazz', plays: 1 }]);
+    expect(await global()).toEqual([{ word: 'jazz', count: 1 }]);
+    const replay = await start(cookie, { word: 'jazz', tier: 'master', previousRoundId: first[0].roundId });
+    expect(replay.roundId).not.toBe(first[0].roundId);
+    await start(cookie, { word: 'crane', tier: 'scholar' });
+    const experimental = await start(cookie, { word: 'lynx', tier: 'scholar', experimental: true });
+    expect(await counted(experimental.roundId)).toBe(0);
+    expect(await plays(id)).toEqual([{ word: 'crane', plays: 1 }, { word: 'jazz', plays: 2 }]);
+    expect(await global()).toEqual([{ word: 'crane', count: 1 }, { word: 'jazz', count: 2 }]);
+    expect(await tiers(id)).toEqual([{ tier: 'master', games: 2, wins: 0 }, { tier: 'scholar', games: 1, wins: 0 }]);
+    // Global counts add up across accounts without naming them.
+    const other = await signup('Other');
+    await start(other.cookie, { word: 'jazz', tier: 'apprentice' });
+    expect(await global()).toEqual([{ word: 'crane', count: 1 }, { word: 'jazz', count: 3 }]);
+    expect(await plays(other.id)).toEqual([{ word: 'jazz', plays: 1 }]);
+  });
+
+  it('counts a win once per counted round, paid or not, and never for experimental or uncounted tickets', async () => {
+    const { cookie, id } = await signup();
+    const paid = await start(cookie, { word: 'crane', tier: 'master' }); await mature(paid.roundId);
+    const responses = await Promise.all(Array.from({ length: 4 }, () => claim(cookie, paid.roundId)));
+    for (const response of responses) expect(response.status).toBe(200);
+    expect(await tiers(id)).toEqual([{ tier: 'master', games: 1, wins: 1 }]);
+    await won(cookie, { word: 'lynx', tier: 'apprentice' }); // out of tier: pays 0, still a win
+    await won(cookie, { word: 'jazz', tier: 'master', experimental: true });
+    // A ticket opened before counting existed (counted = 0) can still be claimed, without a win.
+    const old = await start(cookie, { word: 'fizz', tier: 'scholar' }); await mature(old.roundId);
+    await env.DB.prepare('UPDATE illucia_rounds SET counted = 0 WHERE id = ?').bind(old.roundId).run();
+    expect(bare(await (await claim(cookie, old.roundId)).json())).toEqual({ score: 140, awarded: { stump: 40, ladder: 0 } });
+    expect(await tiers(id)).toEqual([{ tier: 'apprentice', games: 1, wins: 1 }, { tier: 'master', games: 1, wins: 1 },
+      { tier: 'scholar', games: 1, wins: 0 }]);
+    expect(await (await claim(cookie, paid.roundId)).json()).toMatchObject({ score: 140 });
+    expect(await tiers(id)).toEqual([{ tier: 'apprentice', games: 1, wins: 1 }, { tier: 'master', games: 1, wins: 1 },
+      { tier: 'scholar', games: 1, wins: 0 }]);
+  });
+
+  it('gives each account a stable personality seed, and the migration backfills missing ones', async () => {
+    const { cookie, id } = await signup(); const other = await signup('Other');
+    await start(cookie); await start(other.cookie);
+    const seedOf = async (user: string) => env.DB.prepare('SELECT personality_seed FROM illucia_players WHERE user_id = ?').bind(user).first('personality_seed');
+    const seed = await seedOf(id);
+    expect(Number.isInteger(seed) && (seed as number) >= 0 && (seed as number) <= 0xffffffff).toBe(true);
+    await start(cookie, { word: 'crane', tier: 'master' });
+    expect(await seedOf(id)).toBe(seed);
+    expect(await seedOf(other.id)).not.toBe(seed);
+    const otherSeed = await seedOf(other.id);
+    await env.DB.prepare('UPDATE illucia_players SET personality_seed = NULL WHERE user_id = ?').bind(id).run();
+    const migration = (env.TEST_MIGRATIONS as { name: string; queries: string[] }[]).find(entry => entry.name.startsWith('0007'))!;
+    const backfill = migration.queries.filter(query => query.includes('UPDATE illucia_players SET personality_seed'));
+    expect(backfill).toHaveLength(1);
+    await env.DB.prepare(backfill[0]).run();
+    expect(await seedOf(id)).toEqual(expect.any(Number));
+    expect(await seedOf(other.id)).toBe(otherSeed);
+  });
+
+  it('account deletion removes the player history and stats but keeps the global word counts', async () => {
+    const owner = await signup(); const other = await signup('Other');
+    await start(owner.cookie, { word: 'jazz', tier: 'master' });
+    await start(other.cookie, { word: 'jazz', tier: 'master' });
+    expect(await global()).toEqual([{ word: 'jazz', count: 2 }]);
+    const removed = await request('delete-account', { cookie: owner.cookie, body: { credential: 'cd'.repeat(32) } });
+    expect(removed.status).toBe(200);
+    expect(await plays(owner.id)).toEqual([]);
+    expect(await tiers(owner.id)).toEqual([]);
+    expect(await plays(other.id)).toEqual([{ word: 'jazz', plays: 1 }]);
+    expect(await tiers(other.id)).toEqual([{ tier: 'master', games: 1, wins: 0 }]);
+    expect(await global()).toEqual([{ word: 'jazz', count: 2 }]);
   });
 });
 

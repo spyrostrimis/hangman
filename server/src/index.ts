@@ -144,6 +144,8 @@ app.post('/user/delete-account', async c => {
     c.env.DB.prepare('DELETE FROM illucia_beaten_words WHERE user_id = ?').bind(user.id),
     c.env.DB.prepare('DELETE FROM illucia_rounds WHERE user_id = ?').bind(user.id),
     c.env.DB.prepare('DELETE FROM illucia_players WHERE user_id = ?').bind(user.id),
+    c.env.DB.prepare('DELETE FROM illucia_player_words WHERE user_id = ?').bind(user.id),
+    c.env.DB.prepare('DELETE FROM illucia_tier_stats WHERE user_id = ?').bind(user.id),
     c.env.DB.prepare('DELETE FROM scores WHERE user_id = ?').bind(user.id),
     c.env.DB.prepare('DELETE FROM users WHERE id = ?').bind(user.id),
   ]);
