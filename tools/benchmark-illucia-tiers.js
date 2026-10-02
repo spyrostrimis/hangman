@@ -2,8 +2,8 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, createKnowledge } from '../client/src/lib/illucia/lexicon.js';
-import { DEFAULT_SEED, loadLexicons, sampleWords, simulate, summarize } from './benchmark-illucia.js';
+import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, createKnowledge } from '../client/src/lib/illucia/lexicon.js';
+import { DEFAULT_SEED, loadLexicons, roundSeed, sampleWords, simulate, summarize, variety } from './benchmark-illucia.js';
 
 export const WORD_BANDS = Object.freeze([
   Object.freeze({ name: 'common', min: 35, max: 35 }),
@@ -20,12 +20,14 @@ export function tierSamples(entriesByLength, perStratum, seed) {
         perStratum, seed + Number(length) * 3 + index)]))]));
 }
 
-export async function benchmarkTiers({ perStratum = 100, seed = DEFAULT_SEED } = {}) {
+// v2 A2: her temperament, every word played with `seeds` seeds shared by the three tiers.
+export async function benchmarkTiers({ perStratum = 100, seed = DEFAULT_SEED, seeds = 8 } = {}) {
   const { entriesByLength, manifestSha256 } = await loadLexicons();
   const samples = tierSamples(entriesByLength, perStratum, seed);
   const report = {
-    configuration: { seed, perStratum, policy: 'count', maxSizes: [35, 50, 70],
-      fallback: 'own-tier per-length word-presence frequency; alphabetical ties',
+    configuration: { seed, perStratum, policy: 'temperament', seedsPerWord: seeds, maxSizes: [35, 50, 70],
+      temperaments: Object.fromEntries(VOCABULARY_TIERS.map(tier => [tier.id, tier.temperament])),
+      fallback: 'own-tier per-length word-presence frequency; ties settled by the seed',
       wordBands: WORD_BANDS, manifestSha256,
       sampleSha256: createHash('sha256').update(JSON.stringify(samples)).digest('hex') },
     environment: { node: process.version, platform: process.platform, architecture: process.arch },
@@ -43,9 +45,10 @@ export async function benchmarkTiers({ perStratum = 100, seed = DEFAULT_SEED } =
       const batch = [];
       const bands = {};
       for (const band of WORD_BANDS) {
-        const group = samples[length][band.name].map(entry => ({
-          ...simulate(entry.word, knowledge, 'count'), size: entry.size, band: band.name, length,
-        }));
+        const group = samples[length][band.name].flatMap(entry => Array.from({ length: seeds }, (_, index) => ({
+          ...simulate(entry.word, knowledge, { seed: roundSeed(seed, entry.word, index) }),
+          size: entry.size, band: band.name, length,
+        })));
         batch.push(...group);
         bands[band.name] = summarize(group);
       }
@@ -59,7 +62,7 @@ export async function benchmarkTiers({ perStratum = 100, seed = DEFAULT_SEED } =
       comparisonLengths5to9[band.name] = summarize(games.filter(game =>
         game.band === band.name && game.length >= 5 && game.length <= 9));
     }
-    report.results[maxSize] = { vocabularyCounts, overall: summarize(games), byWordBand,
+    report.results[maxSize] = { vocabularyCounts, overall: summarize(games), variety: variety(games), byWordBand,
       byLength, comparisonLengths5to9 };
     console.error(`Size ${maxSize}: ${report.results[maxSize].overall.wins}/${games.length} solved; ` +
       `${report.results[maxSize].overall.gamesUsingFallback} games used fallback`);
@@ -75,6 +78,7 @@ async function main() {
     if (value === undefined) throw new Error(`Missing value for ${flag}`);
     if (flag === '--per-stratum') options.perStratum = Number(value);
     else if (flag === '--seed') options.seed = Number(value);
+    else if (flag === '--seeds') options.seeds = Number(value);
     else if (flag === '--output') output = resolve(value);
     else throw new Error(`Unknown option ${flag}`);
   }

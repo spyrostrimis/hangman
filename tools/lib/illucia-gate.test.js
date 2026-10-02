@@ -72,3 +72,18 @@ test('Holm correction turns a lone borderline inversion into a near miss', () =>
     apprentice: games(20, i => i < 10), scholar: games(20, () => false), master: games(20, i => i < 10) } };
   assert.equal(tierGate([clear]).passed, false);
 });
+
+test('with shared seeds, words compare by win fraction (v2 A2)', () => {
+  // Per word over 8 seeds: the lower tier is ahead on 12 words, the higher tier on 2, equal on 6.
+  const fractions = (values) => values.map((won, i) => ({ word: `w${i}`, won }));
+  const lower = fractions([...Array(12).fill(0.75), 0.5, 0.5, ...Array(6).fill(0.5)]);
+  const higher = fractions([...Array(12).fill(0.5), 0.75, 0.625, ...Array(6).fill(0.5)]);
+  const result = pairedComparison(lower, higher);
+  assert.equal(result.lowerOnly, 12);
+  assert.equal(result.higherOnly, 2);
+  close(result.p, binomialUpperTail(12, 14));
+  close(result.difference, (0.5 * 12 + 0.75 + 0.625 + 3 - (0.75 * 12 + 1 + 3)) / 20);
+  // With booleans the same function is the McNemar test (positive control).
+  const flat = pairedComparison(games(4, i => i < 3), games(4, i => i === 3));
+  assert.deepEqual([flat.lowerOnly, flat.higherOnly], [3, 1]);
+});

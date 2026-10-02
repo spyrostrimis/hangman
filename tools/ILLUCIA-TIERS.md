@@ -8,10 +8,14 @@ Or run `npm run benchmark:illucia-tiers` from `tools/`. Node 24; no network.
 The committed report is `tools/benchmarks/illucia-i3b.json`.
 
 All three tiers use candidate hit-counting weighted by commonness (v2 A1: size
-≤35 → 10, 40–50 → 3, 55–70 → 1), identical game rules and deterministic
-alphabetical tie-breaking. Apprentice knows size ≤35, Scholar ≤50, Master ≤70.
-Apprentice knows only size-35 words, so for her the weighting changes nothing.
-The fallback below stays unweighted.
+≤35 → 10, 40–50 → 3, 55–70 → 1) and identical game rules. Apprentice knows size ≤35,
+Scholar ≤50, Master ≤70. Apprentice knows only size-35 words, so for her the
+weighting changes nothing. The fallback below stays unweighted.
+
+Since v2 A2 the benchmark plays her temperament (seeded; see
+[docs/ILLUCIA-STRENGTH.md](../docs/ILLUCIA-STRENGTH.md)): every sampled word is played
+with 8 seeds, the same at every tier, and rates are over all games. The strict A1
+figures (one deterministic game per word, alphabetical ties) are kept in brackets.
 The full size ≤70 list still determines whether a player's word is accepted.
 
 If feedback rules out every candidate at a lower tier, its next guess comes from
@@ -85,16 +89,22 @@ commonness weighting (v2 A1); the unweighted figures are in brackets:
 Weighting removes the inversion on common words and costs the higher tiers some
 strength on the rarer words they know.
 
+With her temperament (v2 A2, 8 seeds per word) the same cells read: common 92.0% /
+91.7% / 91.6%, less common 9.4% / 88.3% / 88.8%, rare 9.0% / 9.8% / 83.3%
+(Apprentice / Scholar / Master).
+
 Across the full balanced 4–15-letter sample:
 
-| Tier | Wins / 3,600 | Win rate | Games using fallback | Zero-candidate decisions |
+| Tier | Wins / 28,800 games | Win rate (A1) | Games using fallback | Zero-candidate decisions |
 | --- | --- | --- | --- | --- |
-| Apprentice | 1,460 | 40.56% | 2,153 | 16,565 expected |
-| Scholar | 2,341 | 65.03% | 1,050 | 7,888 expected |
-| Master | 3,239 | 89.97% | 0 | 0 |
+| Apprentice | 11,678 | 40.55% (40.56%) | 17,246 | 132,422 expected |
+| Scholar | 18,740 | 65.07% (65.03%) | 8,335 | 62,577 expected |
+| Master | 25,912 | 89.97% (89.97%) | 0 | 0 |
 
-Weighted (v2 A1). Unweighted, Scholar solved 2,365 (65.69%) and Master 3,276 (91.00%);
-Apprentice is unchanged.
+Temperament (v2 A2), 3,600 words × 8 seeds. A1 played each word once, weighted;
+unweighted, Scholar solved 65.69% and Master 91.00%. Distinct guess sequences per word
+over its 8 seeds: Apprentice 5.96, Scholar 6.33, Master 6.56; distinct opening letters
+6 / 4 / 4.
 
 Regenerated after the lemma-form profanity filter changed the vocabulary
 (see [ILLUCIA-WORDS.md](ILLUCIA-WORDS.md)); the seeded samples changed with it.

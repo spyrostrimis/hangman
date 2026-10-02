@@ -27,7 +27,10 @@ export function binomialUpperTail(k, n) {
   return Math.min(1, Math.exp(peak) * terms.reduce((sum, term) => sum + Math.exp(term - peak), 0));
 }
 
-// One-sided exact McNemar: is the lower tier ahead on the words they split?
+// One-sided exact sign test, word by word: is the lower tier ahead on more words than a fair
+// coin would give? `won` is a boolean, or a word's win fraction over shared seeds (v2 A2);
+// with booleans this is exactly the McNemar test on discordant words. lowerOnly/higherOnly
+// count the words on which that tier's win fraction is higher.
 export function pairedComparison(lowerGames, higherGames) {
   if (lowerGames.length !== higherGames.length) throw new Error('Paired comparison needs the same words.');
   let lowerOnly = 0;
@@ -36,12 +39,12 @@ export function pairedComparison(lowerGames, higherGames) {
   let higherWins = 0;
   for (let i = 0; i < lowerGames.length; i++) {
     if (lowerGames[i].word !== higherGames[i].word) throw new Error('Paired comparison needs the same word order.');
-    const lower = lowerGames[i].won;
-    const higher = higherGames[i].won;
-    lowerWins += Number(lower);
-    higherWins += Number(higher);
-    if (lower && !higher) lowerOnly++;
-    if (higher && !lower) higherOnly++;
+    const lower = Number(lowerGames[i].won);
+    const higher = Number(higherGames[i].won);
+    lowerWins += lower;
+    higherWins += higher;
+    if (lower > higher) lowerOnly++;
+    if (higher > lower) higherOnly++;
   }
   const n = lowerGames.length;
   return {
@@ -80,6 +83,8 @@ export function tierGate(cells, alpha = GATE_ALPHA) {
     const fails = adjusted[index] <= alpha;
     return {
       ...comparison,
+      lowerWins: round(comparison.lowerWins),
+      higherWins: round(comparison.higherWins),
       lowerWinRate: round(comparison.lowerWinRate),
       higherWinRate: round(comparison.higherWinRate),
       difference: round(comparison.difference),
@@ -91,7 +96,7 @@ export function tierGate(cells, alpha = GATE_ALPHA) {
     };
   });
   return {
-    test: 'one-sided exact McNemar (lower tier ahead on discordant words), Holm-corrected',
+    test: 'one-sided exact sign test on per-word win fractions (McNemar for single games), Holm-corrected',
     alpha, comparisons: rows.length, cells: cells.length,
     passed: rows.every(row => !row.fails),
     failures: rows.filter(row => row.fails),

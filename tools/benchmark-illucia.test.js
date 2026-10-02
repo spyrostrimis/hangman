@@ -76,3 +76,30 @@ test('tier samples stratify by original size and cap small strata without duplic
   assert.throws(() => tierSamples({ 3: entries }, 0, 9), /positive/);
   assert.throws(() => tierSamples({ 3: entries }, 1, -1), /seed/);
 });
+
+test('round seeds are shared by word and index, and differ across them (v2 A2)', async () => {
+  const { roundSeed } = await import('./benchmark-illucia.js');
+  assert.equal(roundSeed(1, 'cats', 0), roundSeed(1, 'cats', 0));
+  const seeds = new Set();
+  for (const word of ['cats', 'dogs', 'hand']) for (let index = 0; index < 8; index++) seeds.add(roundSeed(20260928, word, index));
+  assert.equal(seeds.size, 24);
+  assert.notEqual(roundSeed(1, 'cats', 0), roundSeed(2, 'cats', 0));
+  assert.ok([...seeds].every(seed => Number.isInteger(seed) && seed >= 0 && seed <= 0xffffffff));
+});
+
+test('per-word win fractions and variety are counted per word and per opening', async () => {
+  const { perWord, variety } = await import('./benchmark-illucia.js');
+  const games = [
+    { word: 'cats', won: true, guesses: 'eacts' }, { word: 'cats', won: false, guesses: 'aeiou' },
+    { word: 'cats', won: true, guesses: 'eacts' }, { word: 'dogs', won: true, guesses: 'eodgs' },
+  ];
+  assert.deepEqual(perWord(games).map(entry => [entry.word, entry.won]), [['cats', 2 / 3], ['dogs', 1]]);
+  const result = variety(games);
+  assert.equal(result.distinctSequencesPerWord, 1.5); // cats: 2 sequences; dogs: 1.
+  assert.equal(result.wordsWithMoreThanOneSequence, 0.5);
+  assert.equal(result.openings.distinct, 2);
+  assert.deepEqual(result.openings.shares, { e: 0.75, a: 0.25 });
+  assert.equal(result.openings.entropyBits, Number((-(0.75 * Math.log2(0.75) + 0.25 * Math.log2(0.25))).toFixed(4)));
+  // Positive control: one opening only means zero entropy.
+  assert.equal(variety(games.slice(3)).openings.entropyBits, 0);
+});

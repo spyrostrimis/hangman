@@ -27,6 +27,18 @@ export function sampleWords(entries, count, seed) {
   return shuffled.slice(0, count);
 }
 
+// The seed for game `index` of `word`: the same for every tier, so tiers play paired games
+// (v2 A2). FNV-1a over the word and index, mixed with the base seed.
+export function roundSeed(base, word, index) {
+  let hash = 0x811c9dc5 ^ base;
+  for (const char of `${word}:${index}`) hash = Math.imul(hash ^ char.charCodeAt(0), 0x01000193);
+  hash ^= hash >>> 16;
+  hash = Math.imul(hash, 0x85ebca6b);
+  hash ^= hash >>> 13;
+  return hash >>> 0;
+}
+
+// policy: a strict policy name, or { seed } for her temperament.
 export function simulate(word, knowledge, policy, clock = () => performance.now()) {
   const inVocabulary = knowledge.words.includes(word);
   if (knowledge.maxSize === 70 && !inVocabulary) {
@@ -52,6 +64,46 @@ export function simulate(word, knowledge, policy, clock = () => performance.now(
     misses: getIncorrectGuesses(round).length, turns: round.guesses.length,
     guesses: round.guesses.join(''), milliseconds, candidateSizes,
     maxSize: knowledge.maxSize, inVocabulary };
+}
+
+// One record per word (in first-seen order) with its win fraction over all its games.
+export function perWord(games) {
+  const words = new Map();
+  for (const game of games) {
+    const entry = words.get(game.word) ?? { word: game.word, wins: 0, plays: 0 };
+    entry.wins += Number(game.won);
+    entry.plays++;
+    words.set(game.word, entry);
+  }
+  return [...words.values()].map(entry => ({ ...entry, won: entry.wins / entry.plays }));
+}
+
+// How varied her play is (v2 A2): distinct full guess sequences per word across its seeds,
+// and the spread of her opening letters across all games (entropy in bits).
+export function variety(games) {
+  const sequences = new Map();
+  for (const game of games) {
+    if (!sequences.has(game.word)) sequences.set(game.word, new Set());
+    sequences.get(game.word).add(game.guesses);
+  }
+  const perWordCounts = [...sequences.values()].map(set => set.size);
+  const openings = {};
+  for (const game of games) openings[game.guesses[0]] = (openings[game.guesses[0]] ?? 0) + 1;
+  const entropy = -Object.values(openings).reduce((sum, count) => {
+    const p = count / games.length;
+    return sum + p * Math.log2(p);
+  }, 0);
+  return {
+    words: sequences.size, games: games.length,
+    distinctSequencesPerWord: rounded(mean(perWordCounts)),
+    wordsWithMoreThanOneSequence: rounded(perWordCounts.filter(count => count > 1).length / (sequences.size || 1)),
+    openings: {
+      distinct: Object.keys(openings).length,
+      entropyBits: rounded(entropy),
+      shares: Object.fromEntries(Object.entries(openings).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1))
+        .map(([letter, count]) => [letter, rounded(count / games.length)])),
+    },
+  };
 }
 
 function quantile(values, fraction) {

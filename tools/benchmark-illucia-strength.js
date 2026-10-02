@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, createKnowledge, isAcceptedWord } from '../client/src/lib/illucia/lexicon.js';
-import { DEFAULT_SEED, loadLexicons, sampleWords, simulate } from './benchmark-illucia.js';
+import { DEFAULT_SEED, loadLexicons, perWord, roundSeed, sampleWords, simulate, variety } from './benchmark-illucia.js';
 import { WORD_BANDS, tierSamples } from './benchmark-illucia-tiers.js';
 import { tierGate } from './lib/illucia-gate.js';
 
@@ -23,6 +23,11 @@ export const TRICKSTER_WORDS = Object.freeze([
   'rhythm', 'zephyr', 'quartz', 'zigzag', 'jigsaw', 'sphinx', 'syzygy', 'squawk', 'jockey', 'buzzer', 'sizzle', 'puzzle',
 ]);
 export const COMMON_PER_LENGTH = 500;
+// v2 A2: every word is played with this many seeds, the same seeds at every tier.
+export const SEEDS_PER_WORD = 8;
+// Strength cap (v2 A2): her temperament may cost each tier at most this much win rate on
+// sets b and d against the strict A1 policy, on top of the tier-order gate.
+export const STRENGTH_CAP = 0.02;
 
 const sizeOf = (entriesByLength, word) => entriesByLength[word.length].find(entry => entry.word === word).size;
 
@@ -92,20 +97,30 @@ export function feel(games) {
   };
 }
 
-export function playSets(entriesByLength, sets) {
+// Her temperament with `seeds` shared seeds per word, and the strict A1 policy once per word
+// as the reference for the strength cap. `temperaments` overrides the tiers' own (tuning).
+export function playSets(entriesByLength, sets, { seeds = SEEDS_PER_WORD, baseSeed = DEFAULT_SEED, temperaments = {} } = {}) {
   const knowledge = {};
   const know = (word, tier) => (knowledge[`${tier.maxSize}:${word.length}`] ??=
     createKnowledge(entriesByLength[word.length], tier.maxSize));
   const results = {};
   const games = {};
+  const words = {};
+  const reference = {};
   for (const tier of VOCABULARY_TIERS) {
+    const temperament = temperaments[tier.id] ?? tier.temperament;
     results[tier.id] = {};
     games[tier.id] = {};
+    words[tier.id] = {};
+    reference[tier.id] = {};
     for (const [key, set] of Object.entries(sets)) {
       // Fixed clock: timing is measured in the browser pass, not here.
-      const played = set.words.map(word => simulate(word, know(word, tier), 'count', () => 0));
+      const played = set.words.flatMap(word => Array.from({ length: seeds }, (_, index) =>
+        simulate(word, know(word, tier), { seed: roundSeed(baseSeed, word, index), temperament }, () => 0)));
       games[tier.id][key] = played;
-      results[tier.id][key] = summary(played);
+      words[tier.id][key] = perWord(played);
+      results[tier.id][key] = { ...summary(played), variety: variety(played) };
+      reference[tier.id][key] = summary(set.words.map(word => simulate(word, know(word, tier), 'count', () => 0)));
       if (key === 'b' || key === 'c') {
         results[tier.id][`${key}ByLength`] = Object.fromEntries([...new Set(set.words.map(word => word.length))]
           .map(length => [length, summary(played.filter(game => game.word.length === length))]));
@@ -113,7 +128,17 @@ export function playSets(entriesByLength, sets) {
     }
     results[tier.id].feelOnD = feel(games[tier.id].d);
   }
-  return { results, games, know };
+  return { results, games, words, reference, know };
+}
+
+// The strength cap on sets b and d: win rate lost against the strict A1 policy.
+export function strengthCap(results, reference, limit = STRENGTH_CAP) {
+  const rows = VOCABULARY_TIERS.flatMap(tier => ['b', 'd'].map(key => {
+    const drop = reference[tier.id][key].winRate - results[tier.id][key].winRate;
+    return { tier: tier.id, set: key, a1: reference[tier.id][key].winRate, temperament: results[tier.id][key].winRate,
+      drop: rounded(drop), ok: drop <= limit + 1e-9 };
+  }));
+  return { limit, passed: rows.every(row => row.ok), rows };
 }
 
 // Tier-order gate cells (v2 decisions, Amendments 2): set a overall; sets b and c
@@ -206,17 +231,20 @@ export function compareParity(cases, observed) {
   return pages;
 }
 
-export async function strength({ seed = DEFAULT_SEED, pages = true } = {}) {
+export async function strength({ seed = DEFAULT_SEED, pages = true, seeds = SEEDS_PER_WORD, temperaments = {} } = {}) {
   const { entriesByLength, manifestSha256 } = await loadLexicons();
   const { sets, sampleSha256I3b, manifestRejected } = await wordSets(entriesByLength, seed);
-  const { results, games, know } = playSets(entriesByLength, sets);
+  const { results, games, words, reference, know } = playSets(entriesByLength, sets, { seeds, baseSeed: seed, temperaments });
   const bandOf = word => WORD_BANDS.find(band =>
     sizeOf(entriesByLength, word) >= band.min && sizeOf(entriesByLength, word) <= band.max).name;
-  const gate = tierGate(gateCells(games, bandOf));
+  const gate = tierGate(gateCells(words, bandOf));
+  const cap = strengthCap(results, reference);
   const cases = parityCases(entriesByLength, sets.d.words, know);
   const report = {
-    configuration: { seed, policy: 'count', tiers: VOCABULARY_TIERS, manifestSha256, sampleSha256I3b,
-      commonPerLength: COMMON_PER_LENGTH },
+    configuration: { seed, policy: 'temperament', seedsPerWord: seeds, seedDerivation: 'roundSeed(seed, word, index)',
+      temperaments: Object.fromEntries(VOCABULARY_TIERS.map(tier => [tier.id, temperaments[tier.id] ?? tier.temperament])),
+      strictReference: 'count (A1), one game per word', parityPolicy: 'count (strict) until the pages pass a seed',
+      tiers: VOCABULARY_TIERS, manifestSha256, sampleSha256I3b, commonPerLength: COMMON_PER_LENGTH },
     environment: { node: process.version, platform: process.platform, architecture: process.arch },
     sets: Object.fromEntries(Object.entries(sets).map(([key, set]) => [key, {
       ...set, count: set.words.length, sha256: sha256(set.words),
@@ -227,15 +255,21 @@ export async function strength({ seed = DEFAULT_SEED, pages = true } = {}) {
     }])),
     manifestRejected,
     results,
+    reference,
     gate,
+    cap,
     hardestTrickster: Object.fromEntries(VOCABULARY_TIERS.map(tier => [tier.id,
-      games[tier.id].c.filter(game => !game.won).map(game => ({ word: game.word, guesses: game.guesses, misses: game.misses }))])),
+      words[tier.id].c.filter(entry => entry.won < 1).map(entry => ({ word: entry.word, winRate: rounded(entry.won) }))])),
     parity: { cases },
   };
   for (const tier of VOCABULARY_TIERS) {
     console.error(`${tier.label}: ` + Object.keys(sets).map(key =>
-      `${key} ${results[tier.id][key].wins}/${results[tier.id][key].games}`).join(', '));
+      `${key} ${(results[tier.id][key].winRate * 100).toFixed(1)}% (A1 ${(reference[tier.id][key].winRate * 100).toFixed(1)}%)`).join(', ') +
+      ` | d: ${results[tier.id].d.variety.distinctSequencesPerWord} sequences/word, ` +
+      `${results[tier.id].d.variety.openings.distinct} openings (${results[tier.id].d.variety.openings.entropyBits} bits)`);
   }
+  console.error(`Strength cap (${cap.limit * 100} points on b and d): ${cap.passed ? 'PASS' : 'FAIL'}` +
+    cap.rows.filter(row => !row.ok).map(row => ` ${row.tier} ${row.set} -${(row.drop * 100).toFixed(1)}`).join(''));
   console.error(`Tier gate: ${gate.passed ? 'PASS' : 'FAIL'} (${gate.failures.length} of ${gate.comparisons} ` +
     `comparisons fail, ${gate.nearMisses.length} near misses, lower tier ahead in ${gate.lowerTierAhead})`);
   for (const row of gate.failures) {
@@ -469,10 +503,12 @@ async function main() {
   for (let i = 2; i < process.argv.length; i++) {
     const flag = process.argv[i];
     if (flag === '--no-pages') { options.pages = false; continue; }
+    if (flag === '--temperaments') { options.temperaments = JSON.parse(process.argv[++i]); continue; }
     if (flag === '--speed') { mode = 'speed'; continue; }
     const value = process.argv[++i];
     if (value === undefined) throw new Error(`Missing value for ${flag}`);
     if (flag === '--seed') options.seed = Number(value);
+    else if (flag === '--seeds') options.seeds = Number(value);
     else if (flag === '--output') output = resolve(value);
     else if (flag === '--base-url') options.baseUrl = value;
     else if (flag === '--browser') options.browser = value;

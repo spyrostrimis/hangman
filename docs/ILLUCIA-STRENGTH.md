@@ -113,6 +113,63 @@ from 1.56 / 11.61 ms to 1.82 / 18.62 ms (p50 / p95; not a contract, one machine)
 so the 8-letter first turn on a throttled phone should be re-checked with `--speed`
 before it is treated as unchanged.
 
+## Temperament (v2 A2, 2026-10-02): gate PASS, cap PASS
+
+Her letter now comes from her temperament (`strategy.js`), seeded per round: strictly
+the best letter with 1–2 misses left (a tie settled by the seed); otherwise a weighted
+pick among letters within the tier's shortlist width of her best weighted share, plus a
+fading early vowel bonus. Starting values were kept, as both checks passed:
+
+| Tier | Shortlist | Vowel bonus |
+|---|---|---|
+| Apprentice | 10 points | +6, fading over 3 turns |
+| Scholar | 7 points | +4 over 2 turns |
+| Master | 4 points | +2 over 1 turn |
+
+**Method.** Every word is played with 8 seeds (`roundSeed(seed, word, index)`), the same
+seeds at every tier. The gate compares each word's win fraction over its 8 games: a
+one-sided exact sign test per comparison (McNemar when each word is played once), Holm
+across the 171 comparisons at 5%. The **strength cap** compares each tier's win rate on
+sets b and d with the strict A1 policy (one game per word, played in the same run) and
+allows at most 2 points lost. The page parity check still plays the strict policy until
+the pages pass a seed.
+
+**Gate: PASS**, 0 of 171 fail; 2 near misses (set d, 4-letter rare, Scholar vs
+Apprentice, raw p 0.020; set d, 5-letter common, Master vs Scholar, raw p 0.032; both
+Holm p 1). The lower tier is ahead in 10 comparisons, the largest gap 3.9 points.
+
+**Strength cap: PASS.** Win rate, temperament (A1 strict in brackets):
+
+| Tier | a) manifest | b) Common 4–6 | c) Trickster | d) Balanced |
+|---|---|---|---|---|
+| Apprentice | 74.9% (75.2%) | 72.2% (72.9%) | 17.4% (16.7%) | 40.6% (40.6%) |
+| Scholar | 95.2% (95.2%) | 72.7% (72.3%) | 30.2% (30.6%) | 65.1% (65.0%) |
+| Master | 98.3% (98.1%) | 72.9% (72.5%) | 36.8% (36.1%) | 90.0% (90.0%) |
+
+The largest loss is Apprentice on set b, 0.75 points; Scholar and Master gain slightly.
+
+**Variety** (8 games per word): distinct guess sequences per word, then distinct opening
+letters and their spread (entropy, bits), with the commonest openings:
+
+| Tier | Set | Sequences / word | Openings | Commonest openings |
+|---|---|---|---|---|
+| Apprentice | b | 7.10 | 3 (1.18 bits) | E 70%, S 18%, A 12% |
+| Apprentice | d | 5.96 | 6 (1.51 bits) | E 54%, I 37%, S 4%, A 3% |
+| Scholar | b | 6.51 | 3 (1.12 bits) | E 73%, A 15%, S 12% |
+| Scholar | d | 6.33 | 4 (1.32 bits) | E 57%, I 36%, A 4%, S 3% |
+| Master | b | 5.38 | 3 (1.15 bits) | E 71%, A 16%, S 13% |
+| Master | d | 6.56 | 4 (1.33 bits) | E 58%, I 34%, A 4%, S 3% |
+
+Before A2 every word had exactly one sequence and one opening per tier (on 4-letter words,
+E for Scholar and Master). Now 96–100% of words get more than one sequence. Openings
+remain dominated by E, with I common on longer words: the shortlist only admits letters
+close to her best, and on most boards few letters are.
+
+Set b by length (temperament): Apprentice 53.2 / 75.4 / 87.9%, Scholar 54.0 / 75.6 /
+88.4%, Master 53.8 / 75.6 / 89.3% at 4 / 5 / 6 letters. Feel on set d: the share of
+rounds that come down to her last miss is 64.8% / 39.4% / 15.0%
+(Apprentice / Scholar / Master).
+
 ## 1. Reproduction
 
 I3 and I3b re-run at HEAD match their committed reports exactly. The manifest SHA-256

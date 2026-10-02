@@ -83,3 +83,15 @@ test('gate cells cover set a, sets b and c by length 4-6, and set d by length an
     assert.deepEqual(cell.games.apprentice.map(game => game.word), cell.games.master.map(game => game.word));
   }
 });
+
+test('the strength cap flags a tier that loses more than 2 points on set b or d', async () => {
+  const { strengthCap } = await import('./benchmark-illucia-strength.js');
+  const rates = (b, d) => ({ b: { winRate: b }, d: { winRate: d } });
+  const reference = { apprentice: rates(0.73, 0.41), scholar: rates(0.72, 0.65), master: rates(0.725, 0.90) };
+  const within = { apprentice: rates(0.72, 0.40), scholar: rates(0.70, 0.64), master: rates(0.71, 0.89) };
+  assert.equal(strengthCap(within, reference).passed, true);
+  const over = { ...within, master: rates(0.70, 0.89) }; // 2.5 points lost on b.
+  const result = strengthCap(over, reference);
+  assert.equal(result.passed, false);
+  assert.deepEqual(result.rows.filter(row => !row.ok).map(row => `${row.tier} ${row.set}`), ['master b']);
+});
