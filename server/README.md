@@ -62,6 +62,13 @@ If current tombstones cannot be recovered, do not restore an older snapshot into
 
 References: [D1 batch atomicity](https://developers.cloudflare.com/d1/worker-api/d1-database/), [Time Travel](https://developers.cloudflare.com/d1/reference/time-travel/), [Free recovery limits](https://developers.cloudflare.com/d1/platform/limits/).
 
+## Illucia memory
+
+Illucia's per-player memory (`illucia_player_words`, `illucia_tier_stats`, `illucia_beaten_words`, `illucia_players.personality_seed`) is kept until account deletion. Design: `docs/SCORING.md`.
+
+- **`word_counts` is never exposed publicly**, neither as a list nor as a per-word number. The only read is the current word's global count in the `voice` data of that player's own start response. Any future public display (popular words, rankings) must apply a minimum-count threshold so rare words cannot single anyone out.
+- **Letter counts are computed on read** from the player's `illucia_player_words` rows at every start and stats request: one row per distinct word played. That is cheap at today's sizes. If word histories grow large, the upgrade path is a stored per-player tally (26 counts and a games total, updated when a ticket is counted). It is not built.
+
 ## Retention and diagnostic logs
 
 An hourly Cron Trigger (`0 * * * *`, UTC) removes claimed Hangman and Illucia rounds once `claimed_at` is at least 24 hours old, unclaimed rounds once `expires_at` is at least 24 hours old, and deletion tombstones strictly older than seven days. Each run uses one atomic D1 batch of five indexed statements, each removing at most 100 oldest eligible rows. Normal cleanup occurs on the next hourly run; failures, quotas or more than 100 eligible rows in a category can delay it. Starting another round may remove that player's expired or explicitly replaced unclaimed ticket sooner. Account deletion removes all of that account's rounds immediately.

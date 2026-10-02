@@ -70,6 +70,12 @@ A win sends `POST /user/illucia/claim` with `{roundId, guesses, answeredQuestion
 
 **Memory.** Every normal-mode win is kept in `illucia_beaten_words` per account until account deletion; a word is spent once it has paid. Out-of-tier wins are recorded with 0 points and leave the word unspent. Experimental wins are not recorded.
 
+**Player memory (C2; implemented and tested locally, not deployed).** Only normal-mode rounds count, once, when their ticket is created (`illucia_rounds.counted`): a resume does not count, a replay does, experimental rounds never do. Each counted ticket adds a play of its word for the player (`illucia_player_words`), a game for its tier (`illucia_tier_stats`, whose wins come from claims of counted tickets) and a play to the global `word_counts`, which has no account or time and survives account deletion. Each account has a stable 32-bit `personality_seed`.
+
+The start response carries `memory.brain` and `memory.voice`. `brain` is the only part that may reach her guessing: the personality seed, games played, per-letter play counts and the learned words of this word's length, all computed from the history **without the current round**, so nothing in it depends on the secret word beyond its length. A test gives two accounts the same history, starts different words of the same length, and requires identical `brain` data. `voice` is for her lines and knows the word: the player's earlier plays of it, whether it beat her before, and its global play count (again without the current round). How `brain` is used, such as the letter prior's weight, is Track A's decision.
+
+`GET /user/illucia/stats` returns the player's own games, wins and lost-or-abandoned (games − wins; losses send no request) overall and per tier, the learned-word total with the 100 most recent, and play counts by length and letter. A round still in play is left out until it is claimed or expires.
+
 **Limits.** A modified client can claim any accepted, unspent word with six invented misses. The bounds are the tier vocabulary, once-per-word, the 12 s floor and one open ticket (see the ceiling table above). A question about a word WordNet does not know earns no multiplier; that rule is enforced by the client only.
 
 ## Release and verification
