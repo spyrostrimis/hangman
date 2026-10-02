@@ -1,8 +1,12 @@
+import hashlib
 import io
+import json
+import re
 import unittest
 
-from build_illucia_labels import (check_categories, inflection_links, label_files, label_words,
-                                  parse_wordnet, synset_coder)
+from build_illucia_labels import (CATEGORIES as CATEGORY_FILE, LOCK, OUTPUT, WORDS, check_categories,
+                                  inflection_links, label_files, label_words, parse_wordnet,
+                                  synset_coder)
 
 # A tiny WN-LMF lexicon: crane is a machine first and a bird second; bat is a mammal
 # and a club; fly is an insect (noun) and a way of moving (verb).
@@ -121,6 +125,75 @@ class IlluciaLabelsTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 check_categories(bad, synsets)
         check_categories(CATEGORIES, synsets)  # positive control
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+class CommittedLabelsTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.manifest = json.loads((OUTPUT / 'manifest.json').read_text())
+        cls.categories = json.loads((OUTPUT / 'categories.json').read_text())['categories']
+        cls.code = {c['key']: c['code'] for c in cls.categories}
+        cls.labels, cls.words = {}, {}
+        for length in range(4, 16):
+            cls.words[length] = {line.split(' ')[0] for line in
+                                 (WORDS / f'{length}.txt').read_text().splitlines()}
+            for line in (OUTPUT / f'{length}.txt').read_text().splitlines():
+                word, codes = line.split(' ')
+                cls.labels[word] = '' if codes == '-' else codes
+
+    def test_files_match_manifest_inputs_and_contract(self):
+        order = ''.join(c['code'] for c in self.categories)
+        rank = {c: i for i, c in enumerate(order)}
+        self.assertFalse((OUTPUT / '3.txt').exists())
+        for length in range(4, 16):
+            data = (OUTPUT / f'{length}.txt').read_bytes()
+            self.assertEqual(sha(data), self.manifest['files'][f'{length}.txt']['sha256'])
+            # The labels were built from exactly these word files; rebuild when they change.
+            self.assertEqual(sha((WORDS / f'{length}.txt').read_bytes()),
+                             self.manifest['inputs']['words'][f'{length}.txt'])
+            lines = data.decode('ascii').splitlines()
+            self.assertEqual(lines, sorted(set(lines)))
+            for line in lines:
+                self.assertRegex(line, rf'^[a-z]{{{length}}} ([{order}]+|-)$')
+                word, codes = line.split(' ')
+                self.assertIn(word, self.words[length])
+                if codes != '-':
+                    self.assertEqual(list(codes), sorted(set(codes), key=rank.get))
+        self.assertEqual((OUTPUT / 'categories.json').read_bytes(), CATEGORY_FILE.read_bytes())
+        lock = json.loads(LOCK.read_text())
+        self.assertEqual(sha((OUTPUT / 'OEWN-LICENSE.md').read_bytes()), lock['oewn_license']['sha256'])
+        self.assertEqual(sha((OUTPUT / 'WordNet-LICENSE.txt').read_bytes()), lock['wordnet_license']['sha256'])
+        self.assertEqual(self.manifest['sources']['wordnet'], lock)
+        self.assertEqual(sum(f['words'] for f in self.manifest['files'].values()), len(self.labels))
+
+    def has(self, word, key):
+        return self.code[key] in self.labels[word]
+
+    def test_known_cases(self):
+        self.assertTrue(self.has('crane', 'bird') and self.has('cranes', 'bird'))
+        self.assertTrue(self.has('bats', 'mammal'))
+        self.assertFalse(self.has('bats', 'bird'))
+        self.assertTrue(self.has('robin', 'bird') and self.has('apple', 'fruit'))
+        self.assertTrue(self.has('spider', 'animal'))
+        self.assertFalse(self.has('spider', 'insect'))
+        self.assertTrue(self.has('whale', 'mammal') and self.has('tomato', 'vegetable'))
+        self.assertTrue(self.has('flies', 'insect'))
+        self.assertFalse(self.has('flying', 'insect'))
+        # Known with no category, versus unknown (absent): the "no bonus possible" case.
+        self.assertEqual(self.labels['news'], '')
+        self.assertIn('because', self.words[7])
+        self.assertNotIn('because', self.labels)
+
+    def test_reviewed_exclusions_hold(self):
+        self.assertFalse(self.has('tool', 'body'))
+        self.assertTrue(self.has('tool', 'artifact'))  # the word keeps its clean categories
+        self.assertFalse(self.has('queer', 'person'))
+        self.assertTrue(self.has('taco', 'food'))
+        self.assertFalse(self.has('taco', 'person'))
 
 
 if __name__ == '__main__':

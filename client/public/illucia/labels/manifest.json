@@ -1,0 +1,319 @@
+{
+  "sources": {
+    "wordnet": {
+      "oewn": {
+        "release": "2025-edition",
+        "commit": "dc343f2683279ecbb13fab4e2fd778d7b162d287",
+        "url": "https://github.com/globalwordnet/english-wordnet/releases/download/2025-edition/english-wordnet-2025.xml.gz",
+        "sha256": "9ca6d1dcb75f822fdd66617f7d9da48142ace38dd544d6ad5e2feca1674ad3fe"
+      },
+      "oewn_license": {
+        "url": "https://raw.githubusercontent.com/globalwordnet/english-wordnet/dc343f2683279ecbb13fab4e2fd778d7b162d287/LICENSE.md",
+        "sha256": "672cc8b5663e8dc74c4b07a9dcf477193853575b119908fd3dc0aeeb60a9dbbb"
+      },
+      "wordnet_license": {
+        "url": "https://raw.githubusercontent.com/globalwordnet/english-wordnet/dc343f2683279ecbb13fab4e2fd778d7b162d287/WNDB_License.txt",
+        "sha256": "df30ec18fbabcdaf031b79ea026d3e6b959010cffe6dd7be9ac137822175b904"
+      }
+    },
+    "esdb": {
+      "release": "rel-2026.02.25",
+      "commit": "7e99edab8e32f9f9ea2b15f249ca8d4d67237410",
+      "url": "https://codeload.github.com/en-wl/wordlist/tar.gz/7e99edab8e32f9f9ea2b15f249ca8d4d67237410",
+      "sha256": "770dd3e42d20b47bb2dd87d150db4ee5472841a7f062876592f67840f5a0b902"
+    },
+    "blocklist": {
+      "commit": "5faf2ba42d7b1c0977169ec3611df25a3c08eb13",
+      "url": "https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/5faf2ba42d7b1c0977169ec3611df25a3c08eb13/en",
+      "sha256": "af851ecef1d5f212caba17339b12ac39cc2fef7d78c74876f67237644fcee8bd"
+    }
+  },
+  "inputs": {
+    "words": {
+      "4.txt": "b07e58068c445c052f22ae6de843ca166c503b9696abadbbc371e00c3e15c0f9",
+      "5.txt": "bc5793155ee667e67441b3ae0cce89c0a28aeebfd49524a958aa8d8bfd876eae",
+      "6.txt": "85aa9a1148cd8cc5d3cd7decfe6c00111dae3d1d561c617dcc584ac84226fd0e",
+      "7.txt": "ab29224bc873cc0646588b8f1b3904f4c48097ce10c09713daa9027d0913f23e",
+      "8.txt": "6e6f3b5e0a9f151d8dd8ad78aa6e6d4ab4319f5529f87eb289406217d7a374be",
+      "9.txt": "28aedbf73396e15a73f200d51b6bc957cf66830aba58a3af4f884f8a016ce231",
+      "10.txt": "89c8b2d1f6f4964dc5e86078d579de5f3a306e4994582c4a6358d0adeda89256",
+      "11.txt": "9d0e31e619d23b904ec79826f53ebca6050225cf9e479affe9c67dff039613cb",
+      "12.txt": "f7a7b083e4f69dfeb110439c693616ecb8b7c3b259b5ac17014eb1a3ffbfe4b7",
+      "13.txt": "46c4672a0f2a8d6852010d54d8714e8c6fa37009abb3764e24055d4ab2b0509c",
+      "14.txt": "25a2d985f2489d15e6d249ef55da5c3080e4d8f833b42bdd73db4af45f54cb09",
+      "15.txt": "9fe34fd9ecbc07fa5b60533bfb494b04a6eeeb67c4b0aac706f61487ff611917"
+    },
+    "categories": {
+      "file": "tools/illucia-categories.json",
+      "sha256": "861e5a1bf886a5645409626c86039efec44d6a6165e1b14d780aaff63010faaf"
+    },
+    "exclude": {
+      "file": "tools/illucia-wordnet-exclude.json",
+      "sha256": "604cb2acd7042516110791a7d4b386bbe27a8b5020637e225e5aecfb9f725fdf"
+    },
+    "projectFilter": {
+      "file": "tools/illucia-filter.json",
+      "sha256": "783e98cf8c4b0be38a9cb6d76abf63c1009df510522ab56b8aa5c561d5d908e4"
+    }
+  },
+  "policy": {
+    "yes": "any sense of the word, or of its ESDB base word in the inflected part of speech",
+    "line": "word codes; \"-\" = known to WordNet with no category; absent = unknown",
+    "caseInsensitive": true,
+    "lengths": [
+      4,
+      15
+    ],
+    "inflections": {
+      "ns": [
+        "n"
+      ],
+      "nss": [
+        "n"
+      ],
+      "ms": [
+        "n",
+        "v"
+      ],
+      "vd": [
+        "v"
+      ],
+      "vd2": [
+        "v"
+      ],
+      "vn": [
+        "v"
+      ],
+      "vg": [
+        "v"
+      ],
+      "vs": [
+        "v"
+      ],
+      "vs2": [
+        "v"
+      ],
+      "vs3": [
+        "v"
+      ],
+      "vs4": [
+        "v"
+      ],
+      "aj1": [
+        "a",
+        "s"
+      ],
+      "aj2": [
+        "a",
+        "s"
+      ],
+      "av1": [
+        "r"
+      ],
+      "av2": [
+        "r"
+      ],
+      "a1": [
+        "a",
+        "s",
+        "r"
+      ],
+      "a2": [
+        "a",
+        "s",
+        "r"
+      ]
+    }
+  },
+  "coverage": {
+    "byLength": {
+      "4": {
+        "words": 4240,
+        "known": 2934,
+        "percent": 69.2
+      },
+      "5": {
+        "words": 8522,
+        "known": 5814,
+        "percent": 68.2
+      },
+      "6": {
+        "words": 13955,
+        "known": 9618,
+        "percent": 68.9
+      },
+      "7": {
+        "words": 19355,
+        "known": 13510,
+        "percent": 69.8
+      },
+      "8": {
+        "words": 21426,
+        "known": 15066,
+        "percent": 70.3
+      },
+      "9": {
+        "words": 20443,
+        "known": 14253,
+        "percent": 69.7
+      },
+      "10": {
+        "words": 17035,
+        "known": 11705,
+        "percent": 68.7
+      },
+      "11": {
+        "words": 12522,
+        "known": 8437,
+        "percent": 67.4
+      },
+      "12": {
+        "words": 8443,
+        "known": 5494,
+        "percent": 65.1
+      },
+      "13": {
+        "words": 5270,
+        "known": 3298,
+        "percent": 62.6
+      },
+      "14": {
+        "words": 2990,
+        "known": 1734,
+        "percent": 58.0
+      },
+      "15": {
+        "words": 1696,
+        "known": 930,
+        "percent": 54.8
+      }
+    },
+    "bySize": {
+      "35": {
+        "words": 38049,
+        "known": 37436,
+        "percent": 98.4
+      },
+      "40-50": {
+        "words": 30328,
+        "known": 21863,
+        "percent": 72.1
+      },
+      "55-70": {
+        "words": 67520,
+        "known": 33494,
+        "percent": 49.6
+      }
+    },
+    "all": {
+      "words": 135897,
+      "known": 92793,
+      "percent": 68.3
+    },
+    "yesByCategory": {
+      "person": 12263,
+      "animal": 4163,
+      "bird": 827,
+      "mammal": 1152,
+      "fish": 512,
+      "insect": 274,
+      "plant": 2753,
+      "tree": 442,
+      "flower": 213,
+      "fruit": 403,
+      "vegetable": 184,
+      "food": 2501,
+      "drink": 368,
+      "body": 1833,
+      "artifact": 12879,
+      "tool": 855,
+      "vehicle": 721,
+      "building": 667,
+      "clothing": 840,
+      "furniture": 198,
+      "instrument": 275,
+      "weapon": 247,
+      "container": 674,
+      "substance": 3183,
+      "place": 1173,
+      "time": 956,
+      "feeling": 925,
+      "color": 237,
+      "job": 1982,
+      "sport": 308,
+      "illness": 414,
+      "move": 4411,
+      "speak": 6418,
+      "senses": 1946,
+      "eat": 1090,
+      "contest": 1666,
+      "make": 2505,
+      "think": 2974,
+      "bodyverb": 2638,
+      "weather": 355,
+      "describe": 16407
+    }
+  },
+  "files": {
+    "4.txt": {
+      "sha256": "3ec977546f181fcab5dae3469ce4bfeafa46ab41ff10202eec68da60095aab6f",
+      "bytes": 23269,
+      "words": 2934
+    },
+    "5.txt": {
+      "sha256": "07fa4578aa07d8ce16c16d4b849d9ead9ac725266d6ca5dc0f1c6f0af7c744d2",
+      "bytes": 50688,
+      "words": 5814
+    },
+    "6.txt": {
+      "sha256": "48e29ca5b3095aa07d7df1a52f69ec0aba2f06505598b31e69029a958b63ec15",
+      "bytes": 91433,
+      "words": 9618
+    },
+    "7.txt": {
+      "sha256": "39109f1c3da8c12492a5086110e732787222bca67392afb3d7e9bdca5c8d2a3b",
+      "bytes": 140666,
+      "words": 13510
+    },
+    "8.txt": {
+      "sha256": "8f88c271a5c9cfcc7906464d9a086b2e25c4b5630a6465069d829f9929c2c137",
+      "bytes": 170217,
+      "words": 15066
+    },
+    "9.txt": {
+      "sha256": "5980dea826110c48f3347378f4c8876f4558e7b4ef6f5d234c2ca13c3d37be30",
+      "bytes": 174278,
+      "words": 14253
+    },
+    "10.txt": {
+      "sha256": "ca952c0e9432312919c31f8835f1f6492d92852c7b3d5d55518ec34a1add7b0c",
+      "bytes": 154332,
+      "words": 11705
+    },
+    "11.txt": {
+      "sha256": "49a5d0c85f102951368644346eaa109e4697d24383e225373bd23df3d2f80279",
+      "bytes": 119378,
+      "words": 8437
+    },
+    "12.txt": {
+      "sha256": "dec29bb4179a2cc365390c34fb60be7deb7908923feaefe864b2b409fca9f7d9",
+      "bytes": 83006,
+      "words": 5494
+    },
+    "13.txt": {
+      "sha256": "b89795d7e8091449d2e8524b06c551f327fef08cb4a97899c28613d6a849a177",
+      "bytes": 52986,
+      "words": 3298
+    },
+    "14.txt": {
+      "sha256": "12c0a7d9b5203c4629cb89886e226910d31c29d67bf8daa825b27e86236139fa",
+      "bytes": 29557,
+      "words": 1734
+    },
+    "15.txt": {
+      "sha256": "e89575dde90f365181ce5d24aff08282cfa4c0eb198acc139189f55fd5d306e7",
+      "bytes": 16758,
+      "words": 930
+    }
+  }
+}

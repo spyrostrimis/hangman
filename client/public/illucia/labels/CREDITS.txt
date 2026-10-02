@@ -1,0 +1,9 @@
+Illucia question labels: Open English WordNet 2025 (english-wordnet-2025.xml.gz).
+Copyright (c) 2019-present, The Open English WordNet Team, licensed under CC BY 4.0.
+Derived from Princeton WordNet: WordNet 3.1 Copyright 2011 by Princeton University.
+See OEWN-LICENSE.md and WordNet-LICENSE.txt.
+https://github.com/globalwordnet/english-wordnet
+https://creativecommons.org/licenses/by/4.0/
+Changes: senses reduced to yes/no category labels for the Illucia vocabulary
+(see categories.json); inflections mapped to base words using ESDB; a reviewed
+list of senses excluded; split by word length.

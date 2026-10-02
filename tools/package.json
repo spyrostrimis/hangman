@@ -7,6 +7,8 @@
     "benchmark:illucia-models": "node benchmark-illucia-models.js",
     "build:illucia": "python build_illucia_words.py",
     "check:illucia": "python build_illucia_words.py --check",
+    "build:illucia-labels": "python build_illucia_labels.py",
+    "check:illucia-labels": "python build_illucia_labels.py --check",
     "collect:mw": "node --env-file=.env collect-mw.js",
     "test": "node --test"
   },
