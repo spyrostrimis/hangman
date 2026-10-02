@@ -49,6 +49,12 @@ licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 The derived vocabulary is filtered, lowercased, deduplicated and split by length with size annotations.
 [In-app credits source](client/public/illucia/credits.html). Illucia loads only the selected word length when a challenge is submitted; the vocabulary is not bundled into JavaScript.
 
+Illucia's question labels derive from [Open English WordNet 2025](https://github.com/globalwordnet/english-wordnet),
+copyright 2019–present by the Open English WordNet Team, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/),
+and from Princeton WordNet (WordNet 3.1 copyright 2011 by Princeton University). The
+[OEWN license](client/public/illucia/labels/OEWN-LICENSE.md) and [WordNet license](client/public/illucia/labels/WordNet-LICENSE.txt)
+are included with the labels. Word meanings are reduced to yes/no categories by length; see `tools/ILLUCIA-LABELS.md`.
+
 <img src="client/src/Images/mw-logo-dark-background.png" alt="Merriam-Webster logo" width="100" height="100" />
 
 Dictionary definitions, written pronunciations, available sourced example sentences, and audio come from **Merriam-Webster's Collegiate® Dictionary with Audio**, used for this non-commercial educational project. Examples retain their supplied attribution. Prepared hints and explanations were authored with AI assistance and reviewed; they are not dictionary quotations. The paintings are rescued assets from the original 2023 AI-assisted project.

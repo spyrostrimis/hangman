@@ -80,6 +80,13 @@ Illucia vocabulary (committed; see `tools/ILLUCIA-WORDS.md`):
 - `tools/benchmark-illucia.js`, `tools/benchmark-illucia-tiers.js` — seeded I3/I3b harnesses; reports in `tools/benchmarks/`, results in `tools/ILLUCIA-SOLVER.md` and `tools/ILLUCIA-TIERS.md`. Regenerate the reports whenever the word files change.
 - `tools/benchmark-illucia-models.js`, `tools/lib/illucia-model.js`, `tools/lib/illucia-dictionary-model.js` — the I7a model-versus-solver experiments (local research, not wired into any page). The offline run (`npm run benchmark:illucia-models`) needs no account; `--live --free-plan` runs call Workers AI over REST with credentials held in memory and a daily budget ledger and lock in ignored `tools/output/`. Reports in `tools/benchmarks/illucia-i7a*.json`, results in `tools/ILLUCIA-MODELS.md` and `tools/ILLUCIA-DICTIONARY.md`.
 
+Illucia question labels (committed, B1; see `tools/ILLUCIA-LABELS.md`; nothing reads them yet):
+
+- `tools/illucia-wordnet-sources.json` — Open English WordNet 2025 (`english-wordnet-2025.xml.gz`) and both licence files, pinned by commit and SHA-256. Separate from `illucia-sources.json` on purpose.
+- `tools/illucia-categories.json` — 41 reviewed categories (code, key, kind noun/verb/adjective, "Can your word mean …?" question, WordNet lexfiles or "kind of" synsets). `tools/illucia-wordnet-exclude.json` — reviewed senses (obscene terms, group slurs), one reason each.
+- `tools/build_illucia_labels.py`, `tools/test_illucia_labels.py` — deterministic build (YES if ANY sense fits; inflections take their ESDB base word's senses in the inflected part of speech only; never through a blocked base) and its tests; `--check` as for the words.
+- `client/public/illucia/labels/4.txt` … `15.txt` — sorted `word codes` lines; `-` = known to WordNet with no category; an absent word is unknown ("no bonus possible"). Plus `categories.json`, `manifest.json` (input word-file hashes, coverage), `CREDITS.txt` and both licence files. Rebuild whenever the word files change.
+
 Local-only (gitignored, never committed):
 
 - `tools/cache/collegiate/` — real MW responses. All 105 cached; reruns cost 0 GETs.
@@ -87,6 +94,7 @@ Local-only (gitignored, never committed):
 - `tools/output/paintings/` — generated WebP delivery assets.
 - `tools/.env` — `MW_KEY`.
 - `tools/cache/illucia/` — checksum-verified ESDB and LDNOOBW downloads. The first build needs `--download`; later builds are offline.
+- `tools/cache/illucia-wordnet/` — checksum-verified OEWN 2025 download and licence files for the label build (which also reads `tools/cache/illucia/`).
 
 ## HINT / UI SEMANTICS
 
@@ -119,7 +127,7 @@ How signed-in Hangman scoring works today (full design, release evidence and lim
 
 From `client/`, run `npm run dev` for the Vite development server, `npm run build` for a production build, and `npm run preview` to serve the production build locally. `.claude/launch.json` defines `client-preview` (vite preview on port 4173) for the desktop app's browser pane.
 
-From `tools/`, run `npm test` (202 tests, 2026-10-02; needs Python 3.12+ on PATH) and `node validate.js ../client/src/data/words.json`. Illucia: `python tools/build_illucia_words.py --check` from the repo root (about a minute), `npm run benchmark:illucia` and `npm run benchmark:illucia-tiers` (several minutes each). The pipeline is local-only and never runs in production.
+From `tools/`, run `npm test` (203 tests, 2026-10-02; needs Python 3.12+ on PATH) and `node validate.js ../client/src/data/words.json`. Illucia: `python tools/build_illucia_words.py --check` from the repo root (about a minute), `python tools/build_illucia_labels.py --check` (about 80 seconds), `npm run benchmark:illucia` and `npm run benchmark:illucia-tiers` (several minutes each). The pipeline is local-only and never runs in production.
 
 From `client/`, run `npm test` (43 Node tests), `npm run test:ui` (54 React component tests), and `npm run build`. From `server/`, run `npm run setup:local`, `npm run types`, `npm run check`, `npm test` (26 Workers/D1 integration tests), and `npm run build` (dry run). User-visible CSS, responsive art, navigation, popovers, forms, and loading states still need manual browser verification in proportion to the change.
 
@@ -218,7 +226,7 @@ Decided by Spyros on 2026-10-02; the full design, acceptance criteria and work t
 
 - **Thinking:** candidates weighted by ESDB size (≤35 → 1, 40–50 → 0.3, 55–70 → 0.1), each tier still limited to its own ceiling; acceptance is that no tier loses to a lower tier beyond noise at any length 4–15 or on strength sets a–d, else fall back to "common words first, then widen". Minimum word length 4 everywhere. Seeded per-round randomness, no alphabetical ties, a weighted pick within 10 points of the best letter while she has 3+ misses left and strictly the best at 1–2, a fading early vowel bonus, and per-tier temperaments. Letter choice stays in code, never a model.
 - **Honest lines:** her reasoning lines must describe what she actually did. The one current "more than any other unused letter" claim is on the Observatory (`IlluciaObservatory.js`), as is "Only her vocabulary changes", which v2 also makes untrue.
-- **Questions:** up to 2 yes/no category questions per round from Open English WordNet 2025 labels (CC BY 4.0, built to static files in `tools/`, credited alongside ESDB/LDNOOBW). A question uses her turn but never a miss; answers are checked where WordNet knows the word.
+- **Questions:** up to 2 yes/no category questions per round from Open English WordNet 2025 labels (CC BY 4.0, credited alongside ESDB/LDNOOBW). B1 has built the labels (`client/public/illucia/labels/`, see `tools/ILLUCIA-LABELS.md`); no page uses them yet. A question uses her turn but never a miss; answers are checked where WordNet knows the word.
 - **Points (normal mode only):** tier base × (length − 3) for stumping her, question bonuses, a three-tier ladder bonus, once per word per player, through the round-ticket system (`docs/SCORING.md`), into the same Hall of Fame total. How the Worker verifies an Illucia claim within the Free 10 ms CPU limit is an open question.
 - **Memory (D1):** per-account words played and words that beat her (which she then knows at every tier), a small letter prior, a personality seed, and a global `word_counts` table with no user or timestamp. Account deletion removes the per-account rows; `/privacy` must disclose it. Her guessing never receives the secret word; her commentary may.
 - **Experimental AI mode:** an off-by-default toggle on `/illucia`; no points while on. A Workers AI free-allowance model proposes a meaning question over ≤80 candidates, code validates it and falls back on any failure; site-wide daily cap (~50), per-user limit, hard timeout. An offline model test comes first.
