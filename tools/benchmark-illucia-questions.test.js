@@ -6,7 +6,7 @@ import { createKnowledge } from '../client/src/lib/illucia/lexicon.js';
 import { loadLexicons } from './benchmark-illucia.js';
 import { BenchmarkStop } from './lib/illucia-model.js';
 import { controlCategory } from './lib/illucia-question-model.js';
-import { runQuestions, summarizeGroup, projectCost, loadBlocked, PROBE_STATE, MODEL_OPTIONS } from './benchmark-illucia-questions.js';
+import { limitRun, runQuestions, summarizeGroup, projectCost, loadBlocked, PROBE_STATE, MODEL_OPTIONS } from './benchmark-illucia-questions.js';
 
 const statesFile = JSON.parse(await readFile(new URL('./benchmarks/illucia-d1-states.json', import.meta.url), 'utf8'));
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -169,4 +169,15 @@ test('the blocked-term list loads at its pinned hash when the vocabulary cache e
   assert.ok(blocked.length > 300);
   assert.ok(blocked.includes('chink'));
   assert.ok(blocked.every(term => /^[a-z]+( [a-z]+)*$/.test(term)));
+});
+
+test('the run ceiling stops before sending once this run has spent its share', async () => {
+  const ledger = { reservedNeurons: 1000 };
+  let sent = 0;
+  const request = limitRun(async () => { sent++; ledger.reservedNeurons += 40; return 'ok'; }, () => ledger.reservedNeurons, 100);
+  assert.equal(await request(qwen, {}), 'ok');
+  assert.equal(await request(qwen, {}), 'ok');
+  assert.equal(await request(qwen, {}), 'ok');
+  await assert.rejects(request(qwen, {}), error => error instanceof BenchmarkStop && error.message === 'run-budget');
+  assert.equal(sent, 3);
 });

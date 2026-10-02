@@ -193,6 +193,16 @@ export async function runQuestions({ states, models, modes, request, blocked, ch
   return report;
 }
 
+// A ceiling for one run on top of the shared daily ledger: once this run's reserved or
+// measured neurons reach `max`, the next request stops the run instead of being sent.
+export function limitRun(request, reserved, max) {
+  const start = reserved();
+  return async (model, input) => {
+    if (reserved() - start >= max) throw new BenchmarkStop('run-budget');
+    return request(model, input);
+  };
+}
+
 // A tiny fixed sort, one per model, to see each envelope, usage and hidden reasoning first.
 export const PROBE_STATE = Object.freeze({ id: 'probe', candidates: Object.freeze(['crane', 'eagle', 'hammer', 'robin', 'table', 'tiger']),
   control: Object.freeze({ code: 'c', question: 'Can your word mean a bird?' }) });
@@ -354,8 +364,12 @@ async function main() {
         blockedTerms: blocked.length, neuronRates: Object.fromEntries(models.map(m => [m, QUESTION_MODELS[m]])), pricingChecked: '2026-10-02' },
       environment: { node: process.version, platform: process.platform },
     };
+    const maxRunNeurons = Number(value('--max-run-neurons') ?? 3000);
+    if (!(maxRunNeurons > 0)) throw new Error('--max-run-neurons must be positive.');
+    report.configuration.maxRunNeurons = maxRunNeurons;
+    const request = limitRun(session.request, () => session.budget().reservedNeurons, maxRunNeurons);
     const checkpoint = current => atomicJson(resolve(output), { ...current, budget: session.budget() });
-    await runQuestions({ states, models, modes, request: session.request, blocked, checkpoint, report, modelOptions });
+    await runQuestions({ states, models, modes, request, blocked, checkpoint, report, modelOptions });
     if (phase === 'probe') {
       report.projection = projectCost(report.requests.filter(r => r.usage !== undefined), statesFile.states);
       await checkpoint(report);
