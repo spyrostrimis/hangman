@@ -67,3 +67,15 @@ Implementation `0c538be`, `c363ac1`, `fdffece` and `be62b76`, with the `/privacy
 - Unauthenticated production checks: `POST /user/illucia/start` and `/user/illucia/claim` return 401 (the previous Worker had no such routes and returned 404); a foreign Origin gets 403; an unknown path outside `/user/illucia/` still returns 404; Hangman's `round/start` returns 401 without a session; `get-best-scores` and `/privacy` return 200.
 - **Not verified in production:** an authenticated start, claim, too-early claim, already-won word or ladder run, and deployed CPU for the new routes. Disposable-account checks were not run in this release; the local suite covers that behaviour. The first real check comes with E3 or an operator-run disposable account.
 - Rollback: `wrangler rollback` to `d2999968`. Migration `0006` only adds tables, so it can stay in place.
+
+## Illucia player memory, C2 (production, 2026-10-02)
+
+Implementation `ee5d50b`, `6108bc2` and `139a21e`, with the `/privacy` disclosure `281dad2` (browser-checked by Spyros), all pushed to `main`; design in `docs/SCORING.md` and `server/README.md`.
+
+- Before release, on the tree at `281dad2`: 66 Worker/D1 tests, TypeScript check and dry-run build pass; client 50 Node and 57 UI tests pass.
+- The first remote migration listing failed with Cloudflare error 7403 ("account is not valid or is not authorized") on the D1 query endpoint, while the deployment listing on the same credentials worked. A read-only retry succeeded and showed only `0007` pending; nothing was applied before that. Treated as transient.
+- Migration `0007_illucia_memory.sql` applied remotely at 11:02:39 UTC. Production lists `illucia_player_words`, `illucia_tier_stats`, `word_counts` and `illucia_rounds.counted`. `illucia_players` had 0 rows, so the seed backfill had nothing to fill.
+- Worker version `352bfbb2-f091-4137-93ae-ff9a23131d5f` deployed at 11:02:58 UTC and serving 100%, replacing `d6721260`. Upload 1,823.37 KiB, 588.14 KiB gzipped; startup time 3 ms. Route and hourly cron unchanged.
+- Unauthenticated production checks: `GET /user/illucia/stats`, `POST /user/illucia/start` and `/user/illucia/claim` return 401; Hangman's `round/start` returns 401; an unknown path outside `/user/illucia/` returns 404; `get-best-scores` returns 200. The published frontend bundle contains the new `/privacy` copy. The stats route cannot be told apart from the previous Worker this way (`/user/illucia/*` was already behind authentication), so the deployment listing is the evidence of which code runs.
+- **Not verified in production:** any authenticated Illucia flow (counting, memory, stats, or C1's claims), and CPU for these routes. As with C1, the local suite covers that behaviour.
+- Rollback: `wrangler rollback` to `d6721260`. Migration `0007` only adds tables and columns that the C1 Worker ignores, so it can stay.
