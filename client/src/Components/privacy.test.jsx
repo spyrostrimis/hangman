@@ -37,9 +37,12 @@ it('covers the facts the code relies on: cookies, retention, deletion and the co
   mount(<Privacy />, '/privacy');
   const text = document.body.textContent;
   for (const fact of ['__Host-hangman_session', '__cf_bm', 'cf_clearance', 'media.merriam-webster.com',
-    'Guest play creates no account data', 'never sent to the server', 'up to 3 days', 'up to 7 days', 'about 24 hours']) {
+    'Guest play creates no account data', 'never sees your secret word', 'sends your word to the server when the round starts',
+    'Words that beat Illucia', 'up to 3 days', 'up to 7 days', 'about 24 hours']) {
     expect(text).toContain(fact);
   }
+  // Signed-in Illucia rounds commit the word to the server, so the page must not deny it.
+  expect(text).not.toContain('never sent to the server');
   expect(text).not.toMatch(/GDPR compliant/i);
   expect(screen.getByRole('link', { name: 'Account' }).getAttribute('href')).toBe('/account');
   expect(screen.getByRole('link', { name: /Hellenic Data Protection Authority/ }).getAttribute('href'))

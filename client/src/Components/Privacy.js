@@ -42,7 +42,8 @@ export default function Privacy() {
       <p>When you press the pronunciation button, your browser downloads the recording directly from Merriam-Webster (<code>media.merriam-webster.com</code>). Merriam-Webster then receives your IP address and which recording you played. Nothing is sent to them unless you press the button.</p>
 
       <h2>Play vs AI (Illucia)</h2>
-      <p>The secret word you choose is never sent to the server. Illucia plays entirely in your browser. To do this, your browser downloads a word list from this site for your word's length only.</p>
+      <p>Illucia guesses in your browser and never sees your secret word while she plays. Your browser downloads a word list from this site for your word's length only.</p>
+      <p>If you are signed in, your browser sends your word to the server when the round starts, so the server can check a win and award points. It is kept in the round record, like a Hangman round. Words that beat Illucia are kept with your account until you delete it, so the same word cannot earn points twice.</p>
 
       <h2>Cloudflare</h2>
       <p>Cloudflare hosts the site, the database and the images, and processes this data on our behalf under its <a href="https://www.cloudflare.com/cloudflare-customer-dpa/" {...external}>Data Processing Addendum</a>. Data may be processed outside the EU; the addendum covers this with the EU Standard Contractual Clauses and the EU–US Data Privacy Framework. See also <a href="https://www.cloudflare.com/privacypolicy/" {...external}>Cloudflare's privacy policy</a>.</p>
@@ -50,6 +51,7 @@ export default function Privacy() {
       <h2>How long data is kept</h2>
       <ul>
         <li><strong>Account, username and score:</strong> until you delete your account.</li>
+        <li><strong>Words that beat Illucia:</strong> until you delete your account.</li>
         <li><strong>Round records:</strong> deleted about 24 hours after the round is won or expires. Cleanup runs every hour, so it can take a little longer, and it can be delayed if the cleanup fails.</li>
         <li><strong>Session cookie:</strong> up to 24 hours.</li>
         <li><strong>Diagnostic logs:</strong> up to 3 days.</li>
@@ -57,7 +59,7 @@ export default function Privacy() {
       </ul>
 
       <h2>Deleting your account</h2>
-      <p>Sign in, open <Link to="/account">Account</Link>, enter your password and confirm. Deletion is permanent: your account, round records and Hall of Fame entry are removed and cannot be recovered.</p>
+      <p>Sign in, open <Link to="/account">Account</Link>, enter your password and confirm. Deletion is permanent: your account, round records, the words that beat Illucia and your Hall of Fame entry are removed and cannot be recovered.</p>
 
       <h2>Your rights</h2>
       <p>You can ask what data we hold about you, or ask us to correct or delete it, by writing to the contact above. You also have the right to <a href="https://www.dpa.gr/en/individuals/complaint-to-the-hellenic-dpa" {...external}>complain to the Hellenic Data Protection Authority</a>.</p>
