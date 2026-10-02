@@ -99,7 +99,7 @@ export function feel(games) {
 
 // Her temperament with `seeds` shared seeds per word, and the strict A1 policy once per word
 // as the reference for the strength cap. `temperaments` overrides the tiers' own (tuning).
-export function playSets(entriesByLength, sets, { seeds = SEEDS_PER_WORD, baseSeed = DEFAULT_SEED, temperaments = {} } = {}) {
+export function playSets(entriesByLength, sets, { seeds = SEEDS_PER_WORD, baseSeed = DEFAULT_SEED, temperaments = {}, strictReference = true } = {}) {
   const knowledge = {};
   const know = (word, tier) => (knowledge[`${tier.maxSize}:${word.length}`] ??=
     createKnowledge(entriesByLength[word.length], tier.maxSize));
@@ -120,7 +120,7 @@ export function playSets(entriesByLength, sets, { seeds = SEEDS_PER_WORD, baseSe
       games[tier.id][key] = played;
       words[tier.id][key] = perWord(played);
       results[tier.id][key] = { ...summary(played), variety: variety(played) };
-      reference[tier.id][key] = summary(set.words.map(word => simulate(word, know(word, tier), 'count', () => 0)));
+      if (strictReference) reference[tier.id][key] = summary(set.words.map(word => simulate(word, know(word, tier), 'count', () => 0)));
       if (key === 'b' || key === 'c') {
         results[tier.id][`${key}ByLength`] = Object.fromEntries([...new Set(set.words.map(word => word.length))]
           .map(length => [length, summary(played.filter(game => game.word.length === length))]));

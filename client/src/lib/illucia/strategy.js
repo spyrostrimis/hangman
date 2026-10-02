@@ -99,7 +99,22 @@ function temperamentDecision(publicState, knowledge, candidates, guessed, temper
   // tier's shortlist width of the best, odds rising linearly above the cut-off.
   const cutoff = top - temperament.shortlist * candidateWeight;
   const options = careful ? best : eligible.filter(letter => score(letter) > cutoff);
-  const odds = careful ? options.map(() => 1) : options.map(letter => score(letter) - cutoff);
+  let odds = careful ? options.map(() => 1) : options.map(letter => score(letter) - cutoff);
+  // Information value (v2 A2, benchmark-only; no tier sets it): inside the shortlist, a letter's
+  // odds rise by up to `information` percent with how well it splits the candidates (weighted
+  // entropy of its reveal patterns, relative to the best on the shortlist). Never the decider.
+  if (!careful && temperament.information > 0 && options.length > 1) {
+    const split = options.map(letter => {
+      let entropy = 0;
+      for (const bucket of partitionWords(candidates, letter).values()) {
+        const p = bucket.reduce((sum, word) => sum + knowledge.weights.get(word), 0) / candidateWeight;
+        entropy -= p * Math.log2(p);
+      }
+      return entropy;
+    });
+    const most = Math.max(...split);
+    if (most > 0) odds = odds.map((value, index) => value * (100 + Math.round(temperament.information * split[index] / most)));
+  }
   const letter = options[weightedIndex(next, odds)];
   const totalOdds = odds.reduce((sum, value) => sum + value, 0);
   const shareOf = value => Math.floor(counts[value] * 10000 / candidateWeight);

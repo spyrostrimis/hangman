@@ -526,3 +526,37 @@ test('every caller must choose: a strict policy name or her temperament with a s
   assert.equal(analyzeDecision(state, sharesKnowledge(), 'count').letter, 'b'); // Positive control.
   assert.equal(chooseLetter(state, sharesKnowledge()), 'b'); // chooseLetter is the strict count (tools).
 });
+
+test('information value (benchmark-only) reweights the shortlist toward letters that split her candidates better', () => {
+  // Both B and C are in 6 of 12 words (50%), so they tie on share. B splits its words across
+  // three positions; C always sits in the same place. B tells her more.
+  const pool = 'dfghjklmnprstvw';
+  const words = [
+    ...Array.from({ length: 6 }, (_, i) => { // B at positions 0, 1, 2, 0, 1, 2.
+      const letters = [pool[2 * i], pool[2 * i + 1]];
+      letters.splice(i % 3, 0, 'b');
+      return letters.join('');
+    }),
+    ...Array.from({ length: 6 }, (_, i) => 'c' + pool[(2 * i + 12) % 15] + pool[(2 * i + 13) % 15]), // C always first.
+  ];
+  assert.equal(new Set(words).size, 12);
+  const knowledge = createKnowledge(entriesOf(words.map(word => `${word} 35`).join('\n')), 35);
+  const state = toPublicState(roundAfter(words[0], 'qxz')); // Three misses: still exploring.
+  assert.deepEqual(analyzeDecision(state, knowledge, { seed: 1, temperament: { shortlist: 1000, vowelBonus: 0, vowelTurns: 0 } })
+    .shortlist.map(entry => entry.letter), ['b', 'c']); // Fixture check: only B and C are close to the top.
+  const base = { shortlist: 1000, vowelBonus: 0, vowelTurns: 0 };
+  const count = temperament => {
+    let b = 0;
+    for (let seed = 0; seed < 600; seed++) if (analyzeDecision(state, knowledge, { seed, temperament }).letter === 'b') b++;
+    return b / 600;
+  };
+  const withInfo = analyzeDecision(state, knowledge, { seed: 1, temperament: { ...base, information: 100 } });
+  assert.deepEqual(withInfo.shortlist.find(entry => entry.letter === 'b').share,
+    withInfo.shortlist.find(entry => entry.letter === 'c').share); // Same share: only the split differs.
+  assert.ok(count({ ...base, information: 100 }) > count(base) + 0.05, `${count({ ...base, information: 100 })} vs ${count(base)}`);
+  // It never changes careful play: with two misses left she still takes the strictly best letter.
+  const careful = toPublicState(roundAfter(SHARES_WORDS[0], 'qxyz'));
+  assert.deepEqual(picks(careful, sharesKnowledge(), { ...tierTemperament('apprentice'), information: 100 }, 100), { b: 100 });
+  // No tier ships with it.
+  assert.ok(VOCABULARY_TIERS.every(tier => !tier.temperament.information));
+});
