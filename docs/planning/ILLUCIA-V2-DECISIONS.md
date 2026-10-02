@@ -90,3 +90,25 @@ A, B and C can run as **parallel sessions in separate clones**, each committing 
 6. **Claim verification (C1):** ticket + 5-second floor + a **rules check**. The server confirms the claimed guesses are legal and really reach six misses on the word. It does **not** replay her choices (that is over the Workers Free CPU limit; her first decision is ~24 ms). Her choices stay forgeable, as in Hangman's threat model.
 7. **Brain location:** stays in `client/src/lib/illucia/` for now. A2 keeps it movable: an injected seeded random generator (never `Math.random`), integer scores, and the seed recorded with the round.
 8. **3-letter words** are removed from the word files, validation and benchmarks. The committed I7a reports stay as historical records and are not re-run.
+
+## Amendments 2 — 2026-10-02, after Track B's and Track C's reviews
+
+1. **Questions are phrased "Can your word mean …?"** This makes the any-sense rule explicit. The category list is curated (Track B's list of 41) rather than WordNet's raw 45 lexicographer files. All categories ship as data; **v1 asks noun categories only** unless B2's benchmark shows the others are worth it.
+2. **Words WordNet doesn't know:** the offer says "no bonus possible for this word" before the player chooses. Label files: a missing word = unknown; `-` = known but no category.
+3. **Vulgar meanings:** a small reviewed exclusion list, with a reason per entry, removes categories that come only from vulgar meanings.
+4. **Points, calibrated against what a cheater can earn** (replaces §3.1–3.3 values and Amendment 1.4's open calibration):
+   - stump points = tier base × min(length − 3, 3), with Apprentice 30, Scholar 40, Master 50, and only for in-tier words;
+   - answered questions **multiply** the stump points: ×1.25 for one, ×1.5 for two;
+   - ladder bonus +100;
+   - claim floor 12 s. That gives a cheater ceiling of ≈1,290 points/minute, close to Hangman's ≈1,200.
+5. **Ladder and once-per-word:**
+   - the word is committed at round start;
+   - once-per-word applies across tiers;
+   - only point-earning wins advance the ladder;
+   - out-of-tier wins pay 0 and don't use up the word;
+   - experimental rounds pay 0 and break the ladder.
+6. **Separate Illucia tickets** (their own table and their own one-open-round rule), so Hangman and Illucia don't replace each other's rounds. This accepts roughly double the per-account ceiling across both modes.
+7. **"Unrefused" = answered.** Questions and answers are client-reported and rules-checked only, like her moves.
+8. **The server reads the word files** (as text modules, binary search). It deploys only after A1 has removed `3.txt`. The server issues a 32-bit seed per round; A2's random generator must accept it.
+9. **Privacy:** `/privacy` states that words that beat her are kept per account until deletion, **before** C1's Worker deploys (Track C owns that copy change).
+10. **Release record:** production already runs migrations 0001–0005 and the deletion/retention Worker; `CLAUDE.md` and `server/RELEASE.md` get corrected in a separate docs commit.
