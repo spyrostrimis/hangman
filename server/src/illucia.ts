@@ -1,6 +1,7 @@
 import { applyGuess, createRound, getRoundStatus } from '../../shared/hangman-core.js';
 import {
-  ILLUCIA_MAX_QUESTIONS, ILLUCIA_MIN_ROUND_DURATION_MS, ILLUCIA_NO_POINTS, ILLUCIA_TIERS, ROUND_TOO_EARLY, illuciaStumpPoints,
+  ILLUCIA_LADDER_BONUS, ILLUCIA_MAX_QUESTIONS, ILLUCIA_MIN_ROUND_DURATION_MS, ILLUCIA_MIN_WORD_LENGTH, ILLUCIA_NO_POINTS, ILLUCIA_TIERS,
+  ROUND_TOO_EARLY, illuciaStumpPoints,
 } from '../../shared/scoring-protocol.js';
 import { illuciaWordSize } from './illucia-words';
 import { ROUND_LIFETIME_MS } from './rounds';
@@ -22,11 +23,33 @@ export function previewPoints(word: string, tier: IlluciaTier, experimental: boo
   return { eligible: true, stump: illuciaStumpPoints(tier, word.length, 0) };
 }
 
+type LadderRow = { ladder_rung: number; ladder_length: number | null; ladder_seq: number | null };
+export type LadderView = { rung: number; next: IlluciaTier; minLength: number };
+const LADDER: readonly IlluciaTier[] = ['apprentice', 'scholar', 'master'];
+
+// The ladder is alive only for the round numbered right after its last step, so a
+// loss, an abandoned or expired round, or any round in between resets it unseen.
+export function ladderFor(row: LadderRow, seq: number): LadderView {
+  if (row.ladder_rung === 0 || row.ladder_seq !== seq - 1) return { rung: 0, next: 'apprentice', minLength: ILLUCIA_MIN_WORD_LENGTH };
+  return { rung: row.ladder_rung, next: LADDER[row.ladder_rung], minLength: row.ladder_length! + 1 };
+}
+
+// Only point-earning wins climb. Apprentice always (re)starts the ladder; Scholar
+// and then Master continue it with a longer word; Master pays the bonus and resets.
+export function climb(row: LadderRow, seq: number, tier: IlluciaTier, length: number, paid: boolean) {
+  const reset = { rung: 0, length: null, seq: null, bonus: 0 };
+  if (!paid) return reset;
+  if (tier === 'apprentice') return { rung: 1, length, seq, bonus: 0 };
+  const view = ladderFor(row, seq);
+  if (view.rung === 0 || tier !== view.next || length < view.minLength) return reset;
+  return view.rung === 2 ? { ...reset, bonus: ILLUCIA_LADDER_BONUS } : { rung: 2, length, seq, bonus: 0 };
+}
+
 type StartInput = { word: string; tier: IlluciaTier; experimental: boolean; previousRoundId: string | null };
 type OpenRound = {
   roundId: string; word: string; tier: IlluciaTier; seed: number; experimental: 0 | 1;
-  issuedAt: number; expiresAt: number; paidPoints: number | null;
-};
+  issuedAt: number; expiresAt: number; paidPoints: number | null; seq: number;
+} & LadderRow;
 
 export async function startIlluciaRound(db: D1Database, userId: string, { word, tier, experimental, previousRoundId }: StartInput) {
   const now = Date.now();
@@ -48,15 +71,17 @@ export async function startIlluciaRound(db: D1Database, userId: string, { word, 
       FROM illucia_rounds WHERE user_id = ?
       ON CONFLICT(user_id) WHERE claimed_at IS NULL DO NOTHING`)
       .bind(crypto.randomUUID(), userId, userId, word, tier, seed, mode, now, now, ROUND_LIFETIME_MS, userId),
-    db.prepare(`SELECT id AS roundId, word, tier, seed, experimental, issued_at AS issuedAt, expires_at AS expiresAt,
-        (SELECT points FROM illucia_beaten_words WHERE user_id = illucia_rounds.user_id AND word = illucia_rounds.word) AS paidPoints
-      FROM illucia_rounds WHERE user_id = ? AND claimed_at IS NULL`).bind(userId),
+    db.prepare(`SELECT id AS roundId, word, tier, seed, experimental, issued_at AS issuedAt, expires_at AS expiresAt, seq,
+        (SELECT points FROM illucia_beaten_words WHERE user_id = illucia_rounds.user_id AND word = illucia_rounds.word) AS paidPoints,
+        ladder_rung, ladder_length, ladder_seq
+      FROM illucia_rounds JOIN illucia_players USING (user_id) WHERE user_id = ? AND claimed_at IS NULL`).bind(userId),
   ]);
   const round = results[4].results[0] as OpenRound;
   return {
     roundId: round.roundId, word: round.word, tier: round.tier, experimental: round.experimental === 1, seed: round.seed,
     issuedAt: round.issuedAt, expiresAt: round.expiresAt, serverNow: Date.now(),
     points: previewPoints(round.word, round.tier, round.experimental === 1, round.paidPoints),
+    ladder: ladderFor(round, round.seq),
   };
 }
 
@@ -78,32 +103,38 @@ export const isAnsweredQuestions = (value: unknown): value is number =>
 
 const SCORE_CEILING = 9007199254740900;
 type ClaimFailure = { error: string; status: 400 | 409; code?: string; retryAfterMs?: number };
-type Claimed = { score: number; awarded: { stump: number; ladder: number }; reason?: string };
+type Claimed = { score: number; awarded: { stump: number; ladder: number }; reason?: string; ladder: LadderView };
 
 export async function claimIlluciaRound(db: D1Database, userId: string, roundId: string, guesses: unknown, answeredQuestions: number)
   : Promise<ClaimFailure | Claimed> {
-  const ticket = await db.prepare(`SELECT word, tier, experimental,
-      (SELECT points FROM illucia_beaten_words WHERE user_id = illucia_rounds.user_id AND word = illucia_rounds.word) AS paidPoints
-    FROM illucia_rounds WHERE id = ? AND user_id = ?`).bind(roundId, userId)
-    .first<{ word: string; tier: IlluciaTier; experimental: 0 | 1; paidPoints: number | null }>();
+  const ticket = await db.prepare(`SELECT word, tier, experimental, seq,
+      (SELECT points FROM illucia_beaten_words WHERE user_id = illucia_rounds.user_id AND word = illucia_rounds.word) AS paidPoints,
+      ladder_rung, ladder_length, ladder_seq
+    FROM illucia_rounds JOIN illucia_players USING (user_id) WHERE id = ? AND user_id = ?`).bind(roundId, userId)
+    .first<{ word: string; tier: IlluciaTier; experimental: 0 | 1; seq: number; paidPoints: number | null } & LadderRow>();
   if (!ticket) return { error: 'This round is no longer available.', status: 409 };
   if (!isLosingReplay(ticket.word, guesses)) return { error: 'The guesses must end with her sixth miss.', status: 400 };
 
   const preview = previewPoints(ticket.word, ticket.tier, ticket.experimental === 1, ticket.paidPoints);
   const stump = preview.eligible ? illuciaStumpPoints(ticket.tier, ticket.word.length, answeredQuestions) : 0;
-  const award = stump;
+  const step = climb(ticket, ticket.seq, ticket.tier, ticket.word.length, stump > 0);
+  const award = stump + step.bonus;
   const now = Date.now();
   // As in Hangman: only the request whose fresh nonce consumes the ticket may
   // record the word or add points; the batch is atomic.
   const claimToken = crypto.randomUUID();
   const consumed = 'EXISTS (SELECT 1 FROM illucia_rounds WHERE id = ? AND user_id = ? AND claim_token = ?)';
   const results = await db.batch([
-    db.prepare(`UPDATE illucia_rounds SET claimed_at = ?, claim_token = ?, stump_points = ?, ladder_points = 0, award_reason = ?
+    // The award was computed from a read; consume only if that state still holds.
+    db.prepare(`UPDATE illucia_rounds SET claimed_at = ?, claim_token = ?, stump_points = ?, ladder_points = ?, award_reason = ?
       WHERE id = ? AND user_id = ? AND claimed_at IS NULL AND expires_at > ? AND issued_at <= ?
       AND EXISTS (SELECT 1 FROM scores WHERE user_id = ? AND total <= ?)
-      AND (? = 0 OR NOT EXISTS (SELECT 1 FROM illucia_beaten_words WHERE user_id = ? AND word = ? AND points > 0))`)
-      .bind(now, claimToken, stump, preview.reason ?? null, roundId, userId, now, now - ILLUCIA_MIN_ROUND_DURATION_MS,
-        userId, SCORE_CEILING - award, stump, userId, ticket.word),
+      AND (? = 0 OR NOT EXISTS (SELECT 1 FROM illucia_beaten_words WHERE user_id = ? AND word = ? AND points > 0))
+      AND EXISTS (SELECT 1 FROM illucia_players WHERE user_id = ? AND ladder_rung = ? AND ladder_seq IS ?)`)
+      .bind(now, claimToken, stump, step.bonus, preview.reason ?? null, roundId, userId, now, now - ILLUCIA_MIN_ROUND_DURATION_MS,
+        userId, SCORE_CEILING - award, stump, userId, ticket.word, userId, ticket.ladder_rung, ticket.ladder_seq),
+    db.prepare(`UPDATE illucia_players SET ladder_rung = ?, ladder_length = ?, ladder_seq = ? WHERE user_id = ? AND ${consumed}`)
+      .bind(step.rung, step.length, step.seq, userId, roundId, userId, claimToken),
     // Every normal-mode win is remembered; a word is spent only once it has paid.
     db.prepare(`INSERT INTO illucia_beaten_words (user_id, word, points, paid_round_id, beaten_at)
       SELECT ?, ?, ?, ?, ? WHERE ? = 0 AND ${consumed}
@@ -113,19 +144,22 @@ export async function claimIlluciaRound(db: D1Database, userId: string, roundId:
     db.prepare(`UPDATE scores SET total = total + ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ? AND ? > 0 AND ${consumed}`)
       .bind(award, userId, award, roundId, userId, claimToken),
     db.prepare(`SELECT illucia_rounds.claimed_at, illucia_rounds.issued_at, illucia_rounds.expires_at, illucia_rounds.stump_points,
-        illucia_rounds.ladder_points, illucia_rounds.award_reason, scores.total AS score
+        illucia_rounds.ladder_points, illucia_rounds.award_reason, scores.total AS score,
+        illucia_players.round_seq, illucia_players.ladder_rung, illucia_players.ladder_length, illucia_players.ladder_seq
       FROM illucia_rounds JOIN scores ON scores.user_id = illucia_rounds.user_id
+      JOIN illucia_players ON illucia_players.user_id = illucia_rounds.user_id
       WHERE illucia_rounds.id = ? AND illucia_rounds.user_id = ?`).bind(roundId, userId),
   ]);
-  const saved = results[3].results[0] as {
+  const saved = results[4].results[0] as {
     claimed_at: number | null; issued_at: number; expires_at: number; stump_points: number | null;
-    ladder_points: number | null; award_reason: string | null; score: number;
-  } | undefined;
+    ladder_points: number | null; award_reason: string | null; score: number; round_seq: number;
+  } & LadderRow | undefined;
   if (saved && saved.claimed_at === null && saved.expires_at > now && now < saved.issued_at + ILLUCIA_MIN_ROUND_DURATION_MS) {
     return { error: 'The round is not ready to be claimed.', status: 409, code: ROUND_TOO_EARLY,
       retryAfterMs: saved.issued_at + ILLUCIA_MIN_ROUND_DURATION_MS - now };
   }
   if (!saved || saved.claimed_at === null) return { error: 'This round expired, was replaced, or the score limit was reached.', status: 409 };
+  // The ladder as the next new round would find it.
   return { score: saved.score, awarded: { stump: saved.stump_points!, ladder: saved.ladder_points! },
-    ...(saved.award_reason ? { reason: saved.award_reason } : {}) };
+    ...(saved.award_reason ? { reason: saved.award_reason } : {}), ladder: ladderFor(saved, saved.round_seq + 1) };
 }

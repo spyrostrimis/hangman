@@ -1,6 +1,7 @@
 import { env, applyD1Migrations } from 'cloudflare:test';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import app from '../src/index';
+import { claimIlluciaRound } from '../src/illucia';
 import { KDF } from '../../shared/auth-protocol.js';
 import { ILLUCIA_ALREADY_WON_MESSAGE } from '../../shared/scoring-protocol.js';
 
@@ -150,12 +151,15 @@ const claim = (cookie: string, roundId: string, extra: object = {}) =>
   request('illucia/claim', { cookie, body: { roundId, guesses: LOSS, ...extra } });
 const total = async (id: string) => env.DB.prepare('SELECT total FROM scores WHERE user_id = ?').bind(id).first('total');
 const beaten = async (id: string) => (await env.DB.prepare('SELECT word, points, paid_round_id FROM illucia_beaten_words WHERE user_id = ? ORDER BY word').bind(id).all()).results;
+// Claim responses without the ladder view, which has its own tests.
+const bare = (response: unknown) => { const { ladder: _, ...rest } = response as { ladder?: object }; return rest; };
 async function won(cookie: string, body: object, extra: object = {}) {
   const ticket = await start(cookie, body);
   await mature(ticket.roundId);
   const response = await claim(cookie, ticket.roundId, extra);
   expect(response.status).toBe(200);
-  return { ticket, result: await response.json() };
+  const { ladder, ...result } = await response.json() as { ladder: object };
+  return { ticket, result, ladder };
 }
 
 describe('Illucia claims', () => {
@@ -170,7 +174,7 @@ describe('Illucia claims', () => {
     expect(await total(id)).toBe(0);
     expect(await beaten(id)).toEqual([]);
     clock.mockReturnValue(ticket.issuedAt + 12000);
-    expect(await (await claim(cookie, ticket.roundId)).json()).toEqual({ score: 50, awarded: { stump: 50, ladder: 0 } });
+    expect(bare(await (await claim(cookie, ticket.roundId)).json())).toEqual({ score: 50, awarded: { stump: 50, ladder: 0 } });
   });
 
   it('accepts only legal guesses that end exactly at her sixth miss on the committed word', async () => {
@@ -183,7 +187,7 @@ describe('Illucia claims', () => {
     }
     expect(await total(id)).toBe(0);
     // Hits between misses are fine, as long as the word is never solved.
-    expect(await (await claim(cookie, ticket.roundId, { guesses: [...'jbdfgkm'] })).json()).toMatchObject({ score: 50 });
+    expect(bare(await (await claim(cookie, ticket.roundId, { guesses: [...'jbdfgkm'] })).json())).toMatchObject({ score: 50 });
   });
 
   it('rejects unknown fields, bad round IDs, foreign and replaced tickets, and out-of-range question counts', async () => {
@@ -198,8 +202,8 @@ describe('Illucia claims', () => {
     expect((await claim(cookie, foreign.roundId)).status).toBe(409);
     expect((await claim(cookie, replaced.roundId)).status).toBe(409);
     expect((await claim(cookie, crypto.randomUUID())).status).toBe(409);
-    expect(await (await claim(cookie, ticket.roundId)).json()).toEqual({ score: 100, awarded: { stump: 100, ladder: 0 } });
-    expect(await (await claim(other.cookie, foreign.roundId)).json()).toMatchObject({ score: 50 });
+    expect(bare(await (await claim(cookie, ticket.roundId)).json())).toEqual({ score: 100, awarded: { stump: 100, ladder: 0 } });
+    expect(bare(await (await claim(other.cookie, foreign.roundId)).json())).toMatchObject({ score: 50 });
   });
 
   it('pays tier base × min(length − 3, 3) and multiplies it for one or two answered questions', async () => {
@@ -252,10 +256,10 @@ describe('Illucia claims', () => {
     const ticket = await start(cookie, { word: 'crane', tier: 'master' });
     await mature(ticket.roundId);
     const responses = await Promise.all(Array.from({ length: 5 }, () => claim(cookie, ticket.roundId, { answeredQuestions: 1 })));
-    for (const response of responses) expect(await response.json()).toEqual({ score: 125, awarded: { stump: 125, ladder: 0 } });
+    for (const response of responses) expect(bare(await response.json())).toEqual({ score: 125, awarded: { stump: 125, ladder: 0 } });
     const next = await start(cookie, { word: 'jazz', tier: 'master' });
     expect(next.roundId).not.toBe(ticket.roundId);
-    expect(await (await claim(cookie, ticket.roundId, { answeredQuestions: 2 })).json()).toEqual({ score: 125, awarded: { stump: 125, ladder: 0 } });
+    expect(bare(await (await claim(cookie, ticket.roundId, { answeredQuestions: 2 })).json())).toEqual({ score: 125, awarded: { stump: 125, ladder: 0 } });
     expect(await total(id)).toBe(125);
     // The Hangman ticket is untouched by Illucia claims.
     expect((await request('round/start', { cookie })).status).toBe(200);
@@ -275,7 +279,118 @@ describe('Illucia claims', () => {
       expect(await beaten(id)).toEqual([]);
       expect(await total(id)).toBe(0);
     } finally { await env.DB.exec('DROP TRIGGER test_fail_illucia_award;'); }
-    expect(await (await claim(cookie, ticket.roundId)).json()).toEqual({ score: 50, awarded: { stump: 50, ladder: 0 } });
+    expect(bare(await (await claim(cookie, ticket.roundId)).json())).toEqual({ score: 50, awarded: { stump: 50, ladder: 0 } });
+  });
+});
+
+describe('Illucia ladder', () => {
+  const view = (rung: number, next: string, minLength: number) => ({ rung, next, minLength });
+  const step = async (cookie: string, word: string, tier: string, extra: object = {}) => {
+    const ticket = await start(cookie, { word, tier, ...extra });
+    await mature(ticket.roundId);
+    const response = await claim(cookie, ticket.roundId);
+    expect(response.status).toBe(200);
+    return { ticket, result: await response.json() as { score: number; awarded: { stump: number; ladder: number }; ladder: object } };
+  };
+
+  it('pays +100 for Apprentice, then Scholar, then Master in a row with longer words, and shows each rung', async () => {
+    const { cookie } = await signup();
+    const apprentice = await step(cookie, 'jazz', 'apprentice');
+    expect(apprentice.ticket.ladder).toEqual(view(0, 'apprentice', 4));
+    expect(apprentice.result).toEqual({ score: 30, awarded: { stump: 30, ladder: 0 }, ladder: view(1, 'scholar', 5) });
+    const scholar = await step(cookie, 'zebra', 'scholar');
+    expect(scholar.ticket.ladder).toEqual(view(1, 'scholar', 5));
+    expect(scholar.result).toEqual({ score: 110, awarded: { stump: 80, ladder: 0 }, ladder: view(2, 'master', 6) });
+    const master = await step(cookie, 'rhythm', 'master');
+    expect(master.ticket.ladder).toEqual(view(2, 'master', 6));
+    expect(master.result).toEqual({ score: 360, awarded: { stump: 150, ladder: 100 }, ladder: view(0, 'apprentice', 4) });
+    // The next Apprentice win starts a new ladder; retrying the Master claim returns its stored bonus without paying again.
+    expect((await step(cookie, 'faith', 'apprentice')).result.ladder).toEqual(view(1, 'scholar', 6));
+    expect((await (await claim(cookie, master.ticket.roundId)).json())).toMatchObject({ score: 420, awarded: { stump: 150, ladder: 100 } });
+    expect((await start(cookie, { word: 'rhythm', tier: 'scholar' })).ladder).toEqual(view(1, 'scholar', 6));
+  });
+
+  it('needs each word longer than the last; an Apprentice win restarts the ladder at any rung', async () => {
+    const { cookie } = await signup();
+    await step(cookie, 'zebra', 'apprentice');
+    expect((await step(cookie, 'faith', 'scholar')).result).toMatchObject({ awarded: { ladder: 0 }, ladder: view(0, 'apprentice', 4) });
+    expect((await step(cookie, 'chimney', 'master')).result.awarded.ladder).toBe(0);
+    await step(cookie, 'jazz', 'apprentice');
+    await step(cookie, 'crane', 'apprentice');
+    expect((await step(cookie, 'rhythm', 'scholar')).result.ladder).toEqual(view(2, 'master', 7));
+    expect((await step(cookie, 'lantern', 'master')).result.awarded).toEqual({ stump: 150, ladder: 100 });
+  });
+
+  it('resets after a loss or abandoned round, an expired ticket, or tiers out of order', async () => {
+    const { cookie } = await signup();
+    await step(cookie, 'jazz', 'apprentice');
+    // She won this one: no claim; the player starts another round.
+    await start(cookie, { word: 'zebra', tier: 'scholar' });
+    const lost = await start(cookie, { word: 'zebra', tier: 'scholar' });
+    expect(lost.ladder).toEqual(view(1, 'scholar', 5));
+    const rematch = await start(cookie, { word: 'zebra', tier: 'scholar', previousRoundId: lost.roundId });
+    expect(rematch.ladder).toEqual(view(0, 'apprentice', 4));
+    await mature(rematch.roundId);
+    expect(bare(await (await claim(cookie, rematch.roundId)).json())).toEqual({ score: 110, awarded: { stump: 80, ladder: 0 } });
+    expect((await step(cookie, 'rhythm', 'master')).result.awarded.ladder).toBe(0);
+
+    await step(cookie, 'fizz', 'apprentice');
+    const open = await start(cookie, { word: 'crane', tier: 'scholar' });
+    // Control: the same start resumes the open round and the ladder is still alive.
+    expect(await start(cookie, { word: 'crane', tier: 'scholar' })).toMatchObject({ roundId: open.roundId, ladder: view(1, 'scholar', 5) });
+    await env.DB.prepare('UPDATE illucia_rounds SET expires_at = ? WHERE id = ?').bind(Date.now() - 1, open.roundId).run();
+    expect((await start(cookie, { word: 'crane', tier: 'scholar' })).ladder).toEqual(view(0, 'apprentice', 4));
+
+    const fresh = await signup('Other');
+    expect((await step(fresh.cookie, 'jazz', 'scholar')).result.ladder).toEqual(view(0, 'apprentice', 4));
+    await step(fresh.cookie, 'fizz', 'apprentice');
+    expect((await step(fresh.cookie, 'abacas', 'master')).result).toMatchObject({ awarded: { ladder: 0 }, ladder: view(0, 'apprentice', 4) });
+  });
+
+  it('only point-earning wins climb: spent, out-of-tier and experimental wins break the ladder', async () => {
+    const { cookie } = await signup();
+    await step(cookie, 'jazz', 'master');
+    await step(cookie, 'fizz', 'apprentice');
+    expect((await step(cookie, 'jazz', 'scholar')).result).toMatchObject({ awarded: { stump: 0 }, ladder: view(0, 'apprentice', 4) });
+    await step(cookie, 'faith', 'apprentice');
+    expect((await step(cookie, 'chimney', 'scholar', { experimental: true })).result.ladder).toEqual(view(0, 'apprentice', 4));
+    await step(cookie, 'crane', 'apprentice');
+    const outside = await step(cookie, 'abacas', 'scholar');
+    expect(outside.result).toMatchObject({ awarded: { stump: 0, ladder: 0 }, ladder: view(0, 'apprentice', 4) });
+    // Control: the same climb with paying words reaches the bonus.
+    await step(cookie, 'sixty', 'apprentice');
+    await step(cookie, 'rhythm', 'scholar');
+    expect((await step(cookie, 'lantern', 'master')).result.awarded).toEqual({ stump: 150, ladder: 100 });
+  });
+
+  it('consumes nothing if the ladder changed between the claim read and its batch', async () => {
+    const { cookie, id } = await signup();
+    await step(cookie, 'jazz', 'apprentice');
+    await step(cookie, 'zebra', 'scholar');
+    const master = await start(cookie, { word: 'rhythm', tier: 'master' });
+    await mature(master.roundId);
+    const interfering = { prepare: env.DB.prepare.bind(env.DB), batch: async (statements: D1PreparedStatement[]) => {
+      await env.DB.prepare('UPDATE illucia_players SET ladder_rung = 0, ladder_length = NULL, ladder_seq = NULL WHERE user_id = ?').bind(id).run();
+      return env.DB.batch(statements);
+    } } as unknown as D1Database;
+    expect(await claimIlluciaRound(interfering, id, master.roundId, LOSS, 0)).toMatchObject({ status: 409 });
+    expect(await env.DB.prepare('SELECT claimed_at FROM illucia_rounds WHERE id = ?').bind(master.roundId).first('claimed_at')).toBeNull();
+    expect(await total(id)).toBe(110);
+    // Control: claimed again from the state as it now stands, the round pays stump points without the bonus.
+    expect(bare(await (await claim(cookie, master.roundId)).json())).toEqual({ score: 260, awarded: { stump: 150, ladder: 0 } });
+  });
+
+  it('pays the ladder bonus once under concurrent Master claims', async () => {
+    const { cookie, id } = await signup();
+    await step(cookie, 'jazz', 'apprentice');
+    await step(cookie, 'zebra', 'scholar');
+    const master = await start(cookie, { word: 'rhythm', tier: 'master' });
+    await mature(master.roundId);
+    const responses = await Promise.all(Array.from({ length: 5 }, () => claim(cookie, master.roundId)));
+    for (const response of responses) expect(bare(await response.json())).toEqual({ score: 360, awarded: { stump: 150, ladder: 100 } });
+    expect(await total(id)).toBe(360);
+    expect(await env.DB.prepare('SELECT ladder_rung, ladder_length, ladder_seq FROM illucia_players WHERE user_id = ?').bind(id).first())
+      .toEqual({ ladder_rung: 0, ladder_length: null, ladder_seq: null });
   });
 });
 
