@@ -1,7 +1,7 @@
 {
   "judgedBy": "Claude (Opus 5.5), 2026-10-02, after the run and before computing accuracy; for Spyros to review",
   "rule": "A question is scored only if it asks the same thing as one B1 category or a union of them. Close but wider or narrower questions are not scored; their notes say why.",
-  "run": "benchmarks/illucia-d1.json, illucia-d1-r1-invent.json, illucia-d1-round2.json, illucia-d1-llama70b.json, illucia-d1-llama70b-part2.json",
+  "run": "benchmarks/illucia-d1.json, illucia-d1-r1-invent.json, illucia-d1-round2.json, illucia-d1-llama70b.json, illucia-d1-llama70b-part2.json, illucia-d1-nemotron-*.json",
   "questions": {
     "can your word mean a type of bird?": {
       "codes": [
@@ -426,6 +426,26 @@
     "can your word mean something that happens or is done to a thing or substance?": {
       "codes": null,
       "note": "No B1 category or union means the same."
+    },
+    "can your word mean a container for holding food or liquid?": {
+      "codes": null,
+      "note": "Narrower than w (a container)."
+    },
+    "can your word mean a person who prepares written material for publication?": {
+      "codes": null,
+      "note": "Narrower than a or C: describes one candidate (editor)."
+    },
+    "can your word mean a type of ship or vessel?": {
+      "codes": null,
+      "note": "Narrower than q (a vehicle)."
+    },
+    "can your word mean something that cannot be changed or appeased?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a country?": {
+      "codes": null,
+      "note": "Narrower than y (a place)."
     }
   }
 }

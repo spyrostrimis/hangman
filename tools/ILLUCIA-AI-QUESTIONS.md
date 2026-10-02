@@ -254,6 +254,26 @@ easier boards it matches Gemma's accuracy and is faster, at about 4× Gemma's co
 (~20 neurons, so ~1,000 a day at the planned 50 requests). Four boards cannot separate it
 from Gemma. The full 21-state run below did, and Llama 3.3 70B won.
 
+### Nemotron 3 120B A12B (added late, 321 neurons)
+
+`@cf/nvidia/nemotron-3-120b-a12b` (45,455 / 136,364 neurons per M tokens), run at the end of
+the day on the same five states (`illucia-d1-nemotron-off*.json`), with reasoning off
+(`chat_template_kwargs.enable_thinking: false`). It was then tried with low reasoning
+(`enable_thinking` + `low_effort`) on two invents (`illucia-d1-nemotron-low.json`).
+
+- **Reasoning off** is the fastest model tested: 0.6–1.1 s, about 18–24 neurons a request,
+  and valid lists 10/10. But only 1 of 5 invented questions split evenly. Its questions
+  described a single candidate ("a person who prepares written material for publication"
+  for *editor*, "a type of ship or vessel"), giving 9–13% YES. Its sorts lean towards YES:
+  79% agreement with WordNet (34/43), 32% false YES, no false NO, and the real word on the
+  wrong side 1/5.
+- **Low reasoning** gave 1 usable invent out of 2, at 1.3–3.3 s and 36–75 neurons, up to
+  1,255 characters of hidden reasoning.
+
+On the four shared states: 1/4 usable (Llama 3.3 70B 3/4, Gemma 4/4). Nemotron is not a
+contender with this prompt. Its narrow questions might respond to prompt tuning, which
+belongs on a held-out set.
+
 ## Stopped run: reasoning on (`benchmarks/illucia-d1-reasoning-on.json`)
 
 The first run used each model's default reasoning (gpt-oss-20b at "low"), a 4,096-token
@@ -303,8 +323,9 @@ The second round then spent a further 4,937 measured neurons (R1 2,450, the othe
 
 The full Llama 3.3 70B run added 1,500 measured neurons. Before its second part the ledger
 dropped the 909 neurons reserved for requests with unknown usage (owner decision, matching
-the Cloudflare dashboard). The day ended at 9,299 measured neurons, under the 10,000 free
-allowance and the ledger's ceiling, which was raised to 10,000 that evening.
+the Cloudflare dashboard). After the Llama run the day stood at 9,299 measured neurons. The Nemotron runs added 321, ending
+the day at 9,620, under the 10,000 free allowance and the ledger's ceiling, which was raised to
+10,000 that evening.
 
 ## What this means for D2 (not decided here)
 

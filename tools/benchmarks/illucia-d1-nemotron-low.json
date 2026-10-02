@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 1,
+  "phase": "run",
+  "startedAt": "2026-10-02T23:38:52.548Z",
+  "status": "complete",
+  "configuration": {
+    "models": [
+      "@cf/nvidia/nemotron-3-120b-a12b"
+    ],
+    "modes": [
+      "invent"
+    ],
+    "promptVersion": "d1-1",
+    "prompts": {
+      "invent": "You help Illucia, a Hangman player, narrow down a hidden English word by its MEANING. The user message is a JSON object whose \"candidates\" field lists every word the hidden word could be.\n1. Invent ONE yes/no question about what the word can mean: what kind of thing, action or quality it is. Start it with \"Can your word mean\" and end it with \"?\". It must not be about letters, spelling, sounds, rhymes or length.\n2. A word is YES if ANY of its meanings fits, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n3. Choose a question that puts roughly half of the candidates in YES and half in NO.\n4. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"question\": \"...\", \"yes\": [\"...\"], \"no\": [\"...\"]}",
+      "sort": "Sort English words by MEANING. The user message is a JSON object with a yes/no \"question\" and a \"candidates\" list.\n1. A word is YES if ANY of its meanings fits the question, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n2. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"yes\": [\"...\"], \"no\": [\"...\"]}"
+    },
+    "promptSha256": "1b85eda7ffdac6d528d315e22cc412da16cc78ad908d179233edb4585023a2d2",
+    "statesSha256": "4ddaee886368cbe7f44bde2512a66f443a0b33d7429bb4a973a17fcbf09d68e1",
+    "temperature": 0,
+    "seed": 20261002,
+    "maxTokens": 2048,
+    "modelOptions": {
+      "@cf/qwen/qwen3-30b-a3b-fp8": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/google/gemma-4-26b-a4b-it": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/zai-org/glm-4.7-flash": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/openai/gpt-oss-20b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/openai/gpt-oss-120b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/qwen/qwen3.8-27b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/nvidia/nemotron-3-120b-a12b": {
+        "chat_template_kwargs": {
+          "enable_thinking": true,
+          "low_effort": true
+        }
+      }
+    },
+    "requestTimeoutMs": 60000,
+    "stateIds": [
+      "6-scholar",
+      "8-master"
+    ],
+    "retries": 0,
+    "timeoutsBeforeSkip": 3,
+    "evenSplit": [
+      0.25,
+      0.75
+    ],
+    "blockedTerms": 421,
+    "neuronRates": {
+      "@cf/nvidia/nemotron-3-120b-a12b": {
+        "input": 45455,
+        "output": 136364
+      }
+    },
+    "pricingChecked": "2026-10-02",
+    "maxRunNeurons": 480
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32"
+  },
+  "requests": [
+    {
+      "state": "6-scholar",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 1329.3134,
+      "inputSha256": "4ee6851fbe68ea0b8506a914dd33b666051a811b6eb054a84397a28acc1664e9",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a person's name?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "edison",
+        "elijah",
+        "elinor",
+        "elisha",
+        "ericka"
+      ],
+      "no": [
+        "edicts",
+        "editor",
+        "enigma",
+        "evicts",
+        "evilly",
+        "exists"
+      ],
+      "yesShare": 0.45454545454545453,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 281,
+        "completion_tokens": 173,
+        "reasoning_tokens": null,
+        "neurons": 36.173
+      },
+      "estimatedNeurons": 36.363827,
+      "providerReportedNeurons": 36.173,
+      "reasoningChars": 294,
+      "visibleChars": 179,
+      "response": "\n{\"question\": \"Can your word mean a person's name?\", \"yes\": [\"edison\", \"elijah\", \"elinor\", \"elisha\", \"ericka\"], \"no\": [\"edicts\", \"editor\", \"enigma\", \"evicts\", \"evilly\", \"exists\"]}"
+    },
+    {
+      "state": "8-master",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 3344.6919000000003,
+      "inputSha256": "2ac01898bbff625aa17fde0ea5162751cf72f0f661eb7296e640650e347756d8",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a country?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "colombia",
+        "columbia",
+        "mongolia"
+      ],
+      "no": [
+        "boltonia",
+        "dyslogia",
+        "dystonia",
+        "dystopia",
+        "fostoria",
+        "monrovia",
+        "myotonia",
+        "photopia",
+        "scotopia",
+        "strontia",
+        "suburbia",
+        "syncytia"
+      ],
+      "yesShare": 0.2,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 306,
+        "completion_tokens": 448,
+        "reasoning_tokens": null,
+        "neurons": 74.69800000000001
+      },
+      "estimatedNeurons": 75.000302,
+      "providerReportedNeurons": 74.69800000000001,
+      "reasoningChars": 1255,
+      "visibleChars": 244,
+      "response": "\n\n{\"question\": \"Can your word mean a country?\", \"yes\": [\"colombia\", \"columbia\", \"mongolia\"], \"no\": [\"boltonia\", \"dyslogia\", \"dystonia\", \"dystopia\", \"fostoria\", \"monrovia\", \"myotonia\", \"photopia\", \"scotopia\", \"strontia\", \"suburbia\", \"syncytia\"]}"
+    }
+  ],
+  "finishedAt": "2026-10-02T23:38:57.228Z",
+  "budget": {
+    "day": "2026-10-02",
+    "requests": 317,
+    "reservedNeurons": 9620.544609965073,
+    "adjustment": "2026-10-02 23:27 UTC, owner decision: reservations for 7 requests with unknown usage (6 timeouts, 1 killed in flight) dropped, 909.0 neurons; owner dashboard showed 7.8k used before the Llama 3.3 70B run.",
+    "maxRequests": 1800,
+    "maxNeurons": 10000,
+    "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
+  },
+  "mappingSha256": "592fedbc5eba3dd4ebb2081cff715946e304f06dbe026ec5115e3e93806158ed",
+  "summary": {
+    "@cf/nvidia/nemotron-3-120b-a12b": {
+      "invent": {
+        "requests": 2,
+        "sent": 2,
+        "outcomes": {
+          "accepted": 1,
+          "uneven": 1
+        },
+        "acceptedRate": 0.5,
+        "strictJsonRate": 1,
+        "validListsRate": 1,
+        "invalidRate": 0,
+        "split": {
+          "meanYesShare": 0.3273,
+          "meanDistanceFromHalf": 0.1727,
+          "inBand": 1,
+          "withValidLists": 2
+        },
+        "accuracy": {
+          "scoredRequests": 0,
+          "unmappedQuestions": 2,
+          "labelled": 0,
+          "correct": 0,
+          "falseYes": 0,
+          "falseNo": 0,
+          "wordnetYes": 0,
+          "wordnetNo": 0,
+          "accuracy": null,
+          "falseYesRate": null,
+          "falseNoRate": null,
+          "answerChecked": 0,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 1329.3134,
+          "p95": 3344.6919,
+          "max": 3344.6919,
+          "within3s": 0.5,
+          "within5s": 1,
+          "within8s": 1,
+          "acceptedWithin3s": 0.5,
+          "acceptedWithin8s": 0.5
+        },
+        "tokens": {
+          "requestsWithUsage": 2,
+          "meanPrompt": 293.5,
+          "meanCompletion": 310.5,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 239.5,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 111.3641,
+          "estimatedPerRequest": 55.6821,
+          "providerReportedTotal": 110.871,
+          "requestsWithoutUsage": 0
+        },
+        "perState": []
+      }
+    }
+  }
+}

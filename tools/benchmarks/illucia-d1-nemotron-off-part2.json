@@ -1,0 +1,452 @@
+{
+  "schemaVersion": 1,
+  "phase": "run",
+  "startedAt": "2026-10-02T23:38:39.003Z",
+  "status": "complete",
+  "configuration": {
+    "models": [
+      "@cf/nvidia/nemotron-3-120b-a12b"
+    ],
+    "modes": [
+      "invent",
+      "sort"
+    ],
+    "promptVersion": "d1-1",
+    "prompts": {
+      "invent": "You help Illucia, a Hangman player, narrow down a hidden English word by its MEANING. The user message is a JSON object whose \"candidates\" field lists every word the hidden word could be.\n1. Invent ONE yes/no question about what the word can mean: what kind of thing, action or quality it is. Start it with \"Can your word mean\" and end it with \"?\". It must not be about letters, spelling, sounds, rhymes or length.\n2. A word is YES if ANY of its meanings fits, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n3. Choose a question that puts roughly half of the candidates in YES and half in NO.\n4. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"question\": \"...\", \"yes\": [\"...\"], \"no\": [\"...\"]}",
+      "sort": "Sort English words by MEANING. The user message is a JSON object with a yes/no \"question\" and a \"candidates\" list.\n1. A word is YES if ANY of its meanings fits the question, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n2. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"yes\": [\"...\"], \"no\": [\"...\"]}"
+    },
+    "promptSha256": "1b85eda7ffdac6d528d315e22cc412da16cc78ad908d179233edb4585023a2d2",
+    "statesSha256": "4ddaee886368cbe7f44bde2512a66f443a0b33d7429bb4a973a17fcbf09d68e1",
+    "temperature": 0,
+    "seed": 20261002,
+    "maxTokens": 2048,
+    "modelOptions": {
+      "@cf/qwen/qwen3-30b-a3b-fp8": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/google/gemma-4-26b-a4b-it": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/zai-org/glm-4.7-flash": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/openai/gpt-oss-20b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/openai/gpt-oss-120b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/qwen/qwen3.8-27b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/nvidia/nemotron-3-120b-a12b": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      }
+    },
+    "requestTimeoutMs": 30000,
+    "stateIds": [
+      "9-scholar",
+      "10-apprentice"
+    ],
+    "retries": 0,
+    "timeoutsBeforeSkip": 3,
+    "evenSplit": [
+      0.25,
+      0.75
+    ],
+    "blockedTerms": 421,
+    "neuronRates": {
+      "@cf/nvidia/nemotron-3-120b-a12b": {
+        "input": 45455,
+        "output": 136364
+      }
+    },
+    "pricingChecked": "2026-10-02",
+    "maxRunNeurons": 570
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32"
+  },
+  "requests": [
+    {
+      "state": "9-scholar",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 907.8082999999999,
+      "inputSha256": "255207eec8606fc025bfe918510b868ee390eef28aecd8a8628e56c22a2fba52",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a type of ship or vessel?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "hydrofoil",
+        "troopship"
+      ],
+      "no": [
+        "courtship",
+        "dubrovnik",
+        "hobgoblin",
+        "kropotkin",
+        "mongoloid",
+        "monotonic",
+        "nonprofit",
+        "oxycontin",
+        "portfolio",
+        "proboscis",
+        "prognosis",
+        "psychosis",
+        "psychotic",
+        "symphonic"
+      ],
+      "yesShare": 0.125,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 304,
+        "completion_tokens": 103,
+        "reasoning_tokens": null,
+        "neurons": 27.688000000000002
+      },
+      "estimatedNeurons": 27.863812,
+      "providerReportedNeurons": 27.688000000000002,
+      "reasoningChars": 0,
+      "visibleChars": 285,
+      "response": "{\"question\": \"Can your word mean a type of ship or vessel?\", \"yes\": [\"hydrofoil\", \"troopship\"], \"no\": [\"courtship\", \"dubrovnik\", \"hobgoblin\", \"kropotkin\", \"mongoloid\", \"monotonic\", \"nonprofit\", \"oxycontin\", \"portfolio\", \"proboscis\", \"prognosis\", \"psychosis\", \"psychotic\", \"symphonic\"]}"
+    },
+    {
+      "state": "9-scholar",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "sort",
+      "milliseconds": 726.1727000000001,
+      "inputSha256": "99e5290fe885d97d9d025c7833c81fb8e4049f8d321e27e2c345e5d76ddc9145",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "hobgoblin",
+        "mongoloid",
+        "nonprofit",
+        "psychotic"
+      ],
+      "no": [
+        "courtship",
+        "dubrovnik",
+        "hydrofoil",
+        "kropotkin",
+        "monotonic",
+        "oxycontin",
+        "portfolio",
+        "proboscis",
+        "prognosis",
+        "psychosis",
+        "symphonic",
+        "troopship"
+      ],
+      "yesShare": 0.25,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 225,
+        "completion_tokens": 88,
+        "reasoning_tokens": null,
+        "neurons": 22.093
+      },
+      "estimatedNeurons": 22.227407,
+      "providerReportedNeurons": 22.093,
+      "reasoningChars": 0,
+      "visibleChars": 225,
+      "response": "{\"yes\": [\"hobgoblin\", \"mongoloid\", \"nonprofit\", \"psychotic\"], \"no\": [\"courtship\", \"dubrovnik\", \"hydrofoil\", \"kropotkin\", \"monotonic\", \"oxycontin\", \"portfolio\", \"proboscis\", \"prognosis\", \"psychosis\", \"symphonic\", \"troopship\"]}"
+    },
+    {
+      "state": "10-apprentice",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 644.8696999999997,
+      "inputSha256": "fabcf9770c81cfe6ca64e87863bd3372144555c64ddcd73d24a127c7ae52abbb",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean something that cannot be changed or appeased?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "implacable"
+      ],
+      "no": [
+        "illustrate",
+        "immaculate",
+        "impassable",
+        "importance",
+        "improbable",
+        "inaccurate",
+        "inaugurate",
+        "inflatable",
+        "invaluable"
+      ],
+      "yesShare": 0.1,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 277,
+        "completion_tokens": 72,
+        "reasoning_tokens": null,
+        "neurons": 22.257
+      },
+      "estimatedNeurons": 22.409243,
+      "providerReportedNeurons": 22.257,
+      "reasoningChars": 0,
+      "visibleChars": 237,
+      "response": "{\"question\": \"Can your word mean something that cannot be changed or appeased?\", \"yes\": [\"implacable\"], \"no\": [\"illustrate\", \"immaculate\", \"impassable\", \"importance\", \"improbable\", \"inaccurate\", \"inaugurate\", \"inflatable\", \"invaluable\"]}"
+    },
+    {
+      "state": "10-apprentice",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "sort",
+      "milliseconds": 549.7037000000005,
+      "inputSha256": "f3b96a973dee8eeb0478394cd10f845ab2c0f1452622130279e6b9b854a73678",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "illustrate",
+        "immaculate",
+        "impassable",
+        "implacable",
+        "improbable",
+        "inaccurate",
+        "inaugurate",
+        "inflatable",
+        "invaluable"
+      ],
+      "no": [
+        "importance"
+      ],
+      "yesShare": 0.9,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 197,
+        "completion_tokens": 55,
+        "reasoning_tokens": null,
+        "neurons": 16.345
+      },
+      "estimatedNeurons": 16.454655,
+      "providerReportedNeurons": 16.345,
+      "reasoningChars": 0,
+      "visibleChars": 157,
+      "response": "{\"yes\": [\"illustrate\", \"immaculate\", \"impassable\", \"implacable\", \"improbable\", \"inaccurate\", \"inaugurate\", \"inflatable\", \"invaluable\"], \"no\": [\"importance\"]}"
+    }
+  ],
+  "finishedAt": "2026-10-02T23:38:41.840Z",
+  "budget": {
+    "day": "2026-10-02",
+    "requests": 315,
+    "reservedNeurons": 9509.180480965071,
+    "adjustment": "2026-10-02 23:27 UTC, owner decision: reservations for 7 requests with unknown usage (6 timeouts, 1 killed in flight) dropped, 909.0 neurons; owner dashboard showed 7.8k used before the Llama 3.3 70B run.",
+    "maxRequests": 1800,
+    "maxNeurons": 10000,
+    "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
+  },
+  "mappingSha256": "592fedbc5eba3dd4ebb2081cff715946e304f06dbe026ec5115e3e93806158ed",
+  "summary": {
+    "@cf/nvidia/nemotron-3-120b-a12b": {
+      "invent": {
+        "requests": 2,
+        "sent": 2,
+        "outcomes": {
+          "uneven": 2
+        },
+        "acceptedRate": 0,
+        "strictJsonRate": 1,
+        "validListsRate": 1,
+        "invalidRate": 0,
+        "split": {
+          "meanYesShare": 0.1125,
+          "meanDistanceFromHalf": 0.3875,
+          "inBand": 0,
+          "withValidLists": 2
+        },
+        "accuracy": {
+          "scoredRequests": 0,
+          "unmappedQuestions": 2,
+          "labelled": 0,
+          "correct": 0,
+          "falseYes": 0,
+          "falseNo": 0,
+          "wordnetYes": 0,
+          "wordnetNo": 0,
+          "accuracy": null,
+          "falseYesRate": null,
+          "falseNoRate": null,
+          "answerChecked": 0,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 644.8697,
+          "p95": 907.8083,
+          "max": 907.8083,
+          "within3s": 1,
+          "within5s": 1,
+          "within8s": 1,
+          "acceptedWithin3s": 0,
+          "acceptedWithin8s": 0
+        },
+        "tokens": {
+          "requestsWithUsage": 2,
+          "meanPrompt": 290.5,
+          "meanCompletion": 87.5,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 4,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 50.2731,
+          "estimatedPerRequest": 25.1365,
+          "providerReportedTotal": 49.945,
+          "requestsWithoutUsage": 0
+        },
+        "perState": []
+      },
+      "sort": {
+        "requests": 2,
+        "sent": 2,
+        "outcomes": {
+          "accepted": 1,
+          "uneven": 1
+        },
+        "acceptedRate": 0.5,
+        "strictJsonRate": 1,
+        "validListsRate": 1,
+        "invalidRate": 0,
+        "split": {
+          "meanYesShare": 0.575,
+          "meanDistanceFromHalf": 0.325,
+          "inBand": 1,
+          "withValidLists": 2
+        },
+        "accuracy": {
+          "scoredRequests": 2,
+          "unmappedQuestions": 0,
+          "labelled": 23,
+          "correct": 20,
+          "falseYes": 3,
+          "falseNo": 0,
+          "wordnetYes": 10,
+          "wordnetNo": 13,
+          "accuracy": 0.8696,
+          "falseYesRate": 0.2308,
+          "falseNoRate": 0,
+          "answerChecked": 2,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 549.7037,
+          "p95": 726.1727,
+          "max": 726.1727,
+          "within3s": 1,
+          "within5s": 1,
+          "within8s": 1,
+          "acceptedWithin3s": 0.5,
+          "acceptedWithin8s": 0.5
+        },
+        "tokens": {
+          "requestsWithUsage": 2,
+          "meanPrompt": 211,
+          "meanCompletion": 71.5,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 7.5,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 38.6821,
+          "estimatedPerRequest": 19.341,
+          "providerReportedTotal": 38.438,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "9-scholar",
+            "codes": [
+              "a"
+            ],
+            "labelled": 13,
+            "unlabelled": 3,
+            "correct": 12,
+            "falseYes": 1,
+            "falseNo": 0,
+            "wordnetYes": 3,
+            "wordnetNo": 10,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": [
+              "+nonprofit"
+            ]
+          },
+          {
+            "state": "10-apprentice",
+            "codes": [
+              "O"
+            ],
+            "labelled": 10,
+            "unlabelled": 0,
+            "correct": 8,
+            "falseYes": 2,
+            "falseNo": 0,
+            "wordnetYes": 7,
+            "wordnetNo": 3,
+            "answer": {
+              "wordnet": true,
+              "said": true,
+              "misfiled": false
+            },
+            "disagreements": [
+              "+illustrate",
+              "+inaugurate"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
