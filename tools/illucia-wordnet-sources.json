@@ -1,0 +1,16 @@
+{
+  "oewn": {
+    "release": "2025-edition",
+    "commit": "dc343f2683279ecbb13fab4e2fd778d7b162d287",
+    "url": "https://github.com/globalwordnet/english-wordnet/releases/download/2025-edition/english-wordnet-2025.xml.gz",
+    "sha256": "9ca6d1dcb75f822fdd66617f7d9da48142ace38dd544d6ad5e2feca1674ad3fe"
+  },
+  "oewn_license": {
+    "url": "https://raw.githubusercontent.com/globalwordnet/english-wordnet/dc343f2683279ecbb13fab4e2fd778d7b162d287/LICENSE.md",
+    "sha256": "672cc8b5663e8dc74c4b07a9dcf477193853575b119908fd3dc0aeeb60a9dbbb"
+  },
+  "wordnet_license": {
+    "url": "https://raw.githubusercontent.com/globalwordnet/english-wordnet/dc343f2683279ecbb13fab4e2fd778d7b162d287/WNDB_License.txt",
+    "sha256": "df30ec18fbabcdaf031b79ea026d3e6b959010cffe6dd7be9ac137822175b904"
+  }
+}

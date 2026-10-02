@@ -1,0 +1,26 @@
+{
+  "exclude": [
+    {"synset": "oewn-05529165-n", "lemma": "slit", "reason": "obscene terms for female genitals; would make 'slit' and 'puss' a part of the body"},
+    {"synset": "oewn-05534354-n", "lemma": "tool", "reason": "obscene terms for penis; would make 'tool' and 'prick' a part of the body"},
+    {"synset": "oewn-09834593-n", "lemma": "prick", "reason": "insulting obscene terms of address; would make 'prick' a person"},
+    {"synset": "oewn-14878732-n", "lemma": "turd", "reason": "obscene terms for feces; would make 'turd' and 'poop' a substance"},
+    {"synset": "oewn-09662401-n", "lemma": "whitey", "reason": "offensive name for a White man"},
+    {"synset": "oewn-09663914-n", "lemma": "coolie", "reason": "ethnic slur for an Asian laborer"},
+    {"synset": "oewn-09700053-n", "lemma": "papist", "reason": "offensive term for Roman Catholics"},
+    {"synset": "oewn-09701518-n", "lemma": "sheeny", "reason": "ethnic slur for a Jew"},
+    {"synset": "oewn-09722969-n", "lemma": "pommy", "reason": "disparaging term for a British person"},
+    {"synset": "oewn-09734917-n", "lemma": "Paddy", "reason": "ethnic slur for a person of Irish descent; would make 'paddy', 'mick' and 'mickey' a person"},
+    {"synset": "oewn-09735835-n", "lemma": "greaseball", "reason": "ethnic slur for a person of Italian descent; would make 'guinea' a person"},
+    {"synset": "oewn-09742312-n", "lemma": "taco", "reason": "ethnic slur for a person of Mexican descent; would make 'taco' and 'greaser' a person"},
+    {"synset": "oewn-09767570-n", "lemma": "Jerry", "reason": "offensive term for a person of German descent; would make 'jerry' and 'boche' a person"},
+    {"synset": "oewn-09903399-n", "lemma": "butch", "reason": "offensive term for a lesbian; would make 'butch', 'dike' and 'dyke' a person"},
+    {"synset": "oewn-10095821-n", "lemma": "queer", "reason": "offensive term for a homosexual man; would make 'queer', 'nance' and 'pouf' a person"},
+    {"synset": "oewn-10166641-n", "lemma": "gringo", "reason": "disparaging term for foreigners"},
+    {"synset": "oewn-10315258-n", "lemma": "Marrano", "reason": "disparaging term for a converted Jew"},
+    {"synset": "oewn-10350152-n", "lemma": "Moonie", "reason": "derogatory term for a member of a religious group"},
+    {"synset": "oewn-10451094-n", "lemma": "piccaninny", "reason": "ethnic slur for a Black child"},
+    {"synset": "oewn-10608651-n", "lemma": "shiksa", "reason": "derogatory term for a non-Jewish woman"},
+    {"synset": "oewn-81621166-n", "lemma": "paleface", "reason": "derogatory term for a white person"},
+    {"synset": "oewn-85871156-n", "lemma": "Chinaman", "reason": "ethnic slur for a man of Chinese descent"}
+  ]
+}
