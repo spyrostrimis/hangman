@@ -4,6 +4,8 @@ import {
   ROUND_TOO_EARLY, illuciaStumpPoints,
 } from '../../shared/scoring-protocol.js';
 import { illuciaWordSize } from './illucia-words';
+
+const ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
 import { ROUND_LIFETIME_MS } from './rounds';
 
 export type IlluciaTier = 'apprentice' | 'scholar' | 'master';
@@ -45,10 +47,41 @@ export function climb(row: LadderRow, seq: number, tier: IlluciaTier, length: nu
   return view.rung === 2 ? { ...reset, bonus: ILLUCIA_LADDER_BONUS } : { rung: 2, length, seq, bonus: 0 };
 }
 
+type PlayedWord = { word: string; plays: number };
+type MemoryInput = {
+  word: string; counted: boolean; personalitySeed: number;
+  history: PlayedWord[]; learned: string[]; everyone: number;
+};
+
+// What her memory holds for this round. `brain` may reach her guessing, so it is
+// history only: the current round is taken out, and nothing in it depends on the
+// secret word beyond its length. `voice` is for her lines and may know the word.
+export function roundMemory({ word, counted, personalitySeed, history, learned, everyone }: MemoryInput) {
+  const current = counted ? 1 : 0;
+  const before = history
+    .map(entry => entry.word === word ? { word: entry.word, plays: entry.plays - current } : entry)
+    .filter(entry => entry.plays > 0);
+  const letters = Object.fromEntries([...ALPHABET].map(letter => [letter, 0]));
+  let games = 0;
+  for (const { word: played, plays } of before) {
+    games += plays;
+    for (const letter of new Set(played)) letters[letter] += plays;
+  }
+  return {
+    brain: { personalitySeed, games, letters, learned },
+    voice: {
+      plays: before.find(entry => entry.word === word)?.plays ?? 0,
+      beatenBefore: learned.includes(word),
+      everyone: Math.max(0, everyone - current),
+    },
+  };
+}
+
 type StartInput = { word: string; tier: IlluciaTier; experimental: boolean; previousRoundId: string | null };
 type OpenRound = {
   roundId: string; word: string; tier: IlluciaTier; seed: number; experimental: 0 | 1;
   issuedAt: number; expiresAt: number; paidPoints: number | null; seq: number;
+  counted: 0 | 1; personality_seed: number;
 } & LadderRow;
 
 export async function startIlluciaRound(db: D1Database, userId: string, { word, tier, experimental, previousRoundId }: StartInput) {
@@ -83,15 +116,26 @@ export async function startIlluciaRound(db: D1Database, userId: string, { word, 
       ON CONFLICT(user_id, tier) DO UPDATE SET games = games + 1`).bind(userId, tier, ticketId),
     db.prepare(`SELECT id AS roundId, word, tier, seed, experimental, issued_at AS issuedAt, expires_at AS expiresAt, seq,
         (SELECT points FROM illucia_beaten_words WHERE user_id = illucia_rounds.user_id AND word = illucia_rounds.word) AS paidPoints,
-        ladder_rung, ladder_length, ladder_seq
+        ladder_rung, ladder_length, ladder_seq, counted, personality_seed
       FROM illucia_rounds JOIN illucia_players USING (user_id) WHERE user_id = ? AND claimed_at IS NULL`).bind(userId),
+    // Read in the same batch, so the history matches the counting above.
+    db.prepare('SELECT word, plays FROM illucia_player_words WHERE user_id = ?').bind(userId),
+    db.prepare('SELECT word FROM illucia_beaten_words WHERE user_id = ? AND length(word) = ? ORDER BY word').bind(userId, word.length),
+    db.prepare('SELECT count FROM word_counts WHERE word = ?').bind(word),
   ]);
   const round = results[7].results[0] as OpenRound;
+  const memory = roundMemory({
+    word: round.word, counted: round.counted === 1, personalitySeed: round.personality_seed,
+    history: results[8].results as PlayedWord[],
+    learned: (results[9].results as { word: string }[]).map(row => row.word),
+    everyone: (results[10].results[0] as { count: number } | undefined)?.count ?? 0,
+  });
   return {
     roundId: round.roundId, word: round.word, tier: round.tier, experimental: round.experimental === 1, seed: round.seed,
     issuedAt: round.issuedAt, expiresAt: round.expiresAt, serverNow: Date.now(),
     points: previewPoints(round.word, round.tier, round.experimental === 1, round.paidPoints),
     ladder: ladderFor(round, round.seq),
+    memory,
   };
 }
 

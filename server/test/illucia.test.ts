@@ -477,6 +477,56 @@ describe('Illucia memory: counting', () => {
   });
 });
 
+describe('Illucia memory: brain and voice', () => {
+  type Memory = { brain: { personalitySeed: number; games: number; letters: Record<string, number>; learned: string[] };
+    voice: { plays: number; beatenBefore: boolean; everyone: number } };
+  const memoryOf = (ticket: unknown) => (ticket as { memory: Memory }).memory;
+  const letters = (counts: Record<string, number>) => Object.fromEntries([...'abcdefghijklmnopqrstuvwxyz'].map(letter => [letter, counts[letter] ?? 0]));
+  // The same history on any account: beat her with jazz (4) and crane (5), then set fizz and leave it.
+  async function history(cookie: string) {
+    await won(cookie, { word: 'jazz', tier: 'master' });
+    await won(cookie, { word: 'crane', tier: 'master' });
+    await start(cookie, { word: 'fizz', tier: 'apprentice' });
+  }
+  const HISTORY_LETTERS = letters({ j: 1, a: 2, z: 2, c: 1, r: 1, n: 1, e: 1, f: 1, i: 1 });
+
+  it('gives her identical brain data for two different same-length words from the same history', async () => {
+    const one = await signup(); const two = await signup('Other');
+    await history(one.cookie); await history(two.cookie);
+    await env.DB.prepare('UPDATE illucia_players SET personality_seed = (SELECT personality_seed FROM illucia_players WHERE user_id = ?) WHERE user_id = ?')
+      .bind(one.id, two.id).run();
+    const jazz = memoryOf(await start(one.cookie, { word: 'jazz', tier: 'master' }));
+    const lynx = memoryOf(await start(two.cookie, { word: 'lynx', tier: 'master' }));
+    expect(jazz.brain).toEqual(lynx.brain);
+    expect(jazz.brain).toEqual({ personalitySeed: expect.any(Number), games: 3, letters: HISTORY_LETTERS, learned: ['jazz'] });
+    // Positive control: the voice data does know which word is in play.
+    expect(jazz.voice).toEqual({ plays: 1, beatenBefore: true, everyone: 2 });
+    expect(lynx.voice).toEqual({ plays: 0, beatenBefore: false, everyone: 0 });
+    expect(jazz.voice).not.toEqual(lynx.voice);
+  });
+
+  it('keeps the current round out of her history on resume, sends learned words of this length only, and counts nothing for experimental rounds', async () => {
+    const { cookie } = await signup();
+    await history(cookie);
+    const first = memoryOf(await start(cookie, { word: 'lynx', tier: 'scholar' }));
+    expect(memoryOf(await start(cookie, { word: 'lynx', tier: 'scholar' }))).toEqual(first);
+    expect(first.brain).toMatchObject({ games: 3, letters: HISTORY_LETTERS, learned: ['jazz'] });
+    expect(memoryOf(await start(cookie, { word: 'zebra', tier: 'scholar' })).brain)
+      .toMatchObject({ games: 4, letters: letters({ j: 1, a: 2, z: 2, c: 1, r: 1, n: 2, e: 1, f: 1, i: 1, l: 1, y: 1, x: 1 }), learned: ['crane'] });
+    // An experimental round is not counted, so there is nothing to take out: its history is the full one.
+    const experimental = memoryOf(await start(cookie, { word: 'crane', tier: 'master', experimental: true }));
+    expect(experimental.brain.games).toBe(5);
+    expect(experimental.voice).toEqual({ plays: 1, beatenBefore: true, everyone: 1 });
+  });
+
+  it('keeps the personality seed stable for an account across rounds', async () => {
+    const { cookie } = await signup();
+    const seeds = [];
+    for (const word of ['jazz', 'crane', 'lynx']) seeds.push(memoryOf(await start(cookie, { word, tier: 'master' })).brain.personalitySeed);
+    expect(new Set(seeds).size).toBe(1);
+  });
+});
+
 describe('Illucia data and accounts', () => {
   const remove = (cookie: string) => request('delete-account', { cookie, body: { credential: 'cd'.repeat(32) } });
   const rows = async (table: string) => (await env.DB.prepare(`SELECT user_id FROM ${table} ORDER BY user_id`).all()).results.map(row => row.user_id);
