@@ -3,7 +3,7 @@ import test from 'node:test';
 import { createRound, applyGuess } from '../client/src/lib/hangman-core.js';
 import { toPublicState } from '../client/src/lib/illucia/public-state.js';
 import { createKnowledge, parseLexicon } from '../client/src/lib/illucia/lexicon.js';
-import { modelInput, parseModelLetter, MODELS, createCloudflareTransport, BenchmarkStop } from './lib/illucia-model.js';
+import { modelInput, parseModelLetter, MODELS, QUESTION_MODELS, neuronEstimate, createCloudflareTransport, BenchmarkStop } from './lib/illucia-model.js';
 import { pilotSample, playModel, summarizeModels, budgetedRequest, benchmarkModels } from './benchmark-illucia-models.js';
 
 // Tiny 3-letter fixtures bypass the word-file parser, whose contract is lengths 4-15.
@@ -183,4 +183,22 @@ test('end-to-end stop checkpoints partial evidence and a matched baseline, never
   assert.equal(checkpoints[0].status, 'running');
   assert.equal(checkpoints.at(-1).status, 'stopped');
   assert.ok(checkpoints.at(-1).finishedAt);
+});
+
+test('D1 question models are priced and reachable, but the I7a runner still allows only its own two', async () => {
+  const qwen = '@cf/qwen/qwen3-30b-a3b-fp8';
+  assert.deepEqual(Object.keys(MODELS), ['@cf/meta/llama-3.2-3b-instruct', '@cf/meta/llama-3.1-8b-instruct-fp8-fast']);
+  assert.equal(Object.keys(QUESTION_MODELS).length, 4);
+  assert.ok(Math.abs(neuronEstimate('@cf/zai-org/glm-4.7-flash', { prompt_tokens: 1000, completion_tokens: 1000 }) - (5500 + 36400) / 1000) < 1e-9);
+  assert.throws(() => neuronEstimate('@cf/meta/llama-3.3-70b-instruct-fp8-fast', { prompt_tokens: 1, completion_tokens: 1 }), /allowlist/);
+  await assert.rejects(benchmarkModels({ count: 1, models: [qwen], request: async () => assert.fail() }), /Invalid models/);
+  const seen = [];
+  const request = createCloudflareTransport({ accountId: 'a'.repeat(32), token: 'secret-test-token',
+    normalize: value => { seen.push(value); return { response: 'custom' }; },
+    fetchImpl: async url => {
+      assert.ok(url.endsWith(`/ai/run/${qwen}`));
+      return { ok: true, json: async () => ({ success: true, result: { choices: [] } }) };
+    } });
+  assert.deepEqual(await request(qwen, modelInput(toPublicState(createRound('cat')))), { response: 'custom' });
+  assert.deepEqual(seen, [{ choices: [] }]);
 });

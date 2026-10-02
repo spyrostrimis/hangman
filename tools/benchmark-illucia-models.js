@@ -236,39 +236,60 @@ async function main() {
   if ((options.mode && options.mode !== 'direct' || options.sampleKind) && !args.includes('--output')) throw new Error('Experiments require a separate explicit output path.');
   if (live && (!freePlan || !args.includes('--output'))) throw new Error('Live runs require --free-plan and an explicit --output. Use only a Workers Free account.');
   options.checkpoint = report => atomicJson(output, report);
-  let lock;
-  const lockPath = resolve(ROOT, 'tools/output/illucia-i7a.lock');
+  let session;
   try {
     if (live) {
       options.models = options.models.length ? options.models : Object.keys(MODELS);
       if (options.models.some(m => !Object.hasOwn(MODELS, m))) throw new Error('Model is not allowlisted.');
-      let token = process.env.CLOUDFLARE_API_TOKEN;
-      if (wrangler) {
-        try {
-          const { stdout } = await promisify(execFile)(process.execPath,
-            [resolve(ROOT, 'server/node_modules/wrangler/bin/wrangler.js'), 'auth', 'token', '--json'],
-            { cwd: resolve(ROOT, 'server'), windowsHide: true, timeout: 30000, maxBuffer: 65536 });
-          token = JSON.parse(stdout).token;
-        } catch { throw new Error('Could not obtain Wrangler credentials. Run wrangler login separately.'); }
-      }
-      const transport = createCloudflareTransport({ accountId: process.env.CLOUDFLARE_ACCOUNT_ID, token });
-      await mkdir(dirname(lockPath), { recursive: true });
-      lock = await open(lockPath, 'wx');
-      const day = new Date().toISOString().slice(0, 10);
-      const ledgerPath = resolve(ROOT, `tools/output/illucia-i7a-budget-${day}.json`);
-      let ledger = { day, requests: 0, reservedNeurons: 0 };
-      try { ledger = JSON.parse(await readFile(ledgerPath, 'utf8')); } catch (e) { if (e.code !== 'ENOENT') throw e; }
-      if (ledger.day !== day || !Number.isInteger(ledger.requests) || ledger.requests < 0 ||
-          !Number.isFinite(ledger.reservedNeurons) || ledger.reservedNeurons < 0) throw new Error('Invalid budget ledger.');
-      options.request = budgetedRequest(transport, ledger, value => atomicJson(ledgerPath, value));
-      options.checkpoint = report => atomicJson(output, { ...report, budget: { ...ledger, maxRequests: 1800, maxNeurons: 6000,
-        scope: 'local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons' } });
+      session = await openLiveSession({ wrangler });
+      options.request = session.request;
+      options.checkpoint = report => atomicJson(output, { ...report, budget: session.budget() });
     }
     const report = await benchmarkModels(options);
     console.log(`Report: ${output} (${report.status})`);
     if (report.status === 'stopped') process.exitCode = 2;
   } finally {
-    if (lock) { await lock.close(); await unlink(lockPath); }
+    await session?.close();
+  }
+}
+
+export const DAILY_MAX_REQUESTS = 1800;
+export const DAILY_MAX_NEURONS = 6000;
+
+// The live-run setup shared by I7a and D1: credentials held in memory only, the exclusive
+// local lock, and the dated daily ledger with its budgeted request wrapper.
+export async function openLiveSession({ wrangler = false, transportOptions = {} } = {}) {
+  let token = process.env.CLOUDFLARE_API_TOKEN;
+  if (wrangler) {
+    try {
+      const { stdout } = await promisify(execFile)(process.execPath,
+        [resolve(ROOT, 'server/node_modules/wrangler/bin/wrangler.js'), 'auth', 'token', '--json'],
+        { cwd: resolve(ROOT, 'server'), windowsHide: true, timeout: 30000, maxBuffer: 65536 });
+      token = JSON.parse(stdout).token;
+    } catch { throw new Error('Could not obtain Wrangler credentials. Run wrangler login separately.'); }
+  }
+  const transport = createCloudflareTransport({ accountId: process.env.CLOUDFLARE_ACCOUNT_ID, token, ...transportOptions });
+  const lockPath = resolve(ROOT, 'tools/output/illucia-i7a.lock');
+  await mkdir(dirname(lockPath), { recursive: true });
+  const lock = await open(lockPath, 'wx');
+  const close = async () => { await lock.close(); await unlink(lockPath); };
+  try {
+    const day = new Date().toISOString().slice(0, 10);
+    const ledgerPath = resolve(ROOT, `tools/output/illucia-i7a-budget-${day}.json`);
+    let ledger = { day, requests: 0, reservedNeurons: 0 };
+    try { ledger = JSON.parse(await readFile(ledgerPath, 'utf8')); } catch (e) { if (e.code !== 'ENOENT') throw e; }
+    if (ledger.day !== day || !Number.isInteger(ledger.requests) || ledger.requests < 0 ||
+        !Number.isFinite(ledger.reservedNeurons) || ledger.reservedNeurons < 0) throw new Error('Invalid budget ledger.');
+    return {
+      request: budgetedRequest(transport, ledger, value => atomicJson(ledgerPath, value),
+        { maxRequests: DAILY_MAX_REQUESTS, maxNeurons: DAILY_MAX_NEURONS }),
+      budget: () => ({ ...ledger, maxRequests: DAILY_MAX_REQUESTS, maxNeurons: DAILY_MAX_NEURONS,
+        scope: 'local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons' }),
+      close,
+    };
+  } catch (error) {
+    await close();
+    throw error;
   }
 }
 
