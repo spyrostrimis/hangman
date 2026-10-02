@@ -147,7 +147,7 @@ describe('Illucia round start', () => {
 
 // Six letters that are in none of the fixture words below, so they are her six misses.
 const LOSS = [...'dgkopq'];
-const mature = (roundId: string) => env.DB.prepare('UPDATE illucia_rounds SET issued_at = ? WHERE id = ?').bind(Date.now() - 12000, roundId).run();
+const mature = (roundId: string) => env.DB.prepare('UPDATE illucia_rounds SET issued_at = ? WHERE id = ?').bind(Date.now() - 15000, roundId).run();
 const claim = (cookie: string, roundId: string, extra: object = {}) =>
   request('illucia/claim', { cookie, body: { roundId, guesses: LOSS, ...extra } });
 const total = async (id: string) => env.DB.prepare('SELECT total FROM scores WHERE user_id = ?').bind(id).first('total');
@@ -164,17 +164,17 @@ async function won(cookie: string, body: object, extra: object = {}) {
 }
 
 describe('Illucia claims', () => {
-  it('rejects at 11,999 ms without consuming or awarding, then accepts the same ticket at 12,000 ms', async () => {
+  it('rejects at 14,999 ms without consuming or awarding, then accepts the same ticket at 15,000 ms', async () => {
     const { cookie, id } = await signup();
     const ticket = await start(cookie);
-    const clock = vi.spyOn(Date, 'now').mockReturnValue(ticket.issuedAt + 11999);
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(ticket.issuedAt + 14999);
     const early = await claim(cookie, ticket.roundId);
     expect(early.status).toBe(409);
     expect(await early.json()).toMatchObject({ code: 'ROUND_TOO_EARLY', retryAfterMs: 1 });
     expect(await env.DB.prepare('SELECT claimed_at FROM illucia_rounds WHERE id = ?').bind(ticket.roundId).first('claimed_at')).toBeNull();
     expect(await total(id)).toBe(0);
     expect(await beaten(id)).toEqual([]);
-    clock.mockReturnValue(ticket.issuedAt + 12000);
+    clock.mockReturnValue(ticket.issuedAt + 15000);
     expect(bare(await (await claim(cookie, ticket.roundId)).json())).toEqual({ score: 50, awarded: { stump: 50, ladder: 0 } });
   });
 
@@ -210,8 +210,8 @@ describe('Illucia claims', () => {
   it('pays tier base × min(length − 3, 3) and multiplies it for one or two answered questions', async () => {
     const { cookie, id } = await signup();
     const cases: [object, number, number][] = [
-      [{ word: 'jazz', tier: 'master' }, 0, 50], [{ word: 'crane', tier: 'master' }, 1, 125], [{ word: 'abacas', tier: 'master' }, 2, 225],
-      [{ word: 'lynx', tier: 'scholar' }, 1, 50], [{ word: 'rhythm', tier: 'apprentice' }, 0, 90], [{ word: 'fizz', tier: 'apprentice' }, 1, 38],
+      [{ word: 'jazz', tier: 'master' }, 0, 50], [{ word: 'crane', tier: 'master' }, 1, 150], [{ word: 'abacas', tier: 'master' }, 2, 300],
+      [{ word: 'lynx', tier: 'scholar' }, 1, 60], [{ word: 'rhythm', tier: 'apprentice' }, 0, 90], [{ word: 'fizz', tier: 'apprentice' }, 1, 45],
     ];
     let expected = 0;
     for (const [body, answeredQuestions, stump] of cases) {
@@ -220,7 +220,7 @@ describe('Illucia claims', () => {
     }
     expect(await total(id)).toBe(expected);
     expect((await beaten(id)).map(row => [row.word, row.points])).toEqual(
-      [['abacas', 225], ['crane', 125], ['fizz', 38], ['jazz', 50], ['lynx', 50], ['rhythm', 90]]);
+      [['abacas', 300], ['crane', 150], ['fizz', 45], ['jazz', 50], ['lynx', 60], ['rhythm', 90]]);
   });
 
   it('pays a word once at any tier; an out-of-tier win pays nothing and leaves the word unspent', async () => {
@@ -257,11 +257,11 @@ describe('Illucia claims', () => {
     const ticket = await start(cookie, { word: 'crane', tier: 'master' });
     await mature(ticket.roundId);
     const responses = await Promise.all(Array.from({ length: 5 }, () => claim(cookie, ticket.roundId, { answeredQuestions: 1 })));
-    for (const response of responses) expect(bare(await response.json())).toEqual({ score: 125, awarded: { stump: 125, ladder: 0 } });
+    for (const response of responses) expect(bare(await response.json())).toEqual({ score: 150, awarded: { stump: 150, ladder: 0 } });
     const next = await start(cookie, { word: 'jazz', tier: 'master' });
     expect(next.roundId).not.toBe(ticket.roundId);
-    expect(bare(await (await claim(cookie, ticket.roundId, { answeredQuestions: 2 })).json())).toEqual({ score: 125, awarded: { stump: 125, ladder: 0 } });
-    expect(await total(id)).toBe(125);
+    expect(bare(await (await claim(cookie, ticket.roundId, { answeredQuestions: 2 })).json())).toEqual({ score: 150, awarded: { stump: 150, ladder: 0 } });
+    expect(await total(id)).toBe(150);
     // The Hangman ticket is untouched by Illucia claims.
     expect((await request('round/start', { cookie })).status).toBe(200);
   });

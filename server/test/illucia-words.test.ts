@@ -70,13 +70,13 @@ describe('Illucia points', () => {
       .toEqual(VOCABULARY_TIERS.map(({ id, maxSize }) => ({ id, maxSize })));
   });
 
-  it('pays tier base × min(length − 3, 3), multiplied by 1.25 or 1.5 for answered questions', () => {
+  it('pays tier base × min(length − 3, 3), multiplied by 1.5 or 2 for answered questions', () => {
     const table = Object.fromEntries(ILLUCIA_TIERS.map(({ id }) =>
       [id, [4, 5, 6, 15].map(length => [0, 1, 2].map(questions => illuciaStumpPoints(id, length, questions)))]));
     expect(table).toEqual({
-      apprentice: [[30, 38, 45], [60, 75, 90], [90, 113, 135], [90, 113, 135]],
-      scholar: [[40, 50, 60], [80, 100, 120], [120, 150, 180], [120, 150, 180]],
-      master: [[50, 63, 75], [100, 125, 150], [150, 188, 225], [150, 188, 225]],
+      apprentice: [[30, 45, 60], [60, 90, 120], [90, 135, 180], [90, 135, 180]],
+      scholar: [[40, 60, 80], [80, 120, 160], [120, 180, 240], [120, 180, 240]],
+      master: [[50, 75, 100], [100, 150, 200], [150, 225, 300], [150, 225, 300]],
     });
   });
 

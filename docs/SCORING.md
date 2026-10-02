@@ -17,9 +17,11 @@ What a script can earn at most, measured over half-open 60-second windows:
 | Mode | Awards per minute | Most points per award | Points per minute |
 | --- | --- | --- | --- |
 | Hangman | 12 (5 s floor) | 100 | 1,200 |
-| Illucia | 5 (12 s floor) | 225: Master, 6+ letters, two answered questions; +100 when it completes a ladder | 1,225 |
+| Illucia | 4 (15 s floor) | 300: Master, 6+ letters, two answered questions; +100 when it completes a ladder | 1,300 |
 
-The Illucia figure is exact, found by trying every tier sequence: a window can hold at most one ladder bonus on top of five 225-point awards (a ladder needs Apprentice and Scholar wins, worth at most 135 and 180, before its Master win). Each mode has its own outstanding ticket, so one account can farm both at once: 2,425 points per minute. Multiple accounts can each earn up to this rate.
+The Illucia figure is exact, found by trying every tier sequence: a window can hold at most one ladder bonus on top of four 300-point awards (a ladder needs Apprentice and Scholar wins, worth at most 180 and 240, before its Master win). Each mode has its own outstanding ticket, so one account can farm both at once: 2,500 points per minute. Multiple accounts can each earn up to this rate.
+
+These Illucia values (C3: ×1.5/×2 question multipliers, 15 s floor) are committed but **not yet deployed**; until the Worker is redeployed, production runs the C1 values (×1.25/×1.5, 12 s floor, ceiling 1,225).
 
 CAPTCHAs, email verification, daily award caps, per-guess server adjudication and moderation are not implemented. They would add friction, operating work or architectural complexity without proving honest play. Reconsider if actual abuse or stakes justify them. The Hall of Fame remains unsuitable as a trusted competition ranking. Existing totals, including unverified awards from the original endpoint, are preserved.
 
@@ -52,9 +54,9 @@ Illucia (Play vs AI) reverses the roles: the player sets the word and she guesse
 
 **Protocol.** `POST /user/illucia/start` with `{word, tier, experimental?, previousRoundId?}` commits the player's word before play. The Worker checks it against the same per-length word files the browser loads (lengths 4–15) and returns `{roundId, word, tier, experimental, seed, issuedAt, expiresAt, serverNow, points}`, or 400 `NOT_ACCEPTED_WORD`. `seed` is a fresh 32-bit integer for her per-round randomness. `points` previews the stump points before questions, or why there are none, and `ladder` is `{rung, next, minLength}` for this round. Each account has one open Illucia ticket, separate from its Hangman ticket. The same word, tier and mode resumes it; any other start, or naming it as `previousRoundId`, abandons it. Like Hangman, no ticket is issued before the account's last Illucia award, tickets expire after 30 minutes, and the hourly sweep removes them 24 hours after claim or expiry.
 
-A win sends `POST /user/illucia/claim` with `{roundId, guesses, answeredQuestions?}`. The Worker rules-checks the guesses against the committed word: 6–26 unique lowercase letters, the sixth miss on the last guess, the word never solved. It **does not replay her choices**; which letters she picked, and whether she asked or the player answered questions, are client-reported. A claim is accepted from `issued_at + 12,000 ms`; earlier claims get 409 `ROUND_TOO_EARLY` with `retryAfterMs`, without consumption. Consumption, the beaten-word record and the score increment are one nonce-guarded D1 batch, as for Hangman. A successful claim or retry returns `{score, awarded: {stump, ladder}, reason?, ladder}`; the award is stored on the ticket, and `ladder` is the rung the next new round would find.
+A win sends `POST /user/illucia/claim` with `{roundId, guesses, answeredQuestions?}`. The Worker rules-checks the guesses against the committed word: 6–26 unique lowercase letters, the sixth miss on the last guess, the word never solved. It **does not replay her choices**; which letters she picked, and whether she asked or the player answered questions, are client-reported. A claim is accepted from `issued_at + 15,000 ms`; earlier claims get 409 `ROUND_TOO_EARLY` with `retryAfterMs`, without consumption. Consumption, the beaten-word record and the score increment are one nonce-guarded D1 batch, as for Hangman. A successful claim or retry returns `{score, awarded: {stump, ladder}, reason?, ladder}`; the award is stored on the ticket, and `ladder` is the rung the next new round would find.
 
-**Points** (`shared/scoring-protocol.js`). Stump points = tier base × min(length − 3, 3), with Apprentice 30, Scholar 40, Master 50. One answered question multiplies them by 1.25, two by 1.5, rounded half up. A win pays no stump points, with a `reason`, when:
+**Points** (`shared/scoring-protocol.js`). Stump points = tier base × min(length − 3, 3), with Apprentice 30, Scholar 40, Master 50. One answered question multiplies them by 1.5, two by 2 (C3; production still uses 1.25 and 1.5 until redeployed). A win pays no stump points, with a `reason`, when:
 
 - the round is experimental (`EXPERIMENTAL`);
 - the word is outside that tier's vocabulary, i.e. ESDB size above 35 for Apprentice or 50 for Scholar (`OUTSIDE_TIER`); Master knows every accepted word;
@@ -62,9 +64,9 @@ A win sends `POST /user/illucia/claim` with `{roundId, guesses, answeredQuestion
 
 | Stump points (0 / 1 / 2 answered questions) | 4 letters | 5 letters | 6+ letters |
 | --- | --- | --- | --- |
-| Apprentice | 30 / 38 / 45 | 60 / 75 / 90 | 90 / 113 / 135 |
-| Scholar | 40 / 50 / 60 | 80 / 100 / 120 | 120 / 150 / 180 |
-| Master | 50 / 63 / 75 | 100 / 125 / 150 | 150 / 188 / 225 |
+| Apprentice | 30 / 45 / 60 | 60 / 90 / 120 | 90 / 135 / 180 |
+| Scholar | 40 / 60 / 80 | 80 / 120 / 160 | 120 / 180 / 240 |
+| Master | 50 / 75 / 100 | 100 / 150 / 200 | 150 / 225 / 300 |
 
 **Ladder.** Win Apprentice, then Scholar, then Master in consecutive Illucia rounds, each word at least one letter longer than the last, and the Master win pays +100 (not multiplied by questions). Only wins that pay stump points climb; any other win resets the ladder: experimental rounds, out-of-tier words, spent words, wrong tier order, or a word that is not longer. An Apprentice win always starts a new ladder. Each new ticket takes the next per-account round number, and the ladder stays alive only for the round right after its last step, so a loss, an abandoned or expired round, or any other round in between resets it without any extra request. The claim computes the ladder from a read and consumes the ticket only if that ladder state still holds.
 
@@ -76,7 +78,7 @@ The start response carries `memory.brain` and `memory.voice`. `brain` is the onl
 
 `GET /user/illucia/stats` returns the player's own games, wins and lost-or-abandoned (games − wins; losses send no request) overall and per tier, the learned-word total with the 100 most recent, and play counts by length and letter. A round still in play is left out until it is claimed or expires.
 
-**Limits.** A modified client can claim any accepted, unspent word with six invented misses. The bounds are the tier vocabulary, once-per-word, the 12 s floor and one open ticket (see the ceiling table above). A question about a word WordNet does not know earns no multiplier; that rule is enforced by the client only.
+**Limits.** A modified client can claim any accepted, unspent word with six invented misses. The bounds are the tier vocabulary, once-per-word, the 15 s floor and one open ticket (see the ceiling table above). A question about a word WordNet does not know earns no multiplier; that rule is enforced by the client only.
 
 ## Release and verification
 
