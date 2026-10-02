@@ -74,7 +74,7 @@ test('count uses word presence, not letter occurrences, and alphabetic ties', ()
   const state = toPublicState(createRound('aaa'));
   assert.equal(chooseLetter(state, knowledge), 'b');
   assert.deepEqual(analyzeDecision(state, knowledge),
-    { letter: 'b', candidateCount: 3, hitCount: 2, weightedHits: 20, candidateWeight: 30 });
+    { letter: 'b', candidateCount: 3, hitCount: 2, weightedHits: 20, candidateWeight: 30, share: 6666, tiedWith: ['c'] });
   assert.equal(chooseLetter(toPublicState(roundAfter('bcd', 'b')), knowledge), 'c');
 });
 
@@ -262,7 +262,7 @@ test('weighted candidates: one common word outweighs a few rare ones', () => {
   const master = createKnowledge(entriesOf('aaxx 35\nbbxx 70\nbcxx 70\nbdxx 70\nbexx 70\nbfxx 70\nbgxx 70\nbhxx 70\nbixx 70\nbjxx 70'), 70);
   // 9 rare B words weigh 9; the one common A word weighs 10.
   assert.deepEqual(analyzeDecision(state, master),
-    { letter: 'a', candidateCount: 10, hitCount: 1, weightedHits: 10, candidateWeight: 19 });
+    { letter: 'a', candidateCount: 10, hitCount: 1, weightedHits: 10, candidateWeight: 19, share: 5263, tiedWith: [] });
   // Positive control: with every word at one level, plain counting picks B (9 words to 1).
   const flat = createKnowledge(entriesOf('aaxx 35\nbbxx 35\nbcxx 35\nbdxx 35\nbexx 35\nbfxx 35\nbgxx 35\nbhxx 35\nbixx 35\nbjxx 35'), 35);
   assert.equal(analyzeDecision(state, flat).letter, 'b');
@@ -278,4 +278,65 @@ test('an injected weight function changes only the ranking (benchmark sweeps)', 
   assert.equal(analyzeDecision(state, createKnowledge(entries, 70)).letter, 'a');
   assert.equal(analyzeDecision(state, createKnowledge(entries, 70, () => 1)).letter, 'b');
   assert.throws(() => createKnowledge(entries, 70, () => 0.5), /positive integer/);
+});
+
+// Characterization for v2 A2 (written against the A1 solver): the strict weighted count.
+function referenceWeightedLetter(state, knowledge) {
+  const guessed = new Set(state.guessedLetters);
+  const candidates = filterCandidates(state, knowledge.words);
+  let best = null;
+  let bestWeight = -1;
+  for (const letter of 'abcdefghijklmnopqrstuvwxyz') {
+    if (guessed.has(letter)) continue;
+    const weight = candidates.filter(word => word.includes(letter))
+      .reduce((sum, word) => sum + knowledge.weights.get(word), 0);
+    if (weight > bestWeight) { best = letter; bestWeight = weight; }
+  }
+  return best;
+}
+
+const MIXED = entriesOf(['bath 35', 'beam 50', 'bean 70', 'bear 35', 'beat 40', 'bite 60', 'boat 35', 'bolt 70',
+  'cart 50', 'case 35', 'cash 65', 'cast 35', 'coat 70', 'code 35', 'cold 50', 'cone 60', 'dare 35', 'dart 70',
+  'date 35', 'dean 50', 'dome 70', 'gate 35', 'hate 40', 'heat 35', 'lane 70', 'late 35', 'mate 60', 'meat 35',
+  'neat 50', 'note 35', 'rate 35', 'seat 70', 'tame 50', 'tone 35'].join('\n'));
+
+test('the strict count picks the heaviest letter, ties alphabetical, at every tier', () => {
+  let decisions = 0;
+  for (const maxSize of [35, 50, 70]) {
+    const knowledge = createKnowledge(MIXED, maxSize);
+    for (const answer of knowledge.words) {
+      let round = createRound(answer);
+      while (getRoundStatus(round) === 'playing') {
+        const state = toPublicState(round);
+        const decision = analyzeDecision(state, knowledge, 'count');
+        assert.equal(decision.letter, referenceWeightedLetter(state, knowledge));
+        round = applyGuess(round, decision.letter);
+        decisions++;
+      }
+    }
+  }
+  assert.ok(decisions > 150);
+});
+
+test('the decision record gives her letter weighted share and the letters tied with it', () => {
+  // _ _ x x: A is in aaxx (10); B in bbxx and bcxx (3 + 3 = 6); C in bcxx (3); D in ddxx (10).
+  const knowledge = createKnowledge(entriesOf('aaxx 35\nbbxx 50\nbcxx 50\nddxx 35'), 70);
+  const decision = analyzeDecision(toPublicState(roundAfter('aaxx', 'x')), knowledge, 'count');
+  assert.equal(decision.letter, 'a');
+  assert.equal(decision.candidateWeight, 26);
+  assert.equal(decision.share, Math.floor(10 * 10000 / 26)); // Hundredths of a percent, as an integer.
+  assert.deepEqual(decision.tiedWith, ['d']);
+  // Positive control: without the tie, nothing is tied.
+  const alone = analyzeDecision(toPublicState(roundAfter('aaxx', 'x')),
+    createKnowledge(entriesOf('aaxx 35\nbbxx 50\nbcxx 50'), 70), 'count');
+  assert.deepEqual(alone.tiedWith, []);
+});
+
+test('letters already guessed are never listed as tied', () => {
+  // _ _ x x after X: every candidate holds A and X, so A weighs exactly as much as the revealed X.
+  const knowledge = createKnowledge(entriesOf('aaxx 35\nabxx 35'), 70);
+  const decision = analyzeDecision(toPublicState(roundAfter('aaxx', 'x')), knowledge, 'count');
+  assert.equal(decision.letter, 'a');
+  assert.equal(decision.weightedHits, decision.candidateWeight); // Same weight as X.
+  assert.deepEqual(decision.tiedWith, []);
 });

@@ -106,8 +106,11 @@ export function analyzeDecision(publicState, knowledge, policy = 'count') {
       return { letter, candidateCount: candidates.length, hitCount: candidates.filter(word => word.includes(letter)).length };
     }
     // candidateCount and hitCount stay plain word counts; the weighted totals explain the choice.
+    // share is her letter's weighted share in hundredths of a percent (an integer).
     return { letter, candidateCount: candidates.length, hitCount: hits[letter],
-      weightedHits: counts[letter], candidateWeight };
+      weightedHits: counts[letter], candidateWeight,
+      share: Math.floor(counts[letter] * 10000 / candidateWeight),
+      tiedWith: [...ALPHABET].filter(value => value !== letter && !guessed.has(value) && counts[value] === counts[letter]) };
   }
   let best = null;
   for (const letter of ALPHABET) {
