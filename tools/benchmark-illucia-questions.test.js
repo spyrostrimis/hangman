@@ -56,10 +56,12 @@ test('requests depend on the candidates only: two answers with the same candidat
   const report = {};
   await runQuestions({ states: [state, { ...state, id: 's2', answer: 'tiger' }], models: [qwen], modes: ['invent', 'sort'],
     request, blocked: [], report, clock: () => 0 });
+  // Order: s1 invent, s1 sort, s2 invent, s2 sort.
   assert.equal(sent.length, 4);
-  assert.equal(sent[0], sent[1]);
-  assert.equal(sent[2], sent[3]);
-  assert.notEqual(sent[0], sent[2]);
+  assert.equal(sent[0], sent[2]);
+  assert.equal(sent[1], sent[3]);
+  assert.notEqual(sent[0], sent[1]);
+  assert.deepEqual(report.requests.map(r => `${r.state} ${r.mode}`), ['s1 invent', 's1 sort', 's2 invent', 's2 sort']);
   for (const body of sent) assert.equal(body.includes('"answer"'), false);
   assert.equal(report.status, 'complete');
   assert.deepEqual(report.requests.map(r => r.outcome), ['accepted', 'accepted', 'accepted', 'accepted']);

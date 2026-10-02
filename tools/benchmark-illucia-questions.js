@@ -155,8 +155,9 @@ export async function runQuestions({ states, models, modes, request, blocked, ch
   const timeouts = Object.fromEntries(models.map(model => [model, 0]));
   report.requests ??= [];
   try {
-    for (const mode of modes) {
-      for (const state of states) {
+    // State by state, both modes, so a budget stop leaves invent and sort for the same prefix.
+    for (const state of states) {
+      for (const mode of modes) {
         if (mode === 'sort' && !state.control) continue;
         for (const model of models) {
           if (timeouts[model] >= TIMEOUTS_BEFORE_SKIP) {
