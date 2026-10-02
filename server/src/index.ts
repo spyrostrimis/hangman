@@ -5,7 +5,7 @@ import { KDF, SALT_PATTERN, CREDENTIAL_PATTERN, USERNAME_PATTERN, SIGNIN_USERNAM
 import { checkVerifier, fakeSalt, makeVerifier, sessionToken, sessionUserId, SESSION_SECONDS } from './crypto';
 import { claimRound, isRoundId, startRound } from './rounds';
 import { scheduledRetention } from './retention';
-import { isIlluciaTier, startIlluciaRound } from './illucia';
+import { claimIlluciaRound, isAnsweredQuestions, isIlluciaTier, startIlluciaRound } from './illucia';
 import { illuciaWordSize } from './illucia-words';
 import { ILLUCIA_NOT_ACCEPTED_WORD } from '../../shared/scoring-protocol.js';
 
@@ -182,6 +182,17 @@ app.post('/user/illucia/start', async c => {
     word: input.word as string, tier: input.tier, experimental: input.experimental === true,
     previousRoundId: typeof input.previousRoundId === 'string' ? input.previousRoundId : null,
   }));
+});
+app.post('/user/illucia/claim', async c => {
+  const input = await readInput(c);
+  if (!input || Object.keys(input).some(key => !['roundId', 'guesses', 'answeredQuestions'].includes(key)) || !isRoundId(input.roundId)
+    || (input.answeredQuestions !== undefined && !isAnsweredQuestions(input.answeredQuestions))) {
+    return failure(c, 'Invalid round claim.', 400);
+  }
+  const answered = input.answeredQuestions === undefined ? 0 : input.answeredQuestions as number;
+  const result = await claimIlluciaRound(c.env.DB, c.get('user').id, input.roundId, input.guesses, answered);
+  if ('error' in result) return c.json({ message: result.error, code: result.code, retryAfterMs: result.retryAfterMs }, result.status);
+  return c.json(result);
 });
 app.notFound(c => c.json({ message: 'Not found.' }, 404));
 app.onError((_error, c) => {

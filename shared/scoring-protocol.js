@@ -9,6 +9,7 @@ export const ILLUCIA_MAX_WORD_LENGTH = 15;
 export const ILLUCIA_MAX_QUESTIONS = 2;
 export const ILLUCIA_LADDER_BONUS = 100;
 export const ILLUCIA_NOT_ACCEPTED_WORD = 'NOT_ACCEPTED_WORD';
+export const ILLUCIA_ALREADY_WON_MESSAGE = 'You already beat me with this word, no more points from it.';
 // Why a round pays no stump points, in the order they are checked.
 export const ILLUCIA_NO_POINTS = Object.freeze({
   experimental: 'EXPERIMENTAL', outsideTier: 'OUTSIDE_TIER', alreadyWon: 'ALREADY_WON',

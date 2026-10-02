@@ -2,6 +2,7 @@ import { env, applyD1Migrations } from 'cloudflare:test';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import app from '../src/index';
 import { KDF } from '../../shared/auth-protocol.js';
+import { ILLUCIA_ALREADY_WON_MESSAGE } from '../../shared/scoring-protocol.js';
 
 const origin = 'https://hangman.spyrostrimis.com';
 const allow = { limit: async () => ({ success: true }) };
@@ -139,6 +140,142 @@ describe('Illucia round start', () => {
     }
     const other = await signup('Other');
     expect((await start(other.cookie, { word: 'jazz', tier: 'master' })).points).toEqual({ eligible: true, stump: 50 });
+  });
+});
+
+// Six letters that are in none of the fixture words below, so they are her six misses.
+const LOSS = [...'dgkopq'];
+const mature = (roundId: string) => env.DB.prepare('UPDATE illucia_rounds SET issued_at = ? WHERE id = ?').bind(Date.now() - 12000, roundId).run();
+const claim = (cookie: string, roundId: string, extra: object = {}) =>
+  request('illucia/claim', { cookie, body: { roundId, guesses: LOSS, ...extra } });
+const total = async (id: string) => env.DB.prepare('SELECT total FROM scores WHERE user_id = ?').bind(id).first('total');
+const beaten = async (id: string) => (await env.DB.prepare('SELECT word, points, paid_round_id FROM illucia_beaten_words WHERE user_id = ? ORDER BY word').bind(id).all()).results;
+async function won(cookie: string, body: object, extra: object = {}) {
+  const ticket = await start(cookie, body);
+  await mature(ticket.roundId);
+  const response = await claim(cookie, ticket.roundId, extra);
+  expect(response.status).toBe(200);
+  return { ticket, result: await response.json() };
+}
+
+describe('Illucia claims', () => {
+  it('rejects at 11,999 ms without consuming or awarding, then accepts the same ticket at 12,000 ms', async () => {
+    const { cookie, id } = await signup();
+    const ticket = await start(cookie);
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(ticket.issuedAt + 11999);
+    const early = await claim(cookie, ticket.roundId);
+    expect(early.status).toBe(409);
+    expect(await early.json()).toMatchObject({ code: 'ROUND_TOO_EARLY', retryAfterMs: 1 });
+    expect(await env.DB.prepare('SELECT claimed_at FROM illucia_rounds WHERE id = ?').bind(ticket.roundId).first('claimed_at')).toBeNull();
+    expect(await total(id)).toBe(0);
+    expect(await beaten(id)).toEqual([]);
+    clock.mockReturnValue(ticket.issuedAt + 12000);
+    expect(await (await claim(cookie, ticket.roundId)).json()).toEqual({ score: 50, awarded: { stump: 50, ladder: 0 } });
+  });
+
+  it('accepts only legal guesses that end exactly at her sixth miss on the committed word', async () => {
+    const { cookie, id } = await signup();
+    const ticket = await start(cookie);
+    await mature(ticket.roundId);
+    for (const guesses of [null, 'bdfgkm', [], [...'bdfgk'], [...'jazbdfg'], [...'jaz'], [...'bdfgkmn'], [...'bdfgkmj'], [...'bdfgkj'],
+      ['b', 'b', 'd', 'f', 'g', 'k', 'm'], [...'BDFGKM'], ['b', 'd', 'f', 'g', 'k', '!'], [1, 2, 3, 4, 5, 6], Array(27).fill('b')]) {
+      expect((await claim(cookie, ticket.roundId, { guesses })).status).toBe(400);
+    }
+    expect(await total(id)).toBe(0);
+    // Hits between misses are fine, as long as the word is never solved.
+    expect(await (await claim(cookie, ticket.roundId, { guesses: [...'jbdfgkm'] })).json()).toMatchObject({ score: 50 });
+  });
+
+  it('rejects unknown fields, bad round IDs, foreign and replaced tickets, and out-of-range question counts', async () => {
+    const { cookie } = await signup(); const other = await signup('Other');
+    const foreign = await start(other.cookie); await mature(foreign.roundId);
+    const replaced = await start(cookie); await mature(replaced.roundId);
+    const ticket = await start(cookie, { word: 'crane', tier: 'master' }); await mature(ticket.roundId);
+    expect((await claim('', ticket.roundId)).status).toBe(401);
+    expect((await claim(cookie, 'not-a-round')).status).toBe(400);
+    for (const answeredQuestions of [3, -1, 1.5, '1', null]) expect((await claim(cookie, ticket.roundId, { answeredQuestions })).status).toBe(400);
+    expect((await claim(cookie, ticket.roundId, { score: 9000 })).status).toBe(400);
+    expect((await claim(cookie, foreign.roundId)).status).toBe(409);
+    expect((await claim(cookie, replaced.roundId)).status).toBe(409);
+    expect((await claim(cookie, crypto.randomUUID())).status).toBe(409);
+    expect(await (await claim(cookie, ticket.roundId)).json()).toEqual({ score: 100, awarded: { stump: 100, ladder: 0 } });
+    expect(await (await claim(other.cookie, foreign.roundId)).json()).toMatchObject({ score: 50 });
+  });
+
+  it('pays tier base × min(length − 3, 3) and multiplies it for one or two answered questions', async () => {
+    const { cookie, id } = await signup();
+    const cases: [object, number, number][] = [
+      [{ word: 'jazz', tier: 'master' }, 0, 50], [{ word: 'crane', tier: 'master' }, 1, 125], [{ word: 'abacas', tier: 'master' }, 2, 225],
+      [{ word: 'lynx', tier: 'scholar' }, 1, 50], [{ word: 'rhythm', tier: 'apprentice' }, 0, 90], [{ word: 'fizz', tier: 'apprentice' }, 1, 38],
+    ];
+    let expected = 0;
+    for (const [body, answeredQuestions, stump] of cases) {
+      expected += stump;
+      expect((await won(cookie, body, { answeredQuestions })).result).toEqual({ score: expected, awarded: { stump, ladder: 0 } });
+    }
+    expect(await total(id)).toBe(expected);
+    expect((await beaten(id)).map(row => [row.word, row.points])).toEqual(
+      [['abacas', 225], ['crane', 125], ['fizz', 38], ['jazz', 50], ['lynx', 50], ['rhythm', 90]]);
+  });
+
+  it('pays a word once at any tier; an out-of-tier win pays nothing and leaves the word unspent', async () => {
+    const { cookie, id } = await signup();
+    expect((await won(cookie, { word: 'lynx', tier: 'apprentice' }, { answeredQuestions: 2 })).result)
+      .toEqual({ score: 0, awarded: { stump: 0, ladder: 0 }, reason: 'OUTSIDE_TIER' });
+    expect(await beaten(id)).toEqual([{ word: 'lynx', points: 0, paid_round_id: null }]);
+    const paid = await won(cookie, { word: 'lynx', tier: 'scholar' });
+    expect(paid.result).toEqual({ score: 40, awarded: { stump: 40, ladder: 0 } });
+    expect(await beaten(id)).toEqual([{ word: 'lynx', points: 40, paid_round_id: paid.ticket.roundId }]);
+    for (const tier of ['scholar', 'master']) {
+      expect((await won(cookie, { word: 'lynx', tier }, { answeredQuestions: 2 })).result)
+        .toEqual({ score: 40, awarded: { stump: 0, ladder: 0 }, reason: 'ALREADY_WON' });
+    }
+    // Out of tier is checked first, so a spent word at a tier that never knew it says so.
+    expect((await won(cookie, { word: 'lynx', tier: 'apprentice' })).result).toMatchObject({ score: 40, reason: 'OUTSIDE_TIER' });
+    expect(await beaten(id)).toEqual([{ word: 'lynx', points: 40, paid_round_id: paid.ticket.roundId }]);
+    expect(ILLUCIA_ALREADY_WON_MESSAGE).toBe('You already beat me with this word, no more points from it.');
+    // Another account's history is separate.
+    const other = await signup('Other');
+    expect((await won(other.cookie, { word: 'lynx', tier: 'master' })).result).toMatchObject({ score: 50 });
+  });
+
+  it('pays nothing and records no beaten word for experimental rounds', async () => {
+    const { cookie, id } = await signup();
+    expect((await won(cookie, { word: 'jazz', tier: 'master', experimental: true }, { answeredQuestions: 2 })).result)
+      .toEqual({ score: 0, awarded: { stump: 0, ladder: 0 }, reason: 'EXPERIMENTAL' });
+    expect(await beaten(id)).toEqual([]);
+    expect((await won(cookie, { word: 'jazz', tier: 'master' })).result).toEqual({ score: 50, awarded: { stump: 50, ladder: 0 } });
+  });
+
+  it('awards once under concurrent claims and returns the stored award on later retries', async () => {
+    const { cookie, id } = await signup();
+    const ticket = await start(cookie, { word: 'crane', tier: 'master' });
+    await mature(ticket.roundId);
+    const responses = await Promise.all(Array.from({ length: 5 }, () => claim(cookie, ticket.roundId, { answeredQuestions: 1 })));
+    for (const response of responses) expect(await response.json()).toEqual({ score: 125, awarded: { stump: 125, ladder: 0 } });
+    const next = await start(cookie, { word: 'jazz', tier: 'master' });
+    expect(next.roundId).not.toBe(ticket.roundId);
+    expect(await (await claim(cookie, ticket.roundId, { answeredQuestions: 2 })).json()).toEqual({ score: 125, awarded: { stump: 125, ladder: 0 } });
+    expect(await total(id)).toBe(125);
+    // The Hangman ticket is untouched by Illucia claims.
+    expect((await request('round/start', { cookie })).status).toBe(200);
+  });
+
+  it('does not consume a ticket at the score ceiling and rolls everything back when the increment fails', async () => {
+    const { cookie, id } = await signup();
+    const ticket = await start(cookie); await mature(ticket.roundId);
+    await env.DB.prepare('UPDATE scores SET total = 9007199254740900 WHERE user_id = ?').bind(id).run();
+    expect((await claim(cookie, ticket.roundId)).status).toBe(409);
+    expect(await env.DB.prepare('SELECT claimed_at FROM illucia_rounds WHERE id = ?').bind(ticket.roundId).first('claimed_at')).toBeNull();
+    await env.DB.prepare('UPDATE scores SET total = 0 WHERE user_id = ?').bind(id).run();
+    await env.DB.exec("CREATE TRIGGER test_fail_illucia_award BEFORE UPDATE ON scores BEGIN SELECT RAISE(ABORT, 'test failure'); END;");
+    try {
+      expect((await claim(cookie, ticket.roundId)).status).toBe(500);
+      expect(await env.DB.prepare('SELECT claimed_at FROM illucia_rounds WHERE id = ?').bind(ticket.roundId).first('claimed_at')).toBeNull();
+      expect(await beaten(id)).toEqual([]);
+      expect(await total(id)).toBe(0);
+    } finally { await env.DB.exec('DROP TRIGGER test_fail_illucia_award;'); }
+    expect(await (await claim(cookie, ticket.roundId)).json()).toEqual({ score: 50, awarded: { stump: 50, ladder: 0 } });
   });
 });
 

@@ -10,6 +10,17 @@ A claim must contain 1–26 unique lowercase a–z guesses. Replay must end exac
 
 **Answers are public by design.** The server guarantees valid replay, exactly-once awards for successfully claimed tickets, and a **5 s rate floor: at most 12 new awards per minute per account** (1,200 points, measured over half-open 60-second intervals). It does not verify that a human played. A bot can register, sign in, obtain the answer and manufacture a valid history, but must wait until the ticket is at least 5,000 ms old. One outstanding ticket per account prevents parallel stockpiling; a new ticket cannot predate the previous award, including a start request delayed behind that award. Replacing a round invalidates the old ticket and starts a fresh wait. Successful claim retries do not add awards or restart the wait. There is no daily cap. Existing approximate IP limits are additional request throttling, not the source of this account-level guarantee. Multiple accounts can each earn up to this rate.
 
+### Cheater ceilings per account
+
+What a script can earn at most, measured over half-open 60-second windows:
+
+| Mode | Awards per minute | Most points per award | Points per minute |
+| --- | --- | --- | --- |
+| Hangman | 12 (5 s floor) | 100 | 1,200 |
+| Illucia | 5 (12 s floor) | 225: Master, 6+ letters, two answered questions | 1,125 |
+
+Each mode has its own outstanding ticket, so one account can farm both at once: 2,325 points per minute. Multiple accounts can each earn up to this rate.
+
 CAPTCHAs, email verification, daily award caps, per-guess server adjudication and moderation are not implemented. They would add friction, operating work or architectural complexity without proving honest play. Reconsider if actual abuse or stakes justify them. The Hall of Fame remains unsuitable as a trusted competition ranking. Existing totals, including unverified awards from the original endpoint, are preserved.
 
 ## Protocol and concurrency
@@ -34,6 +45,30 @@ The first round waits for session restoration. Guests then play locally without 
 On an early win the client shows **Saving…** and holds the claim until `issuedAt + 5000`. It converts `issuedAt` and `serverNow` to a monotonic client deadline so a wrong device wall clock cannot skip the wait or add hours. Response transit time can only make this initial wait conservative. A typed `ROUND_TOO_EARLY` response transparently waits its `retryAfterMs` and retries the same ticket; it is never shown as an error to the player. Navigation or an account change during the delay prevents sending a stale claim.
 
 Winning claims suppress ordinary duplicate sends, including React StrictMode. Play again waits for the pending save to finish. An ambiguous failure offers **Retry saving points**, using the same round and guesses; retries are safe even if the first request committed and its response was lost. Starting another round after a failure can abandon an unclaimed ticket. Expired sessions and definitively ineligible rounds show a message rather than promising an award. Score responses cannot update another signed-in account or overwrite a newer round's message.
+
+## Illucia rounds
+
+Illucia (Play vs AI) reverses the roles: the player sets the word and she guesses. The player scores by stumping her, i.e. she reaches six misses. Status: implemented and tested locally; not deployed.
+
+**Protocol.** `POST /user/illucia/start` with `{word, tier, experimental?, previousRoundId?}` commits the player's word before play. The Worker checks it against the same per-length word files the browser loads (lengths 4–15) and returns `{roundId, word, tier, experimental, seed, issuedAt, expiresAt, serverNow, points}`, or 400 `NOT_ACCEPTED_WORD`. `seed` is a fresh 32-bit integer for her per-round randomness. `points` previews the stump points before questions, or why there are none. Each account has one open Illucia ticket, separate from its Hangman ticket. The same word, tier and mode resumes it; any other start, or naming it as `previousRoundId`, abandons it. Like Hangman, no ticket is issued before the account's last Illucia award, tickets expire after 30 minutes, and the hourly sweep removes them 24 hours after claim or expiry.
+
+A win sends `POST /user/illucia/claim` with `{roundId, guesses, answeredQuestions?}`. The Worker rules-checks the guesses against the committed word: 6–26 unique lowercase letters, the sixth miss on the last guess, the word never solved. It **does not replay her choices**; which letters she picked, and whether she asked or the player answered questions, are client-reported. A claim is accepted from `issued_at + 12,000 ms`; earlier claims get 409 `ROUND_TOO_EARLY` with `retryAfterMs`, without consumption. Consumption, the beaten-word record and the score increment are one nonce-guarded D1 batch, as for Hangman. A successful claim or retry returns `{score, awarded: {stump, ladder}, reason?}` with the award stored on the ticket.
+
+**Points** (`shared/scoring-protocol.js`). Stump points = tier base × min(length − 3, 3), with Apprentice 30, Scholar 40, Master 50. One answered question multiplies them by 1.25, two by 1.5, rounded half up. A win pays no stump points, with a `reason`, when:
+
+- the round is experimental (`EXPERIMENTAL`);
+- the word is outside that tier's vocabulary, i.e. ESDB size above 35 for Apprentice or 50 for Scholar (`OUTSIDE_TIER`); Master knows every accepted word;
+- the word has already paid this player at any tier (`ALREADY_WON`); the client shows `ILLUCIA_ALREADY_WON_MESSAGE`.
+
+| Stump points (0 / 1 / 2 answered questions) | 4 letters | 5 letters | 6+ letters |
+| --- | --- | --- | --- |
+| Apprentice | 30 / 38 / 45 | 60 / 75 / 90 | 90 / 113 / 135 |
+| Scholar | 40 / 50 / 60 | 80 / 100 / 120 | 120 / 150 / 180 |
+| Master | 50 / 63 / 75 | 100 / 125 / 150 | 150 / 188 / 225 |
+
+**Memory.** Every normal-mode win is kept in `illucia_beaten_words` per account until account deletion; a word is spent once it has paid. Out-of-tier wins are recorded with 0 points and leave the word unspent. Experimental wins are not recorded.
+
+**Limits.** A modified client can claim any accepted, unspent word with six invented misses. The bounds are the tier vocabulary, once-per-word, the 12 s floor and one open ticket (see the ceiling table above). A question about a word WordNet does not know earns no multiplier; that rule is enforced by the client only.
 
 ## Release and verification
 
