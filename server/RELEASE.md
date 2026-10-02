@@ -56,3 +56,14 @@ The two local records above were deployed on 2026-10-01 without a release entry.
 - `wrangler deployments list` shows Worker version `d2999968-db0e-4516-b0e8-ba27bc8d3765` deployed at 18:07:57 UTC and serving 100%. It followed `46a25777` (the five-second floor).
 - An unauthenticated `GET /user/delete-account` on the production domain returns 401, not 404, so the deployed Worker has the deletion route.
 - Not recorded: which commit was deployed, a production disposable-account deletion check, a successful scheduled retention run, or deployed CPU for these routes.
+
+## Illucia points, C1 (production, 2026-10-02)
+
+Implementation `0c538be`, `c363ac1`, `fdffece` and `be62b76`, with the `/privacy` disclosure `9deeced`, all pushed to `main`; design in `docs/SCORING.md`.
+
+- Before release, on the tree at `9deeced` (after Track A's A1 landed; A1 left word files 4–15 unchanged): 56 Worker/D1 tests, TypeScript check and dry-run build pass; client 50 Node and 57 UI tests pass.
+- Migration `0006_illucia_rounds.sql` applied remotely at 09:37:38 UTC; it was the only pending migration. Production `sqlite_master` lists `illucia_players`, `illucia_rounds`, `illucia_beaten_words` and the four `illucia_rounds` indexes.
+- Worker version `d6721260-e98a-4fd1-bdc4-db0fab3a5622` deployed at 09:37:59 UTC and serving 100%, replacing `d2999968`. Upload 1,818.55 KiB, 586.96 KiB gzipped (the bundled word files); Wrangler reported a startup time of 3 ms. Route `hangman.spyrostrimis.com/user/*` and the hourly cron are unchanged.
+- Unauthenticated production checks: `POST /user/illucia/start` and `/user/illucia/claim` return 401 (the previous Worker had no such routes and returned 404); a foreign Origin gets 403; an unknown path outside `/user/illucia/` still returns 404; Hangman's `round/start` returns 401 without a session; `get-best-scores` and `/privacy` return 200.
+- **Not verified in production:** an authenticated start, claim, too-early claim, already-won word or ladder run, and deployed CPU for the new routes. Disposable-account checks were not run in this release; the local suite covers that behaviour. The first real check comes with E3 or an operator-run disposable account.
+- Rollback: `wrangler rollback` to `d2999968`. Migration `0006` only adds tables, so it can stay in place.

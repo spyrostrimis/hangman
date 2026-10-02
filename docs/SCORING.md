@@ -48,7 +48,7 @@ Winning claims suppress ordinary duplicate sends, including React StrictMode. Pl
 
 ## Illucia rounds
 
-Illucia (Play vs AI) reverses the roles: the player sets the word and she guesses. The player scores by stumping her, i.e. she reaches six misses. Status: implemented and tested locally; not deployed.
+Illucia (Play vs AI) reverses the roles: the player sets the word and she guesses. The player scores by stumping her, i.e. she reaches six misses. Status: deployed 2026-10-02 (migration `0006`, Worker `d6721260`; see `server/RELEASE.md`). No page calls these routes yet, and an authenticated production check is still pending.
 
 **Protocol.** `POST /user/illucia/start` with `{word, tier, experimental?, previousRoundId?}` commits the player's word before play. The Worker checks it against the same per-length word files the browser loads (lengths 4–15) and returns `{roundId, word, tier, experimental, seed, issuedAt, expiresAt, serverNow, points}`, or 400 `NOT_ACCEPTED_WORD`. `seed` is a fresh 32-bit integer for her per-round randomness. `points` previews the stump points before questions, or why there are none, and `ladder` is `{rung, next, minLength}` for this round. Each account has one open Illucia ticket, separate from its Hangman ticket. The same word, tier and mode resumes it; any other start, or naming it as `previousRoundId`, abandons it. Like Hangman, no ticket is issued before the account's last Illucia award, tickets expire after 30 minutes, and the hourly sweep removes them 24 hours after claim or expiry.
 
