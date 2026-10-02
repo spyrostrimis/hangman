@@ -1,0 +1,292 @@
+{
+  "schemaVersion": 1,
+  "phase": "run",
+  "startedAt": "2026-10-02T16:45:40.161Z",
+  "status": "stopped",
+  "configuration": {
+    "models": [
+      "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b"
+    ],
+    "modes": [
+      "invent"
+    ],
+    "promptVersion": "d1-1",
+    "prompts": {
+      "invent": "You help Illucia, a Hangman player, narrow down a hidden English word by its MEANING. The user message is a JSON object whose \"candidates\" field lists every word the hidden word could be.\n1. Invent ONE yes/no question about what the word can mean: what kind of thing, action or quality it is. Start it with \"Can your word mean\" and end it with \"?\". It must not be about letters, spelling, sounds, rhymes or length.\n2. A word is YES if ANY of its meanings fits, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n3. Choose a question that puts roughly half of the candidates in YES and half in NO.\n4. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"question\": \"...\", \"yes\": [\"...\"], \"no\": [\"...\"]}",
+      "sort": "Sort English words by MEANING. The user message is a JSON object with a yes/no \"question\" and a \"candidates\" list.\n1. A word is YES if ANY of its meanings fits the question, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n2. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"yes\": [\"...\"], \"no\": [\"...\"]}"
+    },
+    "promptSha256": "1b85eda7ffdac6d528d315e22cc412da16cc78ad908d179233edb4585023a2d2",
+    "statesSha256": "4ddaee886368cbe7f44bde2512a66f443a0b33d7429bb4a973a17fcbf09d68e1",
+    "temperature": 0,
+    "seed": 20261002,
+    "maxTokens": 2048,
+    "modelOptions": {
+      "@cf/qwen/qwen3-30b-a3b-fp8": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/google/gemma-4-26b-a4b-it": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/zai-org/glm-4.7-flash": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/openai/gpt-oss-20b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/openai/gpt-oss-120b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/qwen/qwen3.8-27b": {
+        "reasoning_effort": "low"
+      }
+    },
+    "requestTimeoutMs": 120000,
+    "stateIds": [
+      "4-apprentice",
+      "6-scholar",
+      "8-master",
+      "9-scholar",
+      "10-apprentice"
+    ],
+    "retries": 0,
+    "timeoutsBeforeSkip": 3,
+    "evenSplit": [
+      0.25,
+      0.75
+    ],
+    "blockedTerms": 421,
+    "neuronRates": {
+      "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b": {
+        "input": 45170,
+        "output": 443756
+      }
+    },
+    "pricingChecked": "2026-10-02",
+    "maxRunNeurons": 3000
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32"
+  },
+  "requests": [
+    {
+      "state": "4-apprentice",
+      "model": "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
+      "mode": "invent",
+      "milliseconds": 84415.8121,
+      "inputSha256": "63f4b2c9b1cd87453724ae04ffa7a1489e446e717d7dd473765127ccd8e131d5",
+      "outcome": "unparseable",
+      "strictJson": false,
+      "envelope": "response",
+      "finishReason": null,
+      "providerModel": null,
+      "usage": {
+        "prompt_tokens": 248,
+        "completion_tokens": 2048,
+        "reasoning_tokens": null,
+        "neurons": 920.0153129198184
+      },
+      "estimatedNeurons": 920.014448,
+      "providerReportedNeurons": 920.0153129198184,
+      "reasoningChars": 0,
+      "visibleChars": 6502,
+      "response": "<think>\nAlright, let's figure out how to help Illucia. The user provided a list of 9 candidates: boil, bowl, coil, foil, foul, fowl, howl, toil, yowl. I need to come up with a yes/no question that splits these words into roughly two equal groups based on their meanings.\n\nFirst, I'll look at each word's meanings:\n\n- **Boil**: A liquid reaching its boiling point, or a skin infection.\n- **Bowl**: A round container, or a large serving of food.\n- **Coil**: To form into a spiral, or a spring.\n- **Foil**: A type of metal sheet, or to prevent someone from succeeding.\n- **Foul**: Dirty or unpleasant, or a violation in sports.\n- **Fowl**: A bird, especially a wild one.\n- **Howl**: To make a loud, mournful cry.\n- **Toil**: Hard work, or to move with difficulty.\n- **Yowl**: A high-pitched cry, similar to a howl.\n\nI need a question that's general enough to apply to all these words. Let's think about categories like objects, actions, animals, etc.\n\nIf I ask, \"Can your word mean a bird?\", then \"fowl\" would be a yes because it refers to birds. The others don't primarily mean a bird, so they'd be no. That would split the list into 1 yes and 8 no, which isn't balanced.\n\nWhat about actions? \"Can your word mean an action?\" Let's see:\n\n- Boil: can be an action (to bring to a boil).\n- Bowl: more of an object.\n- Coil: an action.\n- Foil: can be an action (to prevent).\n- Foul: can be an action (to commit a foul).\n- Fowl: not an action.\n- Howl: action.\n- Toil: action.\n- Yowl: action.\n\nSo yes would be boil, coil, foil, foul, howl, toil, yowl (7 words), and no would be bowl and fowl (2 words). That's not balanced either.\n\nAnother angle: \"Can your word mean something you can hold?\" Let's check:\n\n- Boil: can't hold.\n- Bowl: yes, it's a container.\n- Coil: if it's a spring, yes; but more abstractly, maybe.\n- Foil: yes, as a sheet.\n- Foul: no.\n- Fowl: no.\n- Howl: no.\n- Toil: no.\n- Yowl: no.\n\nThat would make yes: bowl, coil, foil (3), and no: the rest (6). Still not balanced.\n\nPerhaps \"Can your word mean a type of container?\" Then bowl is yes, and maybe others like coil (if referring to a spring as a container?), but that's stretching. It might not be clear.\n\nWait, another idea: \"Can your word mean something related to sound?\" Let's see:\n\n- Boil: no.\n- Bowl: no.\n- Coil: no.\n- Foil: no.\n- Foul: no.\n- Fowl: no.\n- Howl: yes.\n- Toil: no.\n- Yowl: yes.\n\nSo yes: howl, yowl (2), no: 7. Not balanced.\n\nHmm, maybe \"Can your word mean something that can be cooked?\" Let's see:\n\n- Boil: yes, cooking method.\n- Bowl: sometimes used in cooking, but not the meaning.\n- Coil: no.\n- Foil: yes, used in cooking (aluminum foil).\n- Foul: no.\n- Fowl: yes, as a bird for cooking.\n- Howl: no.\n- Toil: no.\n- Yowl: no.\n\nSo yes: boil, foil, fowl (3), no: 6. Still not balanced.\n\nWait, perhaps \"Can your word mean something that is wet?\" Let's check:\n\n- Boil: involves water.\n- Bowl: can hold water, but not inherently wet.\n- Coil: no.\n- Foil: no.\n- Foul: can mean dirty, which might involve wetness.\n- Fowl: birds can be wet.\n- Howl: no.\n- Toil: no.\n- Yowl: no.\n\nSo yes: boil, foul, fowl (3), no: 6. Still not balanced.\n\nMaybe \"Can your word mean something that can be found in a kitchen?\" Let's see:\n\n- Boil: yes, as a cooking method.\n- Bowl: yes.\n- Coil: unless it's a kitchen gadget, but not primarily.\n- Foil: yes, aluminum foil.\n- Foul: no.\n- Fowl: yes, as a food item.\n- Howl: no.\n- Toil: no.\n- Yowl: no.\n\nSo yes: boil, bowl, foil, fowl (4), no: 5. That's closer to balanced.\n\nAlternatively, \"Can your word mean something that can be worn?\" Let's see:\n\n- Boil: no.\n- Bowl: no.\n- Coil: maybe as a hair style.\n- Foil: yes, as in makeup or fashion.\n- Foul: no.\n- Fowl: no.\n- Howl: no.\n- Toil: no.\n- Yowl: no.\n\nSo yes: coil, foil (2), no: 7. Not balanced.\n\nWait, another angle: \"Can your word mean something that can be used in a game?\" Let's see:\n\n- Boil: no.\n- Bowl: yes, as in a game (like football).\n- Coil: no.\n- Foil: no.\n- Foul: yes, as in sports.\n- Fowl: no.\n- Howl: no.\n- Toil: no.\n- Yowl: no.\n\nSo yes: bowl, foul (2), no: 7. Not balanced.\n\nHmm, perhaps I'm overcomplicating. Let's go back to the initial thought of using \"Can your word mean a bird?\" Even though it's only one word, maybe it's the best option despite the imbalance. Alternatively, maybe another question can split it better.\n\nWait, another idea: \"Can your word mean something that can be made of metal?\" Let's check:\n\n- Boil: no.\n- Bowl: sometimes made of metal.\n- Coil: yes, as a spring.\n- Foil: yes, metal sheet.\n- Foul: no.\n- Fowl: no.\n- Howl: no.\n- Toil: no.\n- Yowl: no.\n\nSo yes: bowl, coil, foil (3), no: 6. Still not balanced.\n\nAlternatively, \"Can your word mean something that can be used in construction?\" Let's see:\n\n- Boil: no.\n- Bowl: no.\n- Coil: yes, as in springs.\n- Foil: no.\n- Foul: no.\n- Fowl: no.\n- Howl: no.\n- Toil: no.\n- Yowl: no.\n\nSo yes: coil (1), no: 8. Not good.\n\nWait, perhaps \"Can your word mean something that can be found in nature?\" Let's check:\n\n- Boil: no.\n- Bowl: no.\n- Coil: no.\n- Foil: no.\n- Foul: can mean natural things like bad smell.\n- Fowl: yes, birds.\n- Howl: no.\n- Toil: no.\n- Yowl: no.\n\nSo yes: foul, fowl (2), no: 7. Not balanced.\n\nAlternatively, \"Can your word mean something that can be a verb?\" Let's see:\n\n- Boil: yes.\n- Bowl: usually a noun.\n- Coil: yes.\n- Foil: yes.\n- Foul: yes.\n- Fowl: usually a noun.\n- Howl: yes.\n- Toil: yes.\n- Yowl: yes.\n\nSo yes: boil, coil, foil, foul, howl, toil, yowl (7), no: bowl, fowl (2). Not balanced.\n\nWait, perhaps \"Can your word mean something that can be a noun?\" Let's see:\n\nAll of them can be nouns, so that's not useful.\n\nAnother angle: \"Can your word mean something that can be a verb and a noun?\" Let's see:\n\n- Boil: yes.\n- Bowl: yes.\n- Coil: yes.\n- Foil: yes.\n- Foul: yes.\n- Fowl: yes.\n- Howl: yes.\n- Toil: yes.\n- Yowl: yes.\n\nSo all would be yes, which doesn't help.\n\nHmm, maybe \"Can your word mean something that can be a tool?\" Let's check:\n\n- Boil: no.\n- Bowl: yes, as a container.\n- Coil: yes, as a spring.\n- Foil: yes, as a tool in cooking or cra"
+    },
+    {
+      "state": "6-scholar",
+      "model": "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
+      "mode": "invent",
+      "milliseconds": 25822.4525,
+      "inputSha256": "3f68783d23ad911eeed5e462d5db29cfe329d4cfb1977c24c85b65638c2a6885",
+      "outcome": "unparseable",
+      "strictJson": false,
+      "envelope": "response",
+      "finishReason": null,
+      "providerModel": null,
+      "usage": {
+        "prompt_tokens": 257,
+        "completion_tokens": 773,
+        "reasoning_tokens": null,
+        "neurons": 354.63238870206237
+      },
+      "estimatedNeurons": 354.632078,
+      "providerReportedNeurons": 354.63238870206237,
+      "reasoningChars": 2640,
+      "visibleChars": 332,
+      "response": "\n\n{\"question\":\"Can your word mean a person's name?\",\"yes\":[\"elijah\",\"elinor\",\"elisha\",\"ericka\"],\"no\":[\"edicts\",\"edison\",\"editor\",\"enigma\",\"evicts\",\"evilly\",\"exists\"]}\n\n{\"question\":\"Can your word mean a person's name?\",\"yes\":[\"elijah\",\"elinor\",\"elisha\",\"ericka\"],\"no\":[\"edicts\",\"edison\",\"editor\",\"enigma\",\"evicts\",\"evilly\",\"exists\"]}"
+    },
+    {
+      "state": "8-master",
+      "model": "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
+      "mode": "invent",
+      "milliseconds": 17827.5294,
+      "inputSha256": "539e89737187141a3119cb25cee5c4b6ad62b04185ce84d6b0ae19f474aff43e",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a place or country?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "boltonia",
+        "colombia",
+        "columbia",
+        "fostoria",
+        "mongolia",
+        "monrovia",
+        "suburbia"
+      ],
+      "no": [
+        "dyslogia",
+        "dystonia",
+        "dystopia",
+        "myotonia",
+        "photopia",
+        "scotopia",
+        "strontia",
+        "syncytia"
+      ],
+      "yesShare": 0.4666666666666667,
+      "envelope": "response",
+      "finishReason": null,
+      "providerModel": null,
+      "usage": {
+        "prompt_tokens": 282,
+        "completion_tokens": 544,
+        "reasoning_tokens": null,
+        "neurons": 254.14141290555742
+      },
+      "estimatedNeurons": 254.141204,
+      "providerReportedNeurons": 254.14141290555742,
+      "reasoningChars": 1578,
+      "visibleChars": 253,
+      "response": "\n\n{\"question\": \"Can your word mean a place or country?\", \"yes\": [\"boltonia\", \"colombia\", \"columbia\", \"mongolia\", \"monrovia\", \"fostoria\", \"suburbia\"], \"no\": [\"dyslogia\", \"dystonia\", \"dystopia\", \"myotonia\", \"photopia\", \"scotopia\", \"strontia\", \"syncytia\"]}"
+    },
+    {
+      "state": "9-scholar",
+      "model": "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
+      "mode": "invent",
+      "milliseconds": 66794.7474,
+      "inputSha256": "5023f88d0f376a001921a7012c33f7078b2d31c29ef70ebc1153bc100fc445e6",
+      "outcome": "unparseable",
+      "strictJson": false,
+      "envelope": "response",
+      "finishReason": null,
+      "providerModel": null,
+      "usage": {
+        "prompt_tokens": 283,
+        "completion_tokens": 2048,
+        "reasoning_tokens": null,
+        "neurons": 921.5962595451182
+      },
+      "estimatedNeurons": 921.595398,
+      "providerReportedNeurons": 921.5962595451182,
+      "reasoningChars": 0,
+      "visibleChars": 8966,
+      "response": "<think>\nAlright, let's figure out how to help Illucia. The user provided a list of 16 candidate words, and I need to come up with a yes/no question that splits them roughly in half based on their meanings.\n\nFirst, I'll look through the words to see if there's a common category or attribute that applies to about half of them. Let's list them out:\n\ncourtship, dubrovnik, hobgoblin, hydrofoil, kropotkin, mongoloid, monotonic, nonprofit, oxycontin, portfolio, proboscis, prognosis, psychosis, psychotic, symphonic, troopship.\n\nHmm, \"courtship\" relates to a social activity. \"Hobgoblin\" is a supernatural creature. \"Hydrofoil\" is a type of boat. \"Kropotkin\" is a surname, possibly related to a person. \"Mongoloid\" is a term related to race or facial features. \"Monotonic\" is a mathematical term. \"Nonprofit\" is an organization type. \"Oxycontin\" is a medication. \"Portfolio\" can refer to a collection of work or financial investments. \"Proboscis\" is a biological term, like an elephant's trunk. \"Prognosis\" is a medical term for a forecast. \"Psychosis\" is a mental disorder. \"Psychotic\" relates to psychosis. \"Symphonic\" relates to music. \"Troopship\" is a ship for transporting troops.\n\nLooking for a theme that applies to about half. Maybe something related to medicine or health? Let's see:\n\nPrognosis is a medical term. Psychosis and psychotic are related to mental health. Oxycontin is a medication. So that's four words. But that's less than half.\n\nWhat about words related to organizations or roles? Nonprofit is an organization. Portfolio can be a collection of work, which might relate to a person's role. Courtship is a social activity, not exactly an organization. Maybe not.\n\nAnother angle: terms related to activities or processes. Courtship is an activity, hydrofoil is a mode of transportation, portfolio could relate to investment activities, troopship is related to transportation. That's four, still not enough.\n\nWait, maybe looking for words that are more abstract or descriptive terms versus specific objects. Monotonic, nonprofit, portfolio, prognosis, psychosis, psychotic, symphonic, troopship – these seem more abstract or relate to concepts. Courtship, hydrofoil, proboscis, oxycontin, dubrovnik, hobgoblin, kropotkin, mongoloid – these are more specific nouns or places.\n\nSo perhaps the question could be: \"Can your word mean a type of organization or concept?\" But that might not split them evenly.\n\nAlternatively, considering that some words are more abstract or relate to activities, while others are concrete objects or places. Let's try to find a question that captures about half.\n\nLooking again, \"Can your word mean a type of organization or activity?\" Let's see:\n\nNonprofit is an organization. Portfolio can be an activity (like managing investments). Courtship is an activity. Troopship is a type of ship used for an activity (transporting troops). That's four. Maybe not enough.\n\nWait, another approach: words that can describe a state or condition. Psychosis, psychotic, prognosis, maybe even courtship as a state of being. That's four.\n\nHmm, perhaps focusing on words that are more abstract or can describe a concept. Monotonic, symphonic, prognosis, psychosis, psychotic, nonprofit, portfolio, troopship – these are more abstract. That's eight words.\n\nSo the question could be: \"Can your word mean a type of concept or state?\" But that's a bit vague.\n\nAlternatively, maybe \"Can your word mean a type of organization or state of being?\" That might include nonprofit, psychosis, psychotic, prognosis, portfolio, troopship, maybe courtship as a state of courtship.\n\nWait, that's seven. Adding perhaps hydrofoil as a type of boat, but that's a physical object. Maybe not.\n\nWait, let's count:\n\nYes: nonprofit, portfolio, prognosis, psychosis, psychotic, troopship, courtship, symphonic, monotonic. That's nine.\n\nNo: dubrovnik, hobgoblin, hydrofoil, kropotkin, mongoloid, oxycontin, proboscis. That's seven.\n\nWait, that's 9 vs 7, which is a bit uneven, but perhaps acceptable.\n\nBut maybe a better split. Let's think of another angle.\n\nHow about words that can describe a type of structure or form? Hydrofoil is a structure, portfolio can be a structure of investments, troopship is a structure, proboscis is a body structure, prognosis is a structure of a forecast, psychosis is a mental structure, symphonic relates to musical structure. That's seven.\n\nNo: courtship, dubrovnik, hobgoblin, kropotkin, mongoloid, monotonic, nonprofit, oxycontin. That's eight.\n\nStill not quite half.\n\nAnother idea: words that can mean a type of creature or being. Hobgoblin is a creature. Psychotic could describe a person. That's two, which is too few.\n\nWait, maybe looking for words that are more abstract vs. concrete. Abstract words: courtship (as a concept), prognosis, psychosis, psychotic, symphonic, monotonic, portfolio, nonprofit, troopship. Concrete: dubrovnik (a place), hobgoblin (creature), hydrofoil (boat), kropotkin (person), mongoloid (physical特征), oxycontin (drug), proboscis (body part). That's nine vs seven.\n\nSo the question could be: \"Can your word mean an abstract concept or state?\" That would put nine in yes and seven in no.\n\nAlternatively, to make it more balanced, perhaps focusing on whether the word can mean a type of activity or process. Courtship is an activity, portfolio can involve managing investments (activity), prognosis is a process, psychosis is a state (not activity), but maybe not.\n\nAlternatively, focusing on whether the word can mean a type of organization. Nonprofit is an organization, portfolio can be a collection (not exactly an organization), troopship is a type of ship used by organizations. Maybe not.\n\nWait, another angle: words that can be used to describe a person's mental state. Psychosis, psychotic. That's two, which is too few.\n\nAlternatively, words that can describe a type of transportation. Hydrofoil, troopship. That's two.\n\nHmm, perhaps I'm overcomplicating. Let's look for a question that naturally splits the list in"
+    }
+  ],
+  "stopReason": "run-budget",
+  "finishedAt": "2026-10-02T16:48:55.027Z",
+  "budget": {
+    "day": "2026-10-02",
+    "requests": 242,
+    "reservedNeurons": 6220.597737000005,
+    "maxRequests": 1800,
+    "maxNeurons": 9000,
+    "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
+  },
+  "mappingSha256": "76d1bebf17fb83a7230d23f2f087c4da82af981f456766453c477a9d3acb2e7f",
+  "summary": {
+    "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b": {
+      "invent": {
+        "requests": 4,
+        "sent": 4,
+        "outcomes": {
+          "unparseable": 3,
+          "accepted": 1
+        },
+        "acceptedRate": 0.25,
+        "strictJsonRate": 0.25,
+        "validListsRate": 0.25,
+        "invalidRate": 0.75,
+        "split": {
+          "meanYesShare": 0.4667,
+          "meanDistanceFromHalf": 0.0333,
+          "inBand": 1,
+          "withValidLists": 1
+        },
+        "accuracy": {
+          "scoredRequests": 1,
+          "unmappedQuestions": 0,
+          "labelled": 5,
+          "correct": 5,
+          "falseYes": 0,
+          "falseNo": 0,
+          "wordnetYes": 1,
+          "wordnetNo": 4,
+          "accuracy": 1,
+          "falseYesRate": 0,
+          "falseNoRate": 0,
+          "answerChecked": 1,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 25822.4525,
+          "p95": 84415.8121,
+          "max": 84415.8121,
+          "within3s": 0,
+          "within5s": 0,
+          "within8s": 0,
+          "acceptedWithin3s": 0,
+          "acceptedWithin8s": 0
+        },
+        "tokens": {
+          "requestsWithUsage": 4,
+          "meanPrompt": 267.5,
+          "meanCompletion": 1353.25,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 280.25,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 2450.3831,
+          "estimatedPerRequest": 612.5958,
+          "providerReportedTotal": 2450.3854,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "8-master",
+            "codes": [
+              "y"
+            ],
+            "labelled": 5,
+            "unlabelled": 10,
+            "correct": 5,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 4,
+            "answer": {
+              "wordnet": true,
+              "said": true,
+              "misfiled": false
+            },
+            "disagreements": []
+          }
+        ]
+      }
+    }
+  }
+}

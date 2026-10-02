@@ -1,0 +1,1650 @@
+{
+  "schemaVersion": 1,
+  "phase": "run",
+  "startedAt": "2026-10-02T16:49:15.082Z",
+  "status": "stopped",
+  "configuration": {
+    "models": [
+      "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "@cf/openai/gpt-oss-120b",
+      "@cf/qwen/qwen3.8-27b"
+    ],
+    "modes": [
+      "invent",
+      "sort"
+    ],
+    "promptVersion": "d1-1",
+    "prompts": {
+      "invent": "You help Illucia, a Hangman player, narrow down a hidden English word by its MEANING. The user message is a JSON object whose \"candidates\" field lists every word the hidden word could be.\n1. Invent ONE yes/no question about what the word can mean: what kind of thing, action or quality it is. Start it with \"Can your word mean\" and end it with \"?\". It must not be about letters, spelling, sounds, rhymes or length.\n2. A word is YES if ANY of its meanings fits, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n3. Choose a question that puts roughly half of the candidates in YES and half in NO.\n4. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"question\": \"...\", \"yes\": [\"...\"], \"no\": [\"...\"]}",
+      "sort": "Sort English words by MEANING. The user message is a JSON object with a yes/no \"question\" and a \"candidates\" list.\n1. A word is YES if ANY of its meanings fits the question, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n2. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"yes\": [\"...\"], \"no\": [\"...\"]}"
+    },
+    "promptSha256": "1b85eda7ffdac6d528d315e22cc412da16cc78ad908d179233edb4585023a2d2",
+    "statesSha256": "4ddaee886368cbe7f44bde2512a66f443a0b33d7429bb4a973a17fcbf09d68e1",
+    "temperature": 0,
+    "seed": 20261002,
+    "maxTokens": 2048,
+    "modelOptions": {
+      "@cf/qwen/qwen3-30b-a3b-fp8": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/google/gemma-4-26b-a4b-it": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/zai-org/glm-4.7-flash": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/openai/gpt-oss-20b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/openai/gpt-oss-120b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/qwen/qwen3.8-27b": {
+        "reasoning_effort": "low"
+      }
+    },
+    "requestTimeoutMs": 60000,
+    "stateIds": [
+      "4-apprentice",
+      "6-scholar",
+      "8-master",
+      "9-scholar",
+      "10-apprentice"
+    ],
+    "retries": 0,
+    "timeoutsBeforeSkip": 3,
+    "evenSplit": [
+      0.25,
+      0.75
+    ],
+    "blockedTerms": 421,
+    "neuronRates": {
+      "@cf/meta/llama-3.3-70b-instruct-fp8-fast": {
+        "input": 26668,
+        "output": 204805
+      },
+      "@cf/openai/gpt-oss-120b": {
+        "input": 31818,
+        "output": 68182
+      },
+      "@cf/qwen/qwen3.8-27b": {
+        "input": 40909,
+        "output": 290909
+      }
+    },
+    "pricingChecked": "2026-10-02",
+    "maxRunNeurons": 2600
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32"
+  },
+  "requests": [
+    {
+      "state": "4-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 1082.7311,
+      "inputSha256": "63f4b2c9b1cd87453724ae04ffa7a1489e446e717d7dd473765127ccd8e131d5",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a bird?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "fowl"
+      ],
+      "no": [
+        "boil",
+        "bowl",
+        "coil",
+        "foil",
+        "foul",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.1111111111111111,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 276,
+        "completion_tokens": 45,
+        "reasoning_tokens": null,
+        "neurons": 16.57651710510254
+      },
+      "estimatedNeurons": 16.576593,
+      "providerReportedNeurons": 16.57651710510254,
+      "reasoningChars": 0,
+      "visibleChars": 124,
+      "response": "{\"question\": \"Can your word mean a bird?\", \"yes\": [\"fowl\"], \"no\": [\"boil\",\"bowl\",\"coil\",\"foil\",\"foul\",\"howl\",\"toil\",\"yowl\"]}"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/openai/gpt-oss-120b",
+      "mode": "invent",
+      "milliseconds": 5280.4358,
+      "inputSha256": "005bc2f83f87921b2d69568d4105ec36ef0ae761091d27333c65b67ccadca2e2",
+      "outcome": "rejected-question",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word be a noun that is a type of object?",
+      "problems": [
+        "wrong-opening"
+      ],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bowl",
+        "coil",
+        "foil",
+        "fowl"
+      ],
+      "no": [
+        "boil",
+        "foul",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.4444444444444444,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/openai/gpt-oss-120b",
+      "usage": {
+        "prompt_tokens": 310,
+        "completion_tokens": 489,
+        "reasoning_tokens": null,
+        "neurons": 43.2044792175293
+      },
+      "estimatedNeurons": 43.204578,
+      "providerReportedNeurons": 43.2044792175293,
+      "reasoningChars": 1440,
+      "visibleChars": 162,
+      "response": "{\n  \"question\": \"Can your word be a noun that is a type of object?\",\n  \"yes\": [\"bowl\", \"coil\", \"foil\", \"fowl\"],\n  \"no\": [\"boil\", \"foul\", \"howl\", \"toil\", \"yowl\"]\n}"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/qwen/qwen3.8-27b",
+      "mode": "invent",
+      "milliseconds": 42244.7887,
+      "inputSha256": "005bc2f83f87921b2d69568d4105ec36ef0ae761091d27333c65b67ccadca2e2",
+      "outcome": "unparseable",
+      "strictJson": false,
+      "envelope": "choices",
+      "finishReason": "length",
+      "providerModel": "@cf/qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 286,
+        "completion_tokens": 2048,
+        "reasoning_tokens": null,
+        "neurons": 607.4818115234375
+      },
+      "estimatedNeurons": 607.481606,
+      "providerReportedNeurons": 607.4818115234375,
+      "reasoningChars": 5972,
+      "visibleChars": 0,
+      "response": ""
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 1130.2452000000048,
+      "inputSha256": "105bc4d2d8107f956251e6fea958ac76f1b4e98140ef38cb570f3e5b0fe1f9ea",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bowl",
+        "coil",
+        "foil"
+      ],
+      "no": [
+        "boil",
+        "foul",
+        "fowl",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.3333333333333333,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 195,
+        "completion_tokens": 41,
+        "reasoning_tokens": null,
+        "neurons": 13.597213745117188
+      },
+      "estimatedNeurons": 13.597265,
+      "providerReportedNeurons": 13.597213745117188,
+      "reasoningChars": 0,
+      "visibleChars": 89,
+      "response": "{\"yes\": [\"bowl\", \"coil\", \"foil\"], \"no\": [\"boil\", \"foul\", \"fowl\", \"howl\", \"toil\", \"yowl\"]}"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/openai/gpt-oss-120b",
+      "mode": "sort",
+      "milliseconds": 2078.471700000002,
+      "inputSha256": "9aaf25059ce6a0798209531a45432e0fddca8572d5174faed7846fd71c764e84",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bowl",
+        "coil",
+        "foil"
+      ],
+      "no": [
+        "boil",
+        "foul",
+        "fowl",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.3333333333333333,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/openai/gpt-oss-120b",
+      "usage": {
+        "prompt_tokens": 230,
+        "completion_tokens": 147,
+        "reasoning_tokens": null,
+        "neurons": 17.340864181518555
+      },
+      "estimatedNeurons": 17.340894,
+      "providerReportedNeurons": 17.340864181518555,
+      "reasoningChars": 373,
+      "visibleChars": 79,
+      "response": "{\"yes\":[\"bowl\",\"coil\",\"foil\"],\"no\":[\"boil\",\"foul\",\"fowl\",\"howl\",\"toil\",\"yowl\"]}"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/qwen/qwen3.8-27b",
+      "mode": "sort",
+      "milliseconds": 6509.125,
+      "inputSha256": "9aaf25059ce6a0798209531a45432e0fddca8572d5174faed7846fd71c764e84",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bowl",
+        "coil",
+        "foil"
+      ],
+      "no": [
+        "boil",
+        "foul",
+        "fowl",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.3333333333333333,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 204,
+        "completion_tokens": 283,
+        "reasoning_tokens": null,
+        "neurons": 90.67272186279297
+      },
+      "estimatedNeurons": 90.672683,
+      "providerReportedNeurons": 90.67272186279297,
+      "reasoningChars": 820,
+      "visibleChars": 81,
+      "response": "\n\n{\"yes\":[\"bowl\",\"coil\",\"foil\"],\"no\":[\"boil\",\"foul\",\"fowl\",\"howl\",\"toil\",\"yowl\"]}"
+    },
+    {
+      "state": "6-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 1553.6344000000026,
+      "inputSha256": "3f68783d23ad911eeed5e462d5db29cfe329d4cfb1977c24c85b65638c2a6885",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a person?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "edison",
+        "elijah",
+        "elinor",
+        "elisha",
+        "ericka"
+      ],
+      "no": [
+        "edicts",
+        "editor",
+        "enigma",
+        "evicts",
+        "evilly",
+        "exists"
+      ],
+      "yesShare": 0.45454545454545453,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 284,
+        "completion_tokens": 62,
+        "reasoning_tokens": null,
+        "neurons": 20.271549224853516
+      },
+      "estimatedNeurons": 20.271622,
+      "providerReportedNeurons": 20.271549224853516,
+      "reasoningChars": 0,
+      "visibleChars": 171,
+      "response": "{\"question\": \"Can your word mean a person?\", \"yes\": [\"edison\", \"elijah\", \"elinor\", \"elisha\", \"ericka\"], \"no\": [\"edicts\", \"editor\", \"enigma\", \"evicts\", \"evilly\", \"exists\"]}"
+    },
+    {
+      "state": "6-scholar",
+      "model": "@cf/openai/gpt-oss-120b",
+      "mode": "invent",
+      "milliseconds": 2131.4128999999957,
+      "inputSha256": "60bbc06fc83c1b1e91a72ed9780a1c7a7d49367014e332e9091dbfb410cbe05d",
+      "outcome": "rejected-question",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word be a proper name of a person?",
+      "problems": [
+        "wrong-opening"
+      ],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "edison",
+        "elijah",
+        "elinor",
+        "elisha",
+        "ericka"
+      ],
+      "no": [
+        "edicts",
+        "editor",
+        "enigma",
+        "evicts",
+        "evilly",
+        "exists"
+      ],
+      "yesShare": 0.45454545454545453,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/openai/gpt-oss-120b",
+      "usage": {
+        "prompt_tokens": 316,
+        "completion_tokens": 390,
+        "reasoning_tokens": null,
+        "neurons": 36.6453857421875
+      },
+      "estimatedNeurons": 36.645468,
+      "providerReportedNeurons": 36.6453857421875,
+      "reasoningChars": 1172,
+      "visibleChars": 194,
+      "response": "{\n  \"question\": \"Can your word be a proper name of a person?\",\n  \"yes\": [\"edison\", \"elijah\", \"elinor\", \"elisha\", \"ericka\"],\n  \"no\": [\"edicts\", \"editor\", \"enigma\", \"evicts\", \"evilly\", \"exists\"]\n}"
+    },
+    {
+      "state": "6-scholar",
+      "model": "@cf/qwen/qwen3.8-27b",
+      "mode": "invent",
+      "milliseconds": 11652.020200000006,
+      "inputSha256": "60bbc06fc83c1b1e91a72ed9780a1c7a7d49367014e332e9091dbfb410cbe05d",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a person's name?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "edison",
+        "elijah",
+        "elinor",
+        "elisha",
+        "ericka"
+      ],
+      "no": [
+        "edicts",
+        "editor",
+        "enigma",
+        "evicts",
+        "evilly",
+        "exists"
+      ],
+      "yesShare": 0.45454545454545453,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 293,
+        "completion_tokens": 581,
+        "reasoning_tokens": null,
+        "neurons": 181.00453186035156
+      },
+      "estimatedNeurons": 181.004466,
+      "providerReportedNeurons": 181.00453186035156,
+      "reasoningChars": 1554,
+      "visibleChars": 166,
+      "response": "\n\n{\"question\":\"Can your word mean a person's name?\",\"yes\":[\"edison\",\"elijah\",\"elinor\",\"elisha\",\"ericka\"],\"no\":[\"edicts\",\"editor\",\"enigma\",\"evicts\",\"evilly\",\"exists\"]}"
+    },
+    {
+      "state": "6-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 1900.4035000000003,
+      "inputSha256": "e04bc2253fa611ce7202cba4621aa882ab2c3a835814fd984a0fe5697330c5cf",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "edison",
+        "editor",
+        "elijah",
+        "elinor",
+        "elisha",
+        "ericka"
+      ],
+      "no": [
+        "edicts",
+        "enigma",
+        "evicts",
+        "evilly",
+        "exists"
+      ],
+      "yesShare": 0.5454545454545454,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 206,
+        "completion_tokens": 51,
+        "reasoning_tokens": null,
+        "neurons": 15.93861198425293
+      },
+      "estimatedNeurons": 15.938663,
+      "providerReportedNeurons": 15.93861198425293,
+      "reasoningChars": 0,
+      "visibleChars": 127,
+      "response": "{\"yes\": [\"editor\", \"elijah\", \"elinor\", \"elisha\", \"ericka\", \"edison\"], \"no\": [\"edicts\", \"enigma\", \"evicts\", \"evilly\", \"exists\"]}"
+    },
+    {
+      "state": "6-scholar",
+      "model": "@cf/openai/gpt-oss-120b",
+      "mode": "sort",
+      "milliseconds": 2279.7981,
+      "inputSha256": "0ae5a05ee69523d5d26e77e23c1710ecf9c40fa2eb3a74f967e02e671f0b791a",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "edison",
+        "editor",
+        "elijah",
+        "elinor",
+        "elisha",
+        "ericka"
+      ],
+      "no": [
+        "edicts",
+        "enigma",
+        "evicts",
+        "evilly",
+        "exists"
+      ],
+      "yesShare": 0.5454545454545454,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/openai/gpt-oss-120b",
+      "usage": {
+        "prompt_tokens": 239,
+        "completion_tokens": 185,
+        "reasoning_tokens": null,
+        "neurons": 20.2181339263916
+      },
+      "estimatedNeurons": 20.218172,
+      "providerReportedNeurons": 20.2181339263916,
+      "reasoningChars": 448,
+      "visibleChars": 115,
+      "response": "{\"yes\":[\"edison\",\"editor\",\"elijah\",\"elinor\",\"elisha\",\"ericka\"],\"no\":[\"edicts\",\"enigma\",\"evicts\",\"evilly\",\"exists\"]}"
+    },
+    {
+      "state": "6-scholar",
+      "model": "@cf/qwen/qwen3.8-27b",
+      "mode": "sort",
+      "milliseconds": 10430.157200000001,
+      "inputSha256": "0ae5a05ee69523d5d26e77e23c1710ecf9c40fa2eb3a74f967e02e671f0b791a",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "edison",
+        "editor",
+        "elijah",
+        "elinor",
+        "elisha",
+        "ericka"
+      ],
+      "no": [
+        "edicts",
+        "enigma",
+        "evicts",
+        "evilly",
+        "exists"
+      ],
+      "yesShare": 0.5454545454545454,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 214,
+        "completion_tokens": 382,
+        "reasoning_tokens": null,
+        "neurons": 119.8818130493164
+      },
+      "estimatedNeurons": 119.881764,
+      "providerReportedNeurons": 119.8818130493164,
+      "reasoningChars": 1218,
+      "visibleChars": 117,
+      "response": "\n\n{\"yes\":[\"edison\",\"editor\",\"elijah\",\"elinor\",\"elisha\",\"ericka\"],\"no\":[\"edicts\",\"enigma\",\"evicts\",\"evilly\",\"exists\"]}"
+    },
+    {
+      "state": "8-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 2402.563200000004,
+      "inputSha256": "539e89737187141a3119cb25cee5c4b6ad62b04185ce84d6b0ae19f474aff43e",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a place?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "boltonia",
+        "colombia",
+        "columbia",
+        "fostoria",
+        "mongolia",
+        "monrovia",
+        "suburbia"
+      ],
+      "no": [
+        "dyslogia",
+        "dystonia",
+        "dystopia",
+        "myotonia",
+        "photopia",
+        "scotopia",
+        "strontia",
+        "syncytia"
+      ],
+      "yesShare": 0.4666666666666667,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 309,
+        "completion_tokens": 91,
+        "reasoning_tokens": null,
+        "neurons": 26.877593994140625
+      },
+      "estimatedNeurons": 26.877667,
+      "providerReportedNeurons": 26.877593994140625,
+      "reasoningChars": 0,
+      "visibleChars": 240,
+      "response": "{\"question\": \"Can your word mean a place?\", \"yes\": [\"colombia\", \"columbia\", \"fostoria\", \"monrovia\", \"mongolia\", \"boltonia\", \"suburbia\"], \"no\": [\"dyslogia\", \"dystonia\", \"dystopia\", \"myotonia\", \"photopia\", \"scotopia\", \"strontia\", \"syncytia\"]}"
+    },
+    {
+      "state": "8-master",
+      "model": "@cf/openai/gpt-oss-120b",
+      "mode": "invent",
+      "milliseconds": 5374.454899999997,
+      "inputSha256": "5512e2d144858aee555944678b74329ef49e19ff328c4a4e2d1a74ea38638b1b",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a medical condition or disorder?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "dyslogia",
+        "dystonia",
+        "myotonia",
+        "photopia",
+        "scotopia",
+        "syncytia"
+      ],
+      "no": [
+        "boltonia",
+        "colombia",
+        "columbia",
+        "dystopia",
+        "fostoria",
+        "mongolia",
+        "monrovia",
+        "strontia",
+        "suburbia"
+      ],
+      "yesShare": 0.4,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/openai/gpt-oss-120b",
+      "usage": {
+        "prompt_tokens": 342,
+        "completion_tokens": 630,
+        "reasoning_tokens": null,
+        "neurons": 53.83628845214844
+      },
+      "estimatedNeurons": 53.836416,
+      "providerReportedNeurons": 53.83628845214844,
+      "reasoningChars": 1825,
+      "visibleChars": 272,
+      "response": "{\n  \"question\": \"Can your word mean a medical condition or disorder?\",\n  \"yes\": [\"dystonia\", \"myotonia\", \"dyslogia\", \"photopia\", \"scotopia\", \"syncytia\"],\n  \"no\": [\"boltonia\", \"columbia\", \"colombia\", \"fostoria\", \"mongolia\", \"monrovia\", \"strontia\", \"suburbia\", \"dystopia\"]\n}"
+    },
+    {
+      "state": "8-master",
+      "model": "@cf/qwen/qwen3.8-27b",
+      "mode": "invent",
+      "milliseconds": 37951.7807,
+      "inputSha256": "5512e2d144858aee555944678b74329ef49e19ff328c4a4e2d1a74ea38638b1b",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a place or location?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "colombia",
+        "columbia",
+        "dystopia",
+        "fostoria",
+        "mongolia",
+        "monrovia",
+        "suburbia"
+      ],
+      "no": [
+        "boltonia",
+        "dyslogia",
+        "dystonia",
+        "myotonia",
+        "photopia",
+        "scotopia",
+        "strontia",
+        "syncytia"
+      ],
+      "yesShare": 0.4666666666666667,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 320,
+        "completion_tokens": 789,
+        "reasoning_tokens": null,
+        "neurons": 242.61817932128906
+      },
+      "estimatedNeurons": 242.618081,
+      "providerReportedNeurons": 242.61817932128906,
+      "reasoningChars": 2260,
+      "visibleChars": 236,
+      "response": "\n\n{\"question\":\"Can your word mean a place or location?\",\"yes\":[\"colombia\",\"columbia\",\"dystopia\",\"fostoria\",\"mongolia\",\"monrovia\",\"suburbia\"],\"no\":[\"boltonia\",\"dyslogia\",\"dystonia\",\"myotonia\",\"photopia\",\"scotopia\",\"strontia\",\"syncytia\"]}"
+    },
+    {
+      "state": "8-master",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "sort",
+      "milliseconds": 2306.463400000008,
+      "inputSha256": "5bb5a4d4813408e669054a2790427c30ecb9bec02c9e334022df6da86ea62d76",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "boltonia",
+        "colombia",
+        "columbia",
+        "dystopia",
+        "fostoria",
+        "mongolia",
+        "monrovia",
+        "scotopia",
+        "suburbia"
+      ],
+      "no": [
+        "dyslogia",
+        "dystonia",
+        "myotonia",
+        "photopia",
+        "strontia",
+        "syncytia"
+      ],
+      "yesShare": 0.6,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 226,
+        "completion_tokens": 80,
+        "reasoning_tokens": null,
+        "neurons": 22.411319732666016
+      },
+      "estimatedNeurons": 22.411368,
+      "providerReportedNeurons": 22.411319732666016,
+      "reasoningChars": 0,
+      "visibleChars": 197,
+      "response": "{\"yes\": [\"colombia\", \"columbia\", \"dystopia\", \"fostoria\", \"mongolia\", \"monrovia\", \"scotopia\", \"suburbia\", \"boltonia\"], \"no\": [\"dyslogia\", \"dystonia\", \"myotonia\", \"photopia\", \"strontia\", \"syncytia\"]}"
+    },
+    {
+      "state": "8-master",
+      "model": "@cf/openai/gpt-oss-120b",
+      "mode": "sort",
+      "milliseconds": 19812.840199999977,
+      "inputSha256": "0d24f8f35a8070b57e14bd6a14d2da6a9aa10364b5078c40150ae70befb817fa",
+      "outcome": "wrong-lists",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [
+          "myotonia"
+        ],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": null,
+      "no": null,
+      "yesShare": null,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/openai/gpt-oss-120b",
+      "usage": {
+        "prompt_tokens": 260,
+        "completion_tokens": 370,
+        "reasoning_tokens": null,
+        "neurons": 33.499942779541016
+      },
+      "estimatedNeurons": 33.50002,
+      "providerReportedNeurons": 33.499942779541016,
+      "reasoningChars": 1002,
+      "visibleChars": 170,
+      "response": "{\"yes\":[\"colombia\",\"columbia\",\"mongolia\",\"monrovia\",\"suburbia\",\"fostoria\",\"dystopia\"],\"no\":[\"boltonia\",\"dyslogia\",\"dystonia\",\"photopia\",\"scotopia\",\"strontia\",\"syncytia\"]}"
+    },
+    {
+      "state": "8-master",
+      "model": "@cf/qwen/qwen3.8-27b",
+      "mode": "sort",
+      "milliseconds": 13219.441599999991,
+      "inputSha256": "0d24f8f35a8070b57e14bd6a14d2da6a9aa10364b5078c40150ae70befb817fa",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "colombia",
+        "columbia",
+        "dystopia",
+        "fostoria",
+        "mongolia",
+        "monrovia",
+        "suburbia"
+      ],
+      "no": [
+        "boltonia",
+        "dyslogia",
+        "dystonia",
+        "myotonia",
+        "photopia",
+        "scotopia",
+        "strontia",
+        "syncytia"
+      ],
+      "yesShare": 0.4666666666666667,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 236,
+        "completion_tokens": 578,
+        "reasoning_tokens": null,
+        "neurons": 177.79998779296875
+      },
+      "estimatedNeurons": 177.799926,
+      "providerReportedNeurons": 177.79998779296875,
+      "reasoningChars": 1798,
+      "visibleChars": 183,
+      "response": "\n\n{\"yes\":[\"colombia\",\"columbia\",\"dystopia\",\"fostoria\",\"mongolia\",\"monrovia\",\"suburbia\"],\"no\":[\"boltonia\",\"dyslogia\",\"dystonia\",\"myotonia\",\"photopia\",\"scotopia\",\"strontia\",\"syncytia\"]}"
+    },
+    {
+      "state": "9-scholar",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "mode": "invent",
+      "milliseconds": 2138.623200000002,
+      "inputSha256": "5023f88d0f376a001921a7012c33f7078b2d31c29ef70ebc1153bc100fc445e6",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a medical term?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "mongoloid",
+        "monotonic",
+        "oxycontin",
+        "proboscis",
+        "prognosis",
+        "psychosis",
+        "psychotic"
+      ],
+      "no": [
+        "courtship",
+        "dubrovnik",
+        "hobgoblin",
+        "hydrofoil",
+        "kropotkin",
+        "nonprofit",
+        "portfolio",
+        "symphonic",
+        "troopship"
+      ],
+      "yesShare": 0.4375,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/meta/llama-3.3-70b-instruct-sd",
+      "usage": {
+        "prompt_tokens": 309,
+        "completion_tokens": 93,
+        "reasoning_tokens": null,
+        "neurons": 27.28720474243164
+      },
+      "estimatedNeurons": 27.287277,
+      "providerReportedNeurons": 27.28720474243164,
+      "reasoningChars": 0,
+      "visibleChars": 275,
+      "response": "{\"question\": \"Can your word mean a medical term?\", \"yes\": [\"mongoloid\", \"monotonic\", \"oxycontin\", \"proboscis\", \"prognosis\", \"psychosis\", \"psychotic\"], \"no\": [\"courtship\", \"dubrovnik\", \"hobgoblin\", \"hydrofoil\", \"kropotkin\", \"nonprofit\", \"portfolio\", \"symphonic\", \"troopship\"]}"
+    },
+    {
+      "state": "9-scholar",
+      "model": "@cf/openai/gpt-oss-120b",
+      "mode": "invent",
+      "milliseconds": 11738.772700000001,
+      "inputSha256": "b5a9a862061b07acdaf7e74fc31ef3334e196d7e9590348e73111db1d1b50fb3",
+      "outcome": "rejected-question",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word refer to a mental health condition or disorder?",
+      "problems": [
+        "wrong-opening"
+      ],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "mongoloid",
+        "psychosis",
+        "psychotic"
+      ],
+      "no": [
+        "courtship",
+        "dubrovnik",
+        "hobgoblin",
+        "hydrofoil",
+        "kropotkin",
+        "monotonic",
+        "nonprofit",
+        "oxycontin",
+        "portfolio",
+        "proboscis",
+        "prognosis",
+        "symphonic",
+        "troopship"
+      ],
+      "yesShare": 0.1875,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/openai/gpt-oss-120b",
+      "usage": {
+        "prompt_tokens": 344,
+        "completion_tokens": 1473,
+        "reasoning_tokens": null,
+        "neurons": 111.3771743774414
+      },
+      "estimatedNeurons": 111.377478,
+      "providerReportedNeurons": 111.3771743774414,
+      "reasoningChars": 5114,
+      "visibleChars": 310,
+      "response": "{\n  \"question\": \"Can your word refer to a mental health condition or disorder?\",\n  \"yes\": [\"mongoloid\", \"psychosis\", \"psychotic\"],\n  \"no\": [\"courtship\", \"dubrovnik\", \"hobgoblin\", \"hydrofoil\", \"kropotkin\", \"monotonic\", \"nonprofit\", \"oxycontin\", \"portfolio\", \"proboscis\", \"prognosis\", \"symphonic\", \"troopship\"]\n}"
+    },
+    {
+      "state": "9-scholar",
+      "model": "@cf/qwen/qwen3.8-27b",
+      "mode": "invent",
+      "milliseconds": 43775.2322,
+      "inputSha256": "b5a9a862061b07acdaf7e74fc31ef3334e196d7e9590348e73111db1d1b50fb3",
+      "outcome": "unparseable",
+      "strictJson": false,
+      "envelope": "choices",
+      "finishReason": "length",
+      "providerModel": "@cf/qwen/qwen3.8-27b",
+      "usage": {
+        "prompt_tokens": 321,
+        "completion_tokens": 2048,
+        "reasoning_tokens": null,
+        "neurons": 608.9136352539062
+      },
+      "estimatedNeurons": 608.913421,
+      "providerReportedNeurons": 608.9136352539062,
+      "reasoningChars": 6670,
+      "visibleChars": 0,
+      "response": ""
+    }
+  ],
+  "stopReason": "run-budget",
+  "finishedAt": "2026-10-02T16:53:02.101Z",
+  "budget": {
+    "day": "2026-10-02",
+    "requests": 263,
+    "reservedNeurons": 8708.053165000003,
+    "maxRequests": 1800,
+    "maxNeurons": 9000,
+    "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
+  },
+  "mappingSha256": "76d1bebf17fb83a7230d23f2f087c4da82af981f456766453c477a9d3acb2e7f",
+  "summary": {
+    "@cf/meta/llama-3.3-70b-instruct-fp8-fast": {
+      "invent": {
+        "requests": 4,
+        "sent": 4,
+        "outcomes": {
+          "uneven": 1,
+          "accepted": 3
+        },
+        "acceptedRate": 0.75,
+        "strictJsonRate": 1,
+        "validListsRate": 1,
+        "invalidRate": 0,
+        "split": {
+          "meanYesShare": 0.3675,
+          "meanDistanceFromHalf": 0.1325,
+          "inBand": 3,
+          "withValidLists": 4
+        },
+        "accuracy": {
+          "scoredRequests": 3,
+          "unmappedQuestions": 1,
+          "labelled": 20,
+          "correct": 19,
+          "falseYes": 0,
+          "falseNo": 1,
+          "wordnetYes": 3,
+          "wordnetNo": 17,
+          "accuracy": 0.95,
+          "falseYesRate": 0,
+          "falseNoRate": 0.3333,
+          "answerChecked": 3,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 1553.6344,
+          "p95": 2402.5632,
+          "max": 2402.5632,
+          "within3s": 1,
+          "within5s": 1,
+          "within8s": 1,
+          "acceptedWithin3s": 0.75,
+          "acceptedWithin8s": 0.75
+        },
+        "tokens": {
+          "requestsWithUsage": 4,
+          "meanPrompt": 294.5,
+          "meanCompletion": 72.75,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 5,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 91.0132,
+          "estimatedPerRequest": 22.7533,
+          "providerReportedTotal": 91.0129,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "4-apprentice",
+            "codes": [
+              "c"
+            ],
+            "labelled": 9,
+            "unlabelled": 0,
+            "correct": 9,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 8,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": []
+          },
+          {
+            "state": "6-scholar",
+            "codes": [
+              "a"
+            ],
+            "labelled": 6,
+            "unlabelled": 5,
+            "correct": 5,
+            "falseYes": 0,
+            "falseNo": 1,
+            "wordnetYes": 1,
+            "wordnetNo": 5,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": [
+              "-editor"
+            ]
+          },
+          {
+            "state": "8-master",
+            "codes": [
+              "y"
+            ],
+            "labelled": 5,
+            "unlabelled": 10,
+            "correct": 5,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 4,
+            "answer": {
+              "wordnet": true,
+              "said": true,
+              "misfiled": false
+            },
+            "disagreements": []
+          }
+        ]
+      },
+      "sort": {
+        "requests": 3,
+        "sent": 3,
+        "outcomes": {
+          "accepted": 3
+        },
+        "acceptedRate": 1,
+        "strictJsonRate": 1,
+        "validListsRate": 1,
+        "invalidRate": 0,
+        "split": {
+          "meanYesShare": 0.4929,
+          "meanDistanceFromHalf": 0.104,
+          "inBand": 3,
+          "withValidLists": 3
+        },
+        "accuracy": {
+          "scoredRequests": 3,
+          "unmappedQuestions": 0,
+          "labelled": 20,
+          "correct": 19,
+          "falseYes": 1,
+          "falseNo": 0,
+          "wordnetYes": 5,
+          "wordnetNo": 15,
+          "accuracy": 0.95,
+          "falseYesRate": 0.0667,
+          "falseNoRate": 0,
+          "answerChecked": 3,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 1900.4035,
+          "p95": 2306.4634,
+          "max": 2306.4634,
+          "within3s": 1,
+          "within5s": 1,
+          "within8s": 1,
+          "acceptedWithin3s": 1,
+          "acceptedWithin8s": 1
+        },
+        "tokens": {
+          "requestsWithUsage": 3,
+          "meanPrompt": 209,
+          "meanCompletion": 57.3333,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 11,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 51.9473,
+          "estimatedPerRequest": 17.3158,
+          "providerReportedTotal": 51.9471,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "4-apprentice",
+            "codes": [
+              "o"
+            ],
+            "labelled": 9,
+            "unlabelled": 0,
+            "correct": 9,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 3,
+            "wordnetNo": 6,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": []
+          },
+          {
+            "state": "6-scholar",
+            "codes": [
+              "a"
+            ],
+            "labelled": 6,
+            "unlabelled": 5,
+            "correct": 6,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 5,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": []
+          },
+          {
+            "state": "8-master",
+            "codes": [
+              "y"
+            ],
+            "labelled": 5,
+            "unlabelled": 10,
+            "correct": 4,
+            "falseYes": 1,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 4,
+            "answer": {
+              "wordnet": true,
+              "said": true,
+              "misfiled": false
+            },
+            "disagreements": [
+              "+dystopia"
+            ]
+          }
+        ]
+      }
+    },
+    "@cf/openai/gpt-oss-120b": {
+      "invent": {
+        "requests": 4,
+        "sent": 4,
+        "outcomes": {
+          "rejected-question": 3,
+          "accepted": 1
+        },
+        "acceptedRate": 0.25,
+        "strictJsonRate": 1,
+        "validListsRate": 1,
+        "invalidRate": 0,
+        "split": {
+          "meanYesShare": 0.3716,
+          "meanDistanceFromHalf": 0.1284,
+          "inBand": 3,
+          "withValidLists": 4
+        },
+        "accuracy": {
+          "scoredRequests": 0,
+          "unmappedQuestions": 4,
+          "labelled": 0,
+          "correct": 0,
+          "falseYes": 0,
+          "falseNo": 0,
+          "wordnetYes": 0,
+          "wordnetNo": 0,
+          "accuracy": null,
+          "falseYesRate": null,
+          "falseNoRate": null,
+          "answerChecked": 0,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 5280.4358,
+          "p95": 11738.7727,
+          "max": 11738.7727,
+          "within3s": 0.25,
+          "within5s": 0.25,
+          "within8s": 0.75,
+          "acceptedWithin3s": 0,
+          "acceptedWithin8s": 0.25
+        },
+        "tokens": {
+          "requestsWithUsage": 4,
+          "meanPrompt": 328,
+          "meanCompletion": 745.5,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 667,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 245.0639,
+          "estimatedPerRequest": 61.266,
+          "providerReportedTotal": 245.0633,
+          "requestsWithoutUsage": 0
+        },
+        "perState": []
+      },
+      "sort": {
+        "requests": 3,
+        "sent": 3,
+        "outcomes": {
+          "accepted": 2,
+          "wrong-lists": 1
+        },
+        "acceptedRate": 0.6667,
+        "strictJsonRate": 1,
+        "validListsRate": 0.6667,
+        "invalidRate": 0.3333,
+        "split": {
+          "meanYesShare": 0.4394,
+          "meanDistanceFromHalf": 0.1061,
+          "inBand": 2,
+          "withValidLists": 2
+        },
+        "accuracy": {
+          "scoredRequests": 2,
+          "unmappedQuestions": 0,
+          "labelled": 15,
+          "correct": 15,
+          "falseYes": 0,
+          "falseNo": 0,
+          "wordnetYes": 4,
+          "wordnetNo": 11,
+          "accuracy": 1,
+          "falseYesRate": 0,
+          "falseNoRate": 0,
+          "answerChecked": 2,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 2279.7981,
+          "p95": 19812.8402,
+          "max": 19812.8402,
+          "within3s": 0.6667,
+          "within5s": 0.6667,
+          "within8s": 0.6667,
+          "acceptedWithin3s": 0.6667,
+          "acceptedWithin8s": 0.6667
+        },
+        "tokens": {
+          "requestsWithUsage": 3,
+          "meanPrompt": 243,
+          "meanCompletion": 234,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 193,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 71.0591,
+          "estimatedPerRequest": 23.6864,
+          "providerReportedTotal": 71.0589,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "4-apprentice",
+            "codes": [
+              "o"
+            ],
+            "labelled": 9,
+            "unlabelled": 0,
+            "correct": 9,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 3,
+            "wordnetNo": 6,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": []
+          },
+          {
+            "state": "6-scholar",
+            "codes": [
+              "a"
+            ],
+            "labelled": 6,
+            "unlabelled": 5,
+            "correct": 6,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 5,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": []
+          }
+        ]
+      }
+    },
+    "@cf/qwen/qwen3.8-27b": {
+      "invent": {
+        "requests": 4,
+        "sent": 4,
+        "outcomes": {
+          "unparseable": 2,
+          "accepted": 2
+        },
+        "acceptedRate": 0.5,
+        "strictJsonRate": 0.5,
+        "validListsRate": 0.5,
+        "invalidRate": 0.5,
+        "split": {
+          "meanYesShare": 0.4606,
+          "meanDistanceFromHalf": 0.0394,
+          "inBand": 2,
+          "withValidLists": 2
+        },
+        "accuracy": {
+          "scoredRequests": 1,
+          "unmappedQuestions": 1,
+          "labelled": 5,
+          "correct": 4,
+          "falseYes": 1,
+          "falseNo": 0,
+          "wordnetYes": 1,
+          "wordnetNo": 4,
+          "accuracy": 0.8,
+          "falseYesRate": 0.25,
+          "falseNoRate": 0,
+          "answerChecked": 1,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 37951.7807,
+          "p95": 43775.2322,
+          "max": 43775.2322,
+          "within3s": 0,
+          "within5s": 0,
+          "within8s": 0,
+          "acceptedWithin3s": 0,
+          "acceptedWithin8s": 0
+        },
+        "tokens": {
+          "requestsWithUsage": 4,
+          "meanPrompt": 305,
+          "meanCompletion": 1366.5,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 1332.75,
+          "cutOffByLength": 2
+        },
+        "neurons": {
+          "estimatedTotal": 1640.0176,
+          "estimatedPerRequest": 410.0044,
+          "providerReportedTotal": 1640.0182,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "8-master",
+            "codes": [
+              "y"
+            ],
+            "labelled": 5,
+            "unlabelled": 10,
+            "correct": 4,
+            "falseYes": 1,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 4,
+            "answer": {
+              "wordnet": true,
+              "said": true,
+              "misfiled": false
+            },
+            "disagreements": [
+              "+dystopia"
+            ]
+          }
+        ]
+      },
+      "sort": {
+        "requests": 3,
+        "sent": 3,
+        "outcomes": {
+          "accepted": 3
+        },
+        "acceptedRate": 1,
+        "strictJsonRate": 1,
+        "validListsRate": 1,
+        "invalidRate": 0,
+        "split": {
+          "meanYesShare": 0.4485,
+          "meanDistanceFromHalf": 0.0818,
+          "inBand": 3,
+          "withValidLists": 3
+        },
+        "accuracy": {
+          "scoredRequests": 3,
+          "unmappedQuestions": 0,
+          "labelled": 20,
+          "correct": 19,
+          "falseYes": 1,
+          "falseNo": 0,
+          "wordnetYes": 5,
+          "wordnetNo": 15,
+          "accuracy": 0.95,
+          "falseYesRate": 0.0667,
+          "falseNoRate": 0,
+          "answerChecked": 3,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 10430.1572,
+          "p95": 13219.4416,
+          "max": 13219.4416,
+          "within3s": 0,
+          "within5s": 0,
+          "within8s": 0.3333,
+          "acceptedWithin3s": 0,
+          "acceptedWithin8s": 0.3333
+        },
+        "tokens": {
+          "requestsWithUsage": 3,
+          "meanPrompt": 218,
+          "meanCompletion": 414.3333,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 372,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 388.3544,
+          "estimatedPerRequest": 129.4515,
+          "providerReportedTotal": 388.3545,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "4-apprentice",
+            "codes": [
+              "o"
+            ],
+            "labelled": 9,
+            "unlabelled": 0,
+            "correct": 9,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 3,
+            "wordnetNo": 6,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": []
+          },
+          {
+            "state": "6-scholar",
+            "codes": [
+              "a"
+            ],
+            "labelled": 6,
+            "unlabelled": 5,
+            "correct": 6,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 5,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": []
+          },
+          {
+            "state": "8-master",
+            "codes": [
+              "y"
+            ],
+            "labelled": 5,
+            "unlabelled": 10,
+            "correct": 4,
+            "falseYes": 1,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 4,
+            "answer": {
+              "wordnet": true,
+              "said": true,
+              "misfiled": false
+            },
+            "disagreements": [
+              "+dystopia"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

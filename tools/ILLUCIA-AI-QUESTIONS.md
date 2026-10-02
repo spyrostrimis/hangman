@@ -164,6 +164,60 @@ costs about 6–7 neurons a request. **The pick is `@cf/google/gemma-4-26b-a4b-i
 reasoning off.** At the planned ~50 requests a day it would use about 350 neurons, 3.5% of
 the 10,000 free allowance.
 
+## Second round: four bigger or reasoning models
+
+Requested 2026-10-02 after round one, run the same day: Llama 3.3 70B, gpt-oss-120b and
+Qwen3.8 27B (both at `reasoning_effort: "low"`, their lowest; Qwen3.8 has no off switch),
+and DeepSeek R1 Distill Qwen 32B, which always reasons and has no control. The owner raised
+the daily ledger ceiling to 9,000 neurons for it.
+
+**States.** Five frozen states chosen for spread and cost: `4-apprentice`, `6-scholar`,
+`8-master`, `9-scholar`, `10-apprentice`. They cover three tiers, five lengths, four
+control categories (man-made object, person, place, adjective), and answers WordNet knows.
+They also have the smallest lists (9–16 candidates), to keep R1 affordable, so they are
+**easier than the full set**: Gemma scored 4/4 on them against 10/21 overall.
+
+**Runs and stops.**
+- **R1** (`illucia-d1-r1-invent.json`): invent only, a 3,000-neuron ceiling and a 120 s
+  timeout. It spent 2,450 neurons on 4 requests. The ceiling, which now counts the next
+  request's worst case (about 920 neurons for R1), refused the fifth.
+- **The other three** (`illucia-d1-round2.json`): both tasks, interleaved by state, a
+  2,600-neuron ceiling and a 60 s timeout. The ceiling stopped them after 21 requests: the
+  `9-scholar` sorts and all of `10-apprentice` were not run. Qwen3.8 alone spent 2,028
+  of the round's 2,487 neurons.
+
+**Comparison on the four states every model ran** (round-one models' results restricted
+to the same states):
+
+| Model | Invent usable | Usable ≤3 s / ≤8 s | Invent p50 / max | Agrees with WordNet (both tasks) | Real word on the wrong side | Neurons / request |
+|---|---:|---:|---:|---:|---:|---:|
+| Gemma 4 26B A4B (round-one pick) | 4/4 | 3 / 4 | 1.9 / 7.9 s | 36/38 | 0/5 | ~4–5 |
+| **Llama 3.3 70B** | 3/4 | 3 / 3 | 1.6 / 2.4 s | 38/40 | 0/6 | ~17–23 |
+| Llama 3.1 8B | 4/4 | 4 / 4 | 0.7 / 0.8 s | 33/45 | 3/5 | ~3 |
+| gpt-oss-120b (low) | 1/4 | 0 / 1 | 5.3 / 11.7 s | 15/15 | 0/2 | ~24–61 |
+| Qwen3.8 27B (low) | 2/4 | 0 / 0 | 38.0 / 43.8 s | 23/25 | 0/4 | ~130–410 |
+| DeepSeek R1 Distill 32B | 1/4 | 0 / 0 | 25.8 / 84.4 s | 5/5 | 0/1 | ~610 |
+
+What happened to each new model:
+- **Llama 3.3 70B** gave clean, even, checkable questions ("Can your word mean a person?",
+  "… a place?"), every reply within 2.4 s. Its one failure was an uneven "a bird?" on
+  9 words.
+- **gpt-oss-120b** asked sensible questions but broke the required wording three times
+  out of four ("Can your word be a proper name of a person?", "… refer to a mental health
+  condition …"), so the validator rejected them.
+- **Qwen3.8** answered correctly when it finished, but each reply took 10–44 s. Twice it
+  hit the 2,048-token ceiling without answering, at about 608 neurons each.
+- **R1** spent 773–2,048 tokens thinking per request. Two invents were cut off still
+  thinking (67–84 s, about 920 neurons each). One produced JSON the validator could not
+  parse, and one was usable after 17.8 s ("a place or country?", 7 of 15 YES).
+
+**Result.** Qwen3.8 and R1 are out: too slow for the 8 s pause and 30–150 times Gemma's
+cost per request. gpt-oss-120b's quality is promising, but it needs a wording fix and is
+still too slow at its lowest effort. **Llama 3.3 70B is the only new contender.** On these
+easier boards it matches Gemma's accuracy and is faster, at about 4× Gemma's cost
+(~20 neurons, so ~1,000 a day at the planned 50 requests). Four boards cannot separate it
+from Gemma. A full 21-state run of Llama 3.3 70B (about 1,000 neurons, next UTC day) would.
+
 ## Stopped run: reasoning on (`benchmarks/illucia-d1-reasoning-on.json`)
 
 The first run used each model's default reasoning (gpt-oss-20b at "low"), a 4,096-token
@@ -207,6 +261,10 @@ when the first run was stopped. Cloudflare may or may not bill those. Either way
 stayed under the local 6,000 cap and the account's 10,000 free allowance. The scored run
 stayed under its agreed 3,000-neuron ceiling (`--max-run-neurons`).
 
+The second round then spent a further 4,937 measured neurons (R1 2,450, the other three
+2,487). That brings the day to about 7,800 measured, and the ledger to 8,708 of the raised
+9,000 cap.
+
 ## What this means for D2 (not decided here)
 
 - **Half the time she falls back.** Even the best model gives a usable question on about
@@ -242,6 +300,6 @@ The probe sends one six-word sort per model, records each envelope and its hidde
 and projects the full run's cost from it. That projection is a floor for models whose
 reasoning grows with the list. `--options-json '{"<model>": {...}}'` overrides one run's
 model settings, and `--max-run-neurons` (default 3,000) caps a run inside the shared daily
-ledger of 1,800 requests and 6,000 reserved or measured neurons. Use a new output path to
+ledger of 1,800 requests and 9,000 reserved or measured neurons (6,000 before 2026-10-02). `--state-ids`, `--modes` and `--timeout-ms` select states, tasks and the request timeout. Use a new output path to
 keep earlier evidence. No npm script was added, to stay out of `package.json` while other
 tracks edit it.

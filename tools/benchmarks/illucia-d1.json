@@ -10589,7 +10589,7 @@
     "maxNeurons": 6000,
     "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
   },
-  "mappingSha256": "b5d7fefcc2c84d50a6a38b9c9cc2a6e328ddbfe9e53b67838036f8e733110470",
+  "mappingSha256": "76d1bebf17fb83a7230d23f2f087c4da82af981f456766453c477a9d3acb2e7f",
   "summary": {
     "@cf/qwen/qwen3-30b-a3b-fp8": {
       "invent": {

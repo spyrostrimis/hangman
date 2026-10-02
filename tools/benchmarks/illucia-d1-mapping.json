@@ -1,7 +1,7 @@
 {
   "judgedBy": "Claude (Opus 5.5), 2026-10-02, after the run and before computing accuracy; for Spyros to review",
   "rule": "A question is scored only if it asks the same thing as one B1 category or a union of them. Close but wider or narrower questions are not scored; their notes say why.",
-  "run": "benchmarks/illucia-d1.json",
+  "run": "benchmarks/illucia-d1.json, illucia-d1-r1-invent.json, illucia-d1-round2.json",
   "questions": {
     "can your word mean a type of bird?": {
       "codes": [
@@ -347,6 +347,44 @@
     "can your word mean to produce, emit, or develop something?": {
       "codes": null,
       "note": "No B1 category or union means the same."
+    },
+    "can your word mean a bird?": {
+      "codes": [
+        "c"
+      ],
+      "note": "Same as c."
+    },
+    "can your word mean a person?": {
+      "codes": [
+        "a"
+      ],
+      "note": "Same as a (a person or a kind of person)."
+    },
+    "can your word mean a medical term?": {
+      "codes": null,
+      "note": "Wider than E (an illness): any medical word."
+    },
+    "can your word mean a medical condition or disorder?": {
+      "codes": null,
+      "note": "Close to E (an illness), but a condition or disorder is wider."
+    },
+    "can your word mean a place or country?": {
+      "codes": [
+        "y"
+      ],
+      "note": "A country is a place; same as y."
+    },
+    "can your word be a noun that is a type of object?": {
+      "codes": null,
+      "note": "Grammar plus \"object\": wider than o (man-made object)."
+    },
+    "can your word be a proper name of a person?": {
+      "codes": null,
+      "note": "Base WordNet has no proper-noun instances."
+    },
+    "can your word refer to a mental health condition or disorder?": {
+      "codes": null,
+      "note": "Narrower than E (an illness)."
     }
   }
 }
