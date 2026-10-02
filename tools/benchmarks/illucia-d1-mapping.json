@@ -1,0 +1,352 @@
+{
+  "judgedBy": "Claude (Opus 5.5), 2026-10-02, after the run and before computing accuracy; for Spyros to review",
+  "rule": "A question is scored only if it asks the same thing as one B1 category or a union of them. Close but wider or narrower questions are not scored; their notes say why.",
+  "run": "benchmarks/illucia-d1.json",
+  "questions": {
+    "can your word mean a type of bird?": {
+      "codes": [
+        "c"
+      ],
+      "note": "Same as c."
+    },
+    "can your word mean a sound made by an animal?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a liquid that is hot enough to burn skin?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a verb that involves a sound or a repetitive motion?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a process or an activity?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a plural of a noun?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean something related to time or age?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a type of alcoholic drink?": {
+      "codes": null,
+      "note": "Narrower than m (a drink)."
+    },
+    "can your word mean a living thing?": {
+      "codes": null,
+      "note": "Close to a+b+g (person, animal, plant), but WordNet has no organism category and fungi or microbes would be missed."
+    },
+    "can your word mean a type of fish?": {
+      "codes": [
+        "e"
+      ],
+      "note": "Same as e."
+    },
+    "can your word mean something related to food or eating?": {
+      "codes": null,
+      "note": "\"Related to\" is wider than l (food or drink)."
+    },
+    "can your word mean a type of food or drink?": {
+      "codes": [
+        "l"
+      ],
+      "note": "Same as l."
+    },
+    "can your word mean a place?": {
+      "codes": [
+        "y"
+      ],
+      "note": "Same as y."
+    },
+    "can your word mean a type of animal or creature?": {
+      "codes": [
+        "b"
+      ],
+      "note": "Same as b."
+    },
+    "can your word mean a type of food?": {
+      "codes": null,
+      "note": "Narrower than l (food or drink): drinks would differ."
+    },
+    "can your word mean a type of surface texture?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean something related to food or cooking?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a type of fabric?": {
+      "codes": null,
+      "note": "Narrower than x (a substance or material)."
+    },
+    "can your word mean a place or location?": {
+      "codes": [
+        "y"
+      ],
+      "note": "Same as y."
+    },
+    "can your word mean a group of people?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean something related to clothing or garments?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a musical instrument?": {
+      "codes": [
+        "u"
+      ],
+      "note": "Same as B1 u."
+    },
+    "can your word mean an action or process?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean an action related to food or cooking?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a type of activity that involves a body part?": {
+      "codes": null,
+      "note": "Close to the verb M (something your body does), but a noun activity is not the same question."
+    },
+    "can your word mean a person who controls or manages something?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean something related to a person's name?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a formal command or order?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a person who is named?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a thing or an object?": {
+      "codes": null,
+      "note": "Wider than o (a man-made object): natural objects count too."
+    },
+    "can your word mean in a skillful way?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean something related to a physical sensation or a way of doing something?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean to make someone calm or quiet?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a noun that refers to a person or thing?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a quality or state?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a repeated action?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean an action involving taking or consuming something?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean to take something away from someone?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a type of action involving taking something away or adding?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a process or action?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a person's name?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean to move in a quick, light way?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a type of movement or sound that is light and playful?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean to move with a jerky or wiggling motion?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a type of movement?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a person who does something?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a person who performs a specific job or role?": {
+      "codes": null,
+      "note": "Close to C (a job, or someone who does one), but \"role\" is wider and C also counts the job itself."
+    },
+    "can your word mean a type of person?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a form of communication?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean something related to removing or cutting something out?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean something that involves a process of removal, cutting, ending, or attracting?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a process or an action?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a place or region?": {
+      "codes": [
+        "y"
+      ],
+      "note": "A region is a place; same as y."
+    },
+    "can your word mean a place or a geographical region?": {
+      "codes": [
+        "y"
+      ],
+      "note": "A region is a place; same as y."
+    },
+    "can your word mean a place or a region?": {
+      "codes": [
+        "y"
+      ],
+      "note": "A region is a place; same as y."
+    },
+    "can your word mean a type of place, city, or fictional world?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a feeling or emotion?": {
+      "codes": [
+        "A"
+      ],
+      "note": "Same as A."
+    },
+    "can your word mean something related to emotions or feelings?": {
+      "codes": null,
+      "note": "\"Related to\" is wider than A (a feeling)."
+    },
+    "can your word mean a feeling of strong desire or longing?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean something related to emotions?": {
+      "codes": null,
+      "note": "\"Related to\" is wider than A (a feeling)."
+    },
+    "can your word mean a quality or characteristic of something?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a condition or state of mind?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean something related to medicine or health?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a type of vehicle or transport?": {
+      "codes": null,
+      "note": "Close to q (a vehicle); \"transport\" also covers systems and acts."
+    },
+    "can your word mean a type of medical condition or biological process?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a type of bus?": {
+      "codes": null,
+      "note": "Narrower than q (a vehicle)."
+    },
+    "can your word mean a place or a building?": {
+      "codes": [
+        "y",
+        "r"
+      ],
+      "note": "Union of y (a place) and r (a building or a room); a room is a slight widening."
+    },
+    "can your word mean something that is not perfect?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean something that is difficult to believe or unlikely to happen?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean to show or explain something clearly?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a quality or characteristic?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a type of movement or dance?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a type of artistic design or pattern?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a type of dance or artistic style?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a type of legal or religious action?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean a type of thing or a concept?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean an action of removing or eliminating something?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean something that has been completely removed or destroyed?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean to remove something completely?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    },
+    "can your word mean to produce, emit, or develop something?": {
+      "codes": null,
+      "note": "No B1 category or union means the same."
+    }
+  }
+}

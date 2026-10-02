@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 1,
+  "phase": "probe",
+  "startedAt": "2026-10-02T12:52:24.544Z",
+  "status": "complete",
+  "configuration": {
+    "models": [
+      "@cf/qwen/qwen3-30b-a3b-fp8",
+      "@cf/google/gemma-4-26b-a4b-it",
+      "@cf/zai-org/glm-4.7-flash",
+      "@cf/openai/gpt-oss-20b"
+    ],
+    "modes": [
+      "sort"
+    ],
+    "promptVersion": "d1-1",
+    "prompts": {
+      "invent": "You help Illucia, a Hangman player, narrow down a hidden English word by its MEANING. The user message is a JSON object whose \"candidates\" field lists every word the hidden word could be.\n1. Invent ONE yes/no question about what the word can mean: what kind of thing, action or quality it is. Start it with \"Can your word mean\" and end it with \"?\". It must not be about letters, spelling, sounds, rhymes or length.\n2. A word is YES if ANY of its meanings fits, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n3. Choose a question that puts roughly half of the candidates in YES and half in NO.\n4. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"question\": \"...\", \"yes\": [\"...\"], \"no\": [\"...\"]}",
+      "sort": "Sort English words by MEANING. The user message is a JSON object with a yes/no \"question\" and a \"candidates\" list.\n1. A word is YES if ANY of its meanings fits the question, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n2. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"yes\": [\"...\"], \"no\": [\"...\"]}"
+    },
+    "promptSha256": "1b85eda7ffdac6d528d315e22cc412da16cc78ad908d179233edb4585023a2d2",
+    "statesSha256": "880b3679c323623d19d395d129d0331f938361366e9251db7f898165b40910ac",
+    "temperature": 0,
+    "seed": 20261002,
+    "maxTokens": 4096,
+    "modelOptions": {
+      "@cf/openai/gpt-oss-20b": {
+        "reasoning_effort": "low"
+      }
+    },
+    "requestTimeoutMs": 30000,
+    "retries": 0,
+    "timeoutsBeforeSkip": 3,
+    "evenSplit": [
+      0.25,
+      0.75
+    ],
+    "blockedTerms": 421,
+    "neuronRates": {
+      "@cf/qwen/qwen3-30b-a3b-fp8": {
+        "input": 4625,
+        "output": 30475
+      },
+      "@cf/google/gemma-4-26b-a4b-it": {
+        "input": 9091,
+        "output": 27273
+      },
+      "@cf/zai-org/glm-4.7-flash": {
+        "input": 5500,
+        "output": 36400
+      },
+      "@cf/openai/gpt-oss-20b": {
+        "input": 18182,
+        "output": 27273
+      }
+    },
+    "pricingChecked": "2026-10-02"
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32"
+  },
+  "requests": [
+    {
+      "state": "probe",
+      "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "mode": "sort",
+      "milliseconds": 3128.5002999999997,
+      "inputSha256": "8f3563e70fbe5f64946df289aac83f5820bdd0f1e229ce8252e9a75a7c2905d2",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "crane",
+        "eagle",
+        "robin"
+      ],
+      "no": [
+        "hammer",
+        "table",
+        "tiger"
+      ],
+      "yesShare": 0.5,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "usage": {
+        "prompt_tokens": 162,
+        "completion_tokens": 452,
+        "reasoning_tokens": null,
+        "neurons": 14.523777961730957
+      },
+      "estimatedNeurons": 14.52395,
+      "providerReportedNeurons": 14.523777961730957,
+      "reasoningChars": 1548,
+      "visibleChars": 74,
+      "response": "\n\n{\"yes\": [\"crane\", \"eagle\", \"robin\"], \"no\": [\"hammer\", \"table\", \"tiger\"]}"
+    },
+    {
+      "state": "probe",
+      "model": "@cf/google/gemma-4-26b-a4b-it",
+      "mode": "sort",
+      "milliseconds": 2540.5963,
+      "inputSha256": "8f3563e70fbe5f64946df289aac83f5820bdd0f1e229ce8252e9a75a7c2905d2",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "crane",
+        "eagle",
+        "robin"
+      ],
+      "no": [
+        "hammer",
+        "table",
+        "tiger"
+      ],
+      "yesShare": 0.5,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/google/gemma-4-26b-a4b-it",
+      "usage": {
+        "prompt_tokens": 166,
+        "completion_tokens": 207,
+        "reasoning_tokens": null,
+        "neurons": 7.154545307159424
+      },
+      "estimatedNeurons": 7.154617,
+      "providerReportedNeurons": 7.154545307159424,
+      "reasoningChars": 499,
+      "visibleChars": 72,
+      "response": "{\"yes\": [\"crane\", \"eagle\", \"robin\"], \"no\": [\"hammer\", \"table\", \"tiger\"]}"
+    },
+    {
+      "state": "probe",
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "mode": "sort",
+      "milliseconds": 25242.482,
+      "inputSha256": "8f3563e70fbe5f64946df289aac83f5820bdd0f1e229ce8252e9a75a7c2905d2",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "crane",
+        "eagle",
+        "robin"
+      ],
+      "no": [
+        "hammer",
+        "table",
+        "tiger"
+      ],
+      "yesShare": 0.5,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/zai-org/glm-4.7-flash",
+      "usage": {
+        "prompt_tokens": 154,
+        "completion_tokens": 707,
+        "reasoning_tokens": null,
+        "neurons": 26.5818
+      },
+      "estimatedNeurons": 26.5818,
+      "providerReportedNeurons": 26.5818,
+      "reasoningChars": 2357,
+      "visibleChars": 72,
+      "response": "{\"yes\": [\"crane\", \"eagle\", \"robin\"], \"no\": [\"hammer\", \"table\", \"tiger\"]}"
+    },
+    {
+      "state": "probe",
+      "model": "@cf/openai/gpt-oss-20b",
+      "mode": "sort",
+      "milliseconds": 1471.7809000000016,
+      "inputSha256": "0ff2056fbbfb5b72c6228ae5e0c111547c5571665f880d4fb835e7e588b5536c",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "crane",
+        "eagle",
+        "robin"
+      ],
+      "no": [
+        "hammer",
+        "table",
+        "tiger"
+      ],
+      "yesShare": 0.5,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/openai/gpt-oss-20b",
+      "usage": {
+        "prompt_tokens": 226,
+        "completion_tokens": 106,
+        "reasoning_tokens": null,
+        "neurons": 6.999993
+      },
+      "estimatedNeurons": 7.00007,
+      "providerReportedNeurons": 6.999993,
+      "reasoningChars": 212,
+      "visibleChars": 65,
+      "response": "{\"yes\":[\"crane\",\"eagle\",\"robin\"],\"no\":[\"hammer\",\"table\",\"tiger\"]}"
+    }
+  ],
+  "finishedAt": "2026-10-02T12:52:56.933Z",
+  "projection": {
+    "@cf/qwen/qwen3-30b-a3b-fp8": {
+      "hiddenTokensPerRequest": 427,
+      "projectedNeurons": 839
+    },
+    "@cf/google/gemma-4-26b-a4b-it": {
+      "hiddenTokensPerRequest": 183,
+      "projectedNeurons": 549
+    },
+    "@cf/zai-org/glm-4.7-flash": {
+      "hiddenTokensPerRequest": 683,
+      "projectedNeurons": 1393
+    },
+    "@cf/openai/gpt-oss-20b": {
+      "hiddenTokensPerRequest": 84,
+      "projectedNeurons": 579
+    }
+  },
+  "budget": {
+    "day": "2026-10-02",
+    "requests": 4,
+    "reservedNeurons": 55.26043699999997,
+    "maxRequests": 1800,
+    "maxNeurons": 6000,
+    "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
+  }
+}

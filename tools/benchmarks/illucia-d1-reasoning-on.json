@@ -1,0 +1,450 @@
+{
+  "schemaVersion": 1,
+  "phase": "run",
+  "startedAt": "2026-10-02T12:53:39.166Z",
+  "status": "stopped",
+  "configuration": {
+    "models": [
+      "@cf/qwen/qwen3-30b-a3b-fp8",
+      "@cf/google/gemma-4-26b-a4b-it",
+      "@cf/zai-org/glm-4.7-flash",
+      "@cf/openai/gpt-oss-20b"
+    ],
+    "modes": [
+      "invent",
+      "sort"
+    ],
+    "promptVersion": "d1-1",
+    "prompts": {
+      "invent": "You help Illucia, a Hangman player, narrow down a hidden English word by its MEANING. The user message is a JSON object whose \"candidates\" field lists every word the hidden word could be.\n1. Invent ONE yes/no question about what the word can mean: what kind of thing, action or quality it is. Start it with \"Can your word mean\" and end it with \"?\". It must not be about letters, spelling, sounds, rhymes or length.\n2. A word is YES if ANY of its meanings fits, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n3. Choose a question that puts roughly half of the candidates in YES and half in NO.\n4. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"question\": \"...\", \"yes\": [\"...\"], \"no\": [\"...\"]}",
+      "sort": "Sort English words by MEANING. The user message is a JSON object with a yes/no \"question\" and a \"candidates\" list.\n1. A word is YES if ANY of its meanings fits the question, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n2. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"yes\": [\"...\"], \"no\": [\"...\"]}"
+    },
+    "promptSha256": "1b85eda7ffdac6d528d315e22cc412da16cc78ad908d179233edb4585023a2d2",
+    "statesSha256": "4ddaee886368cbe7f44bde2512a66f443a0b33d7429bb4a973a17fcbf09d68e1",
+    "temperature": 0,
+    "seed": 20261002,
+    "maxTokens": 4096,
+    "modelOptions": {
+      "@cf/openai/gpt-oss-20b": {
+        "reasoning_effort": "low"
+      }
+    },
+    "requestTimeoutMs": 30000,
+    "retries": 0,
+    "timeoutsBeforeSkip": 3,
+    "evenSplit": [
+      0.25,
+      0.75
+    ],
+    "blockedTerms": 421,
+    "neuronRates": {
+      "@cf/qwen/qwen3-30b-a3b-fp8": {
+        "input": 4625,
+        "output": 30475
+      },
+      "@cf/google/gemma-4-26b-a4b-it": {
+        "input": 9091,
+        "output": 27273
+      },
+      "@cf/zai-org/glm-4.7-flash": {
+        "input": 5500,
+        "output": 36400
+      },
+      "@cf/openai/gpt-oss-20b": {
+        "input": 18182,
+        "output": 27273
+      }
+    },
+    "pricingChecked": "2026-10-02"
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32"
+  },
+  "requests": [
+    {
+      "state": "4-apprentice",
+      "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "mode": "invent",
+      "milliseconds": 14968.965300000002,
+      "inputSha256": "7298684949e037a0e0fb554b7c3e35723f0f174244c07fe2f2b60a1da67623b9",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a type of animal or sound?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "boil",
+        "fowl",
+        "howl",
+        "yowl"
+      ],
+      "no": [
+        "bowl",
+        "coil",
+        "foil",
+        "foul",
+        "toil"
+      ],
+      "yesShare": 0.4444444444444444,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "usage": {
+        "prompt_tokens": 254,
+        "completion_tokens": 2203,
+        "reasoning_tokens": null,
+        "neurons": 68.31056213378906
+      },
+      "estimatedNeurons": 68.311175,
+      "providerReportedNeurons": 68.31056213378906,
+      "reasoningChars": 7533,
+      "visibleChars": 152,
+      "response": "\n\n{\"question\": \"Can your word mean a type of animal or sound?\", \"yes\": [\"boil\", \"fowl\", \"howl\", \"yowl\"], \"no\": [\"bowl\", \"coil\", \"foil\", \"foul\", \"toil\"]}"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/google/gemma-4-26b-a4b-it",
+      "mode": "invent",
+      "milliseconds": 30004.514,
+      "outcome": "timeout",
+      "inputSha256": "7298684949e037a0e0fb554b7c3e35723f0f174244c07fe2f2b60a1da67623b9"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "mode": "invent",
+      "milliseconds": 30005.680700000004,
+      "outcome": "timeout",
+      "inputSha256": "7298684949e037a0e0fb554b7c3e35723f0f174244c07fe2f2b60a1da67623b9"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/openai/gpt-oss-20b",
+      "mode": "invent",
+      "milliseconds": 8018.246000000014,
+      "inputSha256": "1acec43c90a822dbfc5e35dbb22928425614f56538344d45ecc347bb9629d47d",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a sound, a bird, or a cooking action?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "boil",
+        "fowl",
+        "howl",
+        "yowl"
+      ],
+      "no": [
+        "bowl",
+        "coil",
+        "foil",
+        "foul",
+        "toil"
+      ],
+      "yesShare": 0.4444444444444444,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/openai/gpt-oss-20b",
+      "usage": {
+        "prompt_tokens": 317,
+        "completion_tokens": 785,
+        "reasoning_tokens": null,
+        "neurons": 27.1727001
+      },
+      "estimatedNeurons": 27.172999,
+      "providerReportedNeurons": 27.1727001,
+      "reasoningChars": 2525,
+      "visibleChars": 149,
+      "response": "{\"question\":\"Can your word mean a sound, a bird, or a cooking action?\",\"yes\":[\"boil\",\"fowl\",\"howl\",\"yowl\"],\"no\":[\"bowl\",\"coil\",\"foil\",\"foul\",\"toil\"]}"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "mode": "sort",
+      "milliseconds": 3421.1698000000033,
+      "inputSha256": "de6fc2c1a683089704c085afb8924d0419b079808483113256be48de4e75f63e",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bowl",
+        "coil",
+        "foil"
+      ],
+      "no": [
+        "boil",
+        "foul",
+        "fowl",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.3333333333333333,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "usage": {
+        "prompt_tokens": 173,
+        "completion_tokens": 561,
+        "reasoning_tokens": null,
+        "neurons": 17.896398544311523
+      },
+      "estimatedNeurons": 17.8966,
+      "providerReportedNeurons": 17.896398544311523,
+      "reasoningChars": 1874,
+      "visibleChars": 91,
+      "response": "\n\n{\"yes\": [\"bowl\", \"coil\", \"foil\"], \"no\": [\"boil\", \"foul\", \"fowl\", \"howl\", \"toil\", \"yowl\"]}"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/google/gemma-4-26b-a4b-it",
+      "mode": "sort",
+      "milliseconds": 15514.674599999998,
+      "inputSha256": "de6fc2c1a683089704c085afb8924d0419b079808483113256be48de4e75f63e",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bowl",
+        "coil",
+        "foil"
+      ],
+      "no": [
+        "boil",
+        "foul",
+        "fowl",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.3333333333333333,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/google/gemma-4-26b-a4b-it-external",
+      "usage": {
+        "prompt_tokens": 178,
+        "completion_tokens": 670,
+        "reasoning_tokens": null,
+        "neurons": 19.89090919494629
+      },
+      "estimatedNeurons": 19.891108,
+      "providerReportedNeurons": 19.89090919494629,
+      "reasoningChars": 1703,
+      "visibleChars": 89,
+      "response": "{\"yes\": [\"bowl\", \"coil\", \"foil\"], \"no\": [\"boil\", \"foul\", \"fowl\", \"howl\", \"toil\", \"yowl\"]}"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "mode": "sort",
+      "milliseconds": 14951.410700000008,
+      "inputSha256": "de6fc2c1a683089704c085afb8924d0419b079808483113256be48de4e75f63e",
+      "outcome": "accepted",
+      "strictJson": false,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bowl",
+        "coil",
+        "foil"
+      ],
+      "no": [
+        "boil",
+        "foul",
+        "fowl",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.3333333333333333,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/zai-org/glm-4.7-flash",
+      "usage": {
+        "prompt_tokens": 166,
+        "completion_tokens": 873,
+        "reasoning_tokens": null,
+        "neurons": 32.6902
+      },
+      "estimatedNeurons": 32.6902,
+      "providerReportedNeurons": 32.6902,
+      "reasoningChars": 2666,
+      "visibleChars": 151,
+      "response": "```json\n{\n  \"yes\": [\n    \"bowl\",\n    \"coil\",\n    \"foil\"\n  ],\n  \"no\": [\n    \"boil\",\n    \"foul\",\n    \"fowl\",\n    \"howl\",\n    \"toil\",\n    \"yowl\"\n  ]\n}\n```"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/openai/gpt-oss-20b",
+      "mode": "sort",
+      "milliseconds": 1333.4330000000045,
+      "inputSha256": "4a6d1e2fed08e21c5be7a9b11bf3ca90a9a3e48c93a814e6b810651a75c2f0a8",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bowl",
+        "coil",
+        "foil"
+      ],
+      "no": [
+        "boil",
+        "foul",
+        "fowl",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.3333333333333333,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/openai/gpt-oss-20b",
+      "usage": {
+        "prompt_tokens": 237,
+        "completion_tokens": 164,
+        "reasoning_tokens": null,
+        "neurons": 8.7818094
+      },
+      "estimatedNeurons": 8.781906,
+      "providerReportedNeurons": 8.7818094,
+      "reasoningChars": 393,
+      "visibleChars": 79,
+      "response": "{\"yes\":[\"bowl\",\"coil\",\"foil\"],\"no\":[\"boil\",\"foul\",\"fowl\",\"howl\",\"toil\",\"yowl\"]}"
+    },
+    {
+      "state": "4-scholar",
+      "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "mode": "invent",
+      "milliseconds": 25580.563800000004,
+      "inputSha256": "92f9c70af9424476593a43083be43ab6197b911099bd9942ae99c50483674763",
+      "outcome": "unparseable",
+      "strictJson": false,
+      "envelope": "choices",
+      "finishReason": "length",
+      "providerModel": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "usage": {
+        "prompt_tokens": 321,
+        "completion_tokens": 4096,
+        "reasoning_tokens": null,
+        "neurons": 126.30915069580078
+      },
+      "estimatedNeurons": 126.310225,
+      "providerReportedNeurons": 126.30915069580078,
+      "reasoningChars": 13079,
+      "visibleChars": 0,
+      "response": ""
+    },
+    {
+      "state": "4-scholar",
+      "model": "@cf/google/gemma-4-26b-a4b-it",
+      "mode": "invent",
+      "milliseconds": 30007.603000000003,
+      "outcome": "timeout",
+      "inputSha256": "92f9c70af9424476593a43083be43ab6197b911099bd9942ae99c50483674763"
+    },
+    {
+      "state": "4-scholar",
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "mode": "invent",
+      "milliseconds": 30011.546100000007,
+      "outcome": "timeout",
+      "inputSha256": "92f9c70af9424476593a43083be43ab6197b911099bd9942ae99c50483674763"
+    },
+    {
+      "state": "4-scholar",
+      "model": "@cf/openai/gpt-oss-20b",
+      "mode": "invent",
+      "milliseconds": 30001.679000000004,
+      "outcome": "timeout",
+      "inputSha256": "00438d18a70add179b1d7f962ae85bf300841b6ad9237ba7535e8bdba8cffb0f"
+    },
+    {
+      "state": "4-scholar",
+      "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "mode": "sort",
+      "milliseconds": 7192.693599999999,
+      "inputSha256": "7d87c52713c99050c5d004a5c8fd848a2c820896790729d65c7bd010b09aaadc",
+      "outcome": "wrong-lists",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": null,
+      "problems": [],
+      "sets": {
+        "missing": [
+          "does"
+        ],
+        "extra": [],
+        "duplicated": [
+          "dyes",
+          "ones",
+          "pies",
+          "ties"
+        ]
+      },
+      "yes": null,
+      "no": null,
+      "yesShare": null,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "usage": {
+        "prompt_tokens": 240,
+        "completion_tokens": 1337,
+        "reasoning_tokens": null,
+        "neurons": 41.85466766357422
+      },
+      "estimatedNeurons": 41.855075,
+      "providerReportedNeurons": 41.85466766357422,
+      "reasoningChars": 4133,
+      "visibleChars": 293,
+      "response": "\n\n{\"yes\": [\"aces\",\"axes\",\"cues\",\"dies\",\"dyes\",\"hoes\",\"ones\",\"pies\",\"ties\"],\"no\": [\"ages\",\"ales\",\"apes\",\"ares\",\"awes\",\"ayes\",\"byes\",\"dues\",\"dyes\",\"foes\",\"goes\",\"hies\",\"hues\",\"ices\",\"ides\",\"ines\",\"ives\",\"lies\",\"odes\",\"ones\",\"ores\",\"owes\",\"pies\",\"roes\",\"rues\",\"ties\",\"toes\",\"vies\",\"woes\",\"yves\"]}"
+    }
+  ],
+  "budget": {
+    "day": "2026-10-02",
+    "requests": 17,
+    "reservedNeurons": 1101.0115970000002,
+    "maxRequests": 1800,
+    "maxNeurons": 6000,
+    "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
+  },
+  "stopReason": "operator",
+  "operatorNote": "Stopped by hand on 2026-10-02 after 13 requests, with the requests above preserved unchanged. Reasoning on (each model's default, gpt-oss-20b at low) made invent replies time out at 30 s or hit the 4,096-token ceiling, and a skip-rule bug (fixed in 5e6792b) kept retrying them at a full ledger reservation each. The process was killed, so the last request in flight was not recorded; the ledger kept its reservation. status, stopReason and this note were added afterwards; nothing else was edited."
+}
