@@ -171,6 +171,43 @@ Set b by length (temperament): Apprentice 53.2 / 75.4 / 87.9%, Scholar 54.0 / 75
 rounds that come down to her last miss is 64.8% / 39.4% / 15.0%
 (Apprentice / Scholar / Master).
 
+## Information value (v2 A2 experiment, benchmark-only): no strength lost, not shipped
+
+`tools/benchmark-illucia-information.js`, report `tools/benchmarks/illucia-a2-information.json`.
+Inside her shortlist only, each letter's odds were raised by up to 100% according to how
+well it splits her candidates (weighted entropy of its reveal patterns, relative to the
+best on the shortlist). Both variants played the strength sets with the same 8 seeds per
+word; a one-sided sign test per tier and set (Holm across 12) asked whether the plain
+temperament is ahead.
+
+- **No strength lost beyond noise** in any of the 12 comparisons (smallest Holm p 0.46:
+  Scholar on set b, 72.7% vs 72.6%). Every win-rate difference is under 0.4 points.
+- **Tier gate with information value: PASS** (0 failures, no near misses).
+- **Variety barely moves**, slightly down: Apprentice set d 5.96 → 5.95 sequences per
+  word, opening entropy 1.51 → 1.50 bits; Master set d 6.56 → 6.56, 1.33 → 1.32 bits.
+
+It meets the decision's bar (no strength cost) but adds nothing measurable, so it stays a
+benchmark option: no tier sets it. Shipping it is a separate decision.
+
+## Her memory of the player (v2 A3 experiment): gate PASS, cap PASS, no strength lost
+
+`tools/benchmark-illucia-memory.js`, report `tools/benchmarks/illucia-a3-memory.json`.
+Eight synthetic players, one per seed index, with 0, 5, 10, 20, 35, 50, 100 and 200
+games (histories of common 4–8-letter words, so the letter-habit weight covers its whole
+ramp up to 5%) and distinct personality seeds. Learned words are left out: knowing a
+word that beat her trivially helps her on that word, and the unit tests cover it.
+
+- **Tier gate with memory: PASS**, 0 of 171 fail; 1 near miss (set d, 4-letter rare,
+  Scholar vs Apprentice, raw p 0.008, Holm p 1); the lower tier is ahead in 14.
+- **Strength cap with memory: PASS.** Largest loss against strict A1: Apprentice set b,
+  0.78 points.
+- **Against the same games without memory:** no strength lost beyond noise (smallest Holm
+  p 0.45, Scholar set d 65.1% vs 64.9%). The trickster set moves most (Apprentice 17.4% →
+  15.3%, Master 36.8% → 35.4%), but it has only 36 words and no comparison is significant.
+- **Variety:** personalities add openings. With memory, Apprentice opens with 4 letters on
+  set b (E 71%, S 14%, A 14%, O 1%) and 7 on set d; Scholar with 4 and 5. Sequences per
+  word stay about the same (Apprentice set d 5.96 → 5.97).
+
 ## 1. Reproduction
 
 I3 and I3b re-run at HEAD match their committed reports exactly. The manifest SHA-256
