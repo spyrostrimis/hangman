@@ -21,7 +21,7 @@ The rebuild is live. The project is now redesigning, reimagining, improving and 
 
 ## CURRENT REBUILD STATE
 
-HEAD `5db5300` on `main` (2026-10-01), pushed. Account implementation deployed and verified on 2026-09-27; see server/RELEASE.md for local and production evidence and remaining limitations.
+HEAD `61ebbb4` on `main` (2026-10-02), pushed; the commit updating this line follows it. Account implementation deployed and verified on 2026-09-27; see server/RELEASE.md for local and production evidence and remaining limitations.
 
 - The static word-game and route-background/loading slices are rebuilt and live.
 - The account/score slice is live: Hono Worker, D1 migrations, client-side PBKDF2 stretching, server HMAC verifiers, expiring cookie auth, connected forms, and cumulative scores. Live browser signup, login, logout, session persistence, and a winning round saving 100 points were verified. New usernames are 3–20 letters or digits (`shared/auth-protocol.js`); sign-in still accepts up to 35 so accounts made under the old limit are not locked out.
