@@ -5,7 +5,8 @@ import { createHash } from 'node:crypto';
 import { createKnowledge } from '../client/src/lib/illucia/lexicon.js';
 import { loadLexicons } from './benchmark-illucia.js';
 import { BenchmarkStop } from './lib/illucia-model.js';
-import { buildStates, runQuestions, summarizeGroup, projectCost, loadBlocked, PROBE_STATE, MODEL_OPTIONS } from './benchmark-illucia-questions.js';
+import { controlCategory } from './lib/illucia-question-model.js';
+import { runQuestions, summarizeGroup, projectCost, loadBlocked, PROBE_STATE, MODEL_OPTIONS } from './benchmark-illucia-questions.js';
 
 const statesFile = JSON.parse(await readFile(new URL('./benchmarks/illucia-d1-states.json', import.meta.url), 'utf8'));
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -22,29 +23,29 @@ const state = { id: 's1', answer: 'crane', candidates: ['crane', 'eagle', 'hamme
   labels: { crane: 'bcoM', eagle: 'bc', hammer: 'nop', robin: 'bca', table: 'ot', tiger: null },
   control: { code: 'c', question: 'Can your word mean a bird?' } };
 
-test('committed states rebuild exactly from the word and label files, and each is a real board', async () => {
+// The states are frozen evidence. They are not rebuilt here: her temperament (Track A) may
+// change, which would change which boards a new build picks, not what these boards are.
+test('committed states are real boards: candidates, answer and labels match the word and label files', async () => {
   const { entriesByLength } = await loadLexicons();
   const dir = new URL('../client/public/illucia/labels/', import.meta.url);
-  const labelsByLength = {};
-  for (let length = 4; length <= 10; length++) {
-    labelsByLength[length] = new Map((await readFile(new URL(`${length}.txt`, dir), 'utf8')).trim().split('\n').map(line => line.split(' ')));
-  }
   const { categories } = JSON.parse(await readFile(new URL('categories.json', dir), 'utf8'));
-  const states = buildStates(entriesByLength, labelsByLength, categories);
-  assert.equal(hash(states), statesFile.statesSha256);
   assert.equal(hash(statesFile.states), statesFile.statesSha256);
-  assert.equal(states.length, 21);
-  assert.equal(new Set(states.map(s => s.answer)).size, 21);
-  for (const s of states) {
+  assert.equal(statesFile.states.length, 21);
+  assert.equal(new Set(statesFile.states.map(s => s.answer)).size, 21);
+  assert.equal(new Set(statesFile.states.map(s => `${s.length}-${s.tier}`)).size, 21);
+  for (const s of statesFile.states) {
+    const labels = new Map((await readFile(new URL(`${s.length}.txt`, dir), 'utf8')).trim().split('\n').map(line => line.split(' ')));
     const pattern = [...s.pattern].map(letter => (letter === '_' ? null : letter));
-    const board = { length: s.length, pattern, guessedLetters: [...s.guessedLetters], missedLetters: [...s.missedLetters] };
+    const guessed = new Set(s.guessedLetters);
+    const fits = word => pattern.every((letter, i) => (letter === null ? !guessed.has(word[i]) : word[i] === letter));
     // filterCandidates only accepts registered public states, so the same rule is checked by hand.
-    const guessed = new Set(board.guessedLetters);
-    const expected = createKnowledge(entriesByLength[s.length], s.maxSize).words.filter(word =>
-      pattern.every((letter, i) => (letter === null ? !guessed.has(word[i]) : word[i] === letter)));
+    const expected = createKnowledge(entriesByLength[s.length], s.maxSize).words.filter(fits);
     assert.deepEqual(s.candidates, expected, s.id);
     assert.ok(s.candidates.length >= 8 && s.candidates.length <= 80, s.id);
-    assert.ok(s.candidates.includes(s.answer), s.id);
+    assert.ok(fits(s.answer) && [...s.missedLetters].every(letter => !s.answer.includes(letter)), s.id);
+    assert.ok([...s.guessedLetters].filter(letter => !s.missedLetters.includes(letter)).every(letter => s.answer.includes(letter)), s.id);
+    assert.deepEqual(s.labels, Object.fromEntries(s.candidates.map(word => [word, labels.get(word) ?? null])), s.id);
+    assert.deepEqual(s.control, controlCategory(s.candidates, labels, categories), s.id);
     assert.ok(s.control.labelledYesShare >= 0.1 && s.control.labelledYesShare <= 0.9, s.id);
   }
 });
