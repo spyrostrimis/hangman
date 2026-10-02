@@ -5,7 +5,7 @@ import { toPublicState } from './illucia/public-state.js';
 import { toBrain } from './illucia/brain.js';
 import { filterCandidates } from './illucia/candidates.js';
 import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, commonnessWeight, parseLexicon, createKnowledge, isAcceptedWord, isWordShape } from './illucia/lexicon.js';
-import { chooseLetter, analyzeDecision, partitionWords, POLICIES } from './illucia/strategy.js';
+import { chooseLetter, analyzeDecision, partitionWords, personalTemperament, POLICIES } from './illucia/strategy.js';
 
 const roundAfter = (answer, guesses = '') => [...guesses].reduce(applyGuess, createRound(answer));
 // Solver fixtures use tiny 3-letter words. They bypass the word-file parser,
@@ -627,4 +627,108 @@ test('with a learned word she plays the word that beat her instead of falling ba
   assert.equal(decision.learnedCandidates, 1);
   // Positive control: without the memory the same board sends Apprentice to her fallback.
   assert.equal(analyzeDecision(afterMiss, plainKnowledge, { seed: 1 }).fallback, true);
+});
+
+test('the letter prior weighs 5% x min(1, games / 50), never more', () => {
+  const weightFor = games => {
+    const letters = { ...zeroLetters(), e: games };
+    const brain = toBrain(rawBrain({ games, letters }), 3);
+    return analyzeDecision(toPublicState(createRound(SHARES_WORDS[0])),
+      createKnowledge(entriesOf(SHARES_WORDS.map(word => `${word} 35`).join('\n')), 35, undefined, brain), { seed: 1 }).priorWeight;
+  };
+  assert.deepEqual([0, 10, 25, 50, 500].map(weightFor), [0, 100, 250, 500, 500]);
+});
+
+test('in careful mode the prior can tip a near-tie toward the player\'s habits', () => {
+  // B is in 50 of 100 words, C in 49: B is her best by one point. This player's past words
+  // always held C and never B; at 5% weight that outweighs the one point.
+  // Filler letters (never A, E, I or Y, which she has already missed) stay far below 49%.
+  const code = 'dfghjklmnpqrstvwxz';
+  const words = Array.from({ length: 100 }, (_, i) =>
+    (i < 50 ? 'b' : 'jkmnp'[i % 5]) + (i >= 51 ? 'c' : 'rstvw'[i % 5]) + code[i % 18] + code[Math.floor(i / 18)]);
+  assert.equal(new Set(words).size, 100);
+  assert.equal(words.filter(word => word.includes('b')).length, 50);
+  assert.equal(words.filter(word => word.includes('c')).length, 49);
+  const entries = entriesOf(words.map(word => `${word} 35`).join('\n'));
+  const careful = toPublicState(roundAfter(words[0], 'aeiy')); // Two misses left.
+  assert.equal(careful.missesLeft, 2);
+  const habit = toBrain(rawBrain({ games: 50, letters: { ...zeroLetters(), c: 50 } }), 4);
+  const withHabit = analyzeDecision(careful, createKnowledge(entries, 35, undefined, habit), { seed: 1 });
+  assert.equal(withHabit.mode, 'careful');
+  assert.equal(withHabit.letter, 'c');
+  assert.equal(withHabit.priorWeight, 500);
+  // Positive controls: with no memory, or with no games yet, she takes B.
+  assert.equal(analyzeDecision(careful, createKnowledge(entries, 35), { seed: 1 }).letter, 'b');
+  const fresh = toBrain(rawBrain({ games: 0 }), 4);
+  assert.equal(analyzeDecision(careful, createKnowledge(entries, 35, undefined, fresh), { seed: 1 }).letter, 'b');
+});
+
+test('a personality varies her temperament a little, the same way every round, keeping the tier order', () => {
+  const widths = { apprentice: [], scholar: [], master: [] };
+  for (let personalitySeed = 0; personalitySeed < 300; personalitySeed++) {
+    for (const tier of VOCABULARY_TIERS) {
+      const personal = personalTemperament(tier.temperament, personalitySeed);
+      assert.deepEqual(personal, personalTemperament(tier.temperament, personalitySeed));
+      assert.ok(personal.shortlist >= Math.floor(tier.temperament.shortlist * 0.85) &&
+        personal.shortlist <= Math.ceil(tier.temperament.shortlist * 1.15), JSON.stringify(personal));
+      assert.ok(personal.vowelBonus >= Math.floor(tier.temperament.vowelBonus * 0.75) &&
+        personal.vowelBonus <= Math.ceil(tier.temperament.vowelBonus * 1.25));
+      assert.match(personal.favouriteVowel, /^[aeiou]$/);
+      widths[tier.id].push(personal.shortlist);
+    }
+    assert.ok(widths.master.at(-1) < widths.scholar.at(-1) && widths.scholar.at(-1) < widths.apprentice.at(-1));
+  }
+  assert.ok(new Set(widths.apprentice).size > 10); // Players really differ.
+  const favourites = new Set(Array.from({ length: 100 }, (_, seed) => personalTemperament(VOCABULARY_TIERS[0].temperament, seed).favouriteVowel));
+  assert.equal(favourites.size, 5);
+});
+
+test('her favourite vowel gets half as much bonus again; a memory brings her personality into play', () => {
+  const base = VOCABULARY_TIERS[0].temperament;
+  let seed = 0;
+  while (personalTemperament(base, seed).favouriteVowel !== 'a') seed++;
+  const personal = personalTemperament(base, seed);
+  // Vowel fixture from the bonus test: A in 57 words, B in 60.
+  const pad = 'cdfghjklmnprstvw';
+  const words = Array.from({ length: 100 }, (_, i) =>
+    (i < 60 ? 'b' : 'q') + (i >= 43 ? 'a' : 'z') + pad[i % 16] + pad[Math.floor(i / 16) % 16]);
+  const entries = entriesOf(words.map(word => `${word} 35`).join('\n'));
+  const brain = toBrain(rawBrain({ personalitySeed: seed }), 4);
+  const decision = analyzeDecision(toPublicState(createRound(words[0])), createKnowledge(entries, 35, undefined, brain), { seed: 2 });
+  assert.equal(decision.personality.favouriteVowel, 'a');
+  if (decision.letter === 'a') assert.equal(decision.vowelBonus, Math.floor(personal.vowelBonus * 3 / 2));
+  assert.deepEqual(decision.personality, personal);
+  // Positive control: without a memory there is no personality in the record.
+  assert.equal(analyzeDecision(toPublicState(createRound(words[0])), createKnowledge(entries, 35), { seed: 2 }).personality, null);
+});
+
+test('her favourite vowel really gets half as much bonus again', () => {
+  const base = VOCABULARY_TIERS[0].temperament;
+  const seedWith = vowel => { let seed = 0; while (personalTemperament(base, seed).favouriteVowel !== vowel) seed++; return seed; };
+  const pad = 'cdfghjklmnprstvw';
+  const words = Array.from({ length: 100 }, (_, i) =>
+    (i < 60 ? 'b' : 'q') + (i >= 43 ? 'a' : 'z') + pad[i % 16] + pad[Math.floor(i / 16) % 16]);
+  const entries = entriesOf(words.map(word => `${word} 35`).join('\n'));
+  const bonusOnA = personalitySeed => {
+    const knowledge = createKnowledge(entries, 35, undefined, toBrain(rawBrain({ personalitySeed }), 4));
+    for (let seed = 0; seed < 500; seed++) {
+      const decision = analyzeDecision(toPublicState(createRound(words[0])), knowledge, { seed });
+      if (decision.letter === 'a') return decision.vowelBonus;
+    }
+    throw new Error('A never picked');
+  };
+  const fan = seedWith('a');
+  const other = seedWith('o');
+  assert.equal(bonusOnA(fan), Math.floor(personalTemperament(base, fan).vowelBonus * 3 / 2));
+  assert.equal(bonusOnA(other), personalTemperament(base, other).vowelBonus); // Control: A is not this one's favourite.
+});
+
+test('with habits blended in she still explores within her shortlist width', () => {
+  // B 60%, C 55%: C is within Apprentice's width (at least 8.5 points for any personality).
+  const state = toPublicState(createRound(SHARES_WORDS[0]));
+  const brain = toBrain(rawBrain({ games: 50 }), 3); // Full 5% weight, no letter habits.
+  const knowledge = createKnowledge(entriesOf(SHARES_WORDS.map(word => `${word} 35`).join('\n')), 35, undefined, brain);
+  const seen = new Set();
+  for (let seed = 0; seed < 200; seed++) seen.add(analyzeDecision(state, knowledge, { seed }).letter);
+  assert.deepEqual([...seen].sort(), ['b', 'c']);
 });

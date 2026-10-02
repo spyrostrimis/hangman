@@ -7,6 +7,7 @@ import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, createKnowledge, is
 import { DEFAULT_SEED, loadLexicons, perWord, roundSeed, sampleWords, simulate, variety } from './benchmark-illucia.js';
 import { WORD_BANDS, tierSamples } from './benchmark-illucia-tiers.js';
 import { tierGate } from './lib/illucia-gate.js';
+import { toBrain } from '../client/src/lib/illucia/brain.js';
 
 // Strength of Illucia as she plays on the live pages: player-like word sets,
 // the feel of a round, and page parity. Measurement only; nothing here feeds the app.
@@ -99,10 +100,15 @@ export function feel(games) {
 
 // Her temperament with `seeds` shared seeds per word, and the strict A1 policy once per word
 // as the reference for the strength cap. `temperaments` overrides the tiers' own (tuning).
-export function playSets(entriesByLength, sets, { seeds = SEEDS_PER_WORD, baseSeed = DEFAULT_SEED, temperaments = {}, strictReference = true } = {}) {
+// `brains(index, length)` (v2 A3 experiments) gives game `index` of every word a player's raw
+// memory, or null; without it she plays with no memory.
+export function playSets(entriesByLength, sets, { seeds = SEEDS_PER_WORD, baseSeed = DEFAULT_SEED, temperaments = {}, strictReference = true, brains = null } = {}) {
   const knowledge = {};
-  const know = (word, tier) => (knowledge[`${tier.maxSize}:${word.length}`] ??=
-    createKnowledge(entriesByLength[word.length], tier.maxSize));
+  const know = (word, tier, index = null) => {
+    const raw = brains && index !== null ? brains(index, word.length) : null;
+    return (knowledge[`${tier.maxSize}:${word.length}:${raw ? index : '-'}`] ??=
+      createKnowledge(entriesByLength[word.length], tier.maxSize, undefined, raw ? toBrain(raw, word.length) : null));
+  };
   const results = {};
   const games = {};
   const words = {};
@@ -116,7 +122,7 @@ export function playSets(entriesByLength, sets, { seeds = SEEDS_PER_WORD, baseSe
     for (const [key, set] of Object.entries(sets)) {
       // Fixed clock: timing is measured in the browser pass, not here.
       const played = set.words.flatMap(word => Array.from({ length: seeds }, (_, index) =>
-        simulate(word, know(word, tier), { seed: roundSeed(baseSeed, word, index), temperament }, () => 0)));
+        simulate(word, know(word, tier, index), { seed: roundSeed(baseSeed, word, index), temperament }, () => 0)));
       games[tier.id][key] = played;
       words[tier.id][key] = perWord(played);
       results[tier.id][key] = { ...summary(played), variety: variety(played) };

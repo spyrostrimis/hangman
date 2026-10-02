@@ -70,11 +70,36 @@ function horizon(words, guessed, missesLeft, letter, depth) {
 
 const VOWELS = new Set('aeiou');
 
+// Her personality with this player (v2 A3): small, stable variations from the account's
+// personality seed. Shortlist width x 85-115% and vowel bonus x 75-125% keep the tier order
+// (Master at most 4.6 points, Scholar 5.95-8.05, Apprentice at least 8.5); one favourite
+// vowel gets half as much bonus again.
+export function personalTemperament(temperament, personalitySeed) {
+  const next = randomStream(personalitySeed, 0);
+  const widthPercent = 85 + (next() % 31);
+  const bonusPercent = 75 + (next() % 51);
+  return Object.freeze({ ...temperament,
+    shortlist: Math.floor(temperament.shortlist * widthPercent / 100),
+    vowelBonus: Math.floor(temperament.vowelBonus * bonusPercent / 100),
+    favouriteVowel: 'aeiou'[next() % 5] });
+}
+
+// The player's letter habits (v2 A3): weight 5% x min(1, games / 50), in hundredths of a percent.
+const priorWeightFor = games => Math.floor(500 * Math.min(games, 50) / 50);
+
 // Her temperament (v2 A2). Scores are integers: a letter's weighted hits × 10,000 plus any
 // vowel bonus × the candidates' total weight, so score / total weight is its share in
 // hundredths of a percent and every comparison is exact. Only letters found in at least one
 // candidate are eligible, so no bonus can make her guess a letter in none of them.
-function temperamentDecision(publicState, knowledge, candidates, guessed, temperament, next) {
+// With a memory of the player (v2 A3), her personality varies the temperament and the
+// player's letter habits blend in: score = (share + bonus) × (10,000 − w) + habit share × w,
+// all × total weight; with w = 0 the scores are exactly the ones above.
+function temperamentDecision(publicState, knowledge, candidates, guessed, baseTemperament, next) {
+  const brain = knowledge.brain;
+  const temperament = brain ? personalTemperament(baseTemperament, brain.personalitySeed) : baseTemperament;
+  const priorWeight = brain ? priorWeightFor(brain.games) : 0;
+  const habit = letter => (priorWeight ? Math.floor(brain.letters[letter] * 10000 / brain.games) : 0);
+  const scale = priorWeight ? 10000 : 1;
   const counts = Object.fromEntries([...ALPHABET].map(letter => [letter, 0]));
   const hits = Object.fromEntries([...ALPHABET].map(letter => [letter, 0]));
   let candidateWeight = 0;
@@ -90,14 +115,18 @@ function temperamentDecision(publicState, knowledge, candidates, guessed, temper
   const turn = publicState.guessedLetters.length;
   const fading = !careful && turn < temperament.vowelTurns
     ? Math.floor(temperament.vowelBonus * (temperament.vowelTurns - turn) / temperament.vowelTurns) : 0;
-  const bonusFor = letter => (VOWELS.has(letter) ? fading : 0);
+  const bonusFor = letter => (!VOWELS.has(letter) ? 0
+    : letter === temperament.favouriteVowel ? Math.floor(fading * 3 / 2) : fading);
   const eligible = [...ALPHABET].filter(letter => !guessed.has(letter) && counts[letter] > 0);
-  const score = letter => counts[letter] * 10000 + bonusFor(letter) * candidateWeight;
+  const score = letter => (priorWeight
+    ? (counts[letter] * 10000 + bonusFor(letter) * candidateWeight) * (10000 - priorWeight)
+      + habit(letter) * priorWeight * candidateWeight
+    : counts[letter] * 10000 + bonusFor(letter) * candidateWeight);
   const top = Math.max(...eligible.map(score));
   const best = eligible.filter(letter => score(letter) === top);
   // Careful: strictly the best (the seed settles a tie). Exploring: letters within the
   // tier's shortlist width of the best, odds rising linearly above the cut-off.
-  const cutoff = top - temperament.shortlist * candidateWeight;
+  const cutoff = top - temperament.shortlist * candidateWeight * scale;
   const options = careful ? best : eligible.filter(letter => score(letter) > cutoff);
   let odds = careful ? options.map(() => 1) : options.map(letter => score(letter) - cutoff);
   // Information value (v2 A2, benchmark-only; no tier sets it): inside the shortlist, a letter's
@@ -127,6 +156,10 @@ function temperamentDecision(publicState, knowledge, candidates, guessed, temper
     best, choseBest: score(letter) === top,
     tiedWith: eligible.filter(value => value !== letter && score(value) === score(letter)),
     vowelBonus: bonusFor(letter),
+    // The player's habits (v2 A3): their weight and her letter's habit share, hundredths of a percent.
+    priorWeight, priorShare: habit(letter),
+    personality: brain ? { shortlist: temperament.shortlist, vowelBonus: temperament.vowelBonus,
+      vowelTurns: temperament.vowelTurns, favouriteVowel: temperament.favouriteVowel } : null,
     // What she considered, best first: share and her chance of picking it, both in hundredths of a percent.
     shortlist: options.map((value, index) => ({ letter: value, share: shareOf(value),
       chance: Math.floor(odds[index] * 10000 / totalOdds) }))
