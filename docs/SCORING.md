@@ -21,7 +21,7 @@ What a script can earn at most, measured over half-open 60-second windows:
 
 The Illucia figure is exact, found by trying every tier sequence: a window can hold at most one ladder bonus on top of four 300-point awards (a ladder needs Apprentice and Scholar wins, worth at most 180 and 240, before its Master win). Each mode has its own outstanding ticket, so one account can farm both at once: 2,500 points per minute. Multiple accounts can each earn up to this rate.
 
-These Illucia values (C3: ×1.5/×2 question multipliers, 15 s floor) are committed but **not yet deployed**; until the Worker is redeployed, production runs the C1 values (×1.25/×1.5, 12 s floor, ceiling 1,225).
+These Illucia values (C3: ×1.5/×2 question multipliers, 15 s floor) replaced the C1 values (×1.25/×1.5, 12 s floor, ceiling 1,225) with Worker `b5095175` on 2026-10-02.
 
 CAPTCHAs, email verification, daily award caps, per-guess server adjudication and moderation are not implemented. They would add friction, operating work or architectural complexity without proving honest play. Reconsider if actual abuse or stakes justify them. The Hall of Fame remains unsuitable as a trusted competition ranking. Existing totals, including unverified awards from the original endpoint, are preserved.
 
@@ -56,7 +56,7 @@ Illucia (Play vs AI) reverses the roles: the player sets the word and she guesse
 
 A win sends `POST /user/illucia/claim` with `{roundId, guesses, answeredQuestions?}`. The Worker rules-checks the guesses against the committed word: 6–26 unique lowercase letters, the sixth miss on the last guess, the word never solved. It **does not replay her choices**; which letters she picked, and whether she asked or the player answered questions, are client-reported. A claim is accepted from `issued_at + 15,000 ms`; earlier claims get 409 `ROUND_TOO_EARLY` with `retryAfterMs`, without consumption. Consumption, the beaten-word record and the score increment are one nonce-guarded D1 batch, as for Hangman. A successful claim or retry returns `{score, awarded: {stump, ladder}, reason?, ladder}`; the award is stored on the ticket, and `ladder` is the rung the next new round would find.
 
-**Points** (`shared/scoring-protocol.js`). Stump points = tier base × min(length − 3, 3), with Apprentice 30, Scholar 40, Master 50. One answered question multiplies them by 1.5, two by 2 (C3; production still uses 1.25 and 1.5 until redeployed). A win pays no stump points, with a `reason`, when:
+**Points** (`shared/scoring-protocol.js`). Stump points = tier base × min(length − 3, 3), with Apprentice 30, Scholar 40, Master 50. One answered question multiplies them by 1.5, two by 2 (C3, deployed 2026-10-02; previously 1.25 and 1.5). A win pays no stump points, with a `reason`, when:
 
 - the round is experimental (`EXPERIMENTAL`);
 - the word is outside that tier's vocabulary, i.e. ESDB size above 35 for Apprentice or 50 for Scholar (`OUTSIDE_TIER`); Master knows every accepted word;

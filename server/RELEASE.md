@@ -79,3 +79,13 @@ Implementation `ee5d50b`, `6108bc2` and `139a21e`, with the `/privacy` disclosur
 - Unauthenticated production checks: `GET /user/illucia/stats`, `POST /user/illucia/start` and `/user/illucia/claim` return 401; Hangman's `round/start` returns 401; an unknown path outside `/user/illucia/` returns 404; `get-best-scores` returns 200. The published frontend bundle contains the new `/privacy` copy. The stats route cannot be told apart from the previous Worker this way (`/user/illucia/*` was already behind authentication), so the deployment listing is the evidence of which code runs.
 - **Not verified in production:** any authenticated Illucia flow (counting, memory, stats, or C1's claims), and CPU for these routes. As with C1, the local suite covers that behaviour.
 - Rollback: `wrangler rollback` to `d6721260`. Migration `0007` only adds tables and columns that the C1 Worker ignores, so it can stay.
+
+## Illucia multipliers and floor, C3 (production, 2026-10-02)
+
+Implementation `d0dc2e1` (×1.5/×2 question multipliers, 15 s Illucia claim floor; cheater ceiling 1,300 points/minute), pushed to `main` after rebasing onto `36d7c35`; the 66 Worker/D1 tests passed again after the rebase.
+
+- No migration: `wrangler d1 migrations list --remote` reported none pending.
+- Worker version `b5095175-0422-4428-9f17-fe7723dba16f` deployed at 16:56:56 UTC and serving 100%, replacing `352bfbb2`. 588.14 KiB gzipped; startup 2 ms.
+- Unauthenticated production checks: Illucia start, claim and stats return 401; Hangman `round/start` 401; an unknown path 404; `get-best-scores` 200.
+- Not verified in production: the new floor and multipliers on an authenticated claim. Tickets issued under `352bfbb2` and claimed after this deploy are held to the 15 s floor.
+- Rollback: `wrangler rollback` to `352bfbb2`.
