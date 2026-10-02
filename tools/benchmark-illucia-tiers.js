@@ -2,7 +2,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createKnowledge } from '../client/src/lib/illucia/lexicon.js';
+import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, createKnowledge } from '../client/src/lib/illucia/lexicon.js';
 import { DEFAULT_SEED, loadLexicons, sampleWords, simulate, summarize } from './benchmark-illucia.js';
 
 export const WORD_BANDS = Object.freeze([
@@ -37,7 +37,7 @@ export async function benchmarkTiers({ perStratum = 100, seed = DEFAULT_SEED } =
     const games = [];
     const byLength = {};
     const vocabularyCounts = {};
-    for (let length = 3; length <= 15; length++) {
+    for (let length = MIN_WORD_LENGTH; length <= MAX_WORD_LENGTH; length++) {
       const knowledge = createKnowledge(entriesByLength[length], maxSize);
       vocabularyCounts[length] = knowledge.words.length;
       const batch = [];

@@ -6,8 +6,14 @@ import { createKnowledge, parseLexicon } from '../client/src/lib/illucia/lexicon
 import { modelInput, parseModelLetter, MODELS, createCloudflareTransport, BenchmarkStop } from './lib/illucia-model.js';
 import { pilotSample, playModel, summarizeModels, budgetedRequest, benchmarkModels } from './benchmark-illucia-models.js';
 
+// Tiny 3-letter fixtures bypass the word-file parser, whose contract is lengths 4-15.
+const entriesOf = text => text.trim().split('\n').map(line => {
+  const [word, size] = line.split(' ');
+  return Object.freeze({ word, size: Number(size) });
+});
+
 const model = Object.keys(MODELS)[0];
-const knowledge = createKnowledge(parseLexicon('cat 35\ndog 70\n', 3));
+const knowledge = createKnowledge(entriesOf('cat 35\ndog 70\n'));
 const result = response => ({ response, usage: { prompt_tokens: 100, completion_tokens: 1 } });
 
 test('outgoing payload is public-only, preserves positions, and rejects private or terminal state', () => {
@@ -101,8 +107,8 @@ test('quota/timeout interrupts without silently solving or counting an incomplet
 });
 
 test('pilot is deterministic and samples strata without replacement', () => {
-  const entries = { 3: parseLexicon('aaa 35\naab 40\naac 55\naad 70\n', 3),
-    4: parseLexicon('aaaa 35\naaab 50\naaac 65\n', 4) };
+  const entries = { 4: parseLexicon('aaaa 35\naaab 40\naaac 55\naaad 70\n', 4),
+    5: parseLexicon('aaaaa 35\naaaab 50\naaaac 65\n', 5) };
   const sample = pilotSample(entries, 6);
   assert.deepEqual(sample, pilotSample(entries, 6));
   assert.equal(new Set(sample.map(e => e.word)).size, 6);

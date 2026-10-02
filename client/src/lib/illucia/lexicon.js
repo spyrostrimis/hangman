@@ -1,4 +1,6 @@
 export const ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
+export const MIN_WORD_LENGTH = 4;
+export const MAX_WORD_LENGTH = 15;
 export const VOCABULARY_TIERS = Object.freeze([
   Object.freeze({ id: 'apprentice', label: 'Apprentice', maxSize: 35 }),
   Object.freeze({ id: 'scholar', label: 'Scholar', maxSize: 50 }),
@@ -7,7 +9,7 @@ export const VOCABULARY_TIERS = Object.freeze([
 
 // Parses one length asset. Loading/network lifecycle belongs to the later UI slice.
 export function parseLexicon(text, length) {
-  if (!Number.isInteger(length) || length < 3 || length > 15) throw new RangeError('Invalid word length.');
+  if (!Number.isInteger(length) || length < MIN_WORD_LENGTH || length > MAX_WORD_LENGTH) throw new RangeError('Invalid word length.');
   if (typeof text !== 'string' || !text.endsWith('\n')) throw new TypeError('Invalid lexicon text.');
   let previous = '';
   return Object.freeze(text.slice(0, -1).split('\n').map(line => {
@@ -20,9 +22,14 @@ export function parseLexicon(text, length) {
   }));
 }
 
+// Lowercase A-Z of a playable length; whether the word is listed is a separate check.
+export function isWordShape(word) {
+  return typeof word === 'string' && /^[a-z]+$/.test(word) &&
+    word.length >= MIN_WORD_LENGTH && word.length <= MAX_WORD_LENGTH;
+}
+
 export function isAcceptedWord(word, entries) {
-  return typeof word === 'string' && /^[a-z]{3,15}$/.test(word) &&
-    entries.some(entry => entry.word === word && entry.size <= 70);
+  return isWordShape(word) && entries.some(entry => entry.word === word && entry.size <= 70);
 }
 
 export function createKnowledge(entries, maxSize = 70) {

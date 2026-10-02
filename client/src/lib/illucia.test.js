@@ -3,12 +3,17 @@ import test from 'node:test';
 import { createRound, applyGuess, getRoundStatus } from './hangman-core.js';
 import { toPublicState } from './illucia/public-state.js';
 import { filterCandidates } from './illucia/candidates.js';
-import { parseLexicon, createKnowledge, isAcceptedWord } from './illucia/lexicon.js';
+import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, parseLexicon, createKnowledge, isAcceptedWord, isWordShape } from './illucia/lexicon.js';
 import { chooseLetter, analyzeDecision, partitionWords, POLICIES } from './illucia/strategy.js';
 
 const roundAfter = (answer, guesses = '') => [...guesses].reduce(applyGuess, createRound(answer));
-const knowledgeOf = words => createKnowledge(parseLexicon(
-  [...words].sort().map(word => `${word} 35\n`).join(''), words[0].length));
+// Solver fixtures use tiny 3-letter words. They bypass the word-file parser,
+// whose own contract (lengths 4-15) is tested separately.
+const entriesOf = text => text.trim().split('\n').map(line => {
+  const [word, size] = line.split(' ');
+  return Object.freeze({ word, size: Number(size) });
+});
+const knowledgeOf = words => createKnowledge(entriesOf([...words].sort().map(word => `${word} 35`).join('\n')));
 
 test('public snapshots allow only public fields and cannot retain the private round', () => {
   const round = roundAfter('eagle', 'ex');
@@ -36,17 +41,32 @@ test('exact positions exclude extra copies of hits and all missed letters', () =
 });
 
 test('lexicon parsing rejects duplicate, malformed, unsorted and wrong-length assets', () => {
-  const entries = parseLexicon('cat 35\ndog 70\n', 3);
-  assert.equal(isAcceptedWord('dog', entries), true);
-  assert.equal(isAcceptedWord('Dog', entries), false);
-  assert.equal(isAcceptedWord('fox', entries), false);
+  const entries = parseLexicon('cats 35\ndogs 70\n', 4);
+  assert.equal(isAcceptedWord('dogs', entries), true);
+  assert.equal(isAcceptedWord('Dogs', entries), false);
+  assert.equal(isAcceptedWord('foxy', entries), false);
   const low = createKnowledge(entries, 35);
-  assert.deepEqual(low.words, ['cat']);
-  assert.deepEqual(createKnowledge(entries).words, ['cat', 'dog']);
-  for (const text of ['cat 35\ncat 50\n', 'dog 70\ncat 35\n', 'café 35\n', 'cats 35\n', 'cat 75\n', 'cat 35']) {
-    assert.throws(() => parseLexicon(text, 3));
+  assert.deepEqual(low.words, ['cats']);
+  assert.deepEqual(createKnowledge(entries).words, ['cats', 'dogs']);
+  for (const text of ['cats 35\ncats 50\n', 'dogs 70\ncats 35\n', 'café 35\n', 'catss 35\n', 'cats 75\n', 'cats 35']) {
+    assert.throws(() => parseLexicon(text, 4));
   }
   assert.throws(() => createKnowledge(entries, 60), /Unknown/);
+});
+
+test('players and word files use 4-15 letters', () => {
+  assert.equal(MIN_WORD_LENGTH, 4);
+  assert.equal(MAX_WORD_LENGTH, 15);
+  assert.throws(() => parseLexicon('cat 35\n', 3), RangeError);
+  assert.deepEqual(parseLexicon('cats 35\n', 4).map(entry => entry.word), ['cats']); // Positive control.
+  assert.equal(isAcceptedWord('cat', entriesOf('cat 35')), false);
+  assert.equal(isAcceptedWord('cats', entriesOf('cats 35')), true); // Positive control.
+  assert.equal(isWordShape('cat'), false);
+  assert.equal(isWordShape('cats'), true);
+  assert.equal(isWordShape('a'.repeat(15)), true);
+  assert.equal(isWordShape('a'.repeat(16)), false);
+  assert.equal(isWordShape('Cats'), false);
+  assert.equal(isWordShape('ca ts'), false);
 });
 
 test('count uses word presence, not letter occurrences, and alphabetic ties', () => {
@@ -98,7 +118,7 @@ test('risk penalty and two-turn endgame lookahead affect benchmark choices', () 
 });
 
 test('zero-candidate fallback uses only its own tier, with deterministic unused-letter ties', () => {
-  const entries = parseLexicon('cat 35\ndog 35\nfib 70\nfob 70\nfox 70\n', 3);
+  const entries = entriesOf('cat 35\ndog 35\nfib 70\nfob 70\nfox 70\n');
   const low = createKnowledge(entries, 35);
   const master = createKnowledge(entries);
   const state = toPublicState(roundAfter('fox', 'f'));
@@ -113,13 +133,13 @@ test('zero-candidate fallback uses only its own tier, with deterministic unused-
   assert.equal(chooseLetter(toPublicState(roundAfter('fox', 'fa')), low), 'c');
   assert.deepEqual(low.words, ['cat', 'dog']);
   // No unmentioned higher-tier vocabulary may be consulted or silently added.
-  const extended = parseLexicon('cat 35\ndog 35\nfib 70\nfob 70\nfox 70\nzzz 70\n', 3);
+  const extended = entriesOf('cat 35\ndog 35\nfib 70\nfob 70\nfox 70\nzzz 70\n');
   assert.deepEqual(analyzeDecision(state, createKnowledge(extended, 35)), analyzeDecision(state, low));
   assert.throws(() => chooseLetter(state, knowledgeOf(['cat', 'dog'])), /Master invariant/);
 });
 
 test('fallback handles empty tier vocabularies and exhausted frequency counts without repeats', () => {
-  const entries = parseLexicon('fox 70\n', 3);
+  const entries = entriesOf('fox 70\n');
   const low = createKnowledge(entries, 35);
   assert.equal(low.words.length, 0);
   assert.equal(chooseLetter(toPublicState(createRound('fox')), low), 'a');
@@ -131,7 +151,7 @@ test('fallback handles empty tier vocabularies and exhausted frequency counts wi
 });
 
 test('Apprentice and Scholar fallback frequencies respect their separate ceilings', () => {
-  const entries = parseLexicon('abc 35\nbbb 50\nxbx 70\n', 3);
+  const entries = entriesOf('abc 35\nbbb 50\nxbx 70\n');
   const apprentice = createKnowledge(entries, 35);
   const scholar = createKnowledge(entries, 50);
   const state = toPublicState(roundAfter('xbx', 'x'));

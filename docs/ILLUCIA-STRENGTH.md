@@ -7,6 +7,24 @@ Measurement only: no application code, vocabulary or policy changed.
 - Reports: `tools/benchmarks/illucia-strength.json`, `tools/benchmarks/illucia-strength-speed.json`
 - Page harness: `client/src/Components/illucia-parity.measure.jsx` (run by the script; outside `npm run test:ui`)
 
+## Update 2026-10-02: 3-letter words removed (v2 A1)
+
+The sections below are the 2026-09-30 measurement over lengths 3–15. Players may now
+choose only 4–15-letter words, and `3.txt` is gone, so the committed reports were
+regenerated. Every sample depends only on the seed and its own length, so each
+length-4–15 result below is unchanged (checked cell by cell); only the totals move.
+Set a is unchanged. Set b loses its 498 three-letter words, set c its 12, set d its 300.
+
+| Tier | a) manifest (105) | b) Common 4–6 (1,500) | c) Trickster (36) | d) Balanced (3,600) |
+|---|---|---|---|---|
+| Apprentice | 75.2% / 2.40 / 9.30 | **72.9%** / 3.87 / 8.01 | 16.7% / 5.58 / 7.56 | 40.6% / 4.31 / 10.47 |
+| Scholar | 95.2% / 1.47 / 8.82 | 67.4% / 4.06 / 8.12 | 27.8% / 5.36 / 7.81 | 65.7% / 3.01 / 9.72 |
+| Master | 98.1% / 1.48 / 8.90 | **63.1%** / 4.24 / 8.23 | 30.6% / 5.33 / 7.75 | 91.0% / 1.79 / 9.00 |
+
+Page parity: 108/108 on both pages (36 words × 3 tiers; 36 out-of-tier cases, 34 that
+used fallback; control: 35 of 36 Apprentice sequences differ from Master's). The
+tier inversion on common short words (flag 1) remains at lengths 4–6.
+
 ## 1. Reproduction
 
 I3 and I3b re-run at HEAD match their committed reports exactly. The manifest SHA-256

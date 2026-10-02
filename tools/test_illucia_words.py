@@ -9,12 +9,12 @@ from build_illucia_words import compile_words, word_files, verify, source_bytes,
 
 class IlluciaWordsTests(unittest.TestCase):
     def test_whole_word_filters_and_flagged_duplicate_senses(self):
-        rows = [('ass', 35), ('ASS', 50), ('class', 35), ('grass', 50),
+        rows = [('arse', 35), ('ARSE', 50), ('parse', 35), ('arsenal', 50),
                 ('rude', 35), ('Rude', 50), ('kind', 35)]
-        self.assertEqual(compile_words(rows, ['Rude'], ' ASS \n'),
-                         {'class': 35, 'grass': 50, 'kind': 35})
+        self.assertEqual(compile_words(rows, ['Rude'], ' ARSE \n'),
+                         {'parse': 35, 'arsenal': 50, 'kind': 35})
         self.assertEqual(compile_words(rows, [], ''),
-                         {'ass': 35, 'class': 35, 'grass': 50, 'rude': 35, 'kind': 35})
+                         {'arse': 35, 'parse': 35, 'arsenal': 50, 'rude': 35, 'kind': 35})
 
     def test_lemma_forms_of_blocked_terms_are_blocked(self):
         rows = [('faggot', 35), ('faggots', 35), ('fingering', 35), ('fingers', 35),
@@ -37,20 +37,20 @@ class IlluciaWordsTests(unittest.TestCase):
                 compile_words(rows, [], 'cum', lemmas, allow=bad)
 
     def test_ascii_length_and_size_boundaries(self):
-        rows = [(w, 35) for w in ['ab', 'abc', 'A' * 15, 'a' * 16, 'naïve',
+        rows = [(w, 35) for w in ['ab', 'abc', 'abcd', 'A' * 15, 'a' * 16, 'naïve',
                                   'a-b', 'a b', "cat's", 'abc.', 'Kelvin']]
         rows += [('below', 34), ('above', 75), ('upper', 70), ('middle', 50)]
         self.assertEqual(compile_words(rows, [], ''),
-                         {'abc': 35, 'a' * 15: 35, 'upper': 70, 'middle': 50})
+                         {'abcd': 35, 'a' * 15: 35, 'upper': 70, 'middle': 50})
 
     def test_minimum_original_size_and_deterministic_bytes(self):
-        rows = [('Zebra', 60), ('zebra', 35), ('apple', 50), ('tiger', 40), ('cat', 70)]
+        rows = [('Zebra', 60), ('zebra', 35), ('apple', 50), ('tiger', 40), ('cats', 70), ('cat', 35)]
         first = word_files(compile_words(rows, [], ''))
         second = word_files(compile_words(reversed(rows * 2), [], ''))
         self.assertEqual(first, second)
         self.assertEqual(first['5.txt'], b'apple 50\ntiger 40\nzebra 35\n')
-        self.assertEqual(first['3.txt'], b'cat 70\n')
-        self.assertEqual(set(first), {f'{n}.txt' for n in range(3, 16)})
+        self.assertEqual(first['4.txt'], b'cats 70\n')
+        self.assertEqual(set(first), {f'{n}.txt' for n in range(4, 16)})
 
     def test_checksum_and_offline_failure(self):
         good = b'known source'
@@ -69,16 +69,30 @@ class IlluciaWordsTests(unittest.TestCase):
     def test_check_does_not_overwrite_drift(self):
         with tempfile.TemporaryDirectory() as folder:
             out = Path(folder)
-            publish({'3.txt': b'cat 35\n'}, out)
-            publish({'3.txt': b'cat 35\n'}, out, True)
+            publish({'4.txt': b'cats 35\n'}, out)
+            publish({'4.txt': b'cats 35\n'}, out, True)
             with self.assertRaisesRegex(ValueError, 'differs'):
-                publish({'3.txt': b'dog 35\n'}, out, True)
-            self.assertEqual((out / '3.txt').read_bytes(), b'cat 35\n')
+                publish({'4.txt': b'dogs 35\n'}, out, True)
+            self.assertEqual((out / '4.txt').read_bytes(), b'cats 35\n')
+
+    def test_leftover_length_files_fail_check_and_build(self):
+        with tempfile.TemporaryDirectory() as folder:
+            out = Path(folder)
+            files = {'4.txt': b'cats 35\n', 'CREDITS.txt': b'credits\n'}
+            publish(files, out)
+            (out / 'notes.txt').write_bytes(b'not a length file\n')
+            publish(files, out, True)  # Positive control: other .txt files are fine.
+            (out / '3.txt').write_bytes(b'cat 35\n')
+            for check in (True, False):
+                with self.assertRaisesRegex(ValueError, 'Unexpected length files: 3.txt'):
+                    publish(files, out, check)
 
     def test_committed_corpus_contract_and_checksums(self):
         manifest = json.loads((OUTPUT / 'manifest.json').read_text())
         words = {}
-        for length in range(3, 16):
+        self.assertEqual(manifest['policy']['lengths'], [4, 15])
+        self.assertFalse((OUTPUT / '3.txt').exists())
+        for length in range(4, 16):
             data = (OUTPUT / f'{length}.txt').read_bytes()
             self.assertEqual(hashlib.sha256(data).hexdigest(),
                              manifest['files'][f'{length}.txt']['sha256'])
@@ -89,7 +103,7 @@ class IlluciaWordsTests(unittest.TestCase):
                 word, size = line.split(' ')
                 words[word] = int(size)
         self.assertEqual(len(words), manifest['acceptedWords'])
-        self.assertTrue({'cat', 'dog', 'class', 'grass', 'hello', 'color'} <= words.keys())
+        self.assertTrue({'cats', 'dogs', 'class', 'grass', 'hello', 'color'} <= words.keys())
         self.assertFalse({'fuck', 'shit', 'ass', 'colour'} & words.keys())
         rules = json.loads(FILTER.read_text())
         self.assertEqual(manifest['policy']['projectFilter']['sha256'],
@@ -98,7 +112,7 @@ class IlluciaWordsTests(unittest.TestCase):
                  'pakis', 'darkies', 'jigaboos', 'chinks', 'homos', 'honkies', 'gooks', 'japs'}
         self.assertFalse((leaks | set(rules['block'])) & words.keys())
         innocent = {'finger', 'throat', 'shrimp', 'scissors', 'butter', 'scatter', 'spicy',
-                    'cocktail', 'retard', 'queer', 'gay'}
+                    'cocktail', 'retard', 'queer', 'gays'}  # gay itself has 3 letters
         self.assertLessEqual(innocent | set(rules['allow']), words.keys())
         self.assertEqual({str(t): sum(s <= t for s in words.values()) for t in (35, 50, 70)},
                          manifest['cumulativeSizes'])

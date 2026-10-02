@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { VOCABULARY_TIERS, createKnowledge, isAcceptedWord } from '../client/src/lib/illucia/lexicon.js';
+import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, createKnowledge, isAcceptedWord } from '../client/src/lib/illucia/lexicon.js';
 import { DEFAULT_SEED, loadLexicons, sampleWords, simulate } from './benchmark-illucia.js';
 import { WORD_BANDS, tierSamples } from './benchmark-illucia-tiers.js';
 
@@ -15,8 +15,8 @@ const PARITY_HARNESS = 'src/Components/illucia-parity.measure.jsx';
 const sha256 = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
 // Short words built on rare letters. Every one must be in the accepted list.
+// The 12 three-letter words were dropped with the 4-letter minimum (v2 A1).
 export const TRICKSTER_WORDS = Object.freeze([
-  'zap', 'zip', 'wax', 'vex', 'fox', 'jab', 'jag', 'jig', 'jog', 'jut', 'gym', 'wry',
   'jazz', 'fuzz', 'buzz', 'fizz', 'jinx', 'lynx', 'quiz', 'quip', 'whiz', 'myth', 'hymn', 'onyx',
   'glyph', 'crypt', 'fjord', 'nymph', 'sylph', 'lymph', 'psych', 'tryst', 'jazzy', 'fuzzy', 'waltz', 'kayak',
   'rhythm', 'zephyr', 'quartz', 'zigzag', 'jigsaw', 'sphinx', 'syzygy', 'squawk', 'jockey', 'buzzer', 'sizzle', 'puzzle',
@@ -27,14 +27,14 @@ const sizeOf = (entriesByLength, word) => entriesByLength[word.length].find(entr
 
 export async function wordSets(entriesByLength, seed = DEFAULT_SEED) {
   const manifest = JSON.parse(await readFile(resolve(CLIENT, 'src/data/words.json'), 'utf8'));
-  const accepted = word => word.length >= 3 && word.length <= 15 && isAcceptedWord(word, entriesByLength[word.length]);
+  const accepted = word => isAcceptedWord(word, entriesByLength[word.length] ?? []);
   const manifestWords = manifest.words.map(record => record.word);
   const rejectedTrickster = TRICKSTER_WORDS.filter(word => !accepted(word));
   if (rejectedTrickster.length) throw new Error(`Trickster words outside the accepted list: ${rejectedTrickster}`);
   // ESDB has no frequency rank finer than size 35, its smallest bucket, so
   // "most common" means size 35 and "top 500" is a seeded sample per length.
   const common = [];
-  for (let length = 3; length <= 6; length++) {
+  for (let length = MIN_WORD_LENGTH; length <= 6; length++) {
     const pool = entriesByLength[length].filter(entry => entry.size <= 35);
     common.push(...sampleWords(pool, COMMON_PER_LENGTH, seed + 1000 + length).map(entry => entry.word).sort());
   }
@@ -45,11 +45,11 @@ export async function wordSets(entriesByLength, seed = DEFAULT_SEED) {
     sets: {
       a: { name: 'manifest', description: 'Accepted words among the 105 Hangman manifest words',
         words: manifestWords.filter(accepted) },
-      b: { name: 'common', description: `Size-35 words of length 3-6, seeded sample of ${COMMON_PER_LENGTH} per length (all of them when fewer)`,
+      b: { name: 'common', description: `Size-35 words of length ${MIN_WORD_LENGTH}-6, seeded sample of ${COMMON_PER_LENGTH} per length (all of them when fewer)`,
         words: common },
       c: { name: 'trickster', description: 'Hand-picked short words with rare letters (accepted list only)',
         words: [...TRICKSTER_WORDS] },
-      d: { name: 'balanced', description: 'The I3b sample: 100 words per length 3-15 per size band (common/medium/rare)',
+      d: { name: 'balanced', description: `The I3b sample: 100 words per length ${MIN_WORD_LENGTH}-${MAX_WORD_LENGTH} per size band (common/medium/rare)`,
         words: Object.values(balanced).flatMap(bands => WORD_BANDS.flatMap(band => bands[band.name].map(entry => entry.word))) },
     },
   };
@@ -119,7 +119,7 @@ export function playSets(entriesByLength, sets) {
 // in-tier and out-of-tier words for Apprentice and Scholar at every length.
 export function parityCases(entriesByLength, balancedWords, know) {
   const words = [];
-  for (let length = 3; length <= 15; length++) {
+  for (let length = MIN_WORD_LENGTH; length <= MAX_WORD_LENGTH; length++) {
     for (const band of WORD_BANDS) {
       words.push(balancedWords.find(word => word.length === length &&
         sizeOf(entriesByLength, word) >= band.min && sizeOf(entriesByLength, word) <= band.max));

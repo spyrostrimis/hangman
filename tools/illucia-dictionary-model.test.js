@@ -8,6 +8,12 @@ import { playModel, developmentSample } from './benchmark-illucia-models.js';
 import { loadLexicons } from './benchmark-illucia.js';
 import { normalizeModelResult } from './lib/illucia-model.js';
 
+// Tiny 3-letter fixtures bypass the word-file parser, whose contract is lengths 4-15.
+const entriesOf = text => text.trim().split('\n').map(line => {
+  const [word, size] = line.split(' ');
+  return Object.freeze({ word, size: Number(size) });
+});
+
 const model = '@cf/meta/llama-3.1-8b-instruct-fp8-fast';
 const knowledge = createKnowledge(parseLexicon('eerie 35\nelope 35\nelude 35\n', 5));
 const stateFor = word => toPublicState(applyGuess(createRound(word), 'e'));
@@ -59,7 +65,7 @@ test('JSON reply parsing rejects repeated letters, extra fields, overlong explan
 });
 
 test('dictionary mode records complete assistance evidence without falsely claiming fallback', async () => {
-  const k = createKnowledge(parseLexicon('cat 35\ndog 35\n', 3));
+  const k = createKnowledge(entriesOf('cat 35\ndog 35\n'));
   const letters = [...'cat'];
   const game = await playModel('cat', k, model, async (_, input) => {
     assert.ok(JSON.parse(input.messages[1].content).candidates.includes('cat'));

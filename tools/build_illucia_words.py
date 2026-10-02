@@ -18,6 +18,9 @@ HERE = Path(__file__).resolve().parent
 OUTPUT = HERE.parent / 'client/public/illucia/words'
 LOCK = HERE / 'illucia-sources.json'
 FILTER = HERE / 'illucia-filter.json'
+MIN_LENGTH = 4
+MAX_LENGTH = 15
+LENGTH_FILE = re.compile(r'\d+\.txt')
 
 
 def digest(data):
@@ -45,7 +48,7 @@ def source_bytes(name, spec, cache, download):
 
 def normalized(word):
     # Reject punctuation/accents before lowercasing (no Unicode-to-ASCII folding).
-    return word.lower() if re.fullmatch(r'[A-Za-z]{3,15}', word) else None
+    return word.lower() if re.fullmatch(rf'[A-Za-z]{{{MIN_LENGTH},{MAX_LENGTH}}}', word) else None
 
 
 def compile_words(rows, flagged, blocklist, lemmas=(), block=(), allow=()):
@@ -72,7 +75,7 @@ def compile_words(rows, flagged, blocklist, lemmas=(), block=(), allow=()):
 def word_files(accepted):
     return {f'{length}.txt': ''.join(
         f'{word} {accepted[word]}\n' for word in sorted(accepted) if len(word) == length
-    ).encode('ascii') for length in range(3, 16)}
+    ).encode('ascii') for length in range(MIN_LENGTH, MAX_LENGTH + 1)}
 
 
 def extract_words(source):
@@ -125,25 +128,30 @@ def build(inputs, lock, project_filter):
         'https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words\n'
         'https://creativecommons.org/licenses/by/4.0/\n'
         'Changes: American English, normal variants, no special categories, ASCII letters,\n'
-        '3-15 characters, lowercase, deduplication, profanity filtering, length/tier files.\n'
+        f'{MIN_LENGTH}-{MAX_LENGTH} characters, lowercase, deduplication, profanity filtering, length/tier files.\n'
     ).encode('utf-8')
     report = {
         'sources': lock,
         'policy': {'spelling': 'A', 'variantLevel': 1, 'categories': [''],
-                   'lengths': [3, 15], 'maximumSize': 70, 'blockLemmaForms': True,
+                   'lengths': [MIN_LENGTH, MAX_LENGTH], 'maximumSize': 70, 'blockLemmaForms': True,
                    'projectFilter': {'file': 'tools/illucia-filter.json',
                                      'sha256': digest(project_filter)}},
         'acceptedWords': len(accepted),
         'cumulativeSizes': {str(t): sum(s <= t for s in accepted.values()) for t in (35, 50, 70)},
         'files': {name: {'sha256': digest(data), 'bytes': len(data),
                          'words': len(data.splitlines())}
-                  for name, data in files.items() if re.fullmatch(r'\d+\.txt', name)},
+                  for name, data in files.items() if LENGTH_FILE.fullmatch(name)},
     }
     files['manifest.json'] = (json.dumps(report, indent=2) + '\n').encode('utf-8')
     return files, report
 
 
 def publish(files, output, check=False):
+    # Writing never deletes, so a length file the build no longer makes must be removed by hand.
+    stale = sorted(path.name for path in output.glob('*.txt')
+                   if LENGTH_FILE.fullmatch(path.name) and path.name not in files) if output.exists() else []
+    if stale:
+        raise ValueError(f'Unexpected length files: {", ".join(stale)}')
     if check:
         for name, data in files.items():
             if not (output / name).exists() or (output / name).read_bytes() != data:

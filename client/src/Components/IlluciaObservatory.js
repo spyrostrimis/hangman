@@ -3,7 +3,7 @@ import RegisteredOnly from './RegisteredOnly';
 import { useAuth } from './AuthProvider';
 import IlluciaFigure from './IlluciaFigure';
 import { applyGuess, createRound, getPattern, getRemainingMisses, getRoundStatus, MAX_MISSES } from '../lib/hangman-core.js';
-import { ALPHABET, VOCABULARY_TIERS, createKnowledge, isAcceptedWord, parseLexicon } from '../lib/illucia/lexicon.js';
+import { ALPHABET, MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, createKnowledge, isAcceptedWord, isWordShape, parseLexicon } from '../lib/illucia/lexicon.js';
 import { toPublicState } from '../lib/illucia/public-state.js';
 import { filterCandidates } from '../lib/illucia/candidates.js';
 import { analyzeDecision } from '../lib/illucia/strategy.js';
@@ -108,8 +108,8 @@ function Setup({ username, onStart }) {
     event.preventDefault();
     if (pending.current) return;
     const word = secret.trim().toLowerCase();
-    if (!/^[a-z]{3,15}$/.test(word)) {
-      setError('Choose 3–15 letters, A–Z only, with no spaces or punctuation.');
+    if (!isWordShape(word)) {
+      setError(`Choose ${MIN_WORD_LENGTH}–${MAX_WORD_LENGTH} letters, A–Z only, with no spaces or punctuation.`);
       return;
     }
     const controller = new AbortController();

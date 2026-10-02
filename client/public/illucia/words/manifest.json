@@ -23,7 +23,7 @@
       ""
     ],
     "lengths": [
-      3,
+      4,
       15
     ],
     "maximumSize": 70,
@@ -33,18 +33,13 @@
       "sha256": "783e98cf8c4b0be38a9cb6d76abf63c1009df510522ab56b8aa5c561d5d908e4"
     }
   },
-  "acceptedWords": 137389,
+  "acceptedWords": 135897,
   "cumulativeSizes": {
-    "35": 38547,
-    "50": 69289,
-    "70": 137389
+    "35": 38049,
+    "50": 68377,
+    "70": 135897
   },
   "files": {
-    "3.txt": {
-      "sha256": "bb772df4c0256a569d837c1bc48f38916310d0039a1311c2afd1c6e06efa5cc2",
-      "bytes": 10444,
-      "words": 1492
-    },
     "4.txt": {
       "sha256": "b07e58068c445c052f22ae6de843ca166c503b9696abadbbc371e00c3e15c0f9",
       "bytes": 33920,

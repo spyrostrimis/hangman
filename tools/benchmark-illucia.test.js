@@ -1,8 +1,14 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { sampleWords, simulate, summarize } from './benchmark-illucia.js';
-import { createKnowledge, parseLexicon } from '../client/src/lib/illucia/lexicon.js';
+import { createKnowledge } from '../client/src/lib/illucia/lexicon.js';
 import { tierSamples } from './benchmark-illucia-tiers.js';
+
+// Tiny 3-letter fixtures bypass the word-file parser, whose contract is lengths 4-15.
+const entriesOf = text => text.trim().split('\n').map(line => {
+  const [word, size] = line.split(' ');
+  return Object.freeze({ word, size: Number(size) });
+});
 
 test('seeded samples are reproducible, without replacement, and do not mutate input', () => {
   const entries = Array.from({ length: 50 }, (_, i) => i);
@@ -15,7 +21,7 @@ test('seeded samples are reproducible, without replacement, and do not mutate in
 });
 
 test('simulation and reports reflect both real wins and sixth-miss losses', () => {
-  const knowledge = createKnowledge(parseLexicon('aaa 35\nbbb 35\nccc 35\nddd 35\neee 35\nfff 35\nggg 35\n', 3));
+  const knowledge = createKnowledge(entriesOf('aaa 35\nbbb 35\nccc 35\nddd 35\neee 35\nfff 35\nggg 35\n'));
   const win = simulate('aaa', knowledge, 'count', () => 0);
   const loss = simulate('ggg', knowledge, 'count', () => 0);
   assert.equal(win.won, true);
@@ -36,7 +42,7 @@ test('simulation and reports reflect both real wins and sixth-miss losses', () =
 });
 
 test('tier simulation counts fallback decisions separately from affected games', () => {
-  const entries = parseLexicon('act 70\ncat 35\nxyz 70\n', 3);
+  const entries = entriesOf('act 70\ncat 35\nxyz 70\n');
   const low = createKnowledge(entries, 35);
   const win = simulate('act', low, 'count', () => 0);
   const loss = simulate('xyz', low, 'count', () => 0);
@@ -58,7 +64,7 @@ test('tier simulation counts fallback decisions separately from affected games',
 });
 
 test('tier samples stratify by original size and cap small strata without duplication', () => {
-  const entries = parseLexicon('aaa 35\naab 35\naac 40\naad 50\naae 55\naaf 65\naag 70\n', 3);
+  const entries = entriesOf('aaa 35\naab 35\naac 40\naad 50\naae 55\naaf 65\naag 70\n');
   const all = tierSamples({ 3: entries }, 100, 9);
   assert.deepEqual(all, tierSamples({ 3: entries }, 100, 9));
   assert.deepEqual(all[3].common.map(entry => entry.size), [35, 35]);

@@ -4,7 +4,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRound, applyGuess, getRoundStatus, getIncorrectGuesses } from '../client/src/lib/hangman-core.js';
 import { toPublicState } from '../client/src/lib/illucia/public-state.js';
-import { parseLexicon, createKnowledge } from '../client/src/lib/illucia/lexicon.js';
+import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, parseLexicon, createKnowledge } from '../client/src/lib/illucia/lexicon.js';
 import { analyzeDecision, POLICIES } from '../client/src/lib/illucia/strategy.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -88,7 +88,7 @@ export async function loadLexicons() {
   const manifestBytes = await readFile(resolve(dataRoot, 'manifest.json'));
   const manifest = JSON.parse(manifestBytes);
   const entriesByLength = {};
-  for (let length = 3; length <= 15; length++) {
+  for (let length = MIN_WORD_LENGTH; length <= MAX_WORD_LENGTH; length++) {
     const bytes = await readFile(resolve(dataRoot, `${length}.txt`));
     if (createHash('sha256').update(bytes).digest('hex') !== manifest.files[`${length}.txt`].sha256) {
       throw new Error(`Vocabulary checksum mismatch for length ${length}.`);
@@ -105,7 +105,7 @@ export async function benchmark({ perLength = 250, seed = DEFAULT_SEED, policies
   const { entriesByLength, manifestSha256 } = await loadLexicons();
   const samples = {};
   const knowledgeByLength = {};
-  for (let length = 3; length <= 15; length++) {
+  for (let length = MIN_WORD_LENGTH; length <= MAX_WORD_LENGTH; length++) {
     const entries = entriesByLength[length];
     samples[length] = sampleWords(entries, perLength, seed + length);
     knowledgeByLength[length] = createKnowledge(entries);
@@ -121,7 +121,7 @@ export async function benchmark({ perLength = 250, seed = DEFAULT_SEED, policies
   for (const policy of policies) {
     const games = [];
     const byLength = {};
-    for (let length = 3; length <= 15; length++) {
+    for (let length = MIN_WORD_LENGTH; length <= MAX_WORD_LENGTH; length++) {
       const batch = samples[length].map(entry => ({ ...simulate(entry.word, knowledgeByLength[length], policy), size: entry.size }));
       games.push(...batch);
       byLength[length] = summarize(batch);

@@ -76,9 +76,9 @@ it('keeps the secret off screen while she still has more than ten candidates', a
 });
 
 it('falls back inside a low tier, ends after six misses and offers a rematch at the next tier', async () => {
-  fetch.mockResolvedValue({ ok: true, text: async () => 'abc 35\nxyz 70\n' });
-  const view = mount(); await start('xyz', 'Apprentice');
-  expect(analyzeDecision.mock.calls[0][1].words).toEqual(['abc']);
+  fetch.mockResolvedValue({ ok: true, text: async () => 'abcd 35\nwxyz 70\n' });
+  const view = mount(); await start('wxyz', 'Apprentice');
+  expect(analyzeDecision.mock.calls[0][1].words).toEqual(['abcd']);
   await tick();
   expect(view.container.querySelector('.obs-reasoning').textContent).toContain('falls back on habit');
   for (let index = 1; index < 6; index++) await tick();
@@ -108,6 +108,17 @@ it('rejects invalid and unlisted words without starting', async () => {
   await start('zzzzz');
   expect(screen.getByRole('alert').textContent).toContain('cannot accept');
   expect(screen.getByLabelText('Insert your secret word')).toBeTruthy();
+});
+
+it('asks for 4-15 letters and never fetches a 3-letter word file', async () => {
+  mount(); await start('cat');
+  expect(screen.getByRole('alert').textContent).toBe('Choose 4–15 letters, A–Z only, with no spaces or punctuation.');
+  expect(fetch).not.toHaveBeenCalled();
+  // Positive control: four letters pass the shape check and load that length.
+  fetch.mockResolvedValue({ ok: true, text: async () => 'cats 35\n' });
+  await start('cats');
+  expect(fetch.mock.calls[0][0]).toBe('/illucia/words/4.txt');
+  expect(screen.queryByRole('alert')).toBeNull();
 });
 
 it('shows a recoverable error when the solver fails instead of inventing an outcome', async () => {

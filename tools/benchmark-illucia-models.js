@@ -6,7 +6,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRound, applyGuess, getRoundStatus, getIncorrectGuesses } from '../client/src/lib/hangman-core.js';
 import { toPublicState } from '../client/src/lib/illucia/public-state.js';
-import { createKnowledge } from '../client/src/lib/illucia/lexicon.js';
+import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, createKnowledge } from '../client/src/lib/illucia/lexicon.js';
 import { chooseLetter } from '../client/src/lib/illucia/strategy.js';
 import { loadLexicons, sampleWords, simulate } from './benchmark-illucia.js';
 import { WORD_BANDS } from './benchmark-illucia-tiers.js';
@@ -33,7 +33,7 @@ export function pilotSample(entriesByLength, count = 50, seed = SEED) {
   if (!Number.isInteger(count) || count < 1 || count > 500) throw new Error('Sample size must be 1–500.');
   if (!Number.isInteger(seed) || seed < 0 || seed > 0xffffffff) throw new Error('Invalid seed.');
   const buckets = [];
-  for (let length = 3; length <= 15; length++) {
+  for (let length = MIN_WORD_LENGTH; length <= MAX_WORD_LENGTH; length++) {
     for (const [i, band] of WORD_BANDS.entries()) {
       buckets.push(sampleWords((entriesByLength[length] ?? []).filter(e => e.size >= band.min && e.size <= band.max),
         count, seed + length * 3 + i).map(e => ({ ...e, length, band: band.name })));

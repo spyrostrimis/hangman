@@ -29,7 +29,7 @@ We build the database with the release's `combine.py`, then use its own query
 builder over `scowl_v0`: American English (`A`, including unmarked spellings
 and default/US regions), normal variants (level <=1), size <=70, and the empty
 category only. No accent removal, punctuation stripping or substring blocking.
-ASCII A-Z/a-z words of length 3-15 are lowercased and deduplicated. Capitalized
+ASCII A-Z/a-z words of length 4-15 are lowercased and deduplicated. Capitalized
 ASCII entries are therefore accepted after normalization, as specified by I2.
 
 Every spelling and inflection in an ESDB group whose usage note starts with
@@ -55,7 +55,7 @@ Owner decision (2026-09-28): `retard`, `queer` and `gay` stay accepted; `chink`
 and `homo` are blocked. The manifest records the filter's SHA-256. Neither upstream list, nor this
 filter, claims exhaustive coverage.
 
-Each `client/public/illucia/words/3.txt` through `15.txt` contains sorted
+Each `client/public/illucia/words/4.txt` through `15.txt` contains sorted
 `word size` records, LF endings, and a final newline. The size is the minimum
 original ESDB size of a surviving record, **not** a remapped difficulty name.
 The release documents 35/50/70 as its small/medium/large sizes. Intermediate

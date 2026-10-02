@@ -25,10 +25,10 @@ Only out-of-tier answers at Apprentice/Scholar can produce expected zero events.
 ## Sample and interpretation
 
 The benchmark samples up to 100 words without replacement from **each length ×
-source-size band**, lengths 3–15. Bands: common =35, medium =40–50, rare =55–70.
+source-size band**, lengths 4–15. Bands: common =35, medium =40–50, rare =55–70.
 Every tier plays the same samples. Small strata use all available words; actual
 counts are recorded. The current corpus supplies 100 words in every stratum:
-3,900 words per tier, 11,700 games in total.
+3,600 words per tier, 10,800 games in total.
 
 Seed 20260928; the shared seeded shuffle uses seed + length ×3 + band index.
 The report records source-manifest and sample SHA-256 hashes, environment,
@@ -78,16 +78,20 @@ source-size band (100 per length). Values are **Illucia's** win rate:
 | Less common (40–50) | 9.4% | 92.0% | 90.4% |
 | Rare (55–70) | 9.0% | 11.4% | 90.6% |
 
-Across the full balanced 3–15-letter sample:
+Across the full balanced 4–15-letter sample:
 
-| Tier | Wins / 3,900 | Win rate | Games using fallback | Zero-candidate decisions |
+| Tier | Wins / 3,600 | Win rate | Games using fallback | Zero-candidate decisions |
 | --- | --- | --- | --- | --- |
-| Apprentice | 1,518 | 38.92% | 2,186 | 16,650 expected |
-| Scholar | 2,438 | 62.51% | 1,069 | 7,887 expected |
-| Master | 3,359 | 86.13% | 0 | 0 |
+| Apprentice | 1,460 | 40.56% | 2,153 | 16,565 expected |
+| Scholar | 2,365 | 65.69% | 1,056 | 7,866 expected |
+| Master | 3,276 | 91.00% | 0 | 0 |
 
 Regenerated after the lemma-form profanity filter changed the vocabulary
 (see [ILLUCIA-WORDS.md](ILLUCIA-WORDS.md)); the seeded samples changed with it.
+Regenerated again on 2026-10-02 after 3-letter words were removed (v2 A1). Each
+stratum's seed depends only on seed, length and band, so the samples for lengths
+4–15 and every length's results are unchanged; only the 300 three-letter words per
+tier are gone. The 5–9-letter table above is identical.
 
 There were no in-tier zero-candidate failures. For the lower tiers, all fallback
 events were on words outside their vocabulary. The tier labels describe breadth

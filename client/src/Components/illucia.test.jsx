@@ -75,10 +75,10 @@ it('sends only the length, hides her hits until the player shows them, and plays
 });
 
 it('waits for the player to answer a miss, answers that reply, and ends at six misses', async () => {
-  fetch.mockResolvedValue({ ok: true, text: async () => 'abc 35\nxyz 70\n' });
-  const view = mount(); await start('xyz', 'Apprentice');
+  fetch.mockResolvedValue({ ok: true, text: async () => 'abcd 35\nwxyz 70\n' });
+  const view = mount(); await start('wxyz', 'Apprentice');
   await think();
-  expect(analyzeDecision.mock.calls[0][1].words).toEqual(['abc']);
+  expect(analyzeDecision.mock.calls[0][1].words).toEqual(['abcd']);
   expect(hiddenTiles()).toHaveLength(0);
   // Positive control on the same round: a miss offers both replies and she waits.
   expect(screen.getByRole('button', { name: 'Oops, wrong' })).toBeTruthy();
@@ -87,13 +87,13 @@ it('waits for the player to answer a miss, answers that reply, and ends at six m
 
   fireEvent.click(screen.getByRole('button', { name: "That wasn't so smart ;)" }));
   expect(bubbles(view.container, 'player').at(-1)).toBe("That wasn't so smart ;)");
-  const smart = replyLine('smart', { letter: 'a', turn: 1, count: 0, share: 100, length: 3, missesLeft: 5 });
+  const smart = replyLine('smart', { letter: 'a', turn: 1, count: 0, share: 100, length: 4, missesLeft: 5 });
   expect(bubbles(view.container, 'illucia').at(-1)).toBe(smart);
   expect(view.container.querySelectorAll('.duel-board-caption')[1].textContent).toBe('Turn 1 · A · miss');
 
   await think();
   fireEvent.click(screen.getByRole('button', { name: 'Oops, wrong' }));
-  const oops = replyLine('oops', { letter: 'b', turn: 2, count: 0, share: 100, length: 3, missesLeft: 4 });
+  const oops = replyLine('oops', { letter: 'b', turn: 2, count: 0, share: 100, length: 4, missesLeft: 4 });
   expect(bubbles(view.container, 'illucia').at(-1)).toBe(oops);
   expect(oops).not.toBe(smart);
 
@@ -104,7 +104,7 @@ it('waits for the player to answer a miss, answers that reply, and ends at six m
   expect(screen.getByRole('heading', { name: 'You win' })).toBeTruthy();
   expect(screen.getByRole('img', { name: 'Her chances: 0 of 6' })).toBeTruthy();
   expect(view.container.querySelectorAll('.duel-board').length).toBe(7);
-  expect([...view.container.querySelectorAll('.duel-board')].at(-1).querySelectorAll('.duel-tile.missed')).toHaveLength(3);
+  expect([...view.container.querySelectorAll('.duel-board')].at(-1).querySelectorAll('.duel-tile.missed')).toHaveLength(4);
   expect(screen.getByRole('button', { name: 'Rematch vs Scholar' })).toBeTruthy();
   expect(screen.queryByRole('button', { name: 'Oops, wrong' })).toBeNull();
   expect(fetch).toHaveBeenCalledTimes(1);
@@ -147,4 +147,15 @@ it('rejects invalid and unlisted words without starting', async () => {
   await start('zzzzz');
   expect(screen.getByRole('alert').textContent).toContain('cannot accept');
   expect(screen.getByLabelText('Your secret word')).toBeTruthy();
+});
+
+it('asks for 4-15 letters and never fetches a 3-letter word file', async () => {
+  mount(); await start('cat');
+  expect(screen.getByRole('alert').textContent).toBe('Choose 4–15 letters, A–Z only, with no spaces or punctuation.');
+  expect(fetch).not.toHaveBeenCalled();
+  // Positive control: four letters pass the shape check and load that length.
+  fetch.mockResolvedValue({ ok: true, text: async () => 'cats 35\n' });
+  await start('cats');
+  expect(fetch.mock.calls[0][0]).toBe('/illucia/words/4.txt');
+  expect(screen.queryByRole('alert')).toBeNull();
 });

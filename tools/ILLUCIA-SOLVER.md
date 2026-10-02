@@ -7,7 +7,7 @@ node tools/benchmark-illucia.js
 ```
 
 This writes `tools/benchmarks/illucia-i3.json`. The default sample is 250 words
-per length, lengths 3-15: 3,250 games per policy, 16,250 games total. Allow several
+per length, lengths 4-15: 3,000 games per policy, 15,000 games total. Allow several
 minutes. A small smoke run without overwriting the committed report:
 
 ```sh
@@ -114,22 +114,27 @@ I3b implements the lower-tier fallback and measurements; I4 adds asset loading a
 
 ## Recorded I3 result
 
-The committed `benchmarks/illucia-i3.json` contains the full 16,250-game run.
+The committed `benchmarks/illucia-i3.json` contains the full 15,000-game run.
 All policies had zero Master invariant failures.
 
-| Policy | Solved / 3,250 | Win rate | Mean misses | Decision p50 / p95 (ms) |
+| Policy | Solved / 3,000 | Win rate | Mean misses | Decision p50 / p95 (ms) |
 | --- | --- | --- | --- | --- |
-| Global frequency | 485 | 14.92% | 5.6680 | 1.18 / 5.53 |
-| Count (baseline) | 2,796 | 86.03% | 2.0554 | 1.39 / 10.28 |
-| Entropy | 2,788 | 85.78% | 2.1052 | 1.40 / 12.46 |
-| Risk-adjusted entropy | 2,799 | 86.12% | 2.0298 | 1.43 / 13.01 |
-| Risk + lookahead | 2,792 | 85.91% | 2.0317 | 1.45 / 13.34 |
+| Global frequency | 462 | 15.40% | 5.6557 | 1.35 / 5.70 |
+| Count (baseline) | 2,728 | 90.93% | 1.7853 | 1.56 / 11.61 |
+| Entropy | 2,717 | 90.57% | 1.8447 | 1.52 / 13.53 |
+| Risk-adjusted entropy | 2,731 | 91.03% | 1.7570 | 1.61 / 15.13 |
+| Risk + lookahead | 2,725 | 90.83% | 1.7587 | 1.61 / 14.30 |
 
 Count remains the production choice. The best challenger gained only three wins
-(0.09 percentage points) on this fixed sample, insufficient evidence of a clear
+(0.10 percentage points) on this fixed sample, insufficient evidence of a clear
 improvement. No statistical significance or optimality is claimed.
 
-Count's win rates by length 3 through 9 were 27.2%, 40.8%, 67.6%, 89.6%, 94.8%,
+Regenerated on 2026-10-02 after 3-letter words were removed (v2 A1). The samples
+for lengths 4-15 depend only on seed + length, so they are unchanged, and every
+length's results are identical to the earlier 3-15 run apart from timings; only the
+250 three-letter games (count won 27.2% of them) are gone.
+
+Count's win rates by length 4 through 9 were 40.8%, 67.6%, 89.6%, 94.8%,
 98.8% and 99.6%. It solved all 250 sampled words at each length 10 through 15; that is
 sample evidence, not a guarantee for every word. I3b will measure how the lower
 knowledge ceilings change these results with the required fallback.
