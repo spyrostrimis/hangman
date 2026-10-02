@@ -8,6 +8,11 @@ export const ILLUCIA_MIN_WORD_LENGTH = 4;
 export const ILLUCIA_MAX_WORD_LENGTH = 15;
 export const ILLUCIA_MAX_QUESTIONS = 2;
 export const ILLUCIA_LADDER_BONUS = 100;
+export const ILLUCIA_NOT_ACCEPTED_WORD = 'NOT_ACCEPTED_WORD';
+// Why a round pays no stump points, in the order they are checked.
+export const ILLUCIA_NO_POINTS = Object.freeze({
+  experimental: 'EXPERIMENTAL', outsideTier: 'OUTSIDE_TIER', alreadyWon: 'ALREADY_WON',
+});
 export const ILLUCIA_TIERS = Object.freeze([
   Object.freeze({ id: 'apprentice', maxSize: 35, base: 30 }),
   Object.freeze({ id: 'scholar', maxSize: 50, base: 40 }),

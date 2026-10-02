@@ -5,6 +5,9 @@ import { KDF, SALT_PATTERN, CREDENTIAL_PATTERN, USERNAME_PATTERN, SIGNIN_USERNAM
 import { checkVerifier, fakeSalt, makeVerifier, sessionToken, sessionUserId, SESSION_SECONDS } from './crypto';
 import { claimRound, isRoundId, startRound } from './rounds';
 import { scheduledRetention } from './retention';
+import { isIlluciaTier, startIlluciaRound } from './illucia';
+import { illuciaWordSize } from './illucia-words';
+import { ILLUCIA_NOT_ACCEPTED_WORD } from '../../shared/scoring-protocol.js';
 
 type AppEnv = { Bindings: Env; Variables: { user: PublicUser } };
 type PublicUser = { id: string; username: string; score: number };
@@ -106,6 +109,7 @@ app.get('/user/get-best-scores', async c => {
 });
 app.use('/user/me', authenticate);
 app.use('/user/round/*', authenticate);
+app.use('/user/illucia/*', authenticate);
 app.use('/user/delete-account', authenticate);
 async function authenticate(c: C, next: () => Promise<void>) {
   const token = getCookie(c, cookieName(c));
@@ -137,6 +141,9 @@ app.post('/user/delete-account', async c => {
   await c.env.DB.batch([
     c.env.DB.prepare('INSERT INTO deleted_accounts (id, deleted_at) VALUES (?, ?) ON CONFLICT(id) DO NOTHING').bind(user.id, Date.now()),
     c.env.DB.prepare('DELETE FROM rounds WHERE user_id = ?').bind(user.id),
+    c.env.DB.prepare('DELETE FROM illucia_beaten_words WHERE user_id = ?').bind(user.id),
+    c.env.DB.prepare('DELETE FROM illucia_rounds WHERE user_id = ?').bind(user.id),
+    c.env.DB.prepare('DELETE FROM illucia_players WHERE user_id = ?').bind(user.id),
     c.env.DB.prepare('DELETE FROM scores WHERE user_id = ?').bind(user.id),
     c.env.DB.prepare('DELETE FROM users WHERE id = ?').bind(user.id),
   ]);
@@ -160,6 +167,21 @@ app.post('/user/round/claim', async c => {
   const result = await claimRound(c.env.DB, c.get('user').id, input.roundId, input.guesses);
   if ('error' in result) return c.json({ message: result.error, code: result.code, retryAfterMs: result.retryAfterMs }, result.status);
   return c.json(result);
+});
+app.post('/user/illucia/start', async c => {
+  const input = await readInput(c);
+  if (!input || Object.keys(input).some(key => !['word', 'tier', 'experimental', 'previousRoundId'].includes(key))
+    || !isIlluciaTier(input.tier) || (input.experimental !== undefined && typeof input.experimental !== 'boolean')
+    || (input.previousRoundId !== undefined && !isRoundId(input.previousRoundId))) {
+    return failure(c, 'Invalid round request.', 400);
+  }
+  if (illuciaWordSize(input.word) === null) {
+    return c.json({ message: "That word is not in Illucia's word list.", code: ILLUCIA_NOT_ACCEPTED_WORD }, 400);
+  }
+  return c.json(await startIlluciaRound(c.env.DB, c.get('user').id, {
+    word: input.word as string, tier: input.tier, experimental: input.experimental === true,
+    previousRoundId: typeof input.previousRoundId === 'string' ? input.previousRoundId : null,
+  }));
 });
 app.notFound(c => c.json({ message: 'Not found.' }, 404));
 app.onError((_error, c) => {

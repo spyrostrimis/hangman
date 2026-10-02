@@ -78,3 +78,25 @@ it('reports a failed scheduled sweep with only a fixed diagnostic and propagates
   await worker.scheduled({ scheduledTime: now } as ScheduledController,env);
   expect(await ids('deleted_accounts')).toEqual([]);
 });
+
+it('sweeps Illucia rounds by the same two clocks with indexed, bounded statements', async () => {
+  async function illucia(id: string, claimed: number | null, expires: number) {
+    await env.DB.prepare('INSERT OR IGNORE INTO users(id, username, username_key, salt, verifier) VALUES (?, ?, ?, ?, ?)').bind(id, id, id, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb').run();
+    await env.DB.prepare(`INSERT INTO illucia_rounds(id,user_id,seq,word,tier,seed,experimental,issued_at,expires_at,claimed_at,claim_token,stump_points,ladder_points)
+      VALUES (?,?,1,'jazz','master',1,0,?,?,?,?,?,?)`)
+      .bind(id, id, expires - 1800000, expires, claimed, claimed === null ? null : id, claimed === null ? null : 0, claimed === null ? null : 0).run();
+  }
+  await illucia('claimed-old', now - DAY, now + DAY);
+  await illucia('claimed-recent', now - DAY + 1, now - 2 * DAY);
+  await illucia('unclaimed-old', null, now - DAY);
+  await illucia('unclaimed-recent', null, now - DAY + 1);
+  await worker.scheduled({ scheduledTime: now } as ScheduledController, env);
+  expect(await ids('illucia_rounds')).toEqual(['claimed-recent', 'unclaimed-recent']);
+  for (const [sql, index] of [
+    ['SELECT id FROM illucia_rounds WHERE claimed_at IS NOT NULL AND claimed_at <= ? ORDER BY claimed_at LIMIT 100', 'illucia_rounds_claimed_retention'],
+    ['SELECT id FROM illucia_rounds WHERE claimed_at IS NULL AND expires_at <= ? ORDER BY expires_at LIMIT 100', 'illucia_rounds_unclaimed_retention'],
+  ]) {
+    const plan = await env.DB.prepare(`EXPLAIN QUERY PLAN ${sql}`).bind(now).all();
+    expect(plan.results.map(row => row.detail).join(' ')).toContain(index);
+  }
+});
