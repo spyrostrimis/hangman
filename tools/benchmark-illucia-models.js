@@ -137,7 +137,7 @@ export async function atomicJson(path, value) {
 }
 
 // Reserve before dispatch and persist across runs. Failed calls retain reservations.
-export function budgetedRequest(transport, ledger, save, { maxRequests = 1800, maxNeurons = 6000, day = () => new Date().toISOString().slice(0, 10) } = {}) {
+export function budgetedRequest(transport, ledger, save, { maxRequests = 1800, maxNeurons = 9000, day = () => new Date().toISOString().slice(0, 10) } = {}) {
   return async (model, input) => {
     if (day() !== ledger.day) throw new BenchmarkStop('utc-day-changed');
     const reservation = neuronEstimate(model, {
@@ -254,7 +254,8 @@ async function main() {
 }
 
 export const DAILY_MAX_REQUESTS = 1800;
-export const DAILY_MAX_NEURONS = 6000;
+// Raised from 6,000 to 9,000 on 2026-10-02 (owner decision), still under the 10,000 free allowance.
+export const DAILY_MAX_NEURONS = 9000;
 
 // The live-run setup shared by I7a and D1: credentials held in memory only, the exclusive
 // local lock, and the dated daily ledger with its budgeted request wrapper.

@@ -14,6 +14,11 @@ export const QUESTION_MODELS = Object.freeze({
   '@cf/openai/gpt-oss-20b': Object.freeze({ input: 18182, output: 27273 }),
   // No reasoning: the control (also an I7a model; same rate).
   '@cf/meta/llama-3.1-8b-instruct-fp8-fast': Object.freeze({ input: 4119, output: 34868 }),
+  // Second D1 round, rates checked 2026-10-02.
+  '@cf/meta/llama-3.3-70b-instruct-fp8-fast': Object.freeze({ input: 26668, output: 204805 }),
+  '@cf/openai/gpt-oss-120b': Object.freeze({ input: 31818, output: 68182 }),
+  '@cf/qwen/qwen3.8-27b': Object.freeze({ input: 40909, output: 290909 }),
+  '@cf/deepseek-ai/deepseek-r1-distill-qwen-32b': Object.freeze({ input: 45170, output: 443756 }),
 });
 const RATES = Object.freeze({ ...MODELS, ...QUESTION_MODELS });
 export const PROMPT_VERSION = 'i7a-1';

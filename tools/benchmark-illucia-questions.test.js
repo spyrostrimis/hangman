@@ -180,4 +180,11 @@ test('the run ceiling stops before sending once this run has spent its share', a
   assert.equal(await request(qwen, {}), 'ok');
   await assert.rejects(request(qwen, {}), error => error instanceof BenchmarkStop && error.message === 'run-budget');
   assert.equal(sent, 3);
+  // Worst case counts before sending: 40 spent + 70 possible > 100 stops the second request.
+  ledger.reservedNeurons = 0;
+  sent = 0;
+  const careful = limitRun(async () => { sent++; ledger.reservedNeurons += 40; return 'ok'; }, () => ledger.reservedNeurons, 100, () => 70);
+  assert.equal(await careful(qwen, {}), 'ok');
+  await assert.rejects(careful(qwen, {}), /run-budget/);
+  assert.equal(sent, 1);
 });

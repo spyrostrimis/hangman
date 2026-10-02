@@ -43,6 +43,9 @@ export const MODEL_OPTIONS = Object.freeze({
   '@cf/google/gemma-4-26b-a4b-it': REASONING_OFF,
   '@cf/zai-org/glm-4.7-flash': REASONING_OFF,
   '@cf/openai/gpt-oss-20b': Object.freeze({ reasoning_effort: 'low' }),
+  // Second round: the lowest documented effort; Llama 3.3 does not reason; R1 has no control.
+  '@cf/openai/gpt-oss-120b': Object.freeze({ reasoning_effort: 'low' }),
+  '@cf/qwen/qwen3.8-27b': Object.freeze({ reasoning_effort: 'low' }),
 });
 // Which word bands each tier's states rotate through (a tier only knows words up to its size).
 const TIER_BANDS = { apprentice: ['common'], scholar: ['common', 'medium'], master: ['common', 'medium', 'rare'] };
@@ -193,12 +196,13 @@ export async function runQuestions({ states, models, modes, request, blocked, ch
   return report;
 }
 
-// A ceiling for one run on top of the shared daily ledger: once this run's reserved or
-// measured neurons reach `max`, the next request stops the run instead of being sent.
-export function limitRun(request, reserved, max) {
+// A ceiling for one run on top of the shared daily ledger: a request is sent only if this
+// run's reserved or measured neurons plus its own worst case (`worstCase`, the ledger's
+// reservation: whole prompt and every allowed output token) stay within `max`.
+export function limitRun(request, reserved, max, worstCase = () => 0) {
   const start = reserved();
   return async (model, input) => {
-    if (reserved() - start >= max) throw new BenchmarkStop('run-budget');
+    if (reserved() - start + worstCase(model, input) > max) throw new BenchmarkStop('run-budget');
     return request(model, input);
   };
 }
@@ -348,18 +352,22 @@ async function main() {
   }
   const modelOptions = { ...MODEL_OPTIONS, ...JSON.parse(value('--options-json') ?? '{}') };
   if (Object.keys(modelOptions).some(m => !models.includes(m) && !Object.hasOwn(MODEL_OPTIONS, m))) throw new Error('Options for an unknown model.');
+  const timeoutMs = Number(value('--timeout-ms') ?? TIMEOUT_MS);
+  if (!Number.isInteger(timeoutMs) || timeoutMs < 1000 || timeoutMs > 120000) throw new Error('--timeout-ms must be 1,000–120,000.');
   const blocked = await loadBlocked();
   const session = await openLiveSession({ wrangler: args.includes('--wrangler-auth'),
-    transportOptions: { timeoutMs: TIMEOUT_MS, normalize: result => normalizeQuestionResult(result, BenchmarkStop) } });
+    transportOptions: { timeoutMs, normalize: result => normalizeQuestionResult(result, BenchmarkStop) } });
   try {
-    const states = phase === 'probe' ? [PROBE_STATE] : statesFile.states;
+    const ids = value('--state-ids')?.split(',');
+    if (ids && ids.some(id => !statesFile.states.some(s => s.id === id))) throw new Error('Unknown state id.');
+    const states = phase === 'probe' ? [PROBE_STATE] : statesFile.states.filter(s => !ids || ids.includes(s.id));
     const modes = phase === 'probe' ? ['sort'] : ['invent', 'sort'];
     const report = {
       schemaVersion: 1, phase, startedAt: new Date().toISOString(), status: 'running',
       configuration: { models, modes, promptVersion: QUESTION_PROMPT_VERSION,
         prompts: { invent: INVENT_PROMPT, sort: SORT_PROMPT }, promptSha256: hash([INVENT_PROMPT, SORT_PROMPT]),
         statesSha256: phase === 'probe' ? hash([PROBE_STATE]) : statesFile.statesSha256,
-        temperature: 0, seed: SEED, maxTokens: MAX_TOKENS, modelOptions, requestTimeoutMs: TIMEOUT_MS,
+        temperature: 0, seed: SEED, maxTokens: MAX_TOKENS, modelOptions, requestTimeoutMs: timeoutMs, stateIds: ids ?? 'all',
         retries: 0, timeoutsBeforeSkip: TIMEOUTS_BEFORE_SKIP, evenSplit: [MIN_YES_SHARE, MAX_YES_SHARE],
         blockedTerms: blocked.length, neuronRates: Object.fromEntries(models.map(m => [m, QUESTION_MODELS[m]])), pricingChecked: '2026-10-02' },
       environment: { node: process.version, platform: process.platform },
@@ -367,7 +375,8 @@ async function main() {
     const maxRunNeurons = Number(value('--max-run-neurons') ?? 3000);
     if (!(maxRunNeurons > 0)) throw new Error('--max-run-neurons must be positive.');
     report.configuration.maxRunNeurons = maxRunNeurons;
-    const request = limitRun(session.request, () => session.budget().reservedNeurons, maxRunNeurons);
+    const request = limitRun(session.request, () => session.budget().reservedNeurons, maxRunNeurons, (model, input) =>
+      neuronEstimate(model, { prompt_tokens: Buffer.byteLength(JSON.stringify(input.messages)) + 256, completion_tokens: input.max_tokens }));
     const checkpoint = current => atomicJson(resolve(output), { ...current, budget: session.budget() });
     await runQuestions({ states, models, modes, request, blocked, checkpoint, report, modelOptions });
     if (phase === 'probe') {
