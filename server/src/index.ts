@@ -5,7 +5,7 @@ import { KDF, SALT_PATTERN, CREDENTIAL_PATTERN, USERNAME_PATTERN, SIGNIN_USERNAM
 import { checkVerifier, fakeSalt, makeVerifier, sessionToken, sessionUserId, SESSION_SECONDS } from './crypto';
 import { claimRound, isRoundId, startRound } from './rounds';
 import { scheduledRetention } from './retention';
-import { claimIlluciaRound, isAnsweredQuestions, isIlluciaTier, startIlluciaRound } from './illucia';
+import { claimIlluciaRound, illuciaStats, isAnsweredQuestions, isIlluciaTier, startIlluciaRound } from './illucia';
 import { illuciaWordSize } from './illucia-words';
 import { ILLUCIA_NOT_ACCEPTED_WORD } from '../../shared/scoring-protocol.js';
 
@@ -196,6 +196,7 @@ app.post('/user/illucia/claim', async c => {
   if ('error' in result) return c.json({ message: result.error, code: result.code, retryAfterMs: result.retryAfterMs }, result.status);
   return c.json(result);
 });
+app.get('/user/illucia/stats', async c => c.json(await illuciaStats(c.env.DB, c.get('user').id)));
 app.notFound(c => c.json({ message: 'Not found.' }, 404));
 app.onError((_error, c) => {
   console.error(JSON.stringify({ event: 'api_failure', path: c.req.path, method: c.req.method }));

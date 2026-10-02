@@ -53,14 +53,19 @@ type MemoryInput = {
   history: PlayedWord[]; learned: string[]; everyone: number;
 };
 
+// The player's history with one counted, still-open round taken out.
+function historyWithout(history: PlayedWord[], word: string | null): PlayedWord[] {
+  return history
+    .map(entry => entry.word === word ? { word: entry.word, plays: entry.plays - 1 } : entry)
+    .filter(entry => entry.plays > 0);
+}
+
 // What her memory holds for this round. `brain` may reach her guessing, so it is
 // history only: the current round is taken out, and nothing in it depends on the
 // secret word beyond its length. `voice` is for her lines and may know the word.
 export function roundMemory({ word, counted, personalitySeed, history, learned, everyone }: MemoryInput) {
   const current = counted ? 1 : 0;
-  const before = history
-    .map(entry => entry.word === word ? { word: entry.word, plays: entry.plays - current } : entry)
-    .filter(entry => entry.plays > 0);
+  const before = historyWithout(history, counted ? word : null);
   const letters = Object.fromEntries([...ALPHABET].map(letter => [letter, 0]));
   let games = 0;
   for (const { word: played, plays } of before) {
@@ -220,4 +225,38 @@ export async function claimIlluciaRound(db: D1Database, userId: string, roundId:
   // The ladder as the next new round would find it.
   return { score: saved.score, awarded: { stump: saved.stump_points!, ladder: saved.ladder_points! },
     ...(saved.award_reason ? { reason: saved.award_reason } : {}), ladder: ladderFor(saved, saved.round_seq + 1) };
+}
+
+const RECENT_LEARNED = 100;
+type TierRow = { tier: IlluciaTier; games: number; wins: number };
+
+// The player's own Illucia statistics. A counted round still in play is left out,
+// so "lost or abandoned" (games − wins) never includes it. word_counts is not read.
+export async function illuciaStats(db: D1Database, userId: string) {
+  const [tierRows, open, history, learned, total] = await db.batch([
+    db.prepare('SELECT tier, games, wins FROM illucia_tier_stats WHERE user_id = ?').bind(userId),
+    db.prepare(`SELECT word, tier FROM illucia_rounds WHERE user_id = ? AND claimed_at IS NULL AND counted = 1 AND expires_at > ?`)
+      .bind(userId, Date.now()),
+    db.prepare('SELECT word, plays FROM illucia_player_words WHERE user_id = ?').bind(userId),
+    db.prepare('SELECT word FROM illucia_beaten_words WHERE user_id = ? ORDER BY beaten_at DESC, word LIMIT ?').bind(userId, RECENT_LEARNED),
+    db.prepare('SELECT COUNT(*) AS total FROM illucia_beaten_words WHERE user_id = ?').bind(userId),
+  ]);
+  const playing = open.results[0] as { word: string; tier: IlluciaTier } | undefined;
+  const summary = (games: number, wins: number) => ({ games, wins, lostOrAbandoned: games - wins });
+  const tiers = Object.fromEntries(ILLUCIA_TIERS.map(({ id }) => {
+    const row = (tierRows.results as TierRow[]).find(candidate => candidate.tier === id);
+    return [id, summary((row?.games ?? 0) - (playing?.tier === id ? 1 : 0), row?.wins ?? 0)];
+  })) as Record<IlluciaTier, ReturnType<typeof summary>>;
+  const lengths: Record<string, number> = {};
+  const letters = Object.fromEntries([...ALPHABET].map(letter => [letter, 0]));
+  for (const { word, plays } of historyWithout(history.results as PlayedWord[], playing?.word ?? null)) {
+    lengths[word.length] = (lengths[word.length] ?? 0) + plays;
+    for (const letter of new Set(word)) letters[letter] += plays;
+  }
+  const all = Object.values(tiers).reduce((sum, tier) => ({ games: sum.games + tier.games, wins: sum.wins + tier.wins }), { games: 0, wins: 0 });
+  return {
+    ...summary(all.games, all.wins), tiers,
+    learned: { total: (total.results[0] as { total: number }).total, recent: (learned.results as { word: string }[]).map(row => row.word) },
+    history: { lengths, letters },
+  };
 }

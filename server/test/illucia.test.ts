@@ -527,6 +527,58 @@ describe('Illucia memory: brain and voice', () => {
   });
 });
 
+describe('Illucia stats', () => {
+  const stats = async (cookie: string) => {
+    const response = await request('illucia/stats', { method: 'GET', cookie });
+    expect(response.status).toBe(200);
+    return await response.json() as Record<string, unknown>;
+  };
+  const letters = (counts: Record<string, number>) => Object.fromEntries([...'abcdefghijklmnopqrstuvwxyz'].map(letter => [letter, counts[letter] ?? 0]));
+  const tier = (games: number, wins: number) => ({ games, wins, lostOrAbandoned: games - wins });
+
+  it('starts empty and requires a session', async () => {
+    const { cookie } = await signup();
+    expect((await request('illucia/stats', { method: 'GET' })).status).toBe(401);
+    expect(await stats(cookie)).toEqual({ ...tier(0, 0), tiers: { apprentice: tier(0, 0), scholar: tier(0, 0), master: tier(0, 0) },
+      learned: { total: 0, recent: [] }, history: { lengths: {}, letters: letters({}) } });
+  });
+
+  it('counts games and wins per tier, lost or abandoned, learned words and history, leaving out the round in play', async () => {
+    const { cookie, id } = await signup();
+    await won(cookie, { word: 'jazz', tier: 'master' });
+    await won(cookie, { word: 'lynx', tier: 'apprentice' }); // out of tier: no points, still a win she learns from
+    await start(cookie, { word: 'crane', tier: 'scholar' }); // abandoned by the next start
+    await won(cookie, { word: 'zebra', tier: 'master', experimental: true }); // never counted
+    const open = await start(cookie, { word: 'rhythm', tier: 'master' });
+    await env.DB.batch([['jazz', 1], ['lynx', 2]].map(([word, at]) =>
+      env.DB.prepare('UPDATE illucia_beaten_words SET beaten_at = ? WHERE user_id = ? AND word = ?').bind(at, id, word)));
+    // Another account's plays never show up here.
+    const other = await signup('Other');
+    await won(other.cookie, { word: 'jazz', tier: 'master' });
+    const playing = await stats(cookie);
+    expect(playing).toEqual({ ...tier(3, 2), tiers: { apprentice: tier(1, 1), scholar: tier(1, 0), master: tier(1, 1) },
+      learned: { total: 2, recent: ['lynx', 'jazz'] },
+      history: { lengths: { 4: 2, 5: 1 }, letters: letters({ j: 1, a: 2, z: 1, l: 1, y: 1, n: 2, x: 1, c: 1, r: 1, e: 1 }) } });
+    // Control: once the open round expires unclaimed, it is a lost or abandoned game.
+    await env.DB.prepare('UPDATE illucia_rounds SET expires_at = ? WHERE id = ?').bind(Date.now() - 1, open.roundId).run();
+    expect(await stats(cookie)).toMatchObject({ ...tier(4, 2), tiers: { master: tier(2, 1) },
+      history: { lengths: { 4: 2, 5: 1, 6: 1 }, letters: letters({ j: 1, a: 2, z: 1, l: 1, y: 2, n: 2, x: 1, c: 1, r: 2, e: 1, h: 1, t: 1, m: 1 }) } });
+  });
+
+  it('lists the 100 most recent learned words with the total, and never exposes global word counts', async () => {
+    const { cookie, id } = await signup();
+    await env.DB.prepare('INSERT INTO illucia_players (user_id, personality_seed) VALUES (?, 1)').bind(id).run();
+    const words = Array.from({ length: 101 }, (_, index) => `w${String.fromCharCode(97 + Math.floor(index / 26))}${String.fromCharCode(97 + index % 26)}x`);
+    await env.DB.batch(words.map((word, index) => env.DB.prepare(
+      'INSERT INTO illucia_beaten_words (user_id, word, points, paid_round_id, beaten_at) VALUES (?, ?, 0, NULL, ?)').bind(id, word, index)));
+    await env.DB.prepare("INSERT INTO word_counts (word, count) VALUES ('jazz', 7)").run();
+    const result = await stats(cookie);
+    expect(result.learned).toEqual({ total: 101, recent: words.slice(1).reverse() });
+    expect(Object.keys(result).sort()).toEqual(['games', 'history', 'learned', 'lostOrAbandoned', 'tiers', 'wins']);
+    expect(JSON.stringify(result)).not.toContain('jazz');
+  });
+});
+
 describe('Illucia data and accounts', () => {
   const remove = (cookie: string) => request('delete-account', { cookie, body: { credential: 'cd'.repeat(32) } });
   const rows = async (table: string) => (await env.DB.prepare(`SELECT user_id FROM ${table} ORDER BY user_id`).all()).results.map(row => row.user_id);
