@@ -1,10 +1,16 @@
 export const ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
 export const MIN_WORD_LENGTH = 4;
 export const MAX_WORD_LENGTH = 15;
+// Temperament (v2 A2), in hundredths of a percentage point: `shortlist` is how far below
+// her best weighted share a letter may be and still be picked while she has 3+ misses
+// left; the vowel bonus starts at `vowelBonus` and fades to nothing over `vowelTurns` turns.
+// Apprentice is the most exploratory, Master the narrowest. Starting values, tuned under
+// the tier-order gate and the strength cap (docs/ILLUCIA-STRENGTH.md).
+const temperament = (shortlist, vowelBonus, vowelTurns) => Object.freeze({ shortlist, vowelBonus, vowelTurns });
 export const VOCABULARY_TIERS = Object.freeze([
-  Object.freeze({ id: 'apprentice', label: 'Apprentice', maxSize: 35 }),
-  Object.freeze({ id: 'scholar', label: 'Scholar', maxSize: 50 }),
-  Object.freeze({ id: 'master', label: 'Master', maxSize: 70 }),
+  Object.freeze({ id: 'apprentice', label: 'Apprentice', maxSize: 35, temperament: temperament(1000, 600, 3) }),
+  Object.freeze({ id: 'scholar', label: 'Scholar', maxSize: 50, temperament: temperament(700, 400, 2) }),
+  Object.freeze({ id: 'master', label: 'Master', maxSize: 70, temperament: temperament(400, 200, 1) }),
 ]);
 
 // Parses one length asset. Loading/network lifecycle belongs to the later UI slice.

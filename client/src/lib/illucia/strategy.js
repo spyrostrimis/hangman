@@ -1,4 +1,5 @@
-import { ALPHABET } from './lexicon.js';
+import { ALPHABET, VOCABULARY_TIERS } from './lexicon.js';
+import { isSeed, randomStream, weightedIndex } from './random.js';
 import { assertPublicState } from './public-state.js';
 import { filterCandidates } from './candidates.js';
 
@@ -67,10 +68,71 @@ function horizon(words, guessed, missesLeft, letter, depth) {
   return [wins, alive];
 }
 
-export function analyzeDecision(publicState, knowledge, policy = 'count') {
+const VOWELS = new Set('aeiou');
+
+// Her temperament (v2 A2). Scores are integers: a letter's weighted hits × 10,000 plus any
+// vowel bonus × the candidates' total weight, so score / total weight is its share in
+// hundredths of a percent and every comparison is exact. Only letters found in at least one
+// candidate are eligible, so no bonus can make her guess a letter in none of them.
+function temperamentDecision(publicState, knowledge, candidates, guessed, temperament, next) {
+  const counts = Object.fromEntries([...ALPHABET].map(letter => [letter, 0]));
+  const hits = Object.fromEntries([...ALPHABET].map(letter => [letter, 0]));
+  let candidateWeight = 0;
+  for (const word of candidates) {
+    const weight = knowledge.weights.get(word);
+    candidateWeight += weight;
+    for (const letter of new Set(word)) {
+      counts[letter] += weight;
+      hits[letter]++;
+    }
+  }
+  const careful = publicState.missesLeft <= 2;
+  const turn = publicState.guessedLetters.length;
+  const fading = !careful && turn < temperament.vowelTurns
+    ? Math.floor(temperament.vowelBonus * (temperament.vowelTurns - turn) / temperament.vowelTurns) : 0;
+  const bonusFor = letter => (VOWELS.has(letter) ? fading : 0);
+  const eligible = [...ALPHABET].filter(letter => !guessed.has(letter) && counts[letter] > 0);
+  const score = letter => counts[letter] * 10000 + bonusFor(letter) * candidateWeight;
+  const top = Math.max(...eligible.map(score));
+  const best = eligible.filter(letter => score(letter) === top);
+  // Careful: strictly the best (the seed settles a tie). Exploring: letters within the
+  // tier's shortlist width of the best, odds rising linearly above the cut-off.
+  const cutoff = top - temperament.shortlist * candidateWeight;
+  const options = careful ? best : eligible.filter(letter => score(letter) > cutoff);
+  const odds = careful ? options.map(() => 1) : options.map(letter => score(letter) - cutoff);
+  const letter = options[weightedIndex(next, odds)];
+  const totalOdds = odds.reduce((sum, value) => sum + value, 0);
+  const shareOf = value => Math.floor(counts[value] * 10000 / candidateWeight);
+  return {
+    letter, mode: careful ? 'careful' : 'exploring',
+    candidateCount: candidates.length, hitCount: hits[letter], weightedHits: counts[letter], candidateWeight,
+    share: shareOf(letter),
+    best, choseBest: score(letter) === top,
+    tiedWith: eligible.filter(value => value !== letter && score(value) === score(letter)),
+    vowelBonus: bonusFor(letter),
+    // What she considered, best first: share and her chance of picking it, both in hundredths of a percent.
+    shortlist: options.map((value, index) => ({ letter: value, share: shareOf(value),
+      chance: Math.floor(odds[index] * 10000 / totalOdds) }))
+      .sort((a, b) => score(b.letter) - score(a.letter) || (a.letter < b.letter ? -1 : 1)),
+  };
+}
+
+// A string selects a strict, deterministic policy (benchmarks; alphabetical ties). An options
+// object selects her temperament and must carry the round seed. A bare call is the strict
+// count until every page passes a seed.
+export function analyzeDecision(publicState, knowledge, policyOrOptions = 'count') {
   assertPublicState(publicState);
+  const temperamental = typeof policyOrOptions === 'object' && policyOrOptions !== null;
+  const policy = temperamental ? 'count' : policyOrOptions;
   if (!POLICIES.includes(policy)) throw new RangeError('Unknown solver policy.');
   if (knowledge.length !== publicState.length) throw new Error('Knowledge length mismatch.');
+  let next = null;
+  let temperament = null;
+  if (temperamental) {
+    if (!isSeed(policyOrOptions.seed)) throw new RangeError('Her temperament needs a round seed (unsigned 32-bit).');
+    next = randomStream(policyOrOptions.seed, publicState.guessedLetters.length);
+    temperament = policyOrOptions.temperament ?? VOCABULARY_TIERS.find(tier => tier.maxSize === knowledge.maxSize).temperament;
+  }
   if (publicState.missesLeft === 0 || publicState.pattern.every(letter => letter !== null)) {
     return { letter: null, candidateCount: 0, hitCount: 0 };
   }
@@ -78,12 +140,15 @@ export function analyzeDecision(publicState, knowledge, policy = 'count') {
   if (candidates.length === 0) {
     if (knowledge.maxSize === 70) throw new Error('Master invariant: zero candidates.');
     // Use only this tier's precomputed word-presence counts for this length.
-    // All-zero scores (including an empty tier) tie alphabetically.
-    const letter = [...ALPHABET].filter(value => !publicState.guessedLetters.includes(value))
-      .reduce((best, value) => best === null || knowledge.frequency[value] > knowledge.frequency[best] ? value : best, null);
+    // Strict: all-zero scores (including an empty tier) tie alphabetically. Temperament: the seed breaks ties.
+    const unused = [...ALPHABET].filter(value => !publicState.guessedLetters.includes(value));
+    const top = Math.max(...unused.map(value => knowledge.frequency[value]));
+    const best = unused.filter(value => knowledge.frequency[value] === top);
+    const letter = next ? best[weightedIndex(next, best.map(() => 1))] : best[0];
     return { letter, candidateCount: 0, hitCount: 0, fallback: true };
   }
   const guessed = new Set(publicState.guessedLetters);
+  if (temperament) return temperamentDecision(publicState, knowledge, candidates, guessed, temperament, next);
   if (policy === 'frequency' || policy === 'count') {
     // count: each candidate adds its commonness weight to every letter it contains.
     const counts = Object.fromEntries([...ALPHABET].map(letter => [letter, 0]));
