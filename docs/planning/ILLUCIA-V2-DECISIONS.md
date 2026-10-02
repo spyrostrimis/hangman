@@ -76,3 +76,17 @@ Evidence it rests on: `docs/ILLUCIA-STRENGTH.md` (tier inversion on common short
 | E — `/illucia` page | `client/src/Components/Illucia*` | E1 temperament + honest lines + min 4 · E2 questions + bonus · E3 points, ladder, "already won" · E4 stats + learned-word lines · E5 experimental toggle | A1–A2; B2 + C1; C1; C2; D2 |
 
 A, B and C can run as **parallel sessions in separate clones**, each committing on `main` after `git pull --rebase`, one push at a time. A and B both touch `tools/`: different files, but possibly both edit `tools/package.json`.
+
+## Amendments — 2026-10-02, after Track A's review
+
+1. **Expectation on common words.** ESDB has a single level for every word up to size 35 (38,547 words), so weighting can bring Master *level* with Apprentice on common words, not above her. The planning chat's "57% vs 54%" was within noise. The gate stays the same: no tier below a lower one.
+2. **Acceptance gate:**
+   - Cells: set a overall; sets b and c overall and at each length 4–6; set d at each length 4–15, and per band at each length (including the common band).
+   - Test: a one-sided exact McNemar test, word by word, Holm-corrected at 5%, with effect sizes reported for every cell.
+   - Weights are the integers 10/3/1. The fallback stays unweighted.
+3. **"Within 10 points"** (temperament, §1.3) means within 10 points of the best **weighted** share.
+4. **Points only for in-tier words** (replaces the unrestricted §3.1). Stump points are paid only if the player's word is in that tier's vocabulary. Beating Apprentice with a word she doesn't know is allowed but earns 0. Master knows the whole accepted list, so any word counts. Base values are to be calibrated from the strength data, so the expected points per Illucia round are comparable to a Hangman round.
+5. **Questions are an optional bet** (replaces "a question uses her turn", §2.3). When Illucia asks, the player may **answer** (it helps her; the bonus is paid if the player still wins) or **decline** (no information, no bonus). B2's benchmark measures how much an answered question helps her and re-checks the tier order with questions on; the bonus values are set from that.
+6. **Claim verification (C1):** ticket + 5-second floor + a **rules check**. The server confirms the claimed guesses are legal and really reach six misses on the word. It does **not** replay her choices (that is over the Workers Free CPU limit; her first decision is ~24 ms). Her choices stay forgeable, as in Hangman's threat model.
+7. **Brain location:** stays in `client/src/lib/illucia/` for now. A2 keeps it movable: an injected seeded random generator (never `Math.random`), integer scores, and the seed recorded with the round.
+8. **3-letter words** are removed from the word files, validation and benchmarks. The committed I7a reports stay as historical records and are not re-run.
