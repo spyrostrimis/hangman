@@ -24,7 +24,17 @@ const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 export const STATS_LENGTHS = Object.freeze([MIN_WORD_LENGTH, 10]);
 // Seeds of the committed run. Spaced so that the per-length sample seeds never coincide.
 export const SEED_STEP = 7919;
-export const MULTIPLIERS = Object.freeze([1, 1.25, 1.5]);  // answered questions: 0, 1, 2
+// Stump-point multipliers by answered questions (0, 1, 2): owner decision 2026-10-02,
+// replacing x1.25 / x1.5, which are still priced for comparison.
+export const MULTIPLIERS = Object.freeze([1, 1.5, 2]);
+export const PREVIOUS_MULTIPLIERS = Object.freeze([1, 1.25, 1.5]);
+// Selective players: rules a real player can follow, from their own word and the public board.
+export const ANSWER_RULES = Object.freeze({
+  // Questions barely help her on long words (she solves them anyway), so answer only there.
+  long: word => word.length >= 7,
+  // Answer only while at most one position is revealed: early, when a question narrows little.
+  early: (word, state) => state.pattern.filter(letter => letter !== null).length <= 1,
+});
 
 // Decline every question, or answer the first one or both, for each timing and category set.
 export const ARMS = Object.freeze([
@@ -33,6 +43,8 @@ export const ARMS = Object.freeze([
     [['noun', ['noun']], ['all', [...KINDS]]].flatMap(([categories, kinds]) =>
       [1, 2].map(answers => Object.freeze({ id: `${timing}-${categories}-${answers}`, timing, earliestTurn,
         categories, kinds: Object.freeze(kinds), answers })))),
+  ...Object.keys(ANSWER_RULES).map(rule => Object.freeze({ id: `third-noun-${rule}`, timing: 'third', earliestTurn: 2,
+    categories: 'noun', kinds: Object.freeze(['noun']), answers: 2, answerIf: rule })),
 ]);
 
 export async function loadQuestions() {
@@ -73,9 +85,11 @@ export function play(word, knowledge, labels, categories, arm) {
       if (question) {
         const truth = checkAnswer(labels, word, question.code);
         const answered = offers.filter(offer => offer.answer !== 'declined').length;
-        const answer = truth !== null && answered < arm.answers ? truth : 'declined';
+        const willing = !arm.answerIf || ANSWER_RULES[arm.answerIf](word, state);
+        const answer = truth !== null && answered < arm.answers && willing ? truth : 'declined';
         offers.push(Object.freeze({ code: question.code, answer }));
         asked.push({ key: question.key, turn: state.guessedLetters.length,
+          revealed: state.pattern.filter(letter => letter !== null).length,
           candidates: question.candidateCount, answer });
         pool = narrowKnowledge(pool, labels, [offers.at(-1)], categories);
       }
@@ -188,13 +202,13 @@ export function askStats(games, broad) {
 // Is the bonus fairly priced? Over in-tier rounds whose word WordNet knows (the only rounds
 // that can earn a bonus), compare the player's expected stump points when they answer with
 // those when they decline. Stump points are tier base x min(length - 3, 3); the base cancels.
-export function pricing(declined, answered, seed = DEFAULT_SEED) {
+export function pricing(declined, answered, seed = DEFAULT_SEED, multipliers = MULTIPLIERS) {
   const rows = declined.map((game, index) => ({ game, arm: answered[index] }))
     .filter(({ game }) => game.inVocabulary && game.labelled);
   const value = (game, multiplier) => (game.won ? 0 : multiplier * Math.min(game.word.length - 3, 3));
   const ratio = list => {
     const declinedPoints = list.reduce((sum, { game }) => sum + value(game, 1), 0);
-    const answeredPoints = list.reduce((sum, { arm }) => sum + value(arm, MULTIPLIERS[arm.answered]), 0);
+    const answeredPoints = list.reduce((sum, { arm }) => sum + value(arm, multipliers[arm.answered]), 0);
     return declinedPoints ? answeredPoints / declinedPoints : null;
   };
   const asked = rows.filter(({ arm }) => arm.answered > 0);
@@ -220,7 +234,7 @@ export function pricing(declined, answered, seed = DEFAULT_SEED) {
   return {
     rounds: rows.length,
     roundsAnswered: asked.length,
-    averageMultiplierWhenAnswered: round4(mean(asked.map(({ arm }) => MULTIPLIERS[arm.answered]))),
+    averageMultiplierWhenAnswered: round4(mean(asked.map(({ arm }) => multipliers[arm.answered]))),
     playerWinDeclined: round4(mean(rows.map(({ game }) => Number(!game.won)))),
     playerWinAnswered: round4(mean(rows.map(({ arm }) => Number(!arm.won)))),
     breakEvenMultiplier: round4(answeredOnAsked ? declinedOnAsked / answeredOnAsked : null),
@@ -228,6 +242,25 @@ export function pricing(declined, answered, seed = DEFAULT_SEED) {
     pointsRatio95: draws.length ? [round4(draws[Math.floor(0.025 * (draws.length - 1))]),
       round4(draws[Math.ceil(0.975 * (draws.length - 1))])] : null,
   };
+}
+
+// Upper bound for a selective player: in each round, the best of declining, answering the
+// first question only, and answering both, chosen with hindsight. No real player can do this.
+export function hindsight(declined, options, multipliers = MULTIPLIERS) {
+  const value = (game, multiplier) => (game.won ? 0 : multiplier * Math.min(game.word.length - 3, 3));
+  let declinedPoints = 0;
+  let bestPoints = 0;
+  let rounds = 0;
+  declined.forEach((game, index) => {
+    if (!game.inVocabulary || !game.labelled) return;
+    rounds++;
+    declinedPoints += value(game, 1);
+    bestPoints += Math.max(value(game, 1), ...options.map(games => {
+      if (games[index].word !== game.word) throw new Error('Hindsight needs the same word order.');
+      return value(games[index], multipliers[games[index].answered]);
+    }));
+  });
+  return { rounds, pointsRatio: round4(declinedPoints ? bestPoints / declinedPoints : null) };
 }
 
 function bandOf(entriesByLength) {
@@ -259,7 +292,7 @@ export async function questionsBenchmark({ seed = DEFAULT_SEED, seeds = 3, quick
     const control = i === 0 ? declineControl(games, sets) : null;
     delete games[CONTROL];
     // The tier-order gate on the full cells, for declining (today's gate) and each answer-both arm.
-    const gates = i === 0 && !quick ? Object.fromEntries(ARMS.filter(arm => arm.answers !== 1).map(arm => {
+    const gates = i === 0 && !quick ? Object.fromEntries(ARMS.filter(arm => arm.answers !== 1 && !arm.answerIf).map(arm => {
       const gate = tierGate(gateCells(games[arm.id], band));
       return [arm.id, { passed: gate.passed, comparisons: gate.comparisons, failures: gate.failures,
         nearMisses: gate.nearMisses, lowerTierAhead: gate.lowerTierAhead }];
@@ -279,7 +312,8 @@ export async function questionsBenchmark({ seed = DEFAULT_SEED, seeds = 3, quick
       results[tier.id].sets[key] = Object.fromEntries(ARMS.filter(arm => arm.answers).map(arm => {
         const answered = pooled(arm.id, tier.id, key);
         return [arm.id, { paired: paired(declined, answered), asked: askStats(answered, broad),
-          pricing: pricing(declined, answered, seed) }];
+          pricing: pricing(declined, answered, seed),
+          pricingPrevious: pricing(declined, answered, seed, PREVIOUS_MULTIPLIERS) }];
       }));
     }
     const all = armId => setKeys.flatMap(key => pooled(armId, tier.id, key));
@@ -296,15 +330,19 @@ export async function questionsBenchmark({ seed = DEFAULT_SEED, seeds = 3, quick
       return [name, versus(all(`${timing}-noun-${answers}`), all(`${timing}-all-${answers}`), ['noun', 'all'])];
     }));
     const declined = all('decline');
+    results[tier.id].hindsight = Object.fromEntries([['all', all], ...setKeys.map(key => [key, armId => pooled(armId, tier.id, key)])]
+      .map(([name, pick]) => [name, { current: hindsight(pick('decline'), [pick('third-noun-1'), pick('third-noun-2')]),
+        previous: hindsight(pick('decline'), [pick('third-noun-1'), pick('third-noun-2')], PREVIOUS_MULTIPLIERS) }]));
     results[tier.id].all = Object.fromEntries(ARMS.filter(arm => arm.answers).map(arm => {
       const answered = all(arm.id);
       return [arm.id, { paired: paired(declined, answered), asked: askStats(answered, broad),
-        pricing: pricing(declined, answered, seed) }];
+        pricing: pricing(declined, answered, seed),
+        pricingPrevious: pricing(declined, answered, seed, PREVIOUS_MULTIPLIERS) }];
     }));
   }
   return {
     configuration: { brain: 'A1: strict commonness-weighted count (no round seed)', seed, seeds, seedStep: SEED_STEP,
-      quick, statsLengths: STATS_LENGTHS, arms: ARMS, multipliers: MULTIPLIERS,
+      quick, statsLengths: STATS_LENGTHS, arms: ARMS, multipliers: MULTIPLIERS, previousMultipliers: PREVIOUS_MULTIPLIERS,
       player: 'honest: true WordNet label; declines when WordNet does not know the word',
       manifestSha256, categoriesSha256, labelsManifestSha256 },
     environment: { node: process.version, platform: process.platform, architecture: process.arch },

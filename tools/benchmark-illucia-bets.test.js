@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { simulate } from './benchmark-illucia.js';
-import { ARMS, MULTIPLIERS, askStats, loadQuestions, paired, play, pricing, versus } from './benchmark-illucia-bets.js';
+import { ANSWER_RULES, ARMS, MULTIPLIERS, PREVIOUS_MULTIPLIERS, askStats, hindsight, loadQuestions, paired, play, pricing,
+  versus } from './benchmark-illucia-bets.js';
 import { createKnowledge } from '../client/src/lib/illucia/lexicon.js';
 import { parseCategories, parseLabels } from '../client/src/lib/illucia/questions.js';
 
@@ -17,10 +18,12 @@ const KNOWLEDGE = createKnowledge(['bolt', 'crow', 'hawk', 'mole', 'nail', 'rake
   .map(word => Object.freeze({ word, size: 35 })), 70);
 const arm = id => ARMS.find(value => value.id === id);
 
-test('nine arms: decline, and answer one or both for each timing and category set', () => {
+test('eleven arms: decline, answer one or both per timing and category set, and two selective players', () => {
   assert.deepEqual(ARMS.map(value => value.id), ['decline',
     'first-noun-1', 'first-noun-2', 'first-all-1', 'first-all-2',
-    'third-noun-1', 'third-noun-2', 'third-all-1', 'third-all-2']);
+    'third-noun-1', 'third-noun-2', 'third-all-1', 'third-all-2', 'third-noun-long', 'third-noun-early']);
+  assert.deepEqual([...MULTIPLIERS], [1, 1.5, 2]);
+  assert.deepEqual([...PREVIOUS_MULTIPLIERS], [1, 1.25, 1.5]);
   assert.equal(arm('third-noun-2').earliestTurn, 2);
   assert.deepEqual(arm('first-all-1').kinds, ['noun', 'verb', 'adjective']);
 });
@@ -94,10 +97,35 @@ test('pricing compares stump points over in-tier rounds WordNet knows, multiplie
   const result = pricing(declined, answered);
   assert.equal(result.rounds, 2);           // the unknown and the out-of-tier words are excluded
   assert.equal(result.roundsAnswered, 2);
-  assert.equal(result.pointsRatio, 1.125);  // (3 x 1.5) / (3 + 1)
+  assert.equal(result.pointsRatio, 1.5);  // (3 x 2) / (3 + 1)
+  assert.equal(pricing(declined, answered, 1, PREVIOUS_MULTIPLIERS).pointsRatio, 1.125);  // (3 x 1.5) / (3 + 1)
   assert.equal(result.breakEvenMultiplier, 1.3333);  // (3 + 1) / 3
   assert.equal(result.averageMultiplierWhenAnswered, (MULTIPLIERS[2] + MULTIPLIERS[1]) / 2);
   assert.equal(pricing(declined, declined).pointsRatio, 1);  // control: declining vs declining
+});
+
+test('selective players answer only by their rule; the hindsight bound takes the best per round', () => {
+  // Long words only: every fixture word has 4 letters, so nothing is answered...
+  const long = KNOWLEDGE.words.map(word => play(word, KNOWLEDGE, LABELS, CATEGORIES, { ...arm('third-noun-long'), earliestTurn: 0 }));
+  assert.ok(long.some(round => round.asked.length) && long.every(round => round.answered === 0));
+  // ...while the same arm with every rule passing answers (positive control).
+  const anyRule = KNOWLEDGE.words.map(word => play(word, KNOWLEDGE, LABELS, CATEGORIES,
+    { ...arm('third-noun-2'), earliestTurn: 0 }));
+  assert.ok(anyRule.some(round => round.answered > 0));
+  // Early: only offers made with at most one position revealed are answered.
+  const early = KNOWLEDGE.words.map(word => play(word, KNOWLEDGE, LABELS, CATEGORIES, { ...arm('third-noun-early'), earliestTurn: 0 }));
+  const offers = early.flatMap(round => round.asked);
+  assert.ok(offers.some(offer => offer.answer !== 'declined'));
+  assert.ok(offers.every(offer => offer.answer === 'declined' || offer.revealed <= 1));
+  assert.equal(ANSWER_RULES.long('kitchen'), true);
+  assert.equal(ANSWER_RULES.long('kitten'), false);
+  // Hindsight: per round, the best of declining, one answer and two answers.
+  const declined = [game('aaaaaa', false, 6), game('bbbb', true, 2), game('cccc', false, 6)];
+  const one = [game('aaaaaa', false, 6, { answered: 1 }), game('bbbb', false, 6, { answered: 1 }), game('cccc', true, 3, { answered: 1 })];
+  const both = [game('aaaaaa', false, 6, { answered: 2 }), game('bbbb', true, 1, { answered: 2 }), game('cccc', true, 2, { answered: 2 })];
+  // Declining earns 3 + 0 + 1 = 4; the best per round earns 3 x 2 + 1 x 1.5 + 1 = 8.5.
+  assert.deepEqual(hindsight(declined, [one, both]), { rounds: 3, pointsRatio: 2.125 });
+  assert.deepEqual(hindsight(declined, []), { rounds: 3, pointsRatio: 1 });  // control: nothing to choose
 });
 
 test('ask statistics: share asked, first turn, and broad (whole lexicographer file) openers', () => {
