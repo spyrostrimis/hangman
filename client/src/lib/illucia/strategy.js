@@ -118,10 +118,11 @@ function temperamentDecision(publicState, knowledge, candidates, guessed, temper
 }
 
 // A string selects a strict, deterministic policy (benchmarks; alphabetical ties). An options
-// object selects her temperament and must carry the round seed. A bare call is the strict
-// count until every page passes a seed.
-export function analyzeDecision(publicState, knowledge, policyOrOptions = 'count') {
+// object selects her temperament and must carry the round seed. There is no default, so no
+// caller can silently play the strict policy.
+export function analyzeDecision(publicState, knowledge, policyOrOptions) {
   assertPublicState(publicState);
+  if (policyOrOptions === undefined) throw new TypeError('Pass a strict policy name or { seed } for her temperament.');
   const temperamental = typeof policyOrOptions === 'object' && policyOrOptions !== null;
   const policy = temperamental ? 'count' : policyOrOptions;
   if (!POLICIES.includes(policy)) throw new RangeError('Unknown solver policy.');
@@ -194,7 +195,8 @@ export function analyzeDecision(publicState, knowledge, policyOrOptions = 'count
   return { letter: best.letter, candidateCount: candidates.length, hitCount: best.hitCount };
 }
 
-// Production policy: candidate hit-counting weighted by commonness. Alternatives are benchmark-only.
+// The strict weighted count (A1) for tools and tests. The pages play her temperament through
+// analyzeDecision(state, knowledge, { seed }).
 export function chooseLetter(publicState, knowledge) {
-  return analyzeDecision(publicState, knowledge).letter;
+  return analyzeDecision(publicState, knowledge, 'count').letter;
 }

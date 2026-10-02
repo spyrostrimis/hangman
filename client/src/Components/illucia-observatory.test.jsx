@@ -4,13 +4,16 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom';
 import IlluciaObservatory from './IlluciaObservatory';
 import { analyzeDecision } from '../lib/illucia/strategy.js';
+import { newLocalSeed } from '../lib/illucia/random.js';
 
 vi.mock('./AuthProvider', () => ({ useAuth: () => ({ user: { id: 'test-player', username: 'tester' }, status: 'authenticated' }) }));
 vi.mock('../lib/illucia/strategy.js', async original => ({ ...await original(), analyzeDecision: vi.fn() }));
+vi.mock('../lib/illucia/random.js', async original => ({ ...await original(), newLocalSeed: vi.fn(() => 1234) }));
 beforeEach(async () => {
   const real = (await vi.importActual('../lib/illucia/strategy.js')).analyzeDecision;
   analyzeDecision.mockImplementation(real);
   analyzeDecision.mockClear();
+  newLocalSeed.mockClear();
   vi.useFakeTimers();
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, text: async () => 'eerie 35\n' }));
 });
@@ -76,9 +79,12 @@ it('keeps the secret off screen while she still has more than ten candidates', a
 });
 
 it('falls back inside a low tier, ends after six misses and offers a rematch at the next tier', async () => {
-  fetch.mockResolvedValue({ ok: true, text: async () => 'abcd 35\nwxyz 70\n' });
+  // Her first guess (A or B) misses WXYZ and rules out all three words she knows; her fallback
+  // then picks among C-H, so every letter misses whichever seed settles the ties.
+  fetch.mockResolvedValue({ ok: true, text: async () => 'abcd 35\nabef 35\nabgh 35\nwxyz 70\n' });
   const view = mount(); await start('wxyz', 'Apprentice');
-  expect(analyzeDecision.mock.calls[0][1].words).toEqual(['abcd']);
+  expect(analyzeDecision.mock.calls[0][1].words).toEqual(['abcd', 'abef', 'abgh']);
+  expect(analyzeDecision.mock.calls[0][2]).toEqual({ seed: 1234 });
   await tick();
   expect(view.container.querySelector('.obs-reasoning').textContent).toContain('falls back on habit');
   for (let index = 1; index < 6; index++) await tick();
@@ -139,6 +145,15 @@ it('explains a weighted choice without claiming her letter is in the most words'
   const view = mount(); await start('aaaa', 'Master');
   expect(nextGuess(view)).toBe('a');
   expect(view.container.querySelector('.obs-reasoning').textContent).toBe(
-    'A appears in 33% of the 3 words she still has in mind. Weighing common words above rare ones, ' +
-    'no unused letter scores higher than A. So A is next.');
+    'A appears in 33% of the 3 words she still has in mind. She weighs common words above rare ones, ' +
+    'and A is on her shortlist. So A is next.');
+});
+
+it('says each level knows more words and plays more carefully, never that only her vocabulary changes', async () => {
+  const view = mount();
+  expect(view.container.textContent).toContain('Each level knows more words and plays a little more carefully.');
+  expect(view.container.textContent).not.toContain('Only her vocabulary changes');
+  await start();
+  expect(newLocalSeed).toHaveBeenCalledTimes(1);
+  expect(analyzeDecision.mock.calls.every(call => call[2]?.seed === 1234)).toBe(true);
 });

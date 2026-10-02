@@ -6,6 +6,7 @@ import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, createKnowledge, is
 import { toPublicState } from '../lib/illucia/public-state.js';
 import { filterCandidates } from '../lib/illucia/candidates.js';
 import { analyzeDecision } from '../lib/illucia/strategy.js';
+import { newLocalSeed } from '../lib/illucia/random.js';
 import { rejectionLine } from '../lib/illucia/lines.js';
 import { greetingLine, openingLine } from '../lib/illucia/observatory-lines.js';
 import { REPLIES, askLine, reasonLine, replyLine, solvedLine } from '../lib/illucia/duel-lines.js';
@@ -36,7 +37,8 @@ function newDuel(word, entries, tier) {
   const knowledge = createKnowledge(entries, tier.maxSize);
   const round = createRound(word);
   return {
-    round, entries, knowledge, tier, phase: 'thinking', lastGuess: null, lastHit: null,
+    // A local seed for her temperament until the server's round seed arrives (E3).
+    round, entries, knowledge, tier, seed: newLocalSeed(), phase: 'thinking', lastGuess: null, lastHit: null,
     log: [
       { type: 'player', text: `My word is ready: ${word.length} letters. You get the ${tier.label} vocabulary.` },
       { type: 'illucia', text: openingLine(word.length, countWords(round, knowledge)) },
@@ -53,7 +55,7 @@ function failed(duel) {
 function guess(duel) {
   const state = toPublicState(duel.round);
   let decision;
-  try { decision = analyzeDecision(state, duel.knowledge); } catch { return failed(duel); }
+  try { decision = analyzeDecision(state, duel.knowledge, { seed: duel.seed }); } catch { return failed(duel); }
   const { letter } = decision;
   const round = applyGuess(duel.round, letter);
   if (!letter || round === duel.round) return failed(duel);

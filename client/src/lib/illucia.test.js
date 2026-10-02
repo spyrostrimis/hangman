@@ -73,7 +73,7 @@ test('count uses word presence, not letter occurrences, and alphabetic ties', ()
   const knowledge = knowledgeOf(['aaa', 'bcd', 'bce']);
   const state = toPublicState(createRound('aaa'));
   assert.equal(chooseLetter(state, knowledge), 'b');
-  assert.deepEqual(analyzeDecision(state, knowledge),
+  assert.deepEqual(analyzeDecision(state, knowledge, 'count'),
     { letter: 'b', candidateCount: 3, hitCount: 2, weightedHits: 20, candidateWeight: 30, share: 6666, tiedWith: ['c'] });
   assert.equal(chooseLetter(toPublicState(roundAfter('bcd', 'b')), knowledge), 'c');
 });
@@ -135,7 +135,7 @@ test('zero-candidate fallback uses only its own tier, with deterministic unused-
   assert.deepEqual(low.words, ['cat', 'dog']);
   // No unmentioned higher-tier vocabulary may be consulted or silently added.
   const extended = entriesOf('cat 35\ndog 35\nfib 70\nfob 70\nfox 70\nzzz 70\n');
-  assert.deepEqual(analyzeDecision(state, createKnowledge(extended, 35)), analyzeDecision(state, low));
+  assert.deepEqual(analyzeDecision(state, createKnowledge(extended, 35), 'count'), analyzeDecision(state, low, 'count'));
   assert.throws(() => chooseLetter(state, knowledgeOf(['cat', 'dog'])), /Master invariant/);
 });
 
@@ -214,7 +214,7 @@ test('one commonness level plays exactly like unweighted hit-counting (Apprentic
     while (getRoundStatus(round) === 'playing') {
       const state = toPublicState(round);
       const expected = referenceCountLetter(state, knowledge.words);
-      const decision = analyzeDecision(state, knowledge);
+      const decision = analyzeDecision(state, knowledge, 'count');
       assert.equal(decision.letter, expected.letter);
       assert.equal(decision.candidateCount, expected.candidates);
       assert.equal(decision.hitCount, expected.hits);
@@ -230,7 +230,7 @@ test('candidate and hit counts stay plain word counts at every tier', () => {
   const state = toPublicState(roundAfter('aaxx', 'x'));
   for (const maxSize of [35, 50, 70]) {
     const knowledge = createKnowledge(entries, maxSize);
-    const decision = analyzeDecision(state, knowledge);
+    const decision = analyzeDecision(state, knowledge, 'count');
     const candidates = filterCandidates(state, knowledge.words);
     assert.equal(decision.candidateCount, candidates.length);
     assert.equal(decision.hitCount, candidates.filter(word => word.includes(decision.letter)).length);
@@ -241,11 +241,11 @@ test('the zero-candidate fallback counts words, not commonness weights', () => {
   // Scholar knows one common A word and two size-50 B words; none fits X_X_.
   const entries = entriesOf('aaaa 35\nbbbb 50\nbbbc 50\nxyxy 70');
   const scholar = createKnowledge(entries, 50);
-  const decision = analyzeDecision(toPublicState(roundAfter('xyxy', 'x')), scholar);
+  const decision = analyzeDecision(toPublicState(roundAfter('xyxy', 'x')), scholar, 'count');
   assert.equal(decision.fallback, true);
   assert.equal(decision.letter, 'b'); // B is in 2 words, A in 1; weighting A's word would choose A.
   // Positive control on the same knowledge: before any guess there are candidates, so no fallback.
-  assert.equal(analyzeDecision(toPublicState(createRound('bbbb')), scholar).fallback, undefined);
+  assert.equal(analyzeDecision(toPublicState(createRound('bbbb')), scholar, 'count').fallback, undefined);
 });
 
 test('commonness weights are the integers 10/3/1 (v2 A1)', () => {
@@ -261,22 +261,22 @@ test('weighted candidates: one common word outweighs a few rare ones', () => {
   const state = toPublicState(roundAfter('aaxx', 'x'));
   const master = createKnowledge(entriesOf('aaxx 35\nbbxx 70\nbcxx 70\nbdxx 70\nbexx 70\nbfxx 70\nbgxx 70\nbhxx 70\nbixx 70\nbjxx 70'), 70);
   // 9 rare B words weigh 9; the one common A word weighs 10.
-  assert.deepEqual(analyzeDecision(state, master),
+  assert.deepEqual(analyzeDecision(state, master, 'count'),
     { letter: 'a', candidateCount: 10, hitCount: 1, weightedHits: 10, candidateWeight: 19, share: 5263, tiedWith: [] });
   // Positive control: with every word at one level, plain counting picks B (9 words to 1).
   const flat = createKnowledge(entriesOf('aaxx 35\nbbxx 35\nbcxx 35\nbdxx 35\nbexx 35\nbfxx 35\nbgxx 35\nbhxx 35\nbixx 35\nbjxx 35'), 35);
-  assert.equal(analyzeDecision(state, flat).letter, 'b');
+  assert.equal(analyzeDecision(state, flat, 'count').letter, 'b');
   // Scholar's middle weight: 3 size-50 words (9) lose to one common word (10); 4 (12) win.
   const scholarState = toPublicState(roundAfter('aaxx', 'x'));
-  assert.equal(analyzeDecision(scholarState, createKnowledge(entriesOf('aaxx 35\nbbxx 50\nbcxx 50\nbdxx 50'), 50)).letter, 'a');
-  assert.equal(analyzeDecision(scholarState, createKnowledge(entriesOf('aaxx 35\nbbxx 50\nbcxx 50\nbdxx 50\nbexx 50'), 50)).letter, 'b');
+  assert.equal(analyzeDecision(scholarState, createKnowledge(entriesOf('aaxx 35\nbbxx 50\nbcxx 50\nbdxx 50'), 50), 'count').letter, 'a');
+  assert.equal(analyzeDecision(scholarState, createKnowledge(entriesOf('aaxx 35\nbbxx 50\nbcxx 50\nbdxx 50\nbexx 50'), 50), 'count').letter, 'b');
 });
 
 test('an injected weight function changes only the ranking (benchmark sweeps)', () => {
   const entries = entriesOf('aaxx 35\nbbxx 70\nbcxx 70');
   const state = toPublicState(roundAfter('aaxx', 'x'));
-  assert.equal(analyzeDecision(state, createKnowledge(entries, 70)).letter, 'a');
-  assert.equal(analyzeDecision(state, createKnowledge(entries, 70, () => 1)).letter, 'b');
+  assert.equal(analyzeDecision(state, createKnowledge(entries, 70), 'count').letter, 'a');
+  assert.equal(analyzeDecision(state, createKnowledge(entries, 70, () => 1), 'count').letter, 'b');
   assert.throws(() => createKnowledge(entries, 70, () => 0.5), /positive integer/);
 });
 
@@ -518,4 +518,11 @@ test('each turn draws afresh from the round seed', () => {
       analyzeDecision(second, knowledge, { seed, temperament }).letter) differ++;
   }
   assert.ok(differ > 30, `${differ}`);
+});
+
+test('every caller must choose: a strict policy name or her temperament with a seed', () => {
+  const state = toPublicState(createRound(SHARES_WORDS[0]));
+  assert.throws(() => analyzeDecision(state, sharesKnowledge()), /strict policy name or/);
+  assert.equal(analyzeDecision(state, sharesKnowledge(), 'count').letter, 'b'); // Positive control.
+  assert.equal(chooseLetter(state, sharesKnowledge()), 'b'); // chooseLetter is the strict count (tools).
 });

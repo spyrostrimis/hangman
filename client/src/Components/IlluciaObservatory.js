@@ -7,6 +7,7 @@ import { ALPHABET, MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, createKno
 import { toPublicState } from '../lib/illucia/public-state.js';
 import { filterCandidates } from '../lib/illucia/candidates.js';
 import { analyzeDecision } from '../lib/illucia/strategy.js';
+import { newLocalSeed } from '../lib/illucia/random.js';
 import { rejectionLine } from '../lib/illucia/lines.js';
 import { greetingLine, openingLine, turnLine } from '../lib/illucia/observatory-lines.js';
 import './IlluciaObservatory.css';
@@ -158,7 +159,7 @@ function Setup({ username, onStart }) {
                 <small>{TIER_NOTES[tier.id]}</small>
               </label>)}
             </div>
-            <p className="obs-muted">Same strategy at every level. Only her vocabulary changes.</p>
+            <p className="obs-muted">Each level knows more words and plays a little more carefully.</p>
             <button type="submit" className="obs-start">Start the duel</button>
           </fieldset>
           {loading && <p role="status">Loading her {secret.trim().length}-letter words…</p>}
@@ -173,7 +174,8 @@ function newGame(word, entries, tier) {
   const round = createRound(word);
   const candidates = filterCandidates(toPublicState(round), knowledge.words);
   return {
-    round, entries, knowledge, tier, turns: [],
+    // A local seed for her temperament; her decision depends only on (seed, board).
+    round, entries, knowledge, tier, seed: newLocalSeed(), turns: [],
     lit: brightestStars(candidates), fading: [],
     line: openingLine(word.length, candidates.length),
   };
@@ -186,7 +188,7 @@ function readMind(game) {
   let decision = null;
   let failed = false;
   if (getRoundStatus(game.round) === 'playing') {
-    try { decision = analyzeDecision(state, game.knowledge); } catch { failed = true; }
+    try { decision = analyzeDecision(state, game.knowledge, { seed: game.seed }); } catch { failed = true; }
   }
   const fallback = Boolean(decision?.fallback);
   const pool = fallback ? game.knowledge.words : candidates;
@@ -224,7 +226,7 @@ function Reasoning({ round, mind, tier, playing }) {
   if (mind.fallback) {
     return <p className="obs-reasoning">None of her {tier.label} words fit this pattern. She falls back on habit: <b>{letter}</b> appears in {share}% of her {round.answer.length}-letter words, so <b>{letter}</b> is next.</p>;
   }
-  return <p className="obs-reasoning"><b>{letter}</b> appears in {share}% of the {mind.total.toLocaleString('en-US')} words she still has in mind. Weighing common words above rare ones, no unused letter scores higher than <b>{letter}</b>. So <b>{letter}</b> is next.</p>;
+  return <p className="obs-reasoning"><b>{letter}</b> appears in {share}% of the {mind.total.toLocaleString('en-US')} words she still has in mind. She weighs common words above rare ones, and <b>{letter}</b> is on her shortlist. So <b>{letter}</b> is next.</p>;
 }
 
 function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch }) {

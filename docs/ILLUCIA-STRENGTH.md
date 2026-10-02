@@ -131,8 +131,9 @@ seeds at every tier. The gate compares each word's win fraction over its 8 games
 one-sided exact sign test per comparison (McNemar when each word is played once), Holm
 across the 171 comparisons at 5%. The **strength cap** compares each tier's win rate on
 sets b and d with the strict A1 policy (one game per word, played in the same run) and
-allows at most 2 points lost. The page parity check still plays the strict policy until
-the pages pass a seed.
+allows at most 2 points lost. Page parity plays her temperament too: each case's seed is
+handed to the page in place of its local seed, and both pages match the benchmark on all
+108 cases (control: 33 of 36 Apprentice sequences differ from Master's).
 
 **Gate: PASS**, 0 of 171 fail; 2 near misses (set d, 4-letter rare, Scholar vs
 Apprentice, raw p 0.020; set d, 5-letter common, Master vs Scholar, raw p 0.032; both

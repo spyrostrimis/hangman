@@ -5,13 +5,16 @@ import { MemoryRouter } from 'react-router-dom';
 import Illucia from './Illucia';
 import { analyzeDecision } from '../lib/illucia/strategy.js';
 import { replyLine } from '../lib/illucia/duel-lines.js';
+import { newLocalSeed } from '../lib/illucia/random.js';
 
 vi.mock('./AuthProvider', () => ({ useAuth: () => ({ user: { id: 'test-player', username: 'tester' }, status: 'authenticated' }) }));
 vi.mock('../lib/illucia/strategy.js', async original => ({ ...await original(), analyzeDecision: vi.fn() }));
+vi.mock('../lib/illucia/random.js', async original => ({ ...await original(), newLocalSeed: vi.fn(() => 1234) }));
 beforeEach(async () => {
   const real = (await vi.importActual('../lib/illucia/strategy.js')).analyzeDecision;
   analyzeDecision.mockImplementation(real);
   analyzeDecision.mockClear();
+  newLocalSeed.mockClear();
   vi.useFakeTimers();
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, text: async () => 'eerie 35\n' }));
 });
@@ -75,10 +78,20 @@ it('sends only the length, hides her hits until the player shows them, and plays
 });
 
 it('waits for the player to answer a miss, answers that reply, and ends at six misses', async () => {
-  fetch.mockResolvedValue({ ok: true, text: async () => 'abcd 35\nwxyz 70\n' });
+  // Her first guess (A or B) misses WXYZ and rules out all three words she knows; her fallback
+  // then picks among C-H, so every letter misses whichever seed settles the ties.
+  fetch.mockResolvedValue({ ok: true, text: async () => 'abcd 35\nabef 35\nabgh 35\nwxyz 70\n' });
   const view = mount(); await start('wxyz', 'Apprentice');
   await think();
-  expect(analyzeDecision.mock.calls[0][1].words).toEqual(['abcd']);
+  expect(analyzeDecision.mock.calls[0][1].words).toEqual(['abcd', 'abef', 'abgh']);
+  // Her letters, and the share the page shows: of her candidates, or of her words in a fallback.
+  const herLetter = call => analyzeDecision.mock.results[call].value.letter;
+  const herShare = call => {
+    const decision = analyzeDecision.mock.results[call].value;
+    return decision.fallback
+      ? Math.round(['abcd', 'abef', 'abgh'].filter(word => word.includes(decision.letter)).length / 3 * 100)
+      : Math.round(decision.hitCount / decision.candidateCount * 100);
+  };
   expect(hiddenTiles()).toHaveLength(0);
   // Positive control on the same round: a miss offers both replies and she waits.
   expect(screen.getByRole('button', { name: 'Oops, wrong' })).toBeTruthy();
@@ -87,13 +100,15 @@ it('waits for the player to answer a miss, answers that reply, and ends at six m
 
   fireEvent.click(screen.getByRole('button', { name: "That wasn't so smart ;)" }));
   expect(bubbles(view.container, 'player').at(-1)).toBe("That wasn't so smart ;)");
-  const smart = replyLine('smart', { letter: 'a', turn: 1, count: 0, share: 100, length: 4, missesLeft: 5 });
+  const first = herLetter(0);
+  const smart = replyLine('smart', { letter: first, turn: 1, count: 0, share: herShare(0), length: 4, missesLeft: 5 });
   expect(bubbles(view.container, 'illucia').at(-1)).toBe(smart);
-  expect(view.container.querySelectorAll('.duel-board-caption')[1].textContent).toBe('Turn 1 · A · miss');
+  expect(view.container.querySelectorAll('.duel-board-caption')[1].textContent).toBe(`Turn 1 · ${first.toUpperCase()} · miss`);
 
   await think();
   fireEvent.click(screen.getByRole('button', { name: 'Oops, wrong' }));
-  const oops = replyLine('oops', { letter: 'b', turn: 2, count: 0, share: 100, length: 4, missesLeft: 4 });
+  const second = herLetter(1);
+  const oops = replyLine('oops', { letter: second, turn: 2, count: 0, share: herShare(1), length: 4, missesLeft: 4 });
   expect(bubbles(view.container, 'illucia').at(-1)).toBe(oops);
   expect(oops).not.toBe(smart);
 
@@ -158,4 +173,16 @@ it('asks for 4-15 letters and never fetches a 3-letter word file', async () => {
   await start('cats');
   expect(fetch.mock.calls[0][0]).toBe('/illucia/words/4.txt');
   expect(screen.queryByRole('alert')).toBeNull();
+});
+
+it('gives each round its own seed and passes it to every decision', async () => {
+  mount(); await start();
+  await think();
+  expect(newLocalSeed).toHaveBeenCalledTimes(1);
+  expect(analyzeDecision.mock.calls.length).toBeGreaterThan(0);
+  expect(analyzeDecision.mock.calls.every(call => call[2]?.seed === 1234)).toBe(true);
+  // A new word is a new round with a new seed.
+  fireEvent.click(screen.getByRole('button', { name: 'New word' }));
+  await start();
+  expect(newLocalSeed).toHaveBeenCalledTimes(2);
 });

@@ -11,6 +11,9 @@ import Illucia from './Illucia';
 import IlluciaObservatory from './IlluciaObservatory';
 
 vi.mock('./AuthProvider', () => ({ useAuth: () => ({ user: { id: 'parity', username: 'parity' }, status: 'authenticated' }) }));
+// Each case's round seed, handed to the page in place of a fresh local seed.
+const caseSeed = vi.hoisted(() => ({ value: 0 }));
+vi.mock('../lib/illucia/random.js', async original => ({ ...await original(), newLocalSeed: () => caseSeed.value }));
 
 const input = JSON.parse(readFileSync(process.env.ILLUCIA_PARITY_INPUT, 'utf8'));
 const results = [];
@@ -53,7 +56,8 @@ async function playDuel(word, tier) {
   return { outcome: 'stalled', container };
 }
 
-async function duelCase({ word, tier }) {
+async function duelCase({ word, tier, seed }) {
+  caseSeed.value = seed;
   const { outcome, container } = await playDuel(word, tier);
   const guesses = [...container.querySelectorAll('.duel-board-caption')].map(node => node.textContent)
     .map(text => /^Turn \d+ · ([A-Z]) · (hit|miss)$/.exec(text)).filter(Boolean).map(match => match[1].toLowerCase());
@@ -62,7 +66,8 @@ async function duelCase({ word, tier }) {
   return { guesses: guesses.join(''), outcome };
 }
 
-async function observatoryCase({ word, tier }) {
+async function observatoryCase({ word, tier, seed }) {
+  caseSeed.value = seed;
   const { container } = render(<MemoryRouter><IlluciaObservatory /></MemoryRouter>);
   await startGame(container, 'obs', word, tier);
   let outcome = 'stalled';

@@ -166,7 +166,8 @@ export function gateCells(games, bandOf) {
 
 // 3 sampled words per length (one per size band, the first of each I3b band):
 // in-tier and out-of-tier words for Apprentice and Scholar at every length.
-export function parityCases(entriesByLength, balancedWords, know) {
+// Each case has its seed; the harness makes the page's newLocalSeed return it.
+export function parityCases(entriesByLength, balancedWords, know, baseSeed = DEFAULT_SEED) {
   const words = [];
   for (let length = MIN_WORD_LENGTH; length <= MAX_WORD_LENGTH; length++) {
     for (const band of WORD_BANDS) {
@@ -175,8 +176,9 @@ export function parityCases(entriesByLength, balancedWords, know) {
     }
   }
   return VOCABULARY_TIERS.flatMap(tier => words.map(word => {
-    const game = simulate(word, know(word, tier), 'count', () => 0);
-    return { word, tier: tier.id, size: sizeOf(entriesByLength, word), inTier: game.inVocabulary,
+    const seed = roundSeed(baseSeed, word, 0);
+    const game = simulate(word, know(word, tier), { seed }, () => 0);
+    return { word, tier: tier.id, seed, size: sizeOf(entriesByLength, word), inTier: game.inVocabulary,
       fallback: game.candidateSizes.includes(0), expected: game.guesses, expectedOutcome: game.won ? 'solved' : 'failed' };
   }));
 }
@@ -239,11 +241,11 @@ export async function strength({ seed = DEFAULT_SEED, pages = true, seeds = SEED
     sizeOf(entriesByLength, word) >= band.min && sizeOf(entriesByLength, word) <= band.max).name;
   const gate = tierGate(gateCells(words, bandOf));
   const cap = strengthCap(results, reference);
-  const cases = parityCases(entriesByLength, sets.d.words, know);
+  const cases = parityCases(entriesByLength, sets.d.words, know, seed);
   const report = {
     configuration: { seed, policy: 'temperament', seedsPerWord: seeds, seedDerivation: 'roundSeed(seed, word, index)',
       temperaments: Object.fromEntries(VOCABULARY_TIERS.map(tier => [tier.id, temperaments[tier.id] ?? tier.temperament])),
-      strictReference: 'count (A1), one game per word', parityPolicy: 'count (strict) until the pages pass a seed',
+      strictReference: 'count (A1), one game per word', parityPolicy: 'temperament, seed roundSeed(seed, word, 0) per case',
       tiers: VOCABULARY_TIERS, manifestSha256, sampleSha256I3b, commonPerLength: COMMON_PER_LENGTH },
     environment: { node: process.version, platform: process.platform, architecture: process.arch },
     sets: Object.fromEntries(Object.entries(sets).map(([key, set]) => [key, {
