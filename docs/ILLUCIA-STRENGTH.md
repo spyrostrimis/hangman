@@ -66,6 +66,53 @@ Unit tests (`tools/lib/illucia-gate.test.js`) check exact tails, Holm adjustment
 clear inversion failing, an even split passing, and correction turning a lone
 borderline cell into a near miss.
 
+## Weighted candidates (v2 A1, 2026-10-02): gate PASS
+
+Her letter choice now counts each candidate word by commonness: ESDB size ≤35 → 10,
+40–50 → 3, 55–70 → 1. The fallback stays unweighted. The committed reports are this
+policy. Apprentice knows only size-35 words, so all her results are identical to
+the unweighted run.
+
+**Gate: PASS**, 0 of 171 comparisons fail. The lower tier is still ahead in 22
+comparisons, all within noise; the largest gaps are 4 words of 100 (set d,
+4-letter rare, Scholar vs Apprentice: 0 vs 4, p 0.06) and 2.6 points (set b, length
+4, Scholar 267 vs Apprentice 280 of 500, raw p 0.043, the one near miss; Holm p 1).
+
+Illucia's win rate / average misses / average turns, weighted (unweighted in brackets):
+
+| Tier | a) manifest (105) | b) Common 4–6 (1,500) | c) Trickster (36) | d) Balanced (3,600) |
+|---|---|---|---|---|
+| Apprentice | 75.2% / 2.40 | 72.9% / 3.87 | 16.7% / 5.58 | 40.6% / 4.31 |
+| Scholar | 95.2% / 1.46 (1.47) | **72.3%** (67.4%) / 3.83 | 30.6% (27.8%) / 5.19 | 65.0% (65.7%) / 3.05 |
+| Master | 98.1% / 1.29 (1.48) | **72.5%** (63.1%) / 3.83 | 36.1% (30.6%) / 5.17 | 90.0% (91.0%) / 1.84 |
+
+Set b by length (Apprentice / Scholar / Master):
+
+| Length | Unweighted | Weighted |
+|---|---|---|
+| 4 | 56.0 / 46.0 / 42.4% | 56.0 / 53.4 / 54.4% |
+| 5 | 75.0 / 69.4 / 62.2% | 75.0 / 74.4 / 73.0% |
+| 6 | 87.8 / 86.8 / 84.8% | 87.8 / 89.2 / 90.0% |
+
+What it costs: Scholar and Master lose some strength on the rarer words they know.
+In I3b's balanced sample, Master's rare band falls from 92.1% to 87.2%, and from
+90.6% to 83.6% at 5–9 letters; Scholar's medium band from 92.8% to 90.1%. Common
+words gain for both: Master 89.7% → 92.9%, Scholar 91.1% → 92.9%
+(`tools/ILLUCIA-TIERS.md`).
+
+As the amended decisions expected (Amendments 1), weighting brings Master level with
+Apprentice on common words, not above her: ESDB gives every word up to size 35 the
+same level. Master's average misses on the manifest set fall from 1.48 to 1.29.
+
+Page parity: 108/108 on both pages (control: 32 of 36 Apprentice sequences differ from
+Master's). Feel on set d: Master's rounds that come down to her last miss rise from
+13.4% to 15.0%; Scholar's from 38.7% to 39.3%.
+
+Speed was not re-measured in the browser. The desktop decision timing in I3 rose
+from 1.56 / 11.61 ms to 1.82 / 18.62 ms (p50 / p95; not a contract, one machine),
+so the 8-letter first turn on a throttled phone should be re-checked with `--speed`
+before it is treated as unchanged.
+
 ## 1. Reproduction
 
 I3 and I3b re-run at HEAD match their committed reports exactly. The manifest SHA-256

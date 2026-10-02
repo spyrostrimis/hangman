@@ -25,8 +25,9 @@ model or DOM dependencies. No page imports them yet.
 
 1. `parseLexicon(text, length)` validates one sorted I2 word file.
 2. `isAcceptedWord(word, entries)` checks the full accepted vocabulary.
-3. `createKnowledge(entries, maxSize)` chooses the solver's vocabulary separately
-   and precomputes word-presence frequency. Default size is 70 (Master).
+3. `createKnowledge(entries, maxSize)` chooses the solver's vocabulary separately,
+   gives each known word its commonness weight and precomputes word-presence
+   frequency. Default size is 70 (Master).
 4. `toPublicState(round)` copies only length, pattern, guessed letters, missed
    letters and misses left. The snapshot and its arrays are frozen. A private
    WeakSet ensures callers cannot accidentally pass a round or an object with
@@ -56,13 +57,15 @@ Scholar (50), Master (70). See [the I3b measurements](ILLUCIA-TIERS.md).
 
 ## Precisely defined policies
 
-All candidates have equal weight. Letters are examined alphabetically, with
-alphabetical tie-breaking after the scores below.
+Only `count` weights candidates (v2 A1, 2026-10-02): each word counts by its ESDB
+size, ≤35 → 10, 40–50 → 3, 55–70 → 1 (`commonnessWeight` in `lexicon.js`; integers
+keep the sums exact). The other policies treat all candidates equally. Letters are
+examined alphabetically, with alphabetical tie-breaking after the scores below.
 
 | Policy | Score maximized |
 | --- | --- |
 | A `frequency` | Fixed word-presence count in the full knowledge vocabulary of this length, ignoring revealed feedback when ranking letters. |
-| B `count` | Number of surviving candidate words containing the letter, counting each word once. Production baseline. |
+| B `count` | Sum of the commonness weights of the surviving candidate words containing the letter, counting each word once. Production. With one commonness level (Apprentice) this is plain word counting. `hitCount` and `candidateCount` stay word counts; `weightedHits` and `candidateWeight` give the weighted totals. |
 | C `entropy` | Shannon entropy of complete position-mask outcomes, including a miss bucket; then hit count. |
 | D `risk` | Entropy × (hit probability)²; then hit count. The exponent is fixed at 2. |
 | E `lookahead` | D normally. With ≤12 candidates and ≤2 misses left, exact two-turn search maximizes probability of solving within the horizon, then probability of surviving it, then D's scores. |
@@ -120,21 +123,26 @@ All policies had zero Master invariant failures.
 | Policy | Solved / 3,000 | Win rate | Mean misses | Decision p50 / p95 (ms) |
 | --- | --- | --- | --- | --- |
 | Global frequency | 462 | 15.40% | 5.6557 | 1.35 / 5.70 |
-| Count (baseline) | 2,728 | 90.93% | 1.7853 | 1.56 / 11.61 |
+| Count (weighted, production) | 2,712 | 90.40% | 1.8260 | 1.82 / 18.62 |
 | Entropy | 2,717 | 90.57% | 1.8447 | 1.52 / 13.53 |
 | Risk-adjusted entropy | 2,731 | 91.03% | 1.7570 | 1.61 / 15.13 |
 | Risk + lookahead | 2,725 | 90.83% | 1.7587 | 1.61 / 14.30 |
 
-Count remains the production choice. The best challenger gained only three wins
-(0.10 percentage points) on this fixed sample, insufficient evidence of a clear
-improvement. No statistical significance or optimality is claimed.
+Before weighting, unweighted count solved 2,728 (90.93%, mean misses 1.7853) and
+the best challenger gained only three wins (0.10 percentage points), insufficient
+evidence of a clear improvement. Count stays the production policy, now weighted
+(v2 A1). On I3's sample, which is drawn uniformly from all ≤70 words and so is
+mostly medium and rare, weighting costs 16 wins (common 83.4% → 86.6%, medium
+89.8% → 89.6%, rare 95.1% → 92.6%); its purpose is the tier order on common words,
+measured in [docs/ILLUCIA-STRENGTH.md](../docs/ILLUCIA-STRENGTH.md). The challengers
+remain unweighted. No statistical significance or optimality is claimed.
 
 Regenerated on 2026-10-02 after 3-letter words were removed (v2 A1). The samples
 for lengths 4-15 depend only on seed + length, so they are unchanged, and every
 length's results are identical to the earlier 3-15 run apart from timings; only the
 250 three-letter games (count won 27.2% of them) are gone.
 
-Count's win rates by length 4 through 9 were 40.8%, 67.6%, 89.6%, 94.8%,
-98.8% and 99.6%. It solved all 250 sampled words at each length 10 through 15; that is
+Weighted count's win rates by length 4 through 9 were 39.6%, 64.8%, 88.4%, 94.0%,
+98.0% and 100%. It solved all 250 sampled words at each length 9 through 15; that is
 sample evidence, not a guarantee for every word. I3b will measure how the lower
 knowledge ceilings change these results with the required fallback.

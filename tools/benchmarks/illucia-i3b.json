@@ -119,8 +119,8 @@
         "averageMisses": 4.3089,
         "averageTurns": 10.4739,
         "decisionMilliseconds": {
-          "p50": 0.4077,
-          "p95": 2.9728
+          "p50": 0.3798,
+          "p95": 3.1729
         },
         "candidateSizes": {
           "mean": 376.3937,
@@ -143,8 +143,8 @@
           "averageMisses": 1.5667,
           "averageTurns": 8.8475,
           "decisionMilliseconds": {
-            "p50": 0.4464,
-            "p95": 3.5098
+            "p50": 0.4343,
+            "p95": 3.4704
           },
           "candidateSizes": {
             "mean": 446.905,
@@ -166,8 +166,8 @@
           "averageMisses": 5.6433,
           "averageTurns": 11.2817,
           "decisionMilliseconds": {
-            "p50": 0.3911,
-            "p95": 2.7748
+            "p50": 0.3623,
+            "p95": 2.8676
           },
           "candidateSizes": {
             "mean": 348.8528,
@@ -189,8 +189,8 @@
           "averageMisses": 5.7167,
           "averageTurns": 11.2925,
           "decisionMilliseconds": {
-            "p50": 0.3952,
-            "p95": 2.7921
+            "p50": 0.3538,
+            "p95": 3.0235
           },
           "candidateSizes": {
             "mean": 348.6637,
@@ -215,8 +215,8 @@
             "averageMisses": 5.56,
             "averageTurns": 7.86,
             "decisionMilliseconds": {
-              "p50": 0.2821,
-              "p95": 0.9363
+              "p50": 0.2849,
+              "p95": 1.0894
             },
             "candidateSizes": {
               "mean": 415.5941,
@@ -239,8 +239,8 @@
               "averageMisses": 4.8,
               "averageTurns": 7.76,
               "decisionMilliseconds": {
-                "p50": 0.2744,
-                "p95": 0.9261
+                "p50": 0.2865,
+                "p95": 1.0928
               },
               "candidateSizes": {
                 "mean": 412.6134,
@@ -262,8 +262,8 @@
               "averageMisses": 5.97,
               "averageTurns": 7.91,
               "decisionMilliseconds": {
-                "p50": 0.2792,
-                "p95": 0.9297
+                "p50": 0.2859,
+                "p95": 1.0935
               },
               "candidateSizes": {
                 "mean": 419.263,
@@ -285,8 +285,8 @@
               "averageMisses": 5.91,
               "averageTurns": 7.91,
               "decisionMilliseconds": {
-                "p50": 0.2942,
-                "p95": 0.9681
+                "p50": 0.2806,
+                "p95": 1.0858
               },
               "candidateSizes": {
                 "mean": 414.8496,
@@ -311,8 +311,8 @@
             "averageMisses": 5.2,
             "averageTurns": 8.5367,
             "decisionMilliseconds": {
-              "p50": 0.4717,
-              "p95": 2.1902
+              "p50": 0.4674,
+              "p95": 2.5088
             },
             "candidateSizes": {
               "mean": 614.1499,
@@ -335,8 +335,8 @@
               "averageMisses": 3.8,
               "averageTurns": 8.15,
               "decisionMilliseconds": {
-                "p50": 0.4864,
-                "p95": 2.1898
+                "p50": 0.4771,
+                "p95": 2.5306
               },
               "candidateSizes": {
                 "mean": 629.6994,
@@ -358,8 +358,8 @@
               "averageMisses": 5.92,
               "averageTurns": 8.8,
               "decisionMilliseconds": {
-                "p50": 0.4677,
-                "p95": 2.1624
+                "p50": 0.4674,
+                "p95": 2.496
               },
               "candidateSizes": {
                 "mean": 610.0364,
@@ -381,8 +381,8 @@
               "averageMisses": 5.88,
               "averageTurns": 8.66,
               "decisionMilliseconds": {
-                "p50": 0.4585,
-                "p95": 2.2073
+                "p50": 0.4577,
+                "p95": 2.5055
               },
               "candidateSizes": {
                 "mean": 603.6963,
@@ -407,8 +407,8 @@
             "averageMisses": 4.8967,
             "averageTurns": 8.6833,
             "decisionMilliseconds": {
-              "p50": 0.7379,
-              "p95": 3.9033
+              "p50": 0.7145,
+              "p95": 4.4365
             },
             "candidateSizes": {
               "mean": 789.8979,
@@ -431,8 +431,8 @@
               "averageMisses": 3.09,
               "averageTurns": 8.08,
               "decisionMilliseconds": {
-                "p50": 0.7692,
-                "p95": 3.914
+                "p50": 0.7398,
+                "p95": 4.438
               },
               "candidateSizes": {
                 "mean": 861.5384,
@@ -454,8 +454,8 @@
               "averageMisses": 5.79,
               "averageTurns": 8.97,
               "decisionMilliseconds": {
-                "p50": 0.7233,
-                "p95": 3.8908
+                "p50": 0.7,
+                "p95": 4.4293
               },
               "candidateSizes": {
                 "mean": 751.2163,
@@ -477,8 +477,8 @@
               "averageMisses": 5.81,
               "averageTurns": 9,
               "decisionMilliseconds": {
-                "p50": 0.7276,
-                "p95": 3.8932
+                "p50": 0.7069,
+                "p95": 4.441
               },
               "candidateSizes": {
                 "mean": 764.1333,
@@ -503,8 +503,8 @@
             "averageMisses": 4.66,
             "averageTurns": 9.4433,
             "decisionMilliseconds": {
-              "p50": 0.9187,
-              "p95": 5.4383
+              "p50": 0.9019,
+              "p95": 6.3156
             },
             "candidateSizes": {
               "mean": 887.0579,
@@ -527,8 +527,8 @@
               "averageMisses": 2.55,
               "averageTurns": 8.69,
               "decisionMilliseconds": {
-                "p50": 0.9874,
-                "p95": 5.469
+                "p50": 0.9745,
+                "p95": 6.3458
               },
               "candidateSizes": {
                 "mean": 976.6444,
@@ -550,8 +550,8 @@
               "averageMisses": 5.75,
               "averageTurns": 9.77,
               "decisionMilliseconds": {
-                "p50": 0.8838,
-                "p95": 5.4194
+                "p50": 0.8734,
+                "p95": 6.2738
               },
               "candidateSizes": {
                 "mean": 851.3398,
@@ -573,8 +573,8 @@
               "averageMisses": 5.68,
               "averageTurns": 9.87,
               "decisionMilliseconds": {
-                "p50": 0.9019,
-                "p95": 5.4375
+                "p50": 0.8831,
+                "p95": 6.3094
               },
               "candidateSizes": {
                 "mean": 843.538,
@@ -599,8 +599,8 @@
             "averageMisses": 4.4167,
             "averageTurns": 9.8467,
             "decisionMilliseconds": {
-              "p50": 0.8684,
-              "p95": 5.8272
+              "p50": 0.8232,
+              "p95": 6.7129
             },
             "candidateSizes": {
               "mean": 776.8578,
@@ -623,8 +623,8 @@
               "averageMisses": 1.69,
               "averageTurns": 8.51,
               "decisionMilliseconds": {
-                "p50": 0.9241,
-                "p95": 5.9458
+                "p50": 0.8976,
+                "p95": 6.7234
               },
               "candidateSizes": {
                 "mean": 904.4677,
@@ -646,8 +646,8 @@
               "averageMisses": 5.63,
               "averageTurns": 10.38,
               "decisionMilliseconds": {
-                "p50": 0.8423,
-                "p95": 5.7873
+                "p50": 0.8184,
+                "p95": 6.7213
               },
               "candidateSizes": {
                 "mean": 735.4807,
@@ -669,8 +669,8 @@
               "averageMisses": 5.93,
               "averageTurns": 10.65,
               "decisionMilliseconds": {
-                "p50": 0.8509,
-                "p95": 5.7949
+                "p50": 0.792,
+                "p95": 6.6865
               },
               "candidateSizes": {
                 "mean": 715.2178,
@@ -695,8 +695,8 @@
             "averageMisses": 4.1833,
             "averageTurns": 10.24,
             "decisionMilliseconds": {
-              "p50": 0.6561,
-              "p95": 5.2319
+              "p50": 0.6484,
+              "p95": 6.0373
             },
             "candidateSizes": {
               "mean": 581.6608,
@@ -719,8 +719,8 @@
               "averageMisses": 1.05,
               "averageTurns": 8.57,
               "decisionMilliseconds": {
-                "p50": 0.7129,
-                "p95": 5.2535
+                "p50": 0.6983,
+                "p95": 6.0455
               },
               "candidateSizes": {
                 "mean": 700.5974,
@@ -742,8 +742,8 @@
               "averageMisses": 5.85,
               "averageTurns": 10.98,
               "decisionMilliseconds": {
-                "p50": 0.6493,
-                "p95": 5.2093
+                "p50": 0.6483,
+                "p95": 6.0459
               },
               "candidateSizes": {
                 "mean": 535.9909,
@@ -765,8 +765,8 @@
               "averageMisses": 5.65,
               "averageTurns": 11.17,
               "decisionMilliseconds": {
-                "p50": 0.6389,
-                "p95": 5.2346
+                "p50": 0.6222,
+                "p95": 6.0244
               },
               "candidateSizes": {
                 "mean": 535.3017,
@@ -791,8 +791,8 @@
             "averageMisses": 4.03,
             "averageTurns": 10.76,
             "decisionMilliseconds": {
-              "p50": 0.5132,
-              "p95": 4.3051
+              "p50": 0.4856,
+              "p95": 4.9027
             },
             "candidateSizes": {
               "mean": 406.3866,
@@ -815,8 +815,8 @@
               "averageMisses": 0.66,
               "averageTurns": 8.66,
               "decisionMilliseconds": {
-                "p50": 0.5333,
-                "p95": 4.2785
+                "p50": 0.5253,
+                "p95": 4.9476
               },
               "candidateSizes": {
                 "mean": 505.9145,
@@ -838,8 +838,8 @@
               "averageMisses": 5.72,
               "averageTurns": 11.82,
               "decisionMilliseconds": {
-                "p50": 0.5144,
-                "p95": 4.3034
+                "p50": 0.4856,
+                "p95": 4.9052
               },
               "candidateSizes": {
                 "mean": 369.6142,
@@ -861,8 +861,8 @@
               "averageMisses": 5.71,
               "averageTurns": 11.8,
               "decisionMilliseconds": {
-                "p50": 0.4964,
-                "p95": 4.3361
+                "p50": 0.4621,
+                "p95": 4.8833
               },
               "candidateSizes": {
                 "mean": 370.178,
@@ -887,8 +887,8 @@
             "averageMisses": 3.9567,
             "averageTurns": 11.2333,
             "decisionMilliseconds": {
-              "p50": 0.3328,
-              "p95": 3.1596
+              "p50": 0.3058,
+              "p95": 3.4004
             },
             "candidateSizes": {
               "mean": 250.4074,
@@ -911,8 +911,8 @@
               "averageMisses": 0.52,
               "averageTurns": 8.85,
               "decisionMilliseconds": {
-                "p50": 0.3668,
-                "p95": 3.2221
+                "p50": 0.3257,
+                "p95": 3.4231
               },
               "candidateSizes": {
                 "mean": 316.5853,
@@ -934,8 +934,8 @@
               "averageMisses": 5.53,
               "averageTurns": 12.49,
               "decisionMilliseconds": {
-                "p50": 0.3164,
-                "p95": 3.1003
+                "p50": 0.2979,
+                "p95": 3.3919
               },
               "candidateSizes": {
                 "mean": 227.225,
@@ -957,8 +957,8 @@
               "averageMisses": 5.82,
               "averageTurns": 12.36,
               "decisionMilliseconds": {
-                "p50": 0.3321,
-                "p95": 3.1836
+                "p50": 0.302,
+                "p95": 3.4047
               },
               "candidateSizes": {
                 "mean": 226.449,
@@ -983,8 +983,8 @@
             "averageMisses": 3.7167,
             "averageTurns": 11.66,
             "decisionMilliseconds": {
-              "p50": 0.1924,
-              "p95": 1.9403
+              "p50": 0.1674,
+              "p95": 2.0496
             },
             "candidateSizes": {
               "mean": 132.8691,
@@ -1007,8 +1007,8 @@
               "averageMisses": 0.21,
               "averageTurns": 9.15,
               "decisionMilliseconds": {
-                "p50": 0.1911,
-                "p95": 1.9401
+                "p50": 0.1763,
+                "p95": 2.0557
               },
               "candidateSizes": {
                 "mean": 168.7749,
@@ -1030,8 +1030,8 @@
               "averageMisses": 5.43,
               "averageTurns": 13.01,
               "decisionMilliseconds": {
-                "p50": 0.1871,
-                "p95": 1.9313
+                "p50": 0.1635,
+                "p95": 2.0558
               },
               "candidateSizes": {
                 "mean": 118.6618,
@@ -1053,8 +1053,8 @@
               "averageMisses": 5.51,
               "averageTurns": 12.82,
               "decisionMilliseconds": {
-                "p50": 0.2,
-                "p95": 1.949
+                "p50": 0.1689,
+                "p95": 2.0391
               },
               "candidateSizes": {
                 "mean": 121.6599,
@@ -1079,8 +1079,8 @@
             "averageMisses": 3.7767,
             "averageTurns": 12.0933,
             "decisionMilliseconds": {
-              "p50": 0.0963,
-              "p95": 1.0486
+              "p50": 0.0865,
+              "p95": 1.1315
             },
             "candidateSizes": {
               "mean": 63.8004,
@@ -1103,8 +1103,8 @@
               "averageMisses": 0.22,
               "averageTurns": 9.58,
               "decisionMilliseconds": {
-                "p50": 0.1014,
-                "p95": 1.0809
+                "p50": 0.0905,
+                "p95": 1.1315
               },
               "candidateSizes": {
                 "mean": 80.6775,
@@ -1126,8 +1126,8 @@
               "averageMisses": 5.39,
               "averageTurns": 13.12,
               "decisionMilliseconds": {
-                "p50": 0.0972,
-                "p95": 1.0468
+                "p50": 0.0859,
+                "p95": 1.1301
               },
               "candidateSizes": {
                 "mean": 58.9047,
@@ -1149,8 +1149,8 @@
               "averageMisses": 5.72,
               "averageTurns": 13.58,
               "decisionMilliseconds": {
-                "p50": 0.0919,
-                "p95": 1.0325
+                "p50": 0.0852,
+                "p95": 1.1331
               },
               "candidateSizes": {
                 "mean": 56.6244,
@@ -1175,8 +1175,8 @@
             "averageMisses": 3.6533,
             "averageTurns": 12.51,
             "decisionMilliseconds": {
-              "p50": 0.0431,
-              "p95": 0.4749
+              "p50": 0.0386,
+              "p95": 0.5202
             },
             "candidateSizes": {
               "mean": 26.227,
@@ -1199,8 +1199,8 @@
               "averageMisses": 0.13,
               "averageTurns": 10.03,
               "decisionMilliseconds": {
-                "p50": 0.0472,
-                "p95": 0.4986
+                "p50": 0.0431,
+                "p95": 0.5218
               },
               "candidateSizes": {
                 "mean": 33.4407,
@@ -1222,8 +1222,8 @@
               "averageMisses": 5.43,
               "averageTurns": 13.92,
               "decisionMilliseconds": {
-                "p50": 0.0428,
-                "p95": 0.4751
+                "p50": 0.0379,
+                "p95": 0.5193
               },
               "candidateSizes": {
                 "mean": 23.3736,
@@ -1245,8 +1245,8 @@
               "averageMisses": 5.4,
               "averageTurns": 13.58,
               "decisionMilliseconds": {
-                "p50": 0.0403,
-                "p95": 0.4611
+                "p50": 0.0365,
+                "p95": 0.5198
               },
               "candidateSizes": {
                 "mean": 23.824,
@@ -1271,8 +1271,8 @@
             "averageMisses": 3.6567,
             "averageTurns": 12.82,
             "decisionMilliseconds": {
-              "p50": 0.0171,
-              "p95": 0.1823
+              "p50": 0.0173,
+              "p95": 0.2047
             },
             "candidateSizes": {
               "mean": 9.545,
@@ -1295,8 +1295,8 @@
               "averageMisses": 0.08,
               "averageTurns": 10.14,
               "decisionMilliseconds": {
-                "p50": 0.0203,
-                "p95": 0.1832
+                "p50": 0.0206,
+                "p95": 0.2046
               },
               "candidateSizes": {
                 "mean": 12.7189,
@@ -1318,8 +1318,8 @@
               "averageMisses": 5.31,
               "averageTurns": 14.21,
               "decisionMilliseconds": {
-                "p50": 0.0157,
-                "p95": 0.1805
+                "p50": 0.0147,
+                "p95": 0.2048
               },
               "candidateSizes": {
                 "mean": 8.3512,
@@ -1341,8 +1341,8 @@
               "averageMisses": 5.58,
               "averageTurns": 14.11,
               "decisionMilliseconds": {
-                "p50": 0.0168,
-                "p95": 0.1879
+                "p50": 0.0152,
+                "p95": 0.2046
               },
               "candidateSizes": {
                 "mean": 8.4663,
@@ -1368,8 +1368,8 @@
           "averageMisses": 2.436,
           "averageTurns": 8.4,
           "decisionMilliseconds": {
-            "p50": 0.8044,
-            "p95": 5.3801
+            "p50": 0.7917,
+            "p95": 6.2309
           },
           "candidateSizes": {
             "mean": 816.2252,
@@ -1391,8 +1391,8 @@
           "averageMisses": 5.788,
           "averageTurns": 9.78,
           "decisionMilliseconds": {
-            "p50": 0.7554,
-            "p95": 5.2227
+            "p50": 0.7443,
+            "p95": 6.0764
           },
           "candidateSizes": {
             "mean": 694.147,
@@ -1414,8 +1414,8 @@
           "averageMisses": 5.79,
           "averageTurns": 9.87,
           "decisionMilliseconds": {
-            "p50": 0.7526,
-            "p95": 5.2827
+            "p50": 0.7318,
+            "p95": 6.0346
           },
           "candidateSizes": {
             "mean": 689.51,
@@ -1449,41 +1449,41 @@
       },
       "overall": {
         "games": 3600,
-        "wins": 2365,
-        "winRate": 0.6569,
-        "averageMisses": 3.0122,
-        "averageTurns": 9.7186,
+        "wins": 2341,
+        "winRate": 0.6503,
+        "averageMisses": 3.0511,
+        "averageTurns": 9.7511,
         "decisionMilliseconds": {
-          "p50": 0.9657,
-          "p95": 6.8673
+          "p50": 0.7211,
+          "p95": 6.8967
         },
         "candidateSizes": {
-          "mean": 721.025,
+          "mean": 721.8826,
           "p50": 2,
           "p95": 5672,
           "max": 11277
         },
         "outOfVocabularyGames": 1200,
-        "gamesUsingFallback": 1056,
+        "gamesUsingFallback": 1050,
         "zeroCandidateEvents": {
-          "expectedLowTier": 7866,
+          "expectedLowTier": 7888,
           "masterBugs": 0
         }
       },
       "byWordBand": {
         "common": {
           "games": 1200,
-          "wins": 1093,
-          "winRate": 0.9108,
-          "averageMisses": 1.6958,
-          "averageTurns": 8.9342,
+          "wins": 1115,
+          "winRate": 0.9292,
+          "averageMisses": 1.5925,
+          "averageTurns": 8.8692,
           "decisionMilliseconds": {
-            "p50": 0.9854,
-            "p95": 8.2499
+            "p50": 0.7431,
+            "p95": 7.0107
           },
           "candidateSizes": {
-            "mean": 790.5037,
-            "p50": 3,
+            "mean": 794.9997,
+            "p50": 4,
             "p95": 5672,
             "max": 11277
           },
@@ -1496,16 +1496,16 @@
         },
         "medium": {
           "games": 1200,
-          "wins": 1114,
-          "winRate": 0.9283,
-          "averageMisses": 1.6558,
-          "averageTurns": 8.9,
+          "wins": 1081,
+          "winRate": 0.9008,
+          "averageMisses": 1.8567,
+          "averageTurns": 9.0525,
           "decisionMilliseconds": {
-            "p50": 0.9865,
-            "p95": 8.3589
+            "p50": 0.7532,
+            "p95": 6.9625
           },
           "candidateSizes": {
-            "mean": 781.5879,
+            "mean": 776.4451,
             "p50": 2,
             "p95": 5672,
             "max": 11277
@@ -1519,24 +1519,24 @@
         },
         "rare": {
           "games": 1200,
-          "wins": 158,
-          "winRate": 0.1317,
-          "averageMisses": 5.685,
-          "averageTurns": 11.3217,
+          "wins": 145,
+          "winRate": 0.1208,
+          "averageMisses": 5.7042,
+          "averageTurns": 11.3317,
           "decisionMilliseconds": {
-            "p50": 0.9276,
-            "p95": 6.2966
+            "p50": 0.6738,
+            "p95": 5.5615
           },
           "candidateSizes": {
-            "mean": 618.5893,
+            "mean": 621.0665,
             "p50": 0,
             "p95": 5125,
             "max": 11277
           },
           "outOfVocabularyGames": 1200,
-          "gamesUsingFallback": 1056,
+          "gamesUsingFallback": 1050,
           "zeroCandidateEvents": {
-            "expectedLowTier": 7866,
+            "expectedLowTier": 7888,
             "masterBugs": 0
           }
         }
@@ -1545,41 +1545,41 @@
         "4": {
           "overall": {
             "games": 300,
-            "wins": 97,
-            "winRate": 0.3233,
-            "averageMisses": 5.2633,
-            "averageTurns": 7.84,
+            "wins": 87,
+            "winRate": 0.29,
+            "averageMisses": 5.2967,
+            "averageTurns": 7.8233,
             "decisionMilliseconds": {
-              "p50": 0.5146,
-              "p95": 1.7508
+              "p50": 0.4364,
+              "p95": 1.7105
             },
             "candidateSizes": {
-              "mean": 653.4588,
-              "p50": 81,
+              "mean": 653.0435,
+              "p50": 80,
               "p95": 2969,
               "max": 2969
             },
             "outOfVocabularyGames": 100,
-            "gamesUsingFallback": 36,
+            "gamesUsingFallback": 31,
             "zeroCandidateEvents": {
-              "expectedLowTier": 73,
+              "expectedLowTier": 63,
               "masterBugs": 0
             }
           },
           "byWordBand": {
             "common": {
               "games": 100,
-              "wins": 39,
-              "winRate": 0.39,
-              "averageMisses": 5.13,
-              "averageTurns": 7.87,
+              "wins": 48,
+              "winRate": 0.48,
+              "averageMisses": 4.84,
+              "averageTurns": 7.79,
               "decisionMilliseconds": {
-                "p50": 0.516,
-                "p95": 1.8721
+                "p50": 0.4413,
+                "p95": 1.7171
               },
               "candidateSizes": {
-                "mean": 689.8831,
-                "p50": 99,
+                "mean": 658.8498,
+                "p50": 91,
                 "p95": 2969,
                 "max": 2969
               },
@@ -1592,17 +1592,17 @@
             },
             "medium": {
               "games": 100,
-              "wins": 54,
-              "winRate": 0.54,
-              "averageMisses": 4.72,
-              "averageTurns": 7.57,
+              "wins": 39,
+              "winRate": 0.39,
+              "averageMisses": 5.05,
+              "averageTurns": 7.62,
               "decisionMilliseconds": {
-                "p50": 0.5197,
-                "p95": 1.7432
+                "p50": 0.4476,
+                "p95": 1.707
               },
               "candidateSizes": {
-                "mean": 669.0766,
-                "p50": 101,
+                "mean": 673.8228,
+                "p50": 97,
                 "p95": 2969,
                 "max": 2969
               },
@@ -1615,24 +1615,24 @@
             },
             "rare": {
               "games": 100,
-              "wins": 4,
-              "winRate": 0.04,
-              "averageMisses": 5.94,
-              "averageTurns": 8.08,
+              "wins": 0,
+              "winRate": 0,
+              "averageMisses": 6,
+              "averageTurns": 8.06,
               "decisionMilliseconds": {
-                "p50": 0.5085,
-                "p95": 1.7343
+                "p50": 0.4311,
+                "p95": 1.7098
               },
               "candidateSizes": {
-                "mean": 603.349,
-                "p50": 60,
+                "mean": 627.7866,
+                "p50": 65,
                 "p95": 2969,
                 "max": 2969
               },
               "outOfVocabularyGames": 100,
-              "gamesUsingFallback": 36,
+              "gamesUsingFallback": 31,
               "zeroCandidateEvents": {
-                "expectedLowTier": 73,
+                "expectedLowTier": 63,
                 "masterBugs": 0
               }
             }
@@ -1641,41 +1641,41 @@
         "5": {
           "overall": {
             "games": 300,
-            "wins": 155,
-            "winRate": 0.5167,
-            "averageMisses": 4.64,
-            "averageTurns": 8.31,
+            "wins": 149,
+            "winRate": 0.4967,
+            "averageMisses": 4.7533,
+            "averageTurns": 8.41,
             "decisionMilliseconds": {
-              "p50": 0.8912,
-              "p95": 3.9493
+              "p50": 0.7716,
+              "p95": 4.129
             },
             "candidateSizes": {
-              "mean": 1031.3137,
-              "p50": 51,
+              "mean": 1058.2164,
+              "p50": 49,
               "p95": 5672,
               "max": 5672
             },
             "outOfVocabularyGames": 100,
-            "gamesUsingFallback": 58,
+            "gamesUsingFallback": 60,
             "zeroCandidateEvents": {
-              "expectedLowTier": 135,
+              "expectedLowTier": 147,
               "masterBugs": 0
             }
           },
           "byWordBand": {
             "common": {
               "games": 100,
-              "wins": 71,
-              "winRate": 0.71,
-              "averageMisses": 4.1,
-              "averageTurns": 8.14,
+              "wins": 82,
+              "winRate": 0.82,
+              "averageMisses": 3.81,
+              "averageTurns": 8.1,
               "decisionMilliseconds": {
-                "p50": 0.8736,
-                "p95": 3.8716
+                "p50": 0.7784,
+                "p95": 4.1312
               },
               "candidateSizes": {
-                "mean": 1048.215,
-                "p50": 67,
+                "mean": 1062.5728,
+                "p50": 68,
                 "p95": 5672,
                 "max": 5672
               },
@@ -1688,19 +1688,115 @@
             },
             "medium": {
               "games": 100,
-              "wins": 74,
-              "winRate": 0.74,
-              "averageMisses": 4.04,
-              "averageTurns": 8.1,
+              "wins": 61,
+              "winRate": 0.61,
+              "averageMisses": 4.56,
+              "averageTurns": 8.37,
               "decisionMilliseconds": {
-                "p50": 0.9183,
-                "p95": 4.143
+                "p50": 0.7906,
+                "p95": 4.1173
               },
               "candidateSizes": {
-                "mean": 1050.3654,
-                "p50": 55,
+                "mean": 1102.2174,
+                "p50": 53,
                 "p95": 5672,
                 "max": 5672
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "rare": {
+              "games": 100,
+              "wins": 6,
+              "winRate": 0.06,
+              "averageMisses": 5.89,
+              "averageTurns": 8.76,
+              "decisionMilliseconds": {
+                "p50": 0.7433,
+                "p95": 4.1301
+              },
+              "candidateSizes": {
+                "mean": 1012.1461,
+                "p50": 30,
+                "p95": 5672,
+                "max": 5672
+              },
+              "outOfVocabularyGames": 100,
+              "gamesUsingFallback": 60,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 147,
+                "masterBugs": 0
+              }
+            }
+          }
+        },
+        "6": {
+          "overall": {
+            "games": 300,
+            "wins": 190,
+            "winRate": 0.6333,
+            "averageMisses": 4.0767,
+            "averageTurns": 8.5567,
+            "decisionMilliseconds": {
+              "p50": 1.2031,
+              "p95": 7.3434
+            },
+            "candidateSizes": {
+              "mean": 1330.4651,
+              "p50": 24,
+              "p95": 8667,
+              "max": 8667
+            },
+            "outOfVocabularyGames": 100,
+            "gamesUsingFallback": 71,
+            "zeroCandidateEvents": {
+              "expectedLowTier": 212,
+              "masterBugs": 0
+            }
+          },
+          "byWordBand": {
+            "common": {
+              "games": 100,
+              "wins": 89,
+              "winRate": 0.89,
+              "averageMisses": 3.18,
+              "averageTurns": 8.22,
+              "decisionMilliseconds": {
+                "p50": 1.2288,
+                "p95": 7.3004
+              },
+              "candidateSizes": {
+                "mean": 1405.0754,
+                "p50": 49,
+                "p95": 8667,
+                "max": 8667
+              },
+              "outOfVocabularyGames": 0,
+              "gamesUsingFallback": 0,
+              "zeroCandidateEvents": {
+                "expectedLowTier": 0,
+                "masterBugs": 0
+              }
+            },
+            "medium": {
+              "games": 100,
+              "wins": 91,
+              "winRate": 0.91,
+              "averageMisses": 3.28,
+              "averageTurns": 8.3,
+              "decisionMilliseconds": {
+                "p50": 1.2069,
+                "p95": 7.3401
+              },
+              "candidateSizes": {
+                "mean": 1347.2639,
+                "p50": 20,
+                "p95": 8667,
+                "max": 8667
               },
               "outOfVocabularyGames": 0,
               "gamesUsingFallback": 0,
@@ -1713,118 +1809,22 @@
               "games": 100,
               "wins": 10,
               "winRate": 0.1,
-              "averageMisses": 5.78,
-              "averageTurns": 8.69,
+              "averageMisses": 5.77,
+              "averageTurns": 9.15,
               "decisionMilliseconds": {
-                "p50": 0.8705,
-                "p95": 3.9557
+                "p50": 1.162,
+                "p95": 7.372
               },
               "candidateSizes": {
-                "mean": 997.7238,
-                "p50": 33,
-                "p95": 5672,
-                "max": 5672
-              },
-              "outOfVocabularyGames": 100,
-              "gamesUsingFallback": 58,
-              "zeroCandidateEvents": {
-                "expectedLowTier": 135,
-                "masterBugs": 0
-              }
-            }
-          }
-        },
-        "6": {
-          "overall": {
-            "games": 300,
-            "wins": 193,
-            "winRate": 0.6433,
-            "averageMisses": 3.9833,
-            "averageTurns": 8.4867,
-            "decisionMilliseconds": {
-              "p50": 1.2763,
-              "p95": 6.5821
-            },
-            "candidateSizes": {
-              "mean": 1340.0778,
-              "p50": 26,
-              "p95": 8667,
-              "max": 8667
-            },
-            "outOfVocabularyGames": 100,
-            "gamesUsingFallback": 75,
-            "zeroCandidateEvents": {
-              "expectedLowTier": 224,
-              "masterBugs": 0
-            }
-          },
-          "byWordBand": {
-            "common": {
-              "games": 100,
-              "wins": 86,
-              "winRate": 0.86,
-              "averageMisses": 3.45,
-              "averageTurns": 8.46,
-              "decisionMilliseconds": {
-                "p50": 1.3269,
-                "p95": 6.6047
-              },
-              "candidateSizes": {
-                "mean": 1365.6454,
-                "p50": 44,
-                "p95": 8667,
-                "max": 8667
-              },
-              "outOfVocabularyGames": 0,
-              "gamesUsingFallback": 0,
-              "zeroCandidateEvents": {
-                "expectedLowTier": 0,
-                "masterBugs": 0
-              }
-            },
-            "medium": {
-              "games": 100,
-              "wins": 94,
-              "winRate": 0.94,
-              "averageMisses": 2.77,
-              "averageTurns": 7.82,
-              "decisionMilliseconds": {
-                "p50": 1.3016,
-                "p95": 6.6225
-              },
-              "candidateSizes": {
-                "mean": 1426.2596,
-                "p50": 26,
-                "p95": 8667,
-                "max": 8667
-              },
-              "outOfVocabularyGames": 0,
-              "gamesUsingFallback": 0,
-              "zeroCandidateEvents": {
-                "expectedLowTier": 0,
-                "masterBugs": 0
-              }
-            },
-            "rare": {
-              "games": 100,
-              "wins": 13,
-              "winRate": 0.13,
-              "averageMisses": 5.73,
-              "averageTurns": 9.18,
-              "decisionMilliseconds": {
-                "p50": 1.2375,
-                "p95": 6.5358
-              },
-              "candidateSizes": {
-                "mean": 1243.1013,
-                "p50": 15,
+                "mean": 1248.2,
+                "p50": 16,
                 "p95": 8667,
                 "max": 8667
               },
               "outOfVocabularyGames": 100,
-              "gamesUsingFallback": 75,
+              "gamesUsingFallback": 71,
               "zeroCandidateEvents": {
-                "expectedLowTier": 224,
+                "expectedLowTier": 212,
                 "masterBugs": 0
               }
             }
@@ -1833,41 +1833,41 @@
         "7": {
           "overall": {
             "games": 300,
-            "wins": 204,
-            "winRate": 0.68,
-            "averageMisses": 3.62,
-            "averageTurns": 9.0933,
+            "wins": 198,
+            "winRate": 0.66,
+            "averageMisses": 3.7467,
+            "averageTurns": 9.1867,
             "decisionMilliseconds": {
-              "p50": 1.6032,
-              "p95": 9.4184
+              "p50": 1.6018,
+              "p95": 11.0274
             },
             "candidateSizes": {
-              "mean": 1551.5843,
+              "mean": 1541.6176,
               "p50": 13,
               "p95": 11200,
               "max": 11200
             },
             "outOfVocabularyGames": 100,
-            "gamesUsingFallback": 90,
+            "gamesUsingFallback": 91,
             "zeroCandidateEvents": {
-              "expectedLowTier": 332,
+              "expectedLowTier": 342,
               "masterBugs": 0
             }
           },
           "byWordBand": {
             "common": {
               "games": 100,
-              "wins": 97,
-              "winRate": 0.97,
-              "averageMisses": 2.65,
-              "averageTurns": 8.79,
+              "wins": 96,
+              "winRate": 0.96,
+              "averageMisses": 2.67,
+              "averageTurns": 8.78,
               "decisionMilliseconds": {
-                "p50": 1.6554,
-                "p95": 9.4269
+                "p50": 1.6271,
+                "p95": 10.6192
               },
               "candidateSizes": {
-                "mean": 1616.9329,
-                "p50": 24,
+                "mean": 1628.8383,
+                "p50": 28,
                 "p95": 11200,
                 "max": 11200
               },
@@ -1880,17 +1880,17 @@
             },
             "medium": {
               "games": 100,
-              "wins": 93,
-              "winRate": 0.93,
-              "averageMisses": 2.56,
-              "averageTurns": 8.48,
+              "wins": 92,
+              "winRate": 0.92,
+              "averageMisses": 2.88,
+              "averageTurns": 8.79,
               "decisionMilliseconds": {
-                "p50": 1.665,
-                "p95": 9.4816
+                "p50": 1.6029,
+                "p95": 11.1078
               },
               "candidateSizes": {
-                "mean": 1649.8349,
-                "p50": 18,
+                "mean": 1597.6177,
+                "p50": 15,
                 "p95": 11200,
                 "max": 11200
               },
@@ -1903,24 +1903,24 @@
             },
             "rare": {
               "games": 100,
-              "wins": 14,
-              "winRate": 0.14,
-              "averageMisses": 5.65,
-              "averageTurns": 10.01,
+              "wins": 10,
+              "winRate": 0.1,
+              "averageMisses": 5.69,
+              "averageTurns": 9.99,
               "decisionMilliseconds": {
-                "p50": 1.5234,
-                "p95": 9.3434
+                "p50": 1.5636,
+                "p95": 11.2645
               },
               "candidateSizes": {
-                "mean": 1410.967,
+                "mean": 1415.6877,
                 "p50": 6,
                 "p95": 11200,
                 "max": 11200
               },
               "outOfVocabularyGames": 100,
-              "gamesUsingFallback": 90,
+              "gamesUsingFallback": 91,
               "zeroCandidateEvents": {
-                "expectedLowTier": 332,
+                "expectedLowTier": 342,
                 "masterBugs": 0
               }
             }
@@ -1931,14 +1931,14 @@
             "games": 300,
             "wins": 202,
             "winRate": 0.6733,
-            "averageMisses": 3.2033,
-            "averageTurns": 9.3033,
+            "averageMisses": 3.28,
+            "averageTurns": 9.39,
             "decisionMilliseconds": {
-              "p50": 1.5643,
-              "p95": 10.4756
+              "p50": 1.5087,
+              "p95": 12.0198
             },
             "candidateSizes": {
-              "mean": 1445.5468,
+              "mean": 1432.2542,
               "p50": 5,
               "p95": 11277,
               "max": 11277
@@ -1946,7 +1946,7 @@
             "outOfVocabularyGames": 100,
             "gamesUsingFallback": 97,
             "zeroCandidateEvents": {
-              "expectedLowTier": 493,
+              "expectedLowTier": 506,
               "masterBugs": 0
             }
           },
@@ -1955,15 +1955,15 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 1.83,
-              "averageTurns": 8.65,
+              "averageMisses": 1.7,
+              "averageTurns": 8.52,
               "decisionMilliseconds": {
-                "p50": 1.6546,
-                "p95": 10.6392
+                "p50": 1.6803,
+                "p95": 12.5015
               },
               "candidateSizes": {
-                "mean": 1558.2682,
-                "p50": 10,
+                "mean": 1582.1256,
+                "p50": 12,
                 "p95": 11277,
                 "max": 11277
               },
@@ -1976,17 +1976,17 @@
             },
             "medium": {
               "games": 100,
-              "wins": 99,
-              "winRate": 0.99,
-              "averageMisses": 1.84,
-              "averageTurns": 8.71,
+              "wins": 98,
+              "winRate": 0.98,
+              "averageMisses": 2.21,
+              "averageTurns": 9.07,
               "decisionMilliseconds": {
-                "p50": 1.5925,
-                "p95": 10.4404
+                "p50": 1.4986,
+                "p95": 11.8178
               },
               "candidateSizes": {
-                "mean": 1542.7646,
-                "p50": 9,
+                "mean": 1481.8434,
+                "p50": 7,
                 "p95": 11277,
                 "max": 11277
               },
@@ -1999,16 +1999,16 @@
             },
             "rare": {
               "games": 100,
-              "wins": 3,
-              "winRate": 0.03,
-              "averageMisses": 5.94,
-              "averageTurns": 10.55,
+              "wins": 4,
+              "winRate": 0.04,
+              "averageMisses": 5.93,
+              "averageTurns": 10.58,
               "decisionMilliseconds": {
-                "p50": 1.5143,
-                "p95": 10.4164
+                "p50": 1.4225,
+                "p95": 11.8473
               },
               "candidateSizes": {
-                "mean": 1272.8635,
+                "mean": 1269.052,
                 "p50": 1,
                 "p95": 11277,
                 "max": 11277
@@ -2016,7 +2016,7 @@
               "outOfVocabularyGames": 100,
               "gamesUsingFallback": 97,
               "zeroCandidateEvents": {
-                "expectedLowTier": 493,
+                "expectedLowTier": 506,
                 "masterBugs": 0
               }
             }
@@ -2025,16 +2025,16 @@
         "9": {
           "overall": {
             "games": 300,
-            "wins": 217,
-            "winRate": 0.7233,
-            "averageMisses": 2.6733,
-            "averageTurns": 9.4633,
+            "wins": 216,
+            "winRate": 0.72,
+            "averageMisses": 2.7,
+            "averageTurns": 9.51,
             "decisionMilliseconds": {
-              "p50": 1.4419,
-              "p95": 9.9864
+              "p50": 1.2398,
+              "p95": 11.239
             },
             "candidateSizes": {
-              "mean": 1159.4149,
+              "mean": 1153.7049,
               "p50": 2,
               "p95": 9754,
               "max": 9754
@@ -2042,7 +2042,7 @@
             "outOfVocabularyGames": 100,
             "gamesUsingFallback": 100,
             "zeroCandidateEvents": {
-              "expectedLowTier": 671,
+              "expectedLowTier": 679,
               "masterBugs": 0
             }
           },
@@ -2051,14 +2051,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 1.09,
-              "averageTurns": 8.61,
+              "averageMisses": 1.03,
+              "averageTurns": 8.55,
               "decisionMilliseconds": {
-                "p50": 1.364,
-                "p95": 9.857
+                "p50": 1.3035,
+                "p95": 11.1748
               },
               "candidateSizes": {
-                "mean": 1281.0105,
+                "mean": 1289.8877,
                 "p50": 4,
                 "p95": 9754,
                 "max": 9754
@@ -2074,14 +2074,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 1.35,
-              "averageTurns": 8.62,
+              "averageMisses": 1.48,
+              "averageTurns": 8.75,
               "decisionMilliseconds": {
-                "p50": 1.7659,
-                "p95": 12.1985
+                "p50": 1.3056,
+                "p95": 11.2929
               },
               "candidateSizes": {
-                "mean": 1257.8956,
+                "mean": 1239.2011,
                 "p50": 3,
                 "p95": 9754,
                 "max": 9754
@@ -2095,16 +2095,16 @@
             },
             "rare": {
               "games": 100,
-              "wins": 17,
-              "winRate": 0.17,
-              "averageMisses": 5.58,
-              "averageTurns": 11.16,
+              "wins": 16,
+              "winRate": 0.16,
+              "averageMisses": 5.59,
+              "averageTurns": 11.23,
               "decisionMilliseconds": {
-                "p50": 1.3108,
-                "p95": 9.9048
+                "p50": 1.1713,
+                "p95": 11.239
               },
               "candidateSizes": {
-                "mean": 989.5367,
+                "mean": 983.4061,
                 "p50": 0,
                 "p95": 9754,
                 "max": 9754
@@ -2112,7 +2112,7 @@
               "outOfVocabularyGames": 100,
               "gamesUsingFallback": 100,
               "zeroCandidateEvents": {
-                "expectedLowTier": 671,
+                "expectedLowTier": 679,
                 "masterBugs": 0
               }
             }
@@ -2121,16 +2121,16 @@
         "10": {
           "overall": {
             "games": 300,
-            "wins": 210,
-            "winRate": 0.7,
-            "averageMisses": 2.4633,
-            "averageTurns": 9.8067,
+            "wins": 211,
+            "winRate": 0.7033,
+            "averageMisses": 2.44,
+            "averageTurns": 9.7967,
             "decisionMilliseconds": {
-              "p50": 1.6811,
-              "p95": 14.6863
+              "p50": 0.9446,
+              "p95": 9.4938
             },
             "candidateSizes": {
-              "mean": 854.7804,
+              "mean": 855.6914,
               "p50": 1,
               "p95": 7605,
               "max": 7605
@@ -2138,7 +2138,7 @@
             "outOfVocabularyGames": 100,
             "gamesUsingFallback": 100,
             "zeroCandidateEvents": {
-              "expectedLowTier": 774,
+              "expectedLowTier": 780,
               "masterBugs": 0
             }
           },
@@ -2147,14 +2147,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.71,
-              "averageTurns": 8.71,
+              "averageMisses": 0.66,
+              "averageTurns": 8.66,
               "decisionMilliseconds": {
-                "p50": 1.7921,
-                "p95": 14.0063
+                "p50": 1.0079,
+                "p95": 9.5341
               },
               "candidateSizes": {
-                "mean": 961.7268,
+                "mean": 967.1778,
                 "p50": 2,
                 "p95": 7605,
                 "max": 7605
@@ -2170,14 +2170,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.94,
-              "averageTurns": 8.9,
+              "averageMisses": 0.96,
+              "averageTurns": 8.92,
               "decisionMilliseconds": {
-                "p50": 1.9127,
-                "p95": 17.1281
+                "p50": 0.9852,
+                "p95": 9.4967
               },
               "candidateSizes": {
-                "mean": 943.5382,
+                "mean": 941.4271,
                 "p50": 2,
                 "p95": 7605,
                 "max": 7605
@@ -2191,16 +2191,16 @@
             },
             "rare": {
               "games": 100,
-              "wins": 10,
-              "winRate": 0.1,
-              "averageMisses": 5.74,
+              "wins": 11,
+              "winRate": 0.11,
+              "averageMisses": 5.7,
               "averageTurns": 11.81,
               "decisionMilliseconds": {
-                "p50": 1.5026,
-                "p95": 13.1997
+                "p50": 0.8861,
+                "p95": 9.4721
               },
               "candidateSizes": {
-                "mean": 709.0186,
+                "mean": 709.1854,
                 "p50": 0,
                 "p95": 7605,
                 "max": 7605
@@ -2208,7 +2208,7 @@
               "outOfVocabularyGames": 100,
               "gamesUsingFallback": 100,
               "zeroCandidateEvents": {
-                "expectedLowTier": 774,
+                "expectedLowTier": 780,
                 "masterBugs": 0
               }
             }
@@ -2219,14 +2219,14 @@
             "games": 300,
             "wins": 208,
             "winRate": 0.6933,
-            "averageMisses": 2.33,
-            "averageTurns": 10.1567,
+            "averageMisses": 2.34,
+            "averageTurns": 10.17,
             "decisionMilliseconds": {
-              "p50": 1.0932,
-              "p95": 9.9644
+              "p50": 0.6354,
+              "p95": 6.9532
             },
             "candidateSizes": {
-              "mean": 549.3164,
+              "mean": 548.607,
               "p50": 1,
               "p95": 5125,
               "max": 5125
@@ -2234,7 +2234,7 @@
             "outOfVocabularyGames": 100,
             "gamesUsingFallback": 100,
             "zeroCandidateEvents": {
-              "expectedLowTier": 872,
+              "expectedLowTier": 868,
               "masterBugs": 0
             }
           },
@@ -2243,14 +2243,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.64,
-              "averageTurns": 8.97,
+              "averageMisses": 0.57,
+              "averageTurns": 8.9,
               "decisionMilliseconds": {
-                "p50": 1.0649,
-                "p95": 9.9144
+                "p50": 0.6569,
+                "p95": 6.9298
               },
               "candidateSizes": {
-                "mean": 629.0368,
+                "mean": 633.9854,
                 "p50": 2,
                 "p95": 5125,
                 "max": 5125
@@ -2266,14 +2266,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.52,
-              "averageTurns": 9.11,
+              "averageMisses": 0.62,
+              "averageTurns": 9.21,
               "decisionMilliseconds": {
-                "p50": 1.1242,
-                "p95": 10.1185
+                "p50": 0.6346,
+                "p95": 6.9464
               },
               "candidateSizes": {
-                "mean": 606.4797,
+                "mean": 599.9142,
                 "p50": 1,
                 "p95": 5125,
                 "max": 5125
@@ -2290,13 +2290,13 @@
               "wins": 8,
               "winRate": 0.08,
               "averageMisses": 5.83,
-              "averageTurns": 12.39,
+              "averageTurns": 12.4,
               "decisionMilliseconds": {
-                "p50": 1.0968,
-                "p95": 10.654
+                "p50": 0.6171,
+                "p95": 7.0008
               },
               "candidateSizes": {
-                "mean": 449.5706,
+                "mean": 449.2194,
                 "p50": 0,
                 "p95": 5125,
                 "max": 5125
@@ -2304,7 +2304,7 @@
               "outOfVocabularyGames": 100,
               "gamesUsingFallback": 100,
               "zeroCandidateEvents": {
-                "expectedLowTier": 872,
+                "expectedLowTier": 868,
                 "masterBugs": 0
               }
             }
@@ -2313,16 +2313,16 @@
         "12": {
           "overall": {
             "games": 300,
-            "wins": 219,
-            "winRate": 0.73,
-            "averageMisses": 2.09,
+            "wins": 220,
+            "winRate": 0.7333,
+            "averageMisses": 2.0933,
             "averageTurns": 10.57,
             "decisionMilliseconds": {
-              "p50": 0.6463,
-              "p95": 8.3429
+              "p50": 0.3766,
+              "p95": 4.6255
             },
             "candidateSizes": {
-              "mean": 326.2255,
+              "mean": 326.2299,
               "p50": 1,
               "p95": 3194,
               "max": 3194
@@ -2330,7 +2330,7 @@
             "outOfVocabularyGames": 100,
             "gamesUsingFallback": 100,
             "zeroCandidateEvents": {
-              "expectedLowTier": 932,
+              "expectedLowTier": 927,
               "masterBugs": 0
             }
           },
@@ -2339,14 +2339,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.26,
-              "averageTurns": 9.2,
+              "averageMisses": 0.23,
+              "averageTurns": 9.17,
               "decisionMilliseconds": {
-                "p50": 0.6657,
-                "p95": 8.4058
+                "p50": 0.3825,
+                "p95": 4.6351
               },
               "candidateSizes": {
-                "mean": 371.762,
+                "mean": 372.9793,
                 "p50": 1,
                 "p95": 3194,
                 "max": 3194
@@ -2362,14 +2362,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.44,
-              "averageTurns": 9.56,
+              "averageMisses": 0.49,
+              "averageTurns": 9.61,
               "decisionMilliseconds": {
-                "p50": 0.5977,
-                "p95": 5.6222
+                "p50": 0.3796,
+                "p95": 4.6139
               },
               "candidateSizes": {
-                "mean": 360.3096,
+                "mean": 358.3538,
                 "p50": 1,
                 "p95": 3194,
                 "max": 3194
@@ -2383,16 +2383,16 @@
             },
             "rare": {
               "games": 100,
-              "wins": 19,
-              "winRate": 0.19,
-              "averageMisses": 5.57,
-              "averageTurns": 12.95,
+              "wins": 20,
+              "winRate": 0.2,
+              "averageMisses": 5.56,
+              "averageTurns": 12.93,
               "decisionMilliseconds": {
-                "p50": 0.7099,
-                "p95": 8.2221
+                "p50": 0.3711,
+                "p95": 4.6289
               },
               "candidateSizes": {
-                "mean": 268.7135,
+                "mean": 269.1995,
                 "p50": 0,
                 "p95": 3194,
                 "max": 3194
@@ -2400,7 +2400,7 @@
               "outOfVocabularyGames": 100,
               "gamesUsingFallback": 100,
               "zeroCandidateEvents": {
-                "expectedLowTier": 932,
+                "expectedLowTier": 927,
                 "masterBugs": 0
               }
             }
@@ -2409,16 +2409,16 @@
         "13": {
           "overall": {
             "games": 300,
-            "wins": 217,
-            "winRate": 0.7233,
-            "averageMisses": 2.0967,
+            "wins": 218,
+            "winRate": 0.7267,
+            "averageMisses": 2.09,
             "averageTurns": 10.9533,
             "decisionMilliseconds": {
-              "p50": 0.3569,
-              "p95": 5.0062
+              "p50": 0.2193,
+              "p95": 2.8221
             },
             "candidateSizes": {
-              "mean": 172.1561,
+              "mean": 172.164,
               "p50": 1,
               "p95": 1770,
               "max": 1770
@@ -2426,7 +2426,7 @@
             "outOfVocabularyGames": 100,
             "gamesUsingFallback": 100,
             "zeroCandidateEvents": {
-              "expectedLowTier": 1048,
+              "expectedLowTier": 1054,
               "masterBugs": 0
             }
           },
@@ -2435,14 +2435,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.25,
-              "averageTurns": 9.61,
+              "averageMisses": 0.21,
+              "averageTurns": 9.57,
               "decisionMilliseconds": {
-                "p50": 0.3558,
-                "p95": 4.9843
+                "p50": 0.2199,
+                "p95": 2.8242
               },
               "candidateSizes": {
-                "mean": 194.6774,
+                "mean": 195.4963,
                 "p50": 1,
                 "p95": 1770,
                 "max": 1770
@@ -2458,14 +2458,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.4,
-              "averageTurns": 9.77,
+              "averageMisses": 0.43,
+              "averageTurns": 9.8,
               "decisionMilliseconds": {
-                "p50": 0.3704,
-                "p95": 5.0845
+                "p50": 0.2313,
+                "p95": 2.8158
               },
               "candidateSizes": {
-                "mean": 194.9652,
+                "mean": 194.3776,
                 "p50": 1,
                 "p95": 1770,
                 "max": 1770
@@ -2479,16 +2479,16 @@
             },
             "rare": {
               "games": 100,
-              "wins": 17,
-              "winRate": 0.17,
-              "averageMisses": 5.64,
-              "averageTurns": 13.48,
+              "wins": 18,
+              "winRate": 0.18,
+              "averageMisses": 5.63,
+              "averageTurns": 13.49,
               "decisionMilliseconds": {
-                "p50": 0.3498,
-                "p95": 2.5982
+                "p50": 0.2126,
+                "p95": 2.8226
               },
               "candidateSizes": {
-                "mean": 139.569,
+                "mean": 139.4744,
                 "p50": 0,
                 "p95": 1770,
                 "max": 1770
@@ -2496,7 +2496,7 @@
               "outOfVocabularyGames": 100,
               "gamesUsingFallback": 100,
               "zeroCandidateEvents": {
-                "expectedLowTier": 1048,
+                "expectedLowTier": 1054,
                 "masterBugs": 0
               }
             }
@@ -2505,16 +2505,16 @@
         "14": {
           "overall": {
             "games": 300,
-            "wins": 223,
-            "winRate": 0.7433,
-            "averageMisses": 1.87,
-            "averageTurns": 11.1633,
+            "wins": 222,
+            "winRate": 0.74,
+            "averageMisses": 1.8833,
+            "averageTurns": 11.17,
             "decisionMilliseconds": {
-              "p50": 0.1847,
-              "p95": 2.3651
+              "p50": 0.099,
+              "p95": 1.3084
             },
             "candidateSizes": {
-              "mean": 73.1418,
+              "mean": 73.1543,
               "p50": 1,
               "p95": 780,
               "max": 780
@@ -2522,7 +2522,7 @@
             "outOfVocabularyGames": 100,
             "gamesUsingFallback": 100,
             "zeroCandidateEvents": {
-              "expectedLowTier": 1099,
+              "expectedLowTier": 1098,
               "masterBugs": 0
             }
           },
@@ -2531,14 +2531,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.15,
-              "averageTurns": 10.05,
+              "averageMisses": 0.13,
+              "averageTurns": 10.03,
               "decisionMilliseconds": {
-                "p50": 0.1982,
-                "p95": 2.358
+                "p50": 0.1015,
+                "p95": 1.3017
               },
               "candidateSizes": {
-                "mean": 81.6179,
+                "mean": 81.8724,
                 "p50": 1,
                 "p95": 780,
                 "max": 780
@@ -2554,14 +2554,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.22,
-              "averageTurns": 10.05,
+              "averageMisses": 0.24,
+              "averageTurns": 10.07,
               "decisionMilliseconds": {
-                "p50": 0.1854,
-                "p95": 2.368
+                "p50": 0.1132,
+                "p95": 1.331
               },
               "candidateSizes": {
-                "mean": 81.7114,
+                "mean": 81.6177,
                 "p50": 1,
                 "p95": 780,
                 "max": 780
@@ -2575,16 +2575,16 @@
             },
             "rare": {
               "games": 100,
-              "wins": 23,
-              "winRate": 0.23,
-              "averageMisses": 5.24,
-              "averageTurns": 13.39,
+              "wins": 22,
+              "winRate": 0.22,
+              "averageMisses": 5.28,
+              "averageTurns": 13.41,
               "decisionMilliseconds": {
-                "p50": 0.1799,
-                "p95": 2.3723
+                "p50": 0.0912,
+                "p95": 1.3018
               },
               "candidateSizes": {
-                "mean": 60.348,
+                "mean": 60.2782,
                 "p50": 0,
                 "p95": 780,
                 "max": 780
@@ -2592,7 +2592,7 @@
               "outOfVocabularyGames": 100,
               "gamesUsingFallback": 100,
               "zeroCandidateEvents": {
-                "expectedLowTier": 1099,
+                "expectedLowTier": 1098,
                 "masterBugs": 0
               }
             }
@@ -2606,11 +2606,11 @@
             "averageMisses": 1.9133,
             "averageTurns": 11.4767,
             "decisionMilliseconds": {
-              "p50": 0.0933,
-              "p95": 1.166
+              "p50": 0.0454,
+              "p95": 0.6381
             },
             "candidateSizes": {
-              "mean": 33.167,
+              "mean": 33.1656,
               "p50": 1,
               "p95": 364,
               "max": 364
@@ -2618,7 +2618,7 @@
             "outOfVocabularyGames": 100,
             "gamesUsingFallback": 100,
             "zeroCandidateEvents": {
-              "expectedLowTier": 1213,
+              "expectedLowTier": 1212,
               "masterBugs": 0
             }
           },
@@ -2627,14 +2627,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.09,
-              "averageTurns": 10.15,
+              "averageMisses": 0.08,
+              "averageTurns": 10.14,
               "decisionMilliseconds": {
-                "p50": 0.0989,
-                "p95": 1.172
+                "p50": 0.0491,
+                "p95": 0.6397
               },
               "candidateSizes": {
-                "mean": 37.7251,
+                "mean": 37.7554,
                 "p50": 1,
                 "p95": 364,
                 "max": 364
@@ -2650,14 +2650,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.07,
-              "averageTurns": 10.11,
+              "averageMisses": 0.08,
+              "averageTurns": 10.12,
               "decisionMilliseconds": {
-                "p50": 0.0925,
-                "p95": 1.164
+                "p50": 0.0482,
+                "p95": 0.6382
               },
               "candidateSizes": {
-                "mean": 37.8971,
+                "mean": 37.8607,
                 "p50": 1,
                 "p95": 364,
                 "max": 364
@@ -2676,11 +2676,11 @@
               "averageMisses": 5.58,
               "averageTurns": 14.17,
               "decisionMilliseconds": {
-                "p50": 0.0905,
-                "p95": 1.1624
+                "p50": 0.0432,
+                "p95": 0.6369
               },
               "candidateSizes": {
-                "mean": 26.5272,
+                "mean": 26.5279,
                 "p50": 0,
                 "p95": 364,
                 "max": 364
@@ -2688,7 +2688,7 @@
               "outOfVocabularyGames": 100,
               "gamesUsingFallback": 100,
               "zeroCandidateEvents": {
-                "expectedLowTier": 1213,
+                "expectedLowTier": 1212,
                 "masterBugs": 0
               }
             }
@@ -2698,17 +2698,17 @@
       "comparisonLengths5to9": {
         "common": {
           "games": 500,
-          "wins": 454,
-          "winRate": 0.908,
-          "averageMisses": 2.624,
-          "averageTurns": 8.53,
+          "wins": 467,
+          "winRate": 0.934,
+          "averageMisses": 2.478,
+          "averageTurns": 8.434,
           "decisionMilliseconds": {
-            "p50": 1.4213,
-            "p95": 9.705
+            "p50": 1.3798,
+            "p95": 10.9633
           },
           "candidateSizes": {
-            "mean": 1378.8321,
-            "p50": 23,
+            "mean": 1398.2929,
+            "p50": 25,
             "p95": 9754,
             "max": 11277
           },
@@ -2721,17 +2721,17 @@
         },
         "medium": {
           "games": 500,
-          "wins": 460,
-          "winRate": 0.92,
-          "averageMisses": 2.512,
-          "averageTurns": 8.346,
+          "wins": 442,
+          "winRate": 0.884,
+          "averageMisses": 2.882,
+          "averageTurns": 8.656,
           "decisionMilliseconds": {
-            "p50": 1.479,
-            "p95": 9.815
+            "p50": 1.3395,
+            "p95": 11.0978
           },
           "candidateSizes": {
-            "mean": 1388.2686,
-            "p50": 16,
+            "mean": 1357.0758,
+            "p50": 14,
             "p95": 9754,
             "max": 11277
           },
@@ -2744,24 +2744,24 @@
         },
         "rare": {
           "games": 500,
-          "wins": 57,
-          "winRate": 0.114,
-          "averageMisses": 5.736,
-          "averageTurns": 9.918,
+          "wins": 46,
+          "winRate": 0.092,
+          "averageMisses": 5.774,
+          "averageTurns": 9.942,
           "decisionMilliseconds": {
-            "p50": 1.3532,
-            "p95": 9.3886
+            "p50": 1.274,
+            "p95": 11.0656
           },
           "candidateSizes": {
-            "mean": 1183.2549,
+            "mean": 1184.8797,
             "p50": 4,
             "p95": 9754,
             "max": 11277
           },
           "outOfVocabularyGames": 500,
-          "gamesUsingFallback": 420,
+          "gamesUsingFallback": 419,
           "zeroCandidateEvents": {
-            "expectedLowTier": 1855,
+            "expectedLowTier": 1886,
             "masterBugs": 0
           }
         }
@@ -2784,16 +2784,16 @@
       },
       "overall": {
         "games": 3600,
-        "wins": 3276,
-        "winRate": 0.91,
-        "averageMisses": 1.79,
-        "averageTurns": 8.9975,
+        "wins": 3239,
+        "winRate": 0.8997,
+        "averageMisses": 1.8425,
+        "averageTurns": 9.0306,
         "decisionMilliseconds": {
-          "p50": 1.8876,
-          "p95": 16.1274
+          "p50": 1.5992,
+          "p95": 12.3762
         },
         "candidateSizes": {
-          "mean": 1512.5381,
+          "mean": 1516.7278,
           "p50": 4,
           "p95": 12522,
           "max": 21426
@@ -2808,16 +2808,16 @@
       "byWordBand": {
         "common": {
           "games": 1200,
-          "wins": 1076,
-          "winRate": 0.8967,
-          "averageMisses": 1.8417,
-          "averageTurns": 9.0575,
+          "wins": 1115,
+          "winRate": 0.9292,
+          "averageMisses": 1.5983,
+          "averageTurns": 8.8733,
           "decisionMilliseconds": {
-            "p50": 1.8895,
-            "p95": 16.7242
+            "p50": 1.5885,
+            "p95": 12.7162
           },
           "candidateSizes": {
-            "mean": 1512.3264,
+            "mean": 1541.7328,
             "p50": 5,
             "p95": 12522,
             "max": 21426
@@ -2831,16 +2831,16 @@
         },
         "medium": {
           "games": 1200,
-          "wins": 1095,
-          "winRate": 0.9125,
-          "averageMisses": 1.7817,
-          "averageTurns": 8.9958,
+          "wins": 1078,
+          "winRate": 0.8983,
+          "averageMisses": 1.87,
+          "averageTurns": 9.0567,
           "decisionMilliseconds": {
-            "p50": 1.9805,
-            "p95": 18.4698
+            "p50": 1.6079,
+            "p95": 12.3267
           },
           "candidateSizes": {
-            "mean": 1502.2028,
+            "mean": 1509.6169,
             "p50": 4,
             "p95": 12522,
             "max": 21426
@@ -2854,16 +2854,16 @@
         },
         "rare": {
           "games": 1200,
-          "wins": 1105,
-          "winRate": 0.9208,
-          "averageMisses": 1.7467,
-          "averageTurns": 8.9392,
+          "wins": 1046,
+          "winRate": 0.8717,
+          "averageMisses": 2.0592,
+          "averageTurns": 9.1617,
           "decisionMilliseconds": {
-            "p50": 1.8044,
-            "p95": 15.5581
+            "p50": 1.5922,
+            "p95": 12.2459
           },
           "candidateSizes": {
-            "mean": 1523.1535,
+            "mean": 1499.5393,
             "p50": 3,
             "p95": 12522,
             "max": 21426
@@ -2880,17 +2880,17 @@
         "4": {
           "overall": {
             "games": 300,
-            "wins": 129,
-            "winRate": 0.43,
-            "averageMisses": 4.9633,
-            "averageTurns": 7.67,
+            "wins": 115,
+            "winRate": 0.3833,
+            "averageMisses": 5.1633,
+            "averageTurns": 7.8,
             "decisionMilliseconds": {
-              "p50": 1.1658,
-              "p95": 4.4656
+              "p50": 0.6451,
+              "p95": 2.4884
             },
             "candidateSizes": {
-              "mean": 947.1256,
-              "p50": 130,
+              "mean": 938.8043,
+              "p50": 122,
               "p95": 4240,
               "max": 4240
             },
@@ -2904,17 +2904,17 @@
           "byWordBand": {
             "common": {
               "games": 100,
-              "wins": 34,
-              "winRate": 0.34,
-              "averageMisses": 5.19,
-              "averageTurns": 7.89,
+              "wins": 50,
+              "winRate": 0.5,
+              "averageMisses": 4.89,
+              "averageTurns": 7.86,
               "decisionMilliseconds": {
-                "p50": 1.1555,
-                "p95": 4.4552
+                "p50": 0.6465,
+                "p95": 2.4786
               },
               "candidateSizes": {
-                "mean": 973.6616,
-                "p50": 136,
+                "mean": 933.4389,
+                "p50": 122,
                 "p95": 4240,
                 "max": 4240
               },
@@ -2927,17 +2927,17 @@
             },
             "medium": {
               "games": 100,
-              "wins": 43,
-              "winRate": 0.43,
-              "averageMisses": 5.06,
-              "averageTurns": 7.69,
+              "wins": 37,
+              "winRate": 0.37,
+              "averageMisses": 5.1,
+              "averageTurns": 7.63,
               "decisionMilliseconds": {
-                "p50": 1.1651,
-                "p95": 4.4515
+                "p50": 0.6846,
+                "p95": 2.5959
               },
               "candidateSizes": {
-                "mean": 935.9116,
-                "p50": 142,
+                "mean": 964.9279,
+                "p50": 135,
                 "p95": 4240,
                 "max": 4240
               },
@@ -2950,17 +2950,17 @@
             },
             "rare": {
               "games": 100,
-              "wins": 52,
-              "winRate": 0.52,
-              "averageMisses": 4.64,
-              "averageTurns": 7.43,
+              "wins": 28,
+              "winRate": 0.28,
+              "averageMisses": 5.5,
+              "averageTurns": 7.91,
               "decisionMilliseconds": {
-                "p50": 1.1895,
-                "p95": 4.5694
+                "p50": 0.6075,
+                "p95": 2.4564
               },
               "candidateSizes": {
-                "mean": 930.5532,
-                "p50": 104,
+                "mean": 918.9368,
+                "p50": 98,
                 "p95": 4240,
                 "max": 4240
               },
@@ -2976,17 +2976,17 @@
         "5": {
           "overall": {
             "games": 300,
-            "wins": 212,
-            "winRate": 0.7067,
-            "averageMisses": 4.1633,
-            "averageTurns": 8.13,
+            "wins": 200,
+            "winRate": 0.6667,
+            "averageMisses": 4.3367,
+            "averageTurns": 8.2367,
             "decisionMilliseconds": {
-              "p50": 2.2951,
-              "p95": 10.9949
+              "p50": 1.1866,
+              "p95": 6.245
             },
             "candidateSizes": {
-              "mean": 1589.0828,
-              "p50": 81,
+              "mean": 1635.4043,
+              "p50": 82,
               "p95": 8522,
               "max": 8522
             },
@@ -3000,17 +3000,17 @@
           "byWordBand": {
             "common": {
               "games": 100,
-              "wins": 66,
-              "winRate": 0.66,
-              "averageMisses": 4.3,
-              "averageTurns": 8.25,
+              "wins": 82,
+              "winRate": 0.82,
+              "averageMisses": 3.82,
+              "averageTurns": 8.1,
               "decisionMilliseconds": {
-                "p50": 2.3359,
-                "p95": 11.1925
+                "p50": 1.1701,
+                "p95": 6.2506
               },
               "candidateSizes": {
-                "mean": 1553.9685,
-                "p50": 82,
+                "mean": 1603.4,
+                "p50": 100,
                 "p95": 8522,
                 "max": 8522
               },
@@ -3023,17 +3023,17 @@
             },
             "medium": {
               "games": 100,
-              "wins": 69,
-              "winRate": 0.69,
-              "averageMisses": 4.25,
-              "averageTurns": 8.23,
+              "wins": 60,
+              "winRate": 0.6,
+              "averageMisses": 4.55,
+              "averageTurns": 8.32,
               "decisionMilliseconds": {
-                "p50": 2.2819,
-                "p95": 10.848
+                "p50": 1.1962,
+                "p95": 6.2246
               },
               "candidateSizes": {
-                "mean": 1560.6428,
-                "p50": 82,
+                "mean": 1680.8438,
+                "p50": 84,
                 "p95": 8522,
                 "max": 8522
               },
@@ -3046,17 +3046,17 @@
             },
             "rare": {
               "games": 100,
-              "wins": 77,
-              "winRate": 0.77,
-              "averageMisses": 3.94,
-              "averageTurns": 7.91,
+              "wins": 58,
+              "winRate": 0.58,
+              "averageMisses": 4.64,
+              "averageTurns": 8.29,
               "decisionMilliseconds": {
-                "p50": 2.2738,
-                "p95": 10.9477
+                "p50": 1.2083,
+                "p95": 6.2563
               },
               "candidateSizes": {
-                "mean": 1655.2971,
-                "p50": 76,
+                "mean": 1621.0712,
+                "p50": 64,
                 "p95": 8522,
                 "max": 8522
               },
@@ -3072,17 +3072,17 @@
         "6": {
           "overall": {
             "games": 300,
-            "wins": 258,
-            "winRate": 0.86,
-            "averageMisses": 3.3833,
-            "averageTurns": 8.3367,
+            "wins": 250,
+            "winRate": 0.8333,
+            "averageMisses": 3.5633,
+            "averageTurns": 8.4433,
             "decisionMilliseconds": {
-              "p50": 3.7783,
-              "p95": 20.1794
+              "p50": 1.9565,
+              "p95": 11.9332
             },
             "candidateSizes": {
-              "mean": 2202.2987,
-              "p50": 44,
+              "mean": 2181.957,
+              "p50": 47,
               "p95": 13955,
               "max": 13955
             },
@@ -3096,17 +3096,17 @@
           "byWordBand": {
             "common": {
               "games": 100,
-              "wins": 83,
-              "winRate": 0.83,
-              "averageMisses": 3.55,
-              "averageTurns": 8.49,
+              "wins": 88,
+              "winRate": 0.88,
+              "averageMisses": 3.16,
+              "averageTurns": 8.19,
               "decisionMilliseconds": {
-                "p50": 3.6724,
-                "p95": 20.2953
+                "p50": 2.0962,
+                "p95": 12.0113
               },
               "candidateSizes": {
-                "mean": 2183.9187,
-                "p50": 58,
+                "mean": 2259.8547,
+                "p50": 71,
                 "p95": 13955,
                 "max": 13955
               },
@@ -3119,16 +3119,16 @@
             },
             "medium": {
               "games": 100,
-              "wins": 91,
-              "winRate": 0.91,
-              "averageMisses": 3.04,
-              "averageTurns": 8.07,
+              "wins": 92,
+              "winRate": 0.92,
+              "averageMisses": 3.32,
+              "averageTurns": 8.37,
               "decisionMilliseconds": {
-                "p50": 3.8295,
-                "p95": 20.1705
+                "p50": 1.9277,
+                "p95": 11.883
               },
               "candidateSizes": {
-                "mean": 2239.9046,
+                "mean": 2172.8292,
                 "p50": 36,
                 "p95": 13955,
                 "max": 13955
@@ -3142,17 +3142,17 @@
             },
             "rare": {
               "games": 100,
-              "wins": 84,
-              "winRate": 0.84,
-              "averageMisses": 3.56,
-              "averageTurns": 8.45,
+              "wins": 70,
+              "winRate": 0.7,
+              "averageMisses": 4.21,
+              "averageTurns": 8.77,
               "decisionMilliseconds": {
-                "p50": 3.7927,
-                "p95": 20.0688
+                "p50": 1.8929,
+                "p95": 11.9264
               },
               "candidateSizes": {
-                "mean": 2184.8509,
-                "p50": 39,
+                "mean": 2117.9225,
+                "p50": 37,
                 "p95": 13955,
                 "max": 13955
               },
@@ -3168,17 +3168,17 @@
         "7": {
           "overall": {
             "games": 300,
-            "wins": 281,
-            "winRate": 0.9367,
-            "averageMisses": 2.8067,
-            "averageTurns": 8.77,
+            "wins": 278,
+            "winRate": 0.9267,
+            "averageMisses": 2.9,
+            "averageTurns": 8.83,
             "decisionMilliseconds": {
-              "p50": 4.5945,
-              "p95": 26.9879
+              "p50": 2.6942,
+              "p95": 18.6077
             },
             "candidateSizes": {
-              "mean": 2760.4303,
-              "p50": 24,
+              "mean": 2776.4054,
+              "p50": 29,
               "p95": 19355,
               "max": 19355
             },
@@ -3192,17 +3192,17 @@
           "byWordBand": {
             "common": {
               "games": 100,
-              "wins": 93,
-              "winRate": 0.93,
-              "averageMisses": 2.93,
-              "averageTurns": 9,
+              "wins": 95,
+              "winRate": 0.95,
+              "averageMisses": 2.62,
+              "averageTurns": 8.71,
               "decisionMilliseconds": {
-                "p50": 5.2111,
-                "p95": 31.4761
+                "p50": 2.8463,
+                "p95": 18.6486
               },
               "candidateSizes": {
-                "mean": 2724.8122,
-                "p50": 29,
+                "mean": 2835.3398,
+                "p50": 45,
                 "p95": 19355,
                 "max": 19355
               },
@@ -3215,17 +3215,17 @@
             },
             "medium": {
               "games": 100,
-              "wins": 94,
-              "winRate": 0.94,
-              "averageMisses": 2.74,
-              "averageTurns": 8.66,
+              "wins": 91,
+              "winRate": 0.91,
+              "averageMisses": 2.88,
+              "averageTurns": 8.73,
               "decisionMilliseconds": {
-                "p50": 4.4053,
-                "p95": 25.2267
+                "p50": 2.6805,
+                "p95": 18.5908
               },
               "candidateSizes": {
-                "mean": 2765.6432,
-                "p50": 23,
+                "mean": 2780.9301,
+                "p50": 27,
                 "p95": 19355,
                 "max": 19355
               },
@@ -3238,17 +3238,17 @@
             },
             "rare": {
               "games": 100,
-              "wins": 94,
-              "winRate": 0.94,
-              "averageMisses": 2.75,
-              "averageTurns": 8.65,
+              "wins": 92,
+              "winRate": 0.92,
+              "averageMisses": 3.2,
+              "averageTurns": 9.05,
               "decisionMilliseconds": {
-                "p50": 3.8402,
-                "p95": 24.2485
+                "p50": 2.6068,
+                "p95": 18.5914
               },
               "candidateSizes": {
-                "mean": 2792.2705,
-                "p50": 21,
+                "mean": 2715.3204,
+                "p50": 20,
                 "p95": 19355,
                 "max": 19355
               },
@@ -3266,14 +3266,14 @@
             "games": 300,
             "wins": 296,
             "winRate": 0.9867,
-            "averageMisses": 2.0867,
-            "averageTurns": 8.8567,
+            "averageMisses": 2.08,
+            "averageTurns": 8.86,
             "decisionMilliseconds": {
-              "p50": 3.1594,
-              "p95": 20.3361
+              "p50": 2.9013,
+              "p95": 22.8176
             },
             "candidateSizes": {
-              "mean": 2884.7798,
+              "mean": 2885.5519,
               "p50": 12,
               "p95": 21426,
               "max": 21426
@@ -3290,15 +3290,15 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 2.1,
-              "averageTurns": 8.92,
+              "averageMisses": 1.72,
+              "averageTurns": 8.54,
               "decisionMilliseconds": {
-                "p50": 3.0334,
-                "p95": 19.9104
+                "p50": 2.9484,
+                "p95": 22.7222
               },
               "candidateSizes": {
-                "mean": 2863.1928,
-                "p50": 14,
+                "mean": 2993.1628,
+                "p50": 19,
                 "p95": 21426,
                 "max": 21426
               },
@@ -3313,15 +3313,15 @@
               "games": 100,
               "wins": 98,
               "winRate": 0.98,
-              "averageMisses": 2.09,
-              "averageTurns": 8.92,
+              "averageMisses": 2.2,
+              "averageTurns": 9.06,
               "decisionMilliseconds": {
-                "p50": 3.5779,
-                "p95": 21.3054
+                "p50": 2.8212,
+                "p95": 22.8176
               },
               "candidateSizes": {
-                "mean": 2861.5751,
-                "p50": 13,
+                "mean": 2819.755,
+                "p50": 12,
                 "p95": 21426,
                 "max": 21426
               },
@@ -3336,15 +3336,15 @@
               "games": 100,
               "wins": 98,
               "winRate": 0.98,
-              "averageMisses": 2.07,
-              "averageTurns": 8.73,
+              "averageMisses": 2.32,
+              "averageTurns": 8.98,
               "decisionMilliseconds": {
-                "p50": 3.0029,
-                "p95": 20.5004
+                "p50": 2.9183,
+                "p95": 22.9612
               },
               "candidateSizes": {
-                "mean": 2930.5464,
-                "p50": 10,
+                "mean": 2849.5969,
+                "p50": 8,
                 "p95": 21426,
                 "max": 21426
               },
@@ -3362,14 +3362,14 @@
             "games": 300,
             "wins": 300,
             "winRate": 1,
-            "averageMisses": 1.31,
-            "averageTurns": 8.68,
+            "averageMisses": 1.33,
+            "averageTurns": 8.7,
             "decisionMilliseconds": {
-              "p50": 2.8724,
-              "p95": 21.2
+              "p50": 2.6939,
+              "p95": 23.7181
             },
             "candidateSizes": {
-              "mean": 2652.3449,
+              "mean": 2646.69,
               "p50": 4,
               "p95": 20443,
               "max": 20443
@@ -3386,14 +3386,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 1.21,
-              "averageTurns": 8.73,
+              "averageMisses": 1.03,
+              "averageTurns": 8.55,
               "decisionMilliseconds": {
-                "p50": 2.8361,
-                "p95": 21.5047
+                "p50": 2.7525,
+                "p95": 23.7289
               },
               "candidateSizes": {
-                "mean": 2646.5624,
+                "mean": 2702.2398,
                 "p50": 6,
                 "p95": 20443,
                 "max": 20443
@@ -3409,14 +3409,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 1.43,
-              "averageTurns": 8.7,
+              "averageMisses": 1.49,
+              "averageTurns": 8.76,
               "decisionMilliseconds": {
-                "p50": 3.1068,
-                "p95": 21.1689
+                "p50": 2.7126,
+                "p95": 23.7675
               },
               "candidateSizes": {
-                "mean": 2613.1299,
+                "mean": 2595.8516,
                 "p50": 4,
                 "p95": 20443,
                 "max": 20443
@@ -3432,14 +3432,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 1.29,
-              "averageTurns": 8.61,
+              "averageMisses": 1.47,
+              "averageTurns": 8.79,
               "decisionMilliseconds": {
-                "p50": 2.716,
-                "p95": 21.1085
+                "p50": 2.6224,
+                "p95": 23.6597
               },
               "candidateSizes": {
-                "mean": 2697.8328,
+                "mean": 2643.322,
                 "p50": 3,
                 "p95": 20443,
                 "max": 20443
@@ -3458,14 +3458,14 @@
             "games": 300,
             "wins": 300,
             "winRate": 1,
-            "averageMisses": 0.89,
-            "averageTurns": 8.8667,
+            "averageMisses": 0.9033,
+            "averageTurns": 8.88,
             "decisionMilliseconds": {
-              "p50": 2.2798,
-              "p95": 19.3122
+              "p50": 2.1799,
+              "p95": 21.4012
             },
             "candidateSizes": {
-              "mean": 2117.4211,
+              "mean": 2114.6873,
               "p50": 2,
               "p95": 17035,
               "max": 17035
@@ -3482,14 +3482,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.89,
-              "averageTurns": 8.89,
+              "averageMisses": 0.63,
+              "averageTurns": 8.63,
               "decisionMilliseconds": {
-                "p50": 2.3608,
-                "p95": 19.0674
+                "p50": 2.2436,
+                "p95": 21.4097
               },
               "candidateSizes": {
-                "mean": 2108.4027,
+                "mean": 2172.1054,
                 "p50": 3,
                 "p95": 17035,
                 "max": 17035
@@ -3505,14 +3505,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.95,
-              "averageTurns": 8.91,
+              "averageMisses": 0.99,
+              "averageTurns": 8.95,
               "decisionMilliseconds": {
-                "p50": 2.336,
-                "p95": 19.1542
+                "p50": 2.1911,
+                "p95": 21.3378
               },
               "candidateSizes": {
-                "mean": 2111.596,
+                "mean": 2101.6291,
                 "p50": 2,
                 "p95": 17035,
                 "max": 17035
@@ -3528,14 +3528,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.83,
-              "averageTurns": 8.8,
+              "averageMisses": 1.09,
+              "averageTurns": 9.06,
               "decisionMilliseconds": {
-                "p50": 2.1704,
-                "p95": 19.5011
+                "p50": 2.1509,
+                "p95": 21.4503
               },
               "candidateSizes": {
-                "mean": 2132.4295,
+                "mean": 2072.894,
                 "p50": 2,
                 "p95": 17035,
                 "max": 17035
@@ -3554,14 +3554,14 @@
             "games": 300,
             "wins": 300,
             "winRate": 1,
-            "averageMisses": 0.72,
-            "averageTurns": 9.2133,
+            "averageMisses": 0.6567,
+            "averageTurns": 9.15,
             "decisionMilliseconds": {
-              "p50": 1.938,
-              "p95": 16.2015
+              "p50": 1.5593,
+              "p95": 16.9948
             },
             "candidateSizes": {
-              "mean": 1479.9598,
+              "mean": 1488.5971,
               "p50": 2,
               "p95": 12522,
               "max": 12522
@@ -3578,14 +3578,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.81,
-              "averageTurns": 9.14,
+              "averageMisses": 0.57,
+              "averageTurns": 8.9,
               "decisionMilliseconds": {
-                "p50": 1.9943,
-                "p95": 16.7475
+                "p50": 1.5885,
+                "p95": 16.99
               },
               "candidateSizes": {
-                "mean": 1507.7976,
+                "mean": 1545.6528,
                 "p50": 2,
                 "p95": 12522,
                 "max": 12522
@@ -3601,14 +3601,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.68,
-              "averageTurns": 9.27,
+              "averageMisses": 0.67,
+              "averageTurns": 9.26,
               "decisionMilliseconds": {
-                "p50": 2.3192,
-                "p95": 24.7739
+                "p50": 1.546,
+                "p95": 16.9937
               },
               "candidateSizes": {
-                "mean": 1455.4682,
+                "mean": 1456.8002,
                 "p50": 2,
                 "p95": 12522,
                 "max": 12522
@@ -3624,14 +3624,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.67,
-              "averageTurns": 9.23,
+              "averageMisses": 0.73,
+              "averageTurns": 9.29,
               "decisionMilliseconds": {
-                "p50": 1.6295,
-                "p95": 15.0154
+                "p50": 1.5538,
+                "p95": 16.9973
               },
               "candidateSizes": {
-                "mean": 1476.9913,
+                "mean": 1465.6308,
                 "p50": 1,
                 "p95": 12522,
                 "max": 12522
@@ -3650,14 +3650,14 @@
             "games": 300,
             "wins": 300,
             "winRate": 1,
-            "averageMisses": 0.44,
-            "averageTurns": 9.4433,
+            "averageMisses": 0.4467,
+            "averageTurns": 9.45,
             "decisionMilliseconds": {
-              "p50": 1.0825,
-              "p95": 10.9574
+              "p50": 1.0311,
+              "p95": 12.1766
             },
             "candidateSizes": {
-              "mean": 960.3717,
+              "mean": 965.5633,
               "p50": 1,
               "p95": 8443,
               "max": 8443
@@ -3674,14 +3674,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.53,
-              "averageTurns": 9.47,
+              "averageMisses": 0.29,
+              "averageTurns": 9.23,
               "decisionMilliseconds": {
-                "p50": 1.0849,
-                "p95": 10.9209
+                "p50": 1.0188,
+                "p95": 12.2168
               },
               "candidateSizes": {
-                "mean": 971.9345,
+                "mean": 978.1907,
                 "p50": 2,
                 "p95": 8443,
                 "max": 8443
@@ -3697,14 +3697,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.36,
-              "averageTurns": 9.48,
+              "averageMisses": 0.44,
+              "averageTurns": 9.56,
               "decisionMilliseconds": {
-                "p50": 1.0449,
-                "p95": 10.9824
+                "p50": 1.0105,
+                "p95": 12.1766
               },
               "candidateSizes": {
-                "mean": 946.289,
+                "mean": 951.8703,
                 "p50": 1,
                 "p95": 8443,
                 "max": 8443
@@ -3720,14 +3720,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.43,
-              "averageTurns": 9.38,
+              "averageMisses": 0.61,
+              "averageTurns": 9.56,
               "decisionMilliseconds": {
-                "p50": 1.1106,
-                "p95": 10.9828
+                "p50": 1.0552,
+                "p95": 12.1472
               },
               "candidateSizes": {
-                "mean": 962.9307,
+                "mean": 967.0649,
                 "p50": 1,
                 "p95": 8443,
                 "max": 8443
@@ -3746,14 +3746,14 @@
             "games": 300,
             "wins": 300,
             "winRate": 1,
-            "averageMisses": 0.3533,
-            "averageTurns": 9.7733,
+            "averageMisses": 0.3567,
+            "averageTurns": 9.7767,
             "decisionMilliseconds": {
-              "p50": 0.6784,
-              "p95": 7.397
+              "p50": 0.6579,
+              "p95": 8.3114
             },
             "candidateSizes": {
-              "mean": 575.3864,
+              "mean": 575.9799,
               "p50": 1,
               "p95": 5270,
               "max": 5270
@@ -3770,14 +3770,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.29,
-              "averageTurns": 9.65,
+              "averageMisses": 0.22,
+              "averageTurns": 9.58,
               "decisionMilliseconds": {
-                "p50": 0.666,
-                "p95": 7.3749
+                "p50": 0.6252,
+                "p95": 8.2964
               },
               "candidateSizes": {
-                "mean": 576.1306,
+                "mean": 580.6482,
                 "p50": 1,
                 "p95": 5270,
                 "max": 5270
@@ -3793,14 +3793,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.44,
-              "averageTurns": 9.81,
+              "averageMisses": 0.43,
+              "averageTurns": 9.8,
               "decisionMilliseconds": {
-                "p50": 0.6939,
-                "p95": 7.4647
+                "p50": 0.6718,
+                "p95": 8.2843
               },
               "candidateSizes": {
-                "mean": 578.8114,
+                "mean": 580.1418,
                 "p50": 1,
                 "p95": 5270,
                 "max": 5270
@@ -3816,14 +3816,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.33,
-              "averageTurns": 9.86,
+              "averageMisses": 0.42,
+              "averageTurns": 9.95,
               "decisionMilliseconds": {
-                "p50": 0.673,
-                "p95": 7.3657
+                "p50": 0.6793,
+                "p95": 8.3844
               },
               "candidateSizes": {
-                "mean": 571.2505,
+                "mean": 567.3859,
                 "p50": 1,
                 "p95": 5270,
                 "max": 5270
@@ -3842,14 +3842,14 @@
             "games": 300,
             "wins": 300,
             "winRate": 1,
-            "averageMisses": 0.21,
-            "averageTurns": 10.0533,
+            "averageMisses": 0.2267,
+            "averageTurns": 10.07,
             "decisionMilliseconds": {
-              "p50": 0.3867,
-              "p95": 4.4729
+              "p50": 0.3592,
+              "p95": 4.9362
             },
             "candidateSizes": {
-              "mean": 310.8757,
+              "mean": 310.567,
               "p50": 1,
               "p95": 2990,
               "max": 2990
@@ -3866,14 +3866,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.17,
-              "averageTurns": 10.07,
+              "averageMisses": 0.15,
+              "averageTurns": 10.05,
               "decisionMilliseconds": {
-                "p50": 0.3694,
-                "p95": 4.3933
+                "p50": 0.3542,
+                "p95": 4.95
               },
               "candidateSizes": {
-                "mean": 310.1162,
+                "mean": 311.0149,
                 "p50": 1,
                 "p95": 2990,
                 "max": 2990
@@ -3892,11 +3892,11 @@
               "averageMisses": 0.25,
               "averageTurns": 10.08,
               "decisionMilliseconds": {
-                "p50": 0.3989,
-                "p95": 4.4936
+                "p50": 0.3733,
+                "p95": 4.9421
               },
               "candidateSizes": {
-                "mean": 310.6022,
+                "mean": 310.7986,
                 "p50": 1,
                 "p95": 2990,
                 "max": 2990
@@ -3912,14 +3912,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.21,
-              "averageTurns": 10.01,
+              "averageMisses": 0.28,
+              "averageTurns": 10.08,
               "decisionMilliseconds": {
-                "p50": 0.3888,
-                "p95": 4.5424
+                "p50": 0.3493,
+                "p95": 4.9188
               },
               "candidateSizes": {
-                "mean": 311.9151,
+                "mean": 309.8889,
                 "p50": 1,
                 "p95": 2990,
                 "max": 2990
@@ -3938,14 +3938,14 @@
             "games": 300,
             "wins": 300,
             "winRate": 1,
-            "averageMisses": 0.1533,
-            "averageTurns": 10.1767,
+            "averageMisses": 0.1467,
+            "averageTurns": 10.17,
             "decisionMilliseconds": {
-              "p50": 0.2266,
-              "p95": 2.7799
+              "p50": 0.202,
+              "p95": 2.9379
             },
             "candidateSizes": {
-              "mean": 172.6142,
+              "mean": 172.7345,
               "p50": 1,
               "p95": 1696,
               "max": 1696
@@ -3962,14 +3962,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.13,
-              "averageTurns": 10.19,
+              "averageMisses": 0.08,
+              "averageTurns": 10.14,
               "decisionMilliseconds": {
-                "p50": 0.2195,
-                "p95": 2.7989
+                "p50": 0.1988,
+                "p95": 2.9353
               },
               "candidateSizes": {
-                "mean": 171.8999,
+                "mean": 172.6795,
                 "p50": 1,
                 "p95": 1696,
                 "max": 1696
@@ -3985,14 +3985,14 @@
               "games": 100,
               "wins": 100,
               "winRate": 1,
-              "averageMisses": 0.09,
-              "averageTurns": 10.13,
+              "averageMisses": 0.12,
+              "averageTurns": 10.16,
               "decisionMilliseconds": {
-                "p50": 0.2266,
-                "p95": 2.7379
+                "p50": 0.1965,
+                "p95": 2.9389
               },
               "candidateSizes": {
-                "mean": 172.6772,
+                "mean": 172.2175,
                 "p50": 1,
                 "p95": 1696,
                 "max": 1696
@@ -4011,11 +4011,11 @@
               "averageMisses": 0.24,
               "averageTurns": 10.21,
               "decisionMilliseconds": {
-                "p50": 0.2342,
-                "p95": 2.8336
+                "p50": 0.2077,
+                "p95": 2.9389
               },
               "candidateSizes": {
-                "mean": 173.2644,
+                "mean": 173.3036,
                 "p50": 1,
                 "p95": 1696,
                 "max": 1696
@@ -4033,17 +4033,17 @@
       "comparisonLengths5to9": {
         "common": {
           "games": 500,
-          "wins": 442,
-          "winRate": 0.884,
-          "averageMisses": 2.818,
-          "averageTurns": 8.678,
+          "wins": 465,
+          "winRate": 0.93,
+          "averageMisses": 2.47,
+          "averageTurns": 8.418,
           "decisionMilliseconds": {
-            "p50": 3.4014,
-            "p95": 20.3798
+            "p50": 2.5254,
+            "p95": 19.2249
           },
           "candidateSizes": {
-            "mean": 2409.0618,
-            "p50": 32,
+            "mean": 2491.2644,
+            "p50": 38,
             "p95": 19355,
             "max": 21426
           },
@@ -4056,17 +4056,17 @@
         },
         "medium": {
           "games": 500,
-          "wins": 452,
-          "winRate": 0.904,
-          "averageMisses": 2.71,
-          "averageTurns": 8.516,
+          "wins": 441,
+          "winRate": 0.882,
+          "averageMisses": 2.888,
+          "averageTurns": 8.648,
           "decisionMilliseconds": {
-            "p50": 3.5321,
-            "p95": 20.6534
+            "p50": 2.456,
+            "p95": 18.9274
           },
           "candidateSizes": {
-            "mean": 2422.0308,
-            "p50": 23,
+            "mean": 2422.1869,
+            "p50": 25,
             "p95": 19355,
             "max": 21426
           },
@@ -4079,17 +4079,17 @@
         },
         "rare": {
           "games": 500,
-          "wins": 453,
-          "winRate": 0.906,
-          "averageMisses": 2.722,
-          "averageTurns": 8.47,
+          "wins": 418,
+          "winRate": 0.836,
+          "averageMisses": 3.168,
+          "averageTurns": 8.776,
           "decisionMilliseconds": {
-            "p50": 3.2308,
-            "p95": 20.2835
+            "p50": 2.4042,
+            "p95": 18.8447
           },
           "candidateSizes": {
-            "mean": 2468.0175,
-            "p50": 22,
+            "mean": 2402.2491,
+            "p50": 19,
             "p95": 19355,
             "max": 21426
           },

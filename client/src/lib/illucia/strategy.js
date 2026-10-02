@@ -85,15 +85,29 @@ export function analyzeDecision(publicState, knowledge, policy = 'count') {
   }
   const guessed = new Set(publicState.guessedLetters);
   if (policy === 'frequency' || policy === 'count') {
+    // count: each candidate adds its commonness weight to every letter it contains.
     const counts = Object.fromEntries([...ALPHABET].map(letter => [letter, 0]));
+    const hits = Object.fromEntries([...ALPHABET].map(letter => [letter, 0]));
+    let candidateWeight = 0;
     if (policy === 'count') {
-      for (const word of candidates) for (const letter of new Set(word)) counts[letter]++;
+      for (const word of candidates) {
+        const weight = knowledge.weights.get(word);
+        candidateWeight += weight;
+        for (const letter of new Set(word)) {
+          counts[letter] += weight;
+          hits[letter]++;
+        }
+      }
     }
     const scores = policy === 'frequency' ? knowledge.frequency : counts;
     const letter = [...ALPHABET].filter(value => !guessed.has(value))
       .reduce((best, value) => best === null || scores[value] > scores[best] ? value : best, null);
-    return { letter, candidateCount: candidates.length,
-      hitCount: policy === 'count' ? counts[letter] : candidates.filter(word => word.includes(letter)).length };
+    if (policy === 'frequency') {
+      return { letter, candidateCount: candidates.length, hitCount: candidates.filter(word => word.includes(letter)).length };
+    }
+    // candidateCount and hitCount stay plain word counts; the weighted totals explain the choice.
+    return { letter, candidateCount: candidates.length, hitCount: hits[letter],
+      weightedHits: counts[letter], candidateWeight };
   }
   let best = null;
   for (const letter of ALPHABET) {
@@ -112,7 +126,7 @@ export function analyzeDecision(publicState, knowledge, policy = 'count') {
   return { letter: best.letter, candidateCount: candidates.length, hitCount: best.hitCount };
 }
 
-// Production policy remains candidate hit-counting. Alternatives are benchmark-only.
+// Production policy: candidate hit-counting weighted by commonness. Alternatives are benchmark-only.
 export function chooseLetter(publicState, knowledge) {
   return analyzeDecision(publicState, knowledge).letter;
 }

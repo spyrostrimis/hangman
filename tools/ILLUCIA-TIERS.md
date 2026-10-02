@@ -7,8 +7,11 @@ node tools/benchmark-illucia-tiers.js
 Or run `npm run benchmark:illucia-tiers` from `tools/`. Node 24; no network.
 The committed report is `tools/benchmarks/illucia-i3b.json`.
 
-All three tiers use candidate hit-counting, identical game rules and deterministic
+All three tiers use candidate hit-counting weighted by commonness (v2 A1: size
+≤35 → 10, 40–50 → 3, 55–70 → 1), identical game rules and deterministic
 alphabetical tie-breaking. Apprentice knows size ≤35, Scholar ≤50, Master ≤70.
+Apprentice knows only size-35 words, so for her the weighting changes nothing.
+The fallback below stays unweighted.
 The full size ≤70 list still determines whether a player's word is accepted.
 
 If feedback rules out every candidate at a lower tier, its next guess comes from
@@ -70,28 +73,35 @@ and ceilings are now exported for the future I4 setup screen. Keep candidate
 hit-counting for all three; there are no deliberate mistakes.
 
 For the plan's 5–9-letter comparison, each cell uses the same 500 words in that
-source-size band (100 per length). Values are **Illucia's** win rate:
+source-size band (100 per length). Values are **Illucia's** win rate, with
+commonness weighting (v2 A1); the unweighted figures are in brackets:
 
 | Player's word | Apprentice ≤35 | Scholar ≤50 | Master ≤70 |
 | --- | --- | --- | --- |
-| Common (=35) | 93.4% | 90.8% | 88.4% |
-| Less common (40–50) | 9.4% | 92.0% | 90.4% |
-| Rare (55–70) | 9.0% | 11.4% | 90.6% |
+| Common (=35) | 93.4% | 93.4% (90.8%) | 93.0% (88.4%) |
+| Less common (40–50) | 9.4% | 88.4% (92.0%) | 88.2% (90.4%) |
+| Rare (55–70) | 9.0% | 9.2% (11.4%) | 83.6% (90.6%) |
+
+Weighting removes the inversion on common words and costs the higher tiers some
+strength on the rarer words they know.
 
 Across the full balanced 4–15-letter sample:
 
 | Tier | Wins / 3,600 | Win rate | Games using fallback | Zero-candidate decisions |
 | --- | --- | --- | --- | --- |
 | Apprentice | 1,460 | 40.56% | 2,153 | 16,565 expected |
-| Scholar | 2,365 | 65.69% | 1,056 | 7,866 expected |
-| Master | 3,276 | 91.00% | 0 | 0 |
+| Scholar | 2,341 | 65.03% | 1,050 | 7,888 expected |
+| Master | 3,239 | 89.97% | 0 | 0 |
+
+Weighted (v2 A1). Unweighted, Scholar solved 2,365 (65.69%) and Master 3,276 (91.00%);
+Apprentice is unchanged.
 
 Regenerated after the lemma-form profanity filter changed the vocabulary
 (see [ILLUCIA-WORDS.md](ILLUCIA-WORDS.md)); the seeded samples changed with it.
 Regenerated again on 2026-10-02 after 3-letter words were removed (v2 A1). Each
 stratum's seed depends only on seed, length and band, so the samples for lengths
 4–15 and every length's results are unchanged; only the 300 three-letter words per
-tier are gone. The 5–9-letter table above is identical.
+tier are gone. The unweighted 5–9-letter figures were identical.
 
 There were no in-tier zero-candidate failures. For the lower tiers, all fallback
 events were on words outside their vocabulary. The tier labels describe breadth

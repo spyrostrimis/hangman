@@ -3,7 +3,7 @@ import test from 'node:test';
 import { createRound, applyGuess, getRoundStatus } from './hangman-core.js';
 import { toPublicState } from './illucia/public-state.js';
 import { filterCandidates } from './illucia/candidates.js';
-import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, parseLexicon, createKnowledge, isAcceptedWord, isWordShape } from './illucia/lexicon.js';
+import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, commonnessWeight, parseLexicon, createKnowledge, isAcceptedWord, isWordShape } from './illucia/lexicon.js';
 import { chooseLetter, analyzeDecision, partitionWords, POLICIES } from './illucia/strategy.js';
 
 const roundAfter = (answer, guesses = '') => [...guesses].reduce(applyGuess, createRound(answer));
@@ -73,7 +73,8 @@ test('count uses word presence, not letter occurrences, and alphabetic ties', ()
   const knowledge = knowledgeOf(['aaa', 'bcd', 'bce']);
   const state = toPublicState(createRound('aaa'));
   assert.equal(chooseLetter(state, knowledge), 'b');
-  assert.deepEqual(analyzeDecision(state, knowledge), { letter: 'b', candidateCount: 3, hitCount: 2 });
+  assert.deepEqual(analyzeDecision(state, knowledge),
+    { letter: 'b', candidateCount: 3, hitCount: 2, weightedHits: 20, candidateWeight: 30 });
   assert.equal(chooseLetter(toPublicState(roundAfter('bcd', 'b')), knowledge), 'c');
 });
 
@@ -184,4 +185,97 @@ test('all policies use shared adjudication, never repeat, and preserve the answe
   }
   assert.ok(solved > 0);
   assert.ok(failed > 0);
+});
+
+// Characterization for v2 A1 weighting (written against the unweighted solver).
+// Reference: unweighted hit-counting over surviving candidates, alphabetical ties.
+function referenceCountLetter(state, words) {
+  const guessed = new Set(state.guessedLetters);
+  const candidates = filterCandidates(state, words);
+  let best = null;
+  let bestCount = -1;
+  for (const letter of 'abcdefghijklmnopqrstuvwxyz') {
+    if (guessed.has(letter)) continue;
+    const count = candidates.filter(word => word.includes(letter)).length;
+    if (count > bestCount) { best = letter; bestCount = count; }
+  }
+  return { letter: best, candidates: candidates.length, hits: bestCount };
+}
+
+const UNIFORM_WORDS = ['bath', 'beam', 'bean', 'bear', 'beat', 'bite', 'boat', 'bolt', 'cart', 'case',
+  'cash', 'cast', 'coat', 'code', 'cold', 'cone', 'dare', 'dart', 'date', 'dean', 'dome', 'gate',
+  'hate', 'heat', 'lane', 'late', 'mate', 'meat', 'neat', 'note', 'rate', 'seat', 'tame', 'tone'];
+
+test('one commonness level plays exactly like unweighted hit-counting (Apprentice is unchanged)', () => {
+  const knowledge = createKnowledge(entriesOf(UNIFORM_WORDS.map(word => `${word} 35`).join('\n')), 35);
+  let decisions = 0;
+  for (const answer of UNIFORM_WORDS) {
+    let round = createRound(answer);
+    while (getRoundStatus(round) === 'playing') {
+      const state = toPublicState(round);
+      const expected = referenceCountLetter(state, knowledge.words);
+      const decision = analyzeDecision(state, knowledge);
+      assert.equal(decision.letter, expected.letter);
+      assert.equal(decision.candidateCount, expected.candidates);
+      assert.equal(decision.hitCount, expected.hits);
+      round = applyGuess(round, decision.letter);
+      decisions++;
+    }
+  }
+  assert.ok(decisions > UNIFORM_WORDS.length * 3);
+});
+
+test('candidate and hit counts stay plain word counts at every tier', () => {
+  const entries = entriesOf('aaxx 35\nbbxx 50\nbcxx 50\nbdxx 70\nbexx 70');
+  const state = toPublicState(roundAfter('aaxx', 'x'));
+  for (const maxSize of [35, 50, 70]) {
+    const knowledge = createKnowledge(entries, maxSize);
+    const decision = analyzeDecision(state, knowledge);
+    const candidates = filterCandidates(state, knowledge.words);
+    assert.equal(decision.candidateCount, candidates.length);
+    assert.equal(decision.hitCount, candidates.filter(word => word.includes(decision.letter)).length);
+  }
+});
+
+test('the zero-candidate fallback counts words, not commonness weights', () => {
+  // Scholar knows one common A word and two size-50 B words; none fits X_X_.
+  const entries = entriesOf('aaaa 35\nbbbb 50\nbbbc 50\nxyxy 70');
+  const scholar = createKnowledge(entries, 50);
+  const decision = analyzeDecision(toPublicState(roundAfter('xyxy', 'x')), scholar);
+  assert.equal(decision.fallback, true);
+  assert.equal(decision.letter, 'b'); // B is in 2 words, A in 1; weighting A's word would choose A.
+  // Positive control on the same knowledge: before any guess there are candidates, so no fallback.
+  assert.equal(analyzeDecision(toPublicState(createRound('bbbb')), scholar).fallback, undefined);
+});
+
+test('commonness weights are the integers 10/3/1 (v2 A1)', () => {
+  assert.deepEqual([35, 40, 50, 55, 60, 65, 70].map(commonnessWeight), [10, 3, 3, 1, 1, 1, 1]);
+  const knowledge = createKnowledge(entriesOf('aaaa 35\nbbbb 40\ncccc 50\ndddd 60\neeee 70'), 70);
+  assert.deepEqual([...knowledge.weights], [['aaaa', 10], ['bbbb', 3], ['cccc', 3], ['dddd', 1], ['eeee', 1]]);
+  // A tier weighs only the words it knows.
+  assert.deepEqual([...createKnowledge(knowledge.words.map(word => ({ word, size: 70 })), 35).weights], []);
+});
+
+test('weighted candidates: one common word outweighs a few rare ones', () => {
+  // Pattern _ _ x x: A is in one common word; B is in rarer words.
+  const state = toPublicState(roundAfter('aaxx', 'x'));
+  const master = createKnowledge(entriesOf('aaxx 35\nbbxx 70\nbcxx 70\nbdxx 70\nbexx 70\nbfxx 70\nbgxx 70\nbhxx 70\nbixx 70\nbjxx 70'), 70);
+  // 9 rare B words weigh 9; the one common A word weighs 10.
+  assert.deepEqual(analyzeDecision(state, master),
+    { letter: 'a', candidateCount: 10, hitCount: 1, weightedHits: 10, candidateWeight: 19 });
+  // Positive control: with every word at one level, plain counting picks B (9 words to 1).
+  const flat = createKnowledge(entriesOf('aaxx 35\nbbxx 35\nbcxx 35\nbdxx 35\nbexx 35\nbfxx 35\nbgxx 35\nbhxx 35\nbixx 35\nbjxx 35'), 35);
+  assert.equal(analyzeDecision(state, flat).letter, 'b');
+  // Scholar's middle weight: 3 size-50 words (9) lose to one common word (10); 4 (12) win.
+  const scholarState = toPublicState(roundAfter('aaxx', 'x'));
+  assert.equal(analyzeDecision(scholarState, createKnowledge(entriesOf('aaxx 35\nbbxx 50\nbcxx 50\nbdxx 50'), 50)).letter, 'a');
+  assert.equal(analyzeDecision(scholarState, createKnowledge(entriesOf('aaxx 35\nbbxx 50\nbcxx 50\nbdxx 50\nbexx 50'), 50)).letter, 'b');
+});
+
+test('an injected weight function changes only the ranking (benchmark sweeps)', () => {
+  const entries = entriesOf('aaxx 35\nbbxx 70\nbcxx 70');
+  const state = toPublicState(roundAfter('aaxx', 'x'));
+  assert.equal(analyzeDecision(state, createKnowledge(entries, 70)).letter, 'a');
+  assert.equal(analyzeDecision(state, createKnowledge(entries, 70, () => 1)).letter, 'b');
+  assert.throws(() => createKnowledge(entries, 70, () => 0.5), /positive integer/);
 });
