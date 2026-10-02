@@ -152,7 +152,8 @@ async function ask({ request, model, mode, state, blocked, clock }) {
 }
 
 export async function runQuestions({ states, models, modes, request, blocked, checkpoint = async () => {}, clock = () => performance.now(), report }) {
-  const timeouts = Object.fromEntries(models.map(model => [model, 0]));
+  // Per model and mode: a fast sort between two slow invents must not reset the count.
+  const timeouts = {};
   report.requests ??= [];
   try {
     // State by state, both modes, so a budget stop leaves invent and sort for the same prefix.
@@ -160,12 +161,13 @@ export async function runQuestions({ states, models, modes, request, blocked, ch
       for (const mode of modes) {
         if (mode === 'sort' && !state.control) continue;
         for (const model of models) {
-          if (timeouts[model] >= TIMEOUTS_BEFORE_SKIP) {
+          const key = `${model} ${mode}`;
+          if ((timeouts[key] ?? 0) >= TIMEOUTS_BEFORE_SKIP) {
             report.requests.push({ state: state.id, model, mode, outcome: 'skipped-after-timeouts' });
             continue;
           }
           const record = await ask({ request, model, mode, state, blocked, clock });
-          timeouts[model] = record.outcome === 'timeout' ? timeouts[model] + 1 : 0;
+          timeouts[key] = record.outcome === 'timeout' ? (timeouts[key] ?? 0) + 1 : 0;
           report.requests.push(record);
           await checkpoint(report);
           console.error(`${mode} ${state.id} ${model}: ${record.outcome}`);

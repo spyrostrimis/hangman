@@ -89,6 +89,19 @@ test('timeouts fail the state; three in a row skip that model; other models carr
   assert.equal(report.status, 'complete');
 });
 
+test('a fast sort between slow invents does not reset the invent timeout count', async () => {
+  const states = Array.from({ length: 5 }, (_, i) => ({ ...state, id: `t${i}` }));
+  const request = async (model, input) => {
+    if (input.messages[0].content.startsWith('You help')) throw new BenchmarkStop('timeout');
+    return okReply(state);
+  };
+  const report = {};
+  await runQuestions({ states, models: [qwen], modes: ['invent', 'sort'], request, blocked: [], report, clock: () => 0 });
+  const outcomes = mode => report.requests.filter(r => r.mode === mode).map(r => r.outcome);
+  assert.deepEqual(outcomes('invent'), ['timeout', 'timeout', 'timeout', 'skipped-after-timeouts', 'skipped-after-timeouts']);
+  assert.deepEqual(outcomes('sort'), Array(5).fill('accepted'));
+});
+
 test('any other stop ends the run with partial evidence checkpointed', async () => {
   let calls = 0;
   const request = async () => { if (++calls === 2) throw new BenchmarkStop('local-budget'); return okReply(state); };
