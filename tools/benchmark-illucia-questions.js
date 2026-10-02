@@ -46,6 +46,8 @@ export const MODEL_OPTIONS = Object.freeze({
   // Second round: the lowest documented effort; Llama 3.3 does not reason; R1 has no control.
   '@cf/openai/gpt-oss-120b': Object.freeze({ reasoning_effort: 'low' }),
   '@cf/qwen/qwen3.8-27b': Object.freeze({ reasoning_effort: 'low' }),
+  // Nemotron documents its switch in chat_template_kwargs (low: enable_thinking + low_effort).
+  '@cf/nvidia/nemotron-3-120b-a12b': REASONING_OFF,
 });
 // Which word bands each tier's states rotate through (a tier only knows words up to its size).
 const TIER_BANDS = { apprentice: ['common'], scholar: ['common', 'medium'], master: ['common', 'medium', 'rare'] };

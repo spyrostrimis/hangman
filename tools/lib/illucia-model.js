@@ -19,6 +19,7 @@ export const QUESTION_MODELS = Object.freeze({
   '@cf/openai/gpt-oss-120b': Object.freeze({ input: 31818, output: 68182 }),
   '@cf/qwen/qwen3.8-27b': Object.freeze({ input: 40909, output: 290909 }),
   '@cf/deepseek-ai/deepseek-r1-distill-qwen-32b': Object.freeze({ input: 45170, output: 443756 }),
+  '@cf/nvidia/nemotron-3-120b-a12b': Object.freeze({ input: 45455, output: 136364 }),
 });
 const RATES = Object.freeze({ ...MODELS, ...QUESTION_MODELS });
 export const PROMPT_VERSION = 'i7a-1';

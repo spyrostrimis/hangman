@@ -188,7 +188,7 @@ test('end-to-end stop checkpoints partial evidence and a matched baseline, never
 test('D1 question models are priced and reachable, but the I7a runner still allows only its own two', async () => {
   const qwen = '@cf/qwen/qwen3-30b-a3b-fp8';
   assert.deepEqual(Object.keys(MODELS), ['@cf/meta/llama-3.2-3b-instruct', '@cf/meta/llama-3.1-8b-instruct-fp8-fast']);
-  assert.equal(Object.keys(QUESTION_MODELS).length, 9);
+  assert.equal(Object.keys(QUESTION_MODELS).length, 10);
   assert.ok(Math.abs(neuronEstimate('@cf/zai-org/glm-4.7-flash', { prompt_tokens: 1000, completion_tokens: 1000 }) - (5500 + 36400) / 1000) < 1e-9);
   assert.throws(() => neuronEstimate('@cf/meta/llama-4-scout-17b-16e-instruct', { prompt_tokens: 1, completion_tokens: 1 }), /allowlist/);
   await assert.rejects(benchmarkModels({ count: 1, models: [qwen], request: async () => assert.fail() }), /Invalid models/);
