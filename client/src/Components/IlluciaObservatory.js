@@ -224,7 +224,7 @@ function Reasoning({ round, mind, tier, playing }) {
   if (mind.fallback) {
     return <p className="obs-reasoning">None of her {tier.label} words fit this pattern. She falls back on habit: <b>{letter}</b> appears in {share}% of her {round.answer.length}-letter words, so <b>{letter}</b> is next.</p>;
   }
-  return <p className="obs-reasoning"><b>{letter}</b> appears in {share}% of the {mind.total.toLocaleString('en-US')} words she still has in mind, more than any other unused letter. So <b>{letter}</b> is next.</p>;
+  return <p className="obs-reasoning"><b>{letter}</b> appears in {share}% of the {mind.total.toLocaleString('en-US')} words she still has in mind. Weighing common words above rare ones, no unused letter scores higher than <b>{letter}</b>. So <b>{letter}</b> is next.</p>;
 }
 
 function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch }) {

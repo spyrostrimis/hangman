@@ -132,3 +132,13 @@ it('shows a recoverable error when the solver fails instead of inventing an outc
   await tick();
   expect(tape(view)).toEqual(['e']);
 });
+
+it('explains a weighted choice without claiming her letter is in the most words', async () => {
+  // A is in one common word; B is in two rare ones. Weighting picks A, which is in fewer words.
+  fetch.mockResolvedValue({ ok: true, text: async () => 'aaaa 35\nbbbb 70\nbbbc 70\n' });
+  const view = mount(); await start('aaaa', 'Master');
+  expect(nextGuess(view)).toBe('a');
+  expect(view.container.querySelector('.obs-reasoning').textContent).toBe(
+    'A appears in 33% of the 3 words she still has in mind. Weighing common words above rare ones, ' +
+    'no unused letter scores higher than A. So A is next.');
+});
