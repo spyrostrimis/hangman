@@ -47,3 +47,12 @@ In this original production release, scores are cumulative and client-authoritat
 - Five additional D1 tests cover both clocks and boundary controls, tombstone expiry, bounded oldest-first backlog draining, actual query plans and sanitized failure propagation. Five mutations (wrong clock, wrong tombstone cutoff, exceeded bound, missing index and swallowed failure) each failed, then were restored.
 - No production migration or deployment is implied by this local record.
 - Restored verification: 24 Worker/D1 tests pass; TypeScript, Worker dry-run and frontend production builds pass. Desktop (1280 px) and 390 px browser checks confirm the signed-out account gate still renders correctly.
+
+## Privacy: production state (recorded 2026-10-02)
+
+The two local records above were deployed on 2026-10-01 without a release entry. This entry records what read-only checks on 2026-10-02 found; it adds no new verification of the features themselves.
+
+- Remote D1 `d1_migrations` lists `0003_deleted_accounts.sql` and `0005_retention_indexes.sql` as applied at 2026-10-01 18:07:44 UTC, and `wrangler d1 migrations list DB --remote` reports nothing pending, so all of 0001–0005 are applied.
+- `wrangler deployments list` shows Worker version `d2999968-db0e-4516-b0e8-ba27bc8d3765` deployed at 18:07:57 UTC and serving 100%. It followed `46a25777` (the five-second floor).
+- An unauthenticated `GET /user/delete-account` on the production domain returns 401, not 404, so the deployed Worker has the deletion route.
+- Not recorded: which commit was deployed, a production disposable-account deletion check, a successful scheduled retention run, or deployed CPU for these routes.
