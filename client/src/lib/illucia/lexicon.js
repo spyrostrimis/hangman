@@ -1,3 +1,5 @@
+import { assertBrain } from './brain.js';
+
 export const ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
 export const MIN_WORD_LENGTH = 4;
 export const MAX_WORD_LENGTH = 15;
@@ -44,20 +46,30 @@ export function commonnessWeight(size) {
   return size <= 35 ? 10 : size <= 50 ? 3 : 1;
 }
 
-export function createKnowledge(entries, maxSize = 70, weightOf = commonnessWeight) {
+// Words that beat her (v2 A3) join her knowledge at every tier and weigh as much as the
+// commonest words: she remembers them.
+export const LEARNED_WEIGHT = 10;
+
+// `brain` is her validated memory of this player (toBrain), or null for no memory.
+export function createKnowledge(entries, maxSize = 70, weightOf = commonnessWeight, brain = null) {
   if (!VOCABULARY_TIERS.some(tier => tier.maxSize === maxSize)) throw new RangeError('Unknown vocabulary size.');
   const length = entries[0]?.word.length;
   if (!length || entries.some(entry => entry.word.length !== length)) {
     throw new Error('Knowledge requires one nonempty length lexicon.');
   }
-  const known = entries.filter(entry => entry.size <= maxSize);
+  if (brain !== null) assertBrain(brain);
+  const learned = new Set(brain?.learned ?? []);
+  for (const word of learned) {
+    if (!entries.some(entry => entry.word === word)) throw new RangeError('Learned words must be accepted words of this length.');
+  }
+  const known = entries.filter(entry => entry.size <= maxSize || learned.has(entry.word));
   const words = Object.freeze(known.map(entry => entry.word));
-  const weights = new Map(known.map(entry => [entry.word, weightOf(entry.size)]));
+  const weights = new Map(known.map(entry => [entry.word, learned.has(entry.word) ? LEARNED_WEIGHT : weightOf(entry.size)]));
   if ([...weights.values()].some(weight => !Number.isInteger(weight) || weight < 1)) {
     throw new RangeError('Commonness weights must be positive integers.');
   }
   // The zero-candidate fallback stays unweighted: it counts words, not weights.
   const frequency = Object.fromEntries([...ALPHABET].map(letter => [letter, 0]));
   for (const word of words) for (const letter of new Set(word)) frequency[letter]++;
-  return Object.freeze({ length, maxSize, words, weights, frequency: Object.freeze(frequency) });
+  return Object.freeze({ length, maxSize, words, weights, learned, brain, frequency: Object.freeze(frequency) });
 }

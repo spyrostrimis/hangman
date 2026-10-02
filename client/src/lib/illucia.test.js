@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createRound, applyGuess, getRoundStatus } from './hangman-core.js';
 import { toPublicState } from './illucia/public-state.js';
+import { toBrain } from './illucia/brain.js';
 import { filterCandidates } from './illucia/candidates.js';
 import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, commonnessWeight, parseLexicon, createKnowledge, isAcceptedWord, isWordShape } from './illucia/lexicon.js';
 import { chooseLetter, analyzeDecision, partitionWords, POLICIES } from './illucia/strategy.js';
@@ -559,4 +560,71 @@ test('information value (benchmark-only) reweights the shortlist toward letters 
   assert.deepEqual(picks(careful, sharesKnowledge(), { ...tierTemperament('apprentice'), information: 100 }, 100), { b: 100 });
   // No tier ships with it.
   assert.ok(VOCABULARY_TIERS.every(tier => !tier.temperament.information));
+});
+
+// v2 A3: her memory of this player (C2's memory.brain).
+const zeroLetters = () => Object.fromEntries([...'abcdefghijklmnopqrstuvwxyz'].map(letter => [letter, 0]));
+const rawBrain = (overrides = {}) => ({ personalitySeed: 7, games: 0, letters: zeroLetters(), learned: [], ...overrides });
+
+test('only personalitySeed, games, letters and learned may reach her guessing', () => {
+  const brain = toBrain(rawBrain({ games: 3, letters: { ...zeroLetters(), e: 3, s: 2 }, learned: ['wxyz', 'jazz'] }), 4);
+  assert.deepEqual(brain.learned, ['jazz', 'wxyz']); // Positive control: C2's shape is accepted.
+  assert.ok(Object.isFrozen(brain) && Object.isFrozen(brain.letters) && Object.isFrozen(brain.learned));
+  // memory.voice knows the secret word: neither it nor any of its fields may come through.
+  for (const extra of [{ voice: {} }, { plays: 1 }, { beatenBefore: true }, { everyone: 9 }, { word: 'jazz' }]) {
+    assert.throws(() => toBrain(rawBrain(extra), 4), /only personalitySeed, games, letters and learned/);
+  }
+  const { learned, ...missing } = rawBrain();
+  assert.throws(() => toBrain(missing, 4), /only/);
+  assert.throws(() => toBrain(rawBrain({ personalitySeed: -1 }), 4), /personalitySeed/);
+  assert.throws(() => toBrain(rawBrain({ games: 1.5 }), 4), /games/);
+  assert.throws(() => toBrain(rawBrain({ games: 1, letters: { ...zeroLetters(), e: 2 } }), 4), /letters/);
+  const { z, ...noZ } = zeroLetters();
+  assert.throws(() => toBrain(rawBrain({ letters: noZ }), 4), /letters/);
+  assert.throws(() => toBrain(rawBrain({ learned: ['cat'] }), 4), /learned/);
+  assert.throws(() => toBrain(rawBrain({ learned: ['jazz', 'jazz'] }), 4), /learned/);
+  assert.throws(() => toBrain(null, 4), /object/);
+});
+
+test('her knowledge accepts only a validated memory', () => {
+  const entries = entriesOf('abcd 35\nwxyz 70');
+  assert.throws(() => createKnowledge(entries, 35, undefined, rawBrain({ learned: ['wxyz'] })), /toBrain/);
+  assert.doesNotThrow(() => createKnowledge(entries, 35, undefined, toBrain(rawBrain({ learned: ['wxyz'] }), 4)));
+});
+
+test('words that beat her join her knowledge at every tier, weighing as much as common words', () => {
+  const entries = entriesOf('abcd 35\nwxyz 70');
+  const brain = toBrain(rawBrain({ learned: ['wxyz'] }), 4);
+  const apprentice = createKnowledge(entries, 35, undefined, brain);
+  assert.deepEqual(apprentice.words, ['abcd', 'wxyz']);
+  assert.equal(apprentice.weights.get('wxyz'), 10);
+  assert.equal(apprentice.frequency.w, 1); // Her own words for the fallback include it too.
+  const master = createKnowledge(entries, 70, undefined, brain);
+  assert.equal(master.weights.get('wxyz'), 10);
+  // Positive control: without the memory, Apprentice does not know it and Master weighs it 1.
+  assert.deepEqual(createKnowledge(entries, 35).words, ['abcd']);
+  assert.equal(createKnowledge(entries, 70).weights.get('wxyz'), 1);
+  // A learned word must be one of the accepted words of this length.
+  assert.throws(() => createKnowledge(entries, 35, undefined, toBrain(rawBrain({ learned: ['qqqq'] }), 4)), /accepted/);
+});
+
+test('with a learned word she plays the word that beat her instead of falling back', () => {
+  const entries = entriesOf('abcd 35\nabef 35\nabgh 35\nwxyz 70');
+  const brain = toBrain(rawBrain({ learned: ['wxyz'] }), 4);
+  const learnedKnowledge = createKnowledge(entries, 35, undefined, brain);
+  const plainKnowledge = createKnowledge(entries, 35);
+  let learnedWins = 0;
+  for (let seed = 0; seed < 50; seed++) {
+    let round = createRound('wxyz');
+    while (getRoundStatus(round) === 'playing') {
+      round = applyGuess(round, analyzeDecision(toPublicState(round), learnedKnowledge, { seed }).letter);
+    }
+    if (getRoundStatus(round) === 'solved') learnedWins++;
+  }
+  assert.equal(learnedWins, 50);
+  const afterMiss = toPublicState(roundAfter('wxyz', 'a'));
+  const decision = analyzeDecision(afterMiss, learnedKnowledge, { seed: 1 });
+  assert.equal(decision.learnedCandidates, 1);
+  // Positive control: without the memory the same board sends Apprentice to her fallback.
+  assert.equal(analyzeDecision(afterMiss, plainKnowledge, { seed: 1 }).fallback, true);
 });

@@ -121,6 +121,8 @@ function temperamentDecision(publicState, knowledge, candidates, guessed, temper
   return {
     letter, mode: careful ? 'careful' : 'exploring',
     candidateCount: candidates.length, hitCount: hits[letter], weightedHits: counts[letter], candidateWeight,
+    // Words that beat this player before and are still possible (v2 A3).
+    learnedCandidates: candidates.filter(word => knowledge.learned.has(word)).length,
     share: shareOf(letter),
     best, choseBest: score(letter) === top,
     tiedWith: eligible.filter(value => value !== letter && score(value) === score(letter)),
