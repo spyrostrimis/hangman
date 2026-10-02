@@ -361,7 +361,8 @@ async function main() {
     const ids = value('--state-ids')?.split(',');
     if (ids && ids.some(id => !statesFile.states.some(s => s.id === id))) throw new Error('Unknown state id.');
     const states = phase === 'probe' ? [PROBE_STATE] : statesFile.states.filter(s => !ids || ids.includes(s.id));
-    const modes = phase === 'probe' ? ['sort'] : ['invent', 'sort'];
+    const modes = phase === 'probe' ? ['sort'] : value('--modes')?.split(',') ?? ['invent', 'sort'];
+    if (!modes.length || modes.some(mode => !['invent', 'sort'].includes(mode)) || new Set(modes).size !== modes.length) throw new Error('--modes takes invent and/or sort.');
     const report = {
       schemaVersion: 1, phase, startedAt: new Date().toISOString(), status: 'running',
       configuration: { models, modes, promptVersion: QUESTION_PROMPT_VERSION,
