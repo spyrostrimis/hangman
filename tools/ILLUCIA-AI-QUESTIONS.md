@@ -300,6 +300,6 @@ The probe sends one six-word sort per model, records each envelope and its hidde
 and projects the full run's cost from it. That projection is a floor for models whose
 reasoning grows with the list. `--options-json '{"<model>": {...}}'` overrides one run's
 model settings, and `--max-run-neurons` (default 3,000) caps a run inside the shared daily
-ledger of 1,800 requests and 9,000 reserved or measured neurons (6,000 before 2026-10-02). `--state-ids`, `--modes` and `--timeout-ms` select states, tasks and the request timeout. Use a new output path to
+ledger of 1,800 requests and 10,000 reserved or measured neurons (6,000 before 2026-10-02, then 9,000). `--state-ids`, `--modes` and `--timeout-ms` select states, tasks and the request timeout. Use a new output path to
 keep earlier evidence. No npm script was added, to stay out of `package.json` while other
 tracks edit it.
