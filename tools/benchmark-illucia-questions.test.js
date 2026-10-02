@@ -73,6 +73,11 @@ test('model options are merged into that model\'s requests only', async () => {
   await runQuestions({ states: [state], models: [qwen, '@cf/openai/gpt-oss-20b'], modes: ['sort'], request, blocked: [], report: {}, clock: () => 0 });
   assert.equal(bodies['@cf/openai/gpt-oss-20b'].reasoning_effort, MODEL_OPTIONS['@cf/openai/gpt-oss-20b'].reasoning_effort);
   assert.equal(Object.hasOwn(bodies[qwen], 'reasoning_effort'), false);
+  const off = { chat_template_kwargs: { enable_thinking: false } };
+  await runQuestions({ states: [state], models: [qwen, gemma], modes: ['sort'], request, blocked: [], report: {}, clock: () => 0,
+    modelOptions: { [qwen]: off } });
+  assert.deepEqual(bodies[qwen].chat_template_kwargs, off.chat_template_kwargs);
+  assert.equal(Object.hasOwn(bodies[gemma], 'chat_template_kwargs'), false);
 });
 
 test('timeouts fail the state; three in a row skip that model; other models carry on', async () => {
@@ -129,6 +134,9 @@ test('summaries score sort mode against the control, invent mode only through th
   assert.deepEqual(sort.perState[0].disagreements, ['+table', '-robin']);
   assert.equal(sort.acceptedRate, 0.5);
   assert.equal(sort.latencyMs.within3s, 0.5);
+  assert.equal(sort.latencyMs.acceptedWithin3s, 0.5);
+  const slow = summarizeGroup([{ ...sortRecord, milliseconds: 5000 }, { ...sortRecord, milliseconds: 9000 }], statesById, 'sort');
+  assert.deepEqual([slow.latencyMs.acceptedWithin3s, slow.latencyMs.acceptedWithin8s, slow.acceptedRate], [0, 0.5, 1]);
   assert.equal(sort.outcomes.timeout, 1);
   const invent = { ...sortRecord, mode: 'invent', question: 'Can your word mean a bird?' };
   assert.throws(() => summarizeGroup([invent], statesById, 'invent', { questions: {} }), /Unmapped/);

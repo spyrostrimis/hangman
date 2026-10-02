@@ -31,11 +31,19 @@ const percentile = (values, p) => [...values].sort((a, b) => a - b)[Math.max(0, 
 export const STATE_LENGTHS = Object.freeze([4, 5, 6, 7, 8, 9, 10]);
 export const MIN_CANDIDATES = 8;
 export const MAX_CANDIDATES = 80;
-export const MAX_TOKENS = 4096;
+// 4,096 in the stopped reasoning-on run (recorded in its report); the visible lists need ~400.
+export const MAX_TOKENS = 2048;
 export const TIMEOUT_MS = 30000;
 export const TIMEOUTS_BEFORE_SKIP = 3;
-// Each model's own request settings: the cheapest documented reasoning effort where one exists.
-export const MODEL_OPTIONS = Object.freeze({ '@cf/openai/gpt-oss-20b': Object.freeze({ reasoning_effort: 'low' }) });
+// Each model's own request settings: reasoning switched off where the chat template allows it
+// (probed 2026-10-02), else the lowest effort. The stopped first run used each model's default.
+const REASONING_OFF = Object.freeze({ chat_template_kwargs: Object.freeze({ enable_thinking: false }) });
+export const MODEL_OPTIONS = Object.freeze({
+  '@cf/qwen/qwen3-30b-a3b-fp8': REASONING_OFF,
+  '@cf/google/gemma-4-26b-a4b-it': REASONING_OFF,
+  '@cf/zai-org/glm-4.7-flash': REASONING_OFF,
+  '@cf/openai/gpt-oss-20b': Object.freeze({ reasoning_effort: 'low' }),
+});
 // Which word bands each tier's states rotate through (a tier only knows words up to its size).
 const TIER_BANDS = { apprentice: ['common'], scholar: ['common', 'medium'], master: ['common', 'medium', 'rare'] };
 
@@ -126,9 +134,9 @@ export async function writeStates(path) {
 }
 
 // One request; a timeout is that model failing that state, every other stop ends the run.
-async function ask({ request, model, mode, state, blocked, clock }) {
+async function ask({ request, model, mode, state, blocked, clock, options }) {
   const input = questionInput(mode, state.candidates, { question: mode === 'sort' ? state.control.question : null,
-    maxTokens: MAX_TOKENS, options: MODEL_OPTIONS[model] ?? {} });
+    maxTokens: MAX_TOKENS, options });
   const start = clock();
   let result;
   try {
@@ -151,7 +159,7 @@ async function ask({ request, model, mode, state, blocked, clock }) {
   };
 }
 
-export async function runQuestions({ states, models, modes, request, blocked, checkpoint = async () => {}, clock = () => performance.now(), report }) {
+export async function runQuestions({ states, models, modes, request, blocked, checkpoint = async () => {}, clock = () => performance.now(), report, modelOptions = MODEL_OPTIONS }) {
   // Per model and mode: a fast sort between two slow invents must not reset the count.
   const timeouts = {};
   report.requests ??= [];
@@ -166,7 +174,7 @@ export async function runQuestions({ states, models, modes, request, blocked, ch
             report.requests.push({ state: state.id, model, mode, outcome: 'skipped-after-timeouts' });
             continue;
           }
-          const record = await ask({ request, model, mode, state, blocked, clock });
+          const record = await ask({ request, model, mode, state, blocked, clock, options: modelOptions[model] ?? {} });
           timeouts[key] = record.outcome === 'timeout' ? (timeouts[key] ?? 0) + 1 : 0;
           report.requests.push(record);
           await checkpoint(report);
@@ -263,7 +271,11 @@ export function summarizeGroup(records, statesById, mode, mapping = null) {
       answerChecked: placements.length, answerMisfiled: placements.filter(p => p.misfiled).length },
     latencyMs: { p50: round2(percentile(ms, 0.5)), p95: round2(percentile(ms, 0.95)), max: round2(ms.length ? Math.max(...ms) : null),
       within3s: rate(timed.filter(t => t <= 3000).length, sent.length), within5s: rate(timed.filter(t => t <= 5000).length, sent.length),
-      within8s: rate(timed.filter(t => t <= 8000).length, sent.length) },
+      within8s: rate(timed.filter(t => t <= 8000).length, sent.length),
+      // Usable in play: accepted and back within 3 s, or within 8 s for experimental mode's
+      // visible "consulting the archive" pause.
+      acceptedWithin3s: rate(answered.filter(r => r.outcome === 'accepted' && r.milliseconds <= 3000).length, records.length),
+      acceptedWithin8s: rate(answered.filter(r => r.outcome === 'accepted' && r.milliseconds <= 8000).length, records.length) },
     tokens: { requestsWithUsage: usage.length, meanPrompt: round2(mean(usage.map(r => r.usage.prompt_tokens))),
       meanCompletion: round2(mean(usage.map(r => r.usage.completion_tokens))),
       meanReportedReasoning: round2(mean(reasoningReported.map(r => r.usage.reasoning_tokens))),
@@ -324,6 +336,8 @@ async function main() {
   if (!models.length || models.some(m => !Object.hasOwn(QUESTION_MODELS, m)) || new Set(models).size !== models.length) {
     throw new Error('Models must come from the D1 allowlist.');
   }
+  const modelOptions = { ...MODEL_OPTIONS, ...JSON.parse(value('--options-json') ?? '{}') };
+  if (Object.keys(modelOptions).some(m => !models.includes(m) && !Object.hasOwn(MODEL_OPTIONS, m))) throw new Error('Options for an unknown model.');
   const blocked = await loadBlocked();
   const session = await openLiveSession({ wrangler: args.includes('--wrangler-auth'),
     transportOptions: { timeoutMs: TIMEOUT_MS, normalize: result => normalizeQuestionResult(result, BenchmarkStop) } });
@@ -335,13 +349,13 @@ async function main() {
       configuration: { models, modes, promptVersion: QUESTION_PROMPT_VERSION,
         prompts: { invent: INVENT_PROMPT, sort: SORT_PROMPT }, promptSha256: hash([INVENT_PROMPT, SORT_PROMPT]),
         statesSha256: phase === 'probe' ? hash([PROBE_STATE]) : statesFile.statesSha256,
-        temperature: 0, seed: SEED, maxTokens: MAX_TOKENS, modelOptions: MODEL_OPTIONS, requestTimeoutMs: TIMEOUT_MS,
+        temperature: 0, seed: SEED, maxTokens: MAX_TOKENS, modelOptions, requestTimeoutMs: TIMEOUT_MS,
         retries: 0, timeoutsBeforeSkip: TIMEOUTS_BEFORE_SKIP, evenSplit: [MIN_YES_SHARE, MAX_YES_SHARE],
         blockedTerms: blocked.length, neuronRates: Object.fromEntries(models.map(m => [m, QUESTION_MODELS[m]])), pricingChecked: '2026-10-02' },
       environment: { node: process.version, platform: process.platform },
     };
     const checkpoint = current => atomicJson(resolve(output), { ...current, budget: session.budget() });
-    await runQuestions({ states, models, modes, request: session.request, blocked, checkpoint, report });
+    await runQuestions({ states, models, modes, request: session.request, blocked, checkpoint, report, modelOptions });
     if (phase === 'probe') {
       report.projection = projectCost(report.requests.filter(r => r.usage !== undefined), statesFile.states);
       await checkpoint(report);

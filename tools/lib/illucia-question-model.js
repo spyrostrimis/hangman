@@ -77,6 +77,14 @@ export function normalizeQuestionResult(result, Stop = Error) {
     finishReason = choice.finish_reason ?? null;
     const reasoning = choice.message.reasoning_content ?? choice.message.reasoning;
     if (typeof reasoning === 'string') reasoningChars = reasoning.length;
+    // With reasoning switched off, Qwen3's provider parser returns the whole reply in the
+    // reasoning field and null content (seen 2026-10-02). Only a normal stop with empty
+    // content is read this way, and it is labelled so every such reply can be found.
+    if (!text && finishReason === 'stop' && typeof reasoning === 'string' && reasoning) {
+      text = reasoning;
+      reasoningChars = 0;
+      envelope = 'choices-reasoning-field';
+    }
   } else if (Array.isArray(result?.output)) {
     const message = result.output.find(item => item?.type === 'message');
     text = (message?.content ?? []).filter(part => part?.type === 'output_text' && typeof part.text === 'string')

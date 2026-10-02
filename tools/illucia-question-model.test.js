@@ -146,9 +146,13 @@ test('envelopes: text, chat choices, Responses output, inline think blocks; unkn
   assert.equal(chat.envelope, 'choices');
   assert.equal(chat.reasoningChars, 3);
   assert.equal(chat.usage.reasoning_tokens, 20);
-  const cut = normalizeQuestionResult({ choices: [{ finish_reason: 'length', message: { content: null } }], usage }, BenchmarkStop);
+  const cut = normalizeQuestionResult({ choices: [{ finish_reason: 'length', message: { content: null, reasoning_content: 'thinking...' } }], usage }, BenchmarkStop);
   assert.equal(cut.response, '');
   assert.equal(cut.finishReason, 'length');
+  assert.equal(cut.reasoningChars, 11);
+  // Reasoning off: the reply arrives in the reasoning field after a normal stop.
+  const moved = normalizeQuestionResult({ choices: [{ finish_reason: 'stop', message: { content: null, reasoning: '{"a":1}', reasoning_content: '{"a":1}' } }], usage }, BenchmarkStop);
+  assert.deepEqual([moved.response, moved.envelope, moved.reasoningChars], ['{"a":1}', 'choices-reasoning-field', 0]);
   const output = normalizeQuestionResult({ status: 'completed', usage: { input_tokens: 5, output_tokens: 9, output_tokens_details: { reasoning_tokens: 4 } },
     output: [{ type: 'reasoning', content: [{ type: 'reasoning_text', text: 'abcd' }] },
       { type: 'message', content: [{ type: 'output_text', text: '{"a":' }, { type: 'output_text', text: '1}' }] }] }, BenchmarkStop);

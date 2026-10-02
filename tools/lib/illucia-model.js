@@ -12,6 +12,8 @@ export const QUESTION_MODELS = Object.freeze({
   '@cf/google/gemma-4-26b-a4b-it': Object.freeze({ input: 9091, output: 27273 }),
   '@cf/zai-org/glm-4.7-flash': Object.freeze({ input: 5500, output: 36400 }),
   '@cf/openai/gpt-oss-20b': Object.freeze({ input: 18182, output: 27273 }),
+  // No reasoning: the control (also an I7a model; same rate).
+  '@cf/meta/llama-3.1-8b-instruct-fp8-fast': Object.freeze({ input: 4119, output: 34868 }),
 });
 const RATES = Object.freeze({ ...MODELS, ...QUESTION_MODELS });
 export const PROMPT_VERSION = 'i7a-1';
