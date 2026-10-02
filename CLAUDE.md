@@ -129,7 +129,7 @@ How signed-in Hangman scoring works today (full design, release evidence and lim
 
 From `client/`, run `npm run dev` for the Vite development server, `npm run build` for a production build, and `npm run preview` to serve the production build locally. `.claude/launch.json` defines `client-preview` (vite preview on port 4173) for the desktop app's browser pane.
 
-From `tools/`, run `npm test` (203 tests, 2026-10-02; needs Python 3.12+ on PATH) and `node validate.js ../client/src/data/words.json`. Illucia: `python tools/build_illucia_words.py --check` from the repo root (about a minute), `python tools/build_illucia_labels.py --check` (about 80 seconds), `npm run benchmark:illucia` and `npm run benchmark:illucia-tiers` (several minutes each). The pipeline is local-only and never runs in production.
+From `tools/`, run `npm test` (209 tests, 2026-10-02; needs Python 3.12+ on PATH) and `node validate.js ../client/src/data/words.json`. Illucia: `python tools/build_illucia_words.py --check` from the repo root (about a minute), `python tools/build_illucia_labels.py --check` (about 80 seconds), `npm run benchmark:illucia` and `npm run benchmark:illucia-tiers` (several minutes each). The pipeline is local-only and never runs in production.
 
 From `client/`, run `npm test` (44 Node tests), `npm run test:ui` (56 React component tests), and `npm run build`. From `server/`, run `npm run setup:local`, `npm run types`, `npm run check`, `npm test` (56 Workers/D1 integration tests), and `npm run build` (dry run). User-visible CSS, responsive art, navigation, popovers, forms, and loading states still need manual browser verification in proportion to the change.
 

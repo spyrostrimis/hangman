@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { loadLexicons, simulate } from './benchmark-illucia.js';
-import { COMMON_PER_LENGTH, TRICKSTER_WORDS, compareParity, feel, wordSets } from './benchmark-illucia-strength.js';
+import { COMMON_PER_LENGTH, TRICKSTER_WORDS, compareParity, feel, gateCells, wordSets } from './benchmark-illucia-strength.js';
 import { MIN_WORD_LENGTH, createKnowledge } from '../client/src/lib/illucia/lexicon.js';
 
 // Tiny 3-letter fixtures bypass the word-file parser, whose contract is lengths 4-15.
@@ -59,4 +59,27 @@ test('round feel separates wins by misses, last-chance wins and losses', () => {
   assert.equal(result.lost, 1);
   assert.equal(result.decidedOnLastMissShare, 0.6667);
   assert.equal(result.fallbackShare, 0);
+});
+
+test('gate cells cover set a, sets b and c by length 4-6, and set d by length and band', () => {
+  const words = { a: ['abcd', 'abcdefg'], b: ['abcd', 'abcde', 'abcdef'], c: ['wxyz', 'wxyzv', 'wxyzvu'],
+    d: ['dddd', 'eeee', 'ffff', 'ddddddddddddddd'] };
+  const band = { dddd: 'common', eeee: 'medium', ffff: 'rare', ddddddddddddddd: 'rare' };
+  const games = Object.fromEntries(['apprentice', 'scholar', 'master'].map(tier => [tier,
+    Object.fromEntries(Object.entries(words).map(([key, list]) => [key, list.map(word => ({ word, won: true }))]))]));
+  const cells = gateCells(games, word => band[word]);
+  assert.equal(cells.length, 1 + 2 * 4 + 12 * 4);
+  const slice = (set, name) => cells.find(cell => cell.set === set && cell.slice === name).games.master.map(game => game.word);
+  assert.deepEqual(slice('a', 'all'), words.a);
+  assert.deepEqual(slice('b', 'length 5'), ['abcde']);
+  assert.deepEqual(slice('c', 'all'), words.c);
+  assert.deepEqual(slice('d', 'length 4'), ['dddd', 'eeee', 'ffff']);
+  assert.deepEqual(slice('d', 'length 4 medium'), ['eeee']);
+  assert.deepEqual(slice('d', 'length 15 rare'), ['ddddddddddddddd']);
+  assert.deepEqual(slice('d', 'length 15 common'), []);
+  assert.equal(cells.some(cell => cell.slice.includes('length 3')), false);
+  // Every tier gets the same words in the same order, as the paired test requires.
+  for (const cell of cells) {
+    assert.deepEqual(cell.games.apprentice.map(game => game.word), cell.games.master.map(game => game.word));
+  }
 });

@@ -25,6 +25,47 @@ Page parity: 108/108 on both pages (36 words × 3 tiers; 36 out-of-tier cases, 3
 used fallback; control: 35 of 36 Apprentice sequences differ from Master's). The
 tier inversion on common short words (flag 1) remains at lengths 4–6.
 
+## Tier-order gate (v2 acceptance test)
+
+`benchmark-illucia-strength.js` now ends with the gate from the v2 decisions
+(Amendments 2), computed by `tools/lib/illucia-gate.js` and stored under `gate` in
+the report. Rule: **no tier may win less than a lower tier beyond noise.**
+
+- **Cells (57):** set a overall; sets b and c overall and at each length 4–6; set d at
+  each length 4–15, and at each length per size band (common, medium, rare).
+- **Comparisons (171):** in every cell, Scholar vs Apprentice, Master vs Scholar and
+  Master vs Apprentice.
+- **Test:** every tier plays the same words, so each comparison is paired word by
+  word. Only words exactly one of the two tiers solves carry information; the
+  one-sided exact McNemar test asks whether the lower tier owns more of them than a
+  fair coin would give. Holm's correction runs across all 171 comparisons, at 5%.
+  A comparison fails when its Holm-adjusted p is ≤ 0.05.
+- **Reported for every comparison:** both win rates, the difference (higher minus
+  lower; negative means the lower tier is ahead), the discordant counts, raw p and
+  Holm p. Near misses are comparisons with raw p ≤ 0.05 that the correction clears.
+- **Limits:** set c has 12 words per length, so its cells can hardly fail. The play
+  is deterministic, so "noise" means the luck of which words were sampled, not
+  random play.
+
+**Baseline, unweighted policy (2026-10-02): FAIL**, 8 of 171 comparisons. The lower
+tier is ahead in 28 comparisons, and 7 more are near misses.
+
+| Cell | Higher vs lower | Wins (of words) | Difference | Holm p |
+|---|---|---|---|---|
+| b all | Scholar vs Apprentice | 1,011 vs 1,094 (1,500) | −5.5 pts | 0.000001 |
+| b all | Master vs Scholar | 947 vs 1,011 (1,500) | −4.3 pts | 0.0003 |
+| b all | Master vs Apprentice | 947 vs 1,094 (1,500) | −9.8 pts | < 0.000001 |
+| b length 4 | Scholar vs Apprentice | 230 vs 280 (500) | −10.0 pts | 0.0002 |
+| b length 4 | Master vs Apprentice | 212 vs 280 (500) | −13.6 pts | < 0.000001 |
+| b length 5 | Master vs Scholar | 311 vs 347 (500) | −7.2 pts | 0.002 |
+| b length 5 | Master vs Apprentice | 311 vs 375 (500) | −12.8 pts | < 0.000001 |
+| d length 5 common | Master vs Apprentice | 66 vs 84 (100) | −18.0 pts | 0.003 |
+
+This is the known inversion (flag 1), and it shows the gate can fail on real data.
+Unit tests (`tools/lib/illucia-gate.test.js`) check exact tails, Holm adjustment, a
+clear inversion failing, an even split passing, and correction turning a lone
+borderline cell into a near miss.
+
 ## 1. Reproduction
 
 I3 and I3b re-run at HEAD match their committed reports exactly. The manifest SHA-256

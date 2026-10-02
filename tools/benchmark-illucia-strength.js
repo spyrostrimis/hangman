@@ -6,6 +6,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, createKnowledge, isAcceptedWord } from '../client/src/lib/illucia/lexicon.js';
 import { DEFAULT_SEED, loadLexicons, sampleWords, simulate } from './benchmark-illucia.js';
 import { WORD_BANDS, tierSamples } from './benchmark-illucia-tiers.js';
+import { tierGate } from './lib/illucia-gate.js';
 
 // Strength of Illucia as she plays on the live pages: player-like word sets,
 // the feel of a round, and page parity. Measurement only; nothing here feeds the app.
@@ -115,6 +116,29 @@ export function playSets(entriesByLength, sets) {
   return { results, games, know };
 }
 
+// Tier-order gate cells (v2 decisions, Amendments 2): set a overall; sets b and c
+// overall and per length 4-6; set d per length 4-15 and per length x size band.
+export function gateCells(games, bandOf) {
+  const pick = (key, keep) => Object.fromEntries(VOCABULARY_TIERS.map(tier =>
+    [tier.id, games[tier.id][key].filter(keep)]));
+  const all = () => true;
+  const cells = [{ set: 'a', slice: 'all', games: pick('a', all) }];
+  for (const key of ['b', 'c']) {
+    cells.push({ set: key, slice: 'all', games: pick(key, all) });
+    for (let length = MIN_WORD_LENGTH; length <= 6; length++) {
+      cells.push({ set: key, slice: `length ${length}`, games: pick(key, game => game.word.length === length) });
+    }
+  }
+  for (let length = MIN_WORD_LENGTH; length <= MAX_WORD_LENGTH; length++) {
+    cells.push({ set: 'd', slice: `length ${length}`, games: pick('d', game => game.word.length === length) });
+    for (const band of WORD_BANDS) {
+      cells.push({ set: 'd', slice: `length ${length} ${band.name}`,
+        games: pick('d', game => game.word.length === length && bandOf(game.word) === band.name) });
+    }
+  }
+  return cells;
+}
+
 // 3 sampled words per length (one per size band, the first of each I3b band):
 // in-tier and out-of-tier words for Apprentice and Scholar at every length.
 export function parityCases(entriesByLength, balancedWords, know) {
@@ -186,6 +210,9 @@ export async function strength({ seed = DEFAULT_SEED, pages = true } = {}) {
   const { entriesByLength, manifestSha256 } = await loadLexicons();
   const { sets, sampleSha256I3b, manifestRejected } = await wordSets(entriesByLength, seed);
   const { results, games, know } = playSets(entriesByLength, sets);
+  const bandOf = word => WORD_BANDS.find(band =>
+    sizeOf(entriesByLength, word) >= band.min && sizeOf(entriesByLength, word) <= band.max).name;
+  const gate = tierGate(gateCells(games, bandOf));
   const cases = parityCases(entriesByLength, sets.d.words, know);
   const report = {
     configuration: { seed, policy: 'count', tiers: VOCABULARY_TIERS, manifestSha256, sampleSha256I3b,
@@ -200,6 +227,7 @@ export async function strength({ seed = DEFAULT_SEED, pages = true } = {}) {
     }])),
     manifestRejected,
     results,
+    gate,
     hardestTrickster: Object.fromEntries(VOCABULARY_TIERS.map(tier => [tier.id,
       games[tier.id].c.filter(game => !game.won).map(game => ({ word: game.word, guesses: game.guesses, misses: game.misses }))])),
     parity: { cases },
@@ -207,6 +235,12 @@ export async function strength({ seed = DEFAULT_SEED, pages = true } = {}) {
   for (const tier of VOCABULARY_TIERS) {
     console.error(`${tier.label}: ` + Object.keys(sets).map(key =>
       `${key} ${results[tier.id][key].wins}/${results[tier.id][key].games}`).join(', '));
+  }
+  console.error(`Tier gate: ${gate.passed ? 'PASS' : 'FAIL'} (${gate.failures.length} of ${gate.comparisons} ` +
+    `comparisons fail, ${gate.nearMisses.length} near misses, lower tier ahead in ${gate.lowerTierAhead})`);
+  for (const row of gate.failures) {
+    console.error(`  FAIL ${row.set} ${row.slice}: ${row.higher} ${row.higherWins} vs ${row.lower} ${row.lowerWins} ` +
+      `of ${row.words} (difference ${row.difference}, Holm p ${row.holmP})`);
   }
   if (pages) {
     report.parity.pages = compareParity(cases, await runPages(cases));
