@@ -1,0 +1,655 @@
+{
+  "configuration": {
+    "seed": 20260928,
+    "seedsPerWord": 8,
+    "information": 100,
+    "manifestSha256": "57636c60fe4ae74dedf3e799257730f2553cb3754f1e2dc721fb718e82c90450",
+    "plainTemperaments": {
+      "apprentice": {
+        "shortlist": 1000,
+        "vowelBonus": 600,
+        "vowelTurns": 3
+      },
+      "scholar": {
+        "shortlist": 700,
+        "vowelBonus": 400,
+        "vowelTurns": 2
+      },
+      "master": {
+        "shortlist": 400,
+        "vowelBonus": 200,
+        "vowelTurns": 1
+      }
+    },
+    "note": "Benchmark-only experiment (decisions 1.5); no tier ships with information value."
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32",
+    "architecture": "x64"
+  },
+  "plain": {
+    "apprentice": {
+      "a": {
+        "winRate": 0.7488,
+        "variety": {
+          "words": 105,
+          "games": 840,
+          "distinctSequencesPerWord": 6.7524,
+          "wordsWithMoreThanOneSequence": 0.9905,
+          "openings": {
+            "distinct": 4,
+            "entropyBits": 0.8278,
+            "shares": {
+              "e": 0.7798,
+              "i": 0.2095,
+              "n": 0.0095,
+              "t": 0.0012
+            }
+          }
+        }
+      },
+      "b": {
+        "winRate": 0.7218,
+        "variety": {
+          "words": 1500,
+          "games": 12000,
+          "distinctSequencesPerWord": 7.1027,
+          "wordsWithMoreThanOneSequence": 0.9993,
+          "openings": {
+            "distinct": 3,
+            "entropyBits": 1.1759,
+            "shares": {
+              "e": 0.6989,
+              "s": 0.1789,
+              "a": 0.1222
+            }
+          }
+        }
+      },
+      "c": {
+        "winRate": 0.1736,
+        "variety": {
+          "words": 36,
+          "games": 288,
+          "distinctSequencesPerWord": 6.6389,
+          "wordsWithMoreThanOneSequence": 1,
+          "openings": {
+            "distinct": 3,
+            "entropyBits": 1.1435,
+            "shares": {
+              "e": 0.7153,
+              "s": 0.1597,
+              "a": 0.125
+            }
+          }
+        }
+      },
+      "d": {
+        "winRate": 0.4055,
+        "variety": {
+          "words": 3600,
+          "games": 28800,
+          "distinctSequencesPerWord": 5.9636,
+          "wordsWithMoreThanOneSequence": 0.9631,
+          "openings": {
+            "distinct": 6,
+            "entropyBits": 1.5139,
+            "shares": {
+              "e": 0.5352,
+              "i": 0.3665,
+              "s": 0.044,
+              "a": 0.0314,
+              "n": 0.0152,
+              "t": 0.0076
+            }
+          }
+        }
+      }
+    },
+    "scholar": {
+      "a": {
+        "winRate": 0.9524,
+        "variety": {
+          "words": 105,
+          "games": 840,
+          "distinctSequencesPerWord": 6.8381,
+          "wordsWithMoreThanOneSequence": 1,
+          "openings": {
+            "distinct": 2,
+            "entropyBits": 0.636,
+            "shares": {
+              "e": 0.8393,
+              "i": 0.1607
+            }
+          }
+        }
+      },
+      "b": {
+        "winRate": 0.727,
+        "variety": {
+          "words": 1500,
+          "games": 12000,
+          "distinctSequencesPerWord": 6.5133,
+          "wordsWithMoreThanOneSequence": 0.998,
+          "openings": {
+            "distinct": 3,
+            "entropyBits": 1.1173,
+            "shares": {
+              "e": 0.727,
+              "a": 0.1483,
+              "s": 0.1247
+            }
+          }
+        }
+      },
+      "c": {
+        "winRate": 0.3021,
+        "variety": {
+          "words": 36,
+          "games": 288,
+          "distinctSequencesPerWord": 6.0556,
+          "wordsWithMoreThanOneSequence": 1,
+          "openings": {
+            "distinct": 3,
+            "entropyBits": 1.1595,
+            "shares": {
+              "e": 0.7083,
+              "a": 0.1632,
+              "s": 0.1285
+            }
+          }
+        }
+      },
+      "d": {
+        "winRate": 0.6507,
+        "variety": {
+          "words": 3600,
+          "games": 28800,
+          "distinctSequencesPerWord": 6.3286,
+          "wordsWithMoreThanOneSequence": 0.9642,
+          "openings": {
+            "distinct": 4,
+            "entropyBits": 1.3239,
+            "shares": {
+              "e": 0.5744,
+              "i": 0.3567,
+              "a": 0.0379,
+              "s": 0.0309
+            }
+          }
+        }
+      }
+    },
+    "master": {
+      "a": {
+        "winRate": 0.9833,
+        "variety": {
+          "words": 105,
+          "games": 840,
+          "distinctSequencesPerWord": 6.4476,
+          "wordsWithMoreThanOneSequence": 1,
+          "openings": {
+            "distinct": 2,
+            "entropyBits": 0.5436,
+            "shares": {
+              "e": 0.875,
+              "i": 0.125
+            }
+          }
+        }
+      },
+      "b": {
+        "winRate": 0.7288,
+        "variety": {
+          "words": 1500,
+          "games": 12000,
+          "distinctSequencesPerWord": 5.3807,
+          "wordsWithMoreThanOneSequence": 0.9873,
+          "openings": {
+            "distinct": 3,
+            "entropyBits": 1.1541,
+            "shares": {
+              "e": 0.7113,
+              "a": 0.1578,
+              "s": 0.131
+            }
+          }
+        }
+      },
+      "c": {
+        "winRate": 0.3681,
+        "variety": {
+          "words": 36,
+          "games": 288,
+          "distinctSequencesPerWord": 4,
+          "wordsWithMoreThanOneSequence": 1,
+          "openings": {
+            "distinct": 3,
+            "entropyBits": 1.1387,
+            "shares": {
+              "e": 0.7153,
+              "a": 0.1701,
+              "s": 0.1146
+            }
+          }
+        }
+      },
+      "d": {
+        "winRate": 0.8997,
+        "variety": {
+          "words": 3600,
+          "games": 28800,
+          "distinctSequencesPerWord": 6.5617,
+          "wordsWithMoreThanOneSequence": 0.9897,
+          "openings": {
+            "distinct": 4,
+            "entropyBits": 1.3292,
+            "shares": {
+              "e": 0.5843,
+              "i": 0.343,
+              "a": 0.0404,
+              "s": 0.0322
+            }
+          }
+        }
+      }
+    }
+  },
+  "informed": {
+    "apprentice": {
+      "a": {
+        "winRate": 0.75,
+        "variety": {
+          "words": 105,
+          "games": 840,
+          "distinctSequencesPerWord": 6.7429,
+          "wordsWithMoreThanOneSequence": 0.9905,
+          "openings": {
+            "distinct": 4,
+            "entropyBits": 0.8063,
+            "shares": {
+              "e": 0.7881,
+              "i": 0.2024,
+              "n": 0.0083,
+              "t": 0.0012
+            }
+          }
+        }
+      },
+      "b": {
+        "winRate": 0.7223,
+        "variety": {
+          "words": 1500,
+          "games": 12000,
+          "distinctSequencesPerWord": 7.08,
+          "wordsWithMoreThanOneSequence": 0.9993,
+          "openings": {
+            "distinct": 3,
+            "entropyBits": 1.1558,
+            "shares": {
+              "e": 0.7077,
+              "s": 0.1749,
+              "a": 0.1174
+            }
+          }
+        }
+      },
+      "c": {
+        "winRate": 0.1736,
+        "variety": {
+          "words": 36,
+          "games": 288,
+          "distinctSequencesPerWord": 6.6389,
+          "wordsWithMoreThanOneSequence": 1,
+          "openings": {
+            "distinct": 3,
+            "entropyBits": 1.1257,
+            "shares": {
+              "e": 0.7222,
+              "s": 0.1597,
+              "a": 0.1181
+            }
+          }
+        }
+      },
+      "d": {
+        "winRate": 0.4053,
+        "variety": {
+          "words": 3600,
+          "games": 28800,
+          "distinctSequencesPerWord": 5.9519,
+          "wordsWithMoreThanOneSequence": 0.9639,
+          "openings": {
+            "distinct": 6,
+            "entropyBits": 1.4982,
+            "shares": {
+              "e": 0.5419,
+              "i": 0.3632,
+              "s": 0.0426,
+              "a": 0.0299,
+              "n": 0.015,
+              "t": 0.0074
+            }
+          }
+        }
+      }
+    },
+    "scholar": {
+      "a": {
+        "winRate": 0.9536,
+        "variety": {
+          "words": 105,
+          "games": 840,
+          "distinctSequencesPerWord": 6.819,
+          "wordsWithMoreThanOneSequence": 1,
+          "openings": {
+            "distinct": 2,
+            "entropyBits": 0.6216,
+            "shares": {
+              "e": 0.8452,
+              "i": 0.1548
+            }
+          }
+        }
+      },
+      "b": {
+        "winRate": 0.7258,
+        "variety": {
+          "words": 1500,
+          "games": 12000,
+          "distinctSequencesPerWord": 6.5027,
+          "wordsWithMoreThanOneSequence": 0.998,
+          "openings": {
+            "distinct": 3,
+            "entropyBits": 1.0968,
+            "shares": {
+              "e": 0.7353,
+              "a": 0.1445,
+              "s": 0.1202
+            }
+          }
+        }
+      },
+      "c": {
+        "winRate": 0.3056,
+        "variety": {
+          "words": 36,
+          "games": 288,
+          "distinctSequencesPerWord": 6.0833,
+          "wordsWithMoreThanOneSequence": 1,
+          "openings": {
+            "distinct": 3,
+            "entropyBits": 1.1509,
+            "shares": {
+              "e": 0.7118,
+              "a": 0.1632,
+              "s": 0.125
+            }
+          }
+        }
+      },
+      "d": {
+        "winRate": 0.6508,
+        "variety": {
+          "words": 3600,
+          "games": 28800,
+          "distinctSequencesPerWord": 6.3233,
+          "wordsWithMoreThanOneSequence": 0.9639,
+          "openings": {
+            "distinct": 4,
+            "entropyBits": 1.3108,
+            "shares": {
+              "e": 0.5797,
+              "i": 0.3543,
+              "a": 0.0366,
+              "s": 0.0295
+            }
+          }
+        }
+      }
+    },
+    "master": {
+      "a": {
+        "winRate": 0.9833,
+        "variety": {
+          "words": 105,
+          "games": 840,
+          "distinctSequencesPerWord": 6.4667,
+          "wordsWithMoreThanOneSequence": 1,
+          "openings": {
+            "distinct": 2,
+            "entropyBits": 0.53,
+            "shares": {
+              "e": 0.8798,
+              "i": 0.1202
+            }
+          }
+        }
+      },
+      "b": {
+        "winRate": 0.729,
+        "variety": {
+          "words": 1500,
+          "games": 12000,
+          "distinctSequencesPerWord": 5.3693,
+          "wordsWithMoreThanOneSequence": 0.9873,
+          "openings": {
+            "distinct": 3,
+            "entropyBits": 1.134,
+            "shares": {
+              "e": 0.7198,
+              "a": 0.1535,
+              "s": 0.1267
+            }
+          }
+        }
+      },
+      "c": {
+        "winRate": 0.3715,
+        "variety": {
+          "words": 36,
+          "games": 288,
+          "distinctSequencesPerWord": 4.0278,
+          "wordsWithMoreThanOneSequence": 1,
+          "openings": {
+            "distinct": 3,
+            "entropyBits": 1.1387,
+            "shares": {
+              "e": 0.7153,
+              "a": 0.1701,
+              "s": 0.1146
+            }
+          }
+        }
+      },
+      "d": {
+        "winRate": 0.9002,
+        "variety": {
+          "words": 3600,
+          "games": 28800,
+          "distinctSequencesPerWord": 6.5592,
+          "wordsWithMoreThanOneSequence": 0.99,
+          "openings": {
+            "distinct": 4,
+            "entropyBits": 1.3211,
+            "shares": {
+              "e": 0.5878,
+              "i": 0.3412,
+              "a": 0.0395,
+              "s": 0.0315
+            }
+          }
+        }
+      }
+    }
+  },
+  "comparison": {
+    "test": "one-sided exact sign test (plain ahead of informed), Holm-corrected",
+    "alpha": 0.05,
+    "noStrengthLost": true,
+    "rows": [
+      {
+        "tier": "apprentice",
+        "set": "a",
+        "words": 105,
+        "plainWinRate": 0.74881,
+        "informedWinRate": 0.75,
+        "difference": 0.00119,
+        "plainAhead": 0,
+        "informedAhead": 1,
+        "p": 1,
+        "holmP": 1,
+        "costsStrength": false
+      },
+      {
+        "tier": "apprentice",
+        "set": "b",
+        "words": 1500,
+        "plainWinRate": 0.721833,
+        "informedWinRate": 0.722333,
+        "difference": 0.0005,
+        "plainAhead": 50,
+        "informedAhead": 55,
+        "p": 0.720803,
+        "holmP": 1,
+        "costsStrength": false
+      },
+      {
+        "tier": "apprentice",
+        "set": "c",
+        "words": 36,
+        "plainWinRate": 0.173611,
+        "informedWinRate": 0.173611,
+        "difference": 0,
+        "plainAhead": 1,
+        "informedAhead": 1,
+        "p": 0.75,
+        "holmP": 1,
+        "costsStrength": false
+      },
+      {
+        "tier": "apprentice",
+        "set": "d",
+        "words": 3600,
+        "plainWinRate": 0.405486,
+        "informedWinRate": 0.405313,
+        "difference": -0.000174,
+        "plainAhead": 33,
+        "informedAhead": 29,
+        "p": 0.351768,
+        "holmP": 1,
+        "costsStrength": false
+      },
+      {
+        "tier": "scholar",
+        "set": "a",
+        "words": 105,
+        "plainWinRate": 0.952381,
+        "informedWinRate": 0.953571,
+        "difference": 0.00119,
+        "plainAhead": 0,
+        "informedAhead": 1,
+        "p": 1,
+        "holmP": 1,
+        "costsStrength": false
+      },
+      {
+        "tier": "scholar",
+        "set": "b",
+        "words": 1500,
+        "plainWinRate": 0.727,
+        "informedWinRate": 0.72575,
+        "difference": -0.00125,
+        "plainAhead": 34,
+        "informedAhead": 20,
+        "p": 0.037952,
+        "holmP": 0.455428,
+        "costsStrength": false
+      },
+      {
+        "tier": "scholar",
+        "set": "c",
+        "words": 36,
+        "plainWinRate": 0.302083,
+        "informedWinRate": 0.305556,
+        "difference": 0.003472,
+        "plainAhead": 0,
+        "informedAhead": 1,
+        "p": 1,
+        "holmP": 1,
+        "costsStrength": false
+      },
+      {
+        "tier": "scholar",
+        "set": "d",
+        "words": 3600,
+        "plainWinRate": 0.650694,
+        "informedWinRate": 0.650764,
+        "difference": 0.000069,
+        "plainAhead": 17,
+        "informedAhead": 17,
+        "p": 0.567917,
+        "holmP": 1,
+        "costsStrength": false
+      },
+      {
+        "tier": "master",
+        "set": "a",
+        "words": 105,
+        "plainWinRate": 0.983333,
+        "informedWinRate": 0.983333,
+        "difference": 0,
+        "plainAhead": 0,
+        "informedAhead": 0,
+        "p": 1,
+        "holmP": 1,
+        "costsStrength": false
+      },
+      {
+        "tier": "master",
+        "set": "b",
+        "words": 1500,
+        "plainWinRate": 0.72875,
+        "informedWinRate": 0.729,
+        "difference": 0.00025,
+        "plainAhead": 13,
+        "informedAhead": 16,
+        "p": 0.770871,
+        "holmP": 1,
+        "costsStrength": false
+      },
+      {
+        "tier": "master",
+        "set": "c",
+        "words": 36,
+        "plainWinRate": 0.368056,
+        "informedWinRate": 0.371528,
+        "difference": 0.003472,
+        "plainAhead": 0,
+        "informedAhead": 1,
+        "p": 1,
+        "holmP": 1,
+        "costsStrength": false
+      },
+      {
+        "tier": "master",
+        "set": "d",
+        "words": 3600,
+        "plainWinRate": 0.899722,
+        "informedWinRate": 0.900174,
+        "difference": 0.000451,
+        "plainAhead": 5,
+        "informedAhead": 19,
+        "p": 0.999228,
+        "holmP": 1,
+        "costsStrength": false
+      }
+    ]
+  },
+  "gateWithInformation": {
+    "passed": true,
+    "failures": [],
+    "nearMisses": []
+  }
+}
