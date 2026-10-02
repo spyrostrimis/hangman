@@ -112,3 +112,11 @@ A, B and C can run as **parallel sessions in separate clones**, each committing 
 8. **The server reads the word files** (as text modules, binary search). It deploys only after A1 has removed `3.txt`. The server issues a 32-bit seed per round; A2's random generator must accept it.
 9. **Privacy:** `/privacy` states that words that beat her are kept per account until deletion, **before** C1's Worker deploys (Track C owns that copy change).
 10. **Release record:** production already runs migrations 0001–0005 and the deletion/retention Worker; `CLAUDE.md` and `server/RELEASE.md` get corrected in a separate docs commit.
+
+## Amendments 3 — 2026-10-02, after B2's measurements
+
+1. **Question timing:** "not before her 3rd guess" stays the default. It costs her 0.1–0.2 points, detectable but immaterial next to a question's 4–9-point value; pacing wins.
+2. **Broad-opener fix:** "man-made object" opens 74–76% of first questions. Fix it with seeded variety among nearly-best questions (after A2 is on main) plus a mild preference for narrow categories. Target: broad categories open well under half of first questions. Her strength cost is acceptable, because questions only happen when the player opts in.
+3. **Multipliers raised:** ×1.5 for one answered question, ×2.0 for two (were ×1.25 / ×1.5). Measured break-even is ≈×1.6 and ≈×2.1–2.45, so a player who answers everything loses slightly and a selective player gains.
+4. **Claim floor raised to 15 s** (was 12 s) to hold the cheater ceiling near Hangman's: ≈333 points per round max × 4 per minute ≈ 1,330 per minute.
+5. **Nouns only in v1**, confirmed (all categories add 0.4–1.6 points for her, mostly from gotcha-prone adjective and verb questions).
