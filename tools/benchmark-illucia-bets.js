@@ -12,7 +12,7 @@ import { toPublicState } from '../client/src/lib/illucia/public-state.js';
 import { filterCandidates } from '../client/src/lib/illucia/candidates.js';
 import { MIN_WORD_LENGTH, VOCABULARY_TIERS, createKnowledge } from '../client/src/lib/illucia/lexicon.js';
 import { analyzeDecision } from '../client/src/lib/illucia/strategy.js';
-import { KINDS, checkAnswer, chooseQuestion, narrowKnowledge, parseCategories, parseLabels } from '../client/src/lib/illucia/questions.js';
+import { B2_RULES, KINDS, checkAnswer, chooseQuestion, narrowKnowledge, parseCategories, parseLabels } from '../client/src/lib/illucia/questions.js';
 import { DEFAULT_SEED, loadLexicons, simulate } from './benchmark-illucia.js';
 import { gateCells, wordSets } from './benchmark-illucia-strength.js';
 import { WORD_BANDS } from './benchmark-illucia-tiers.js';
@@ -81,7 +81,7 @@ export function play(word, knowledge, labels, categories, arm) {
     const state = toPublicState(round);
     if (arm.answers > 0) {
       const question = chooseQuestion(state, pool, labels, categories, offers,
-        { kinds: arm.kinds, earliestTurn: arm.earliestTurn });
+        { ...B2_RULES, kinds: arm.kinds, earliestTurn: arm.earliestTurn });
       if (question) {
         const truth = checkAnswer(labels, word, question.code);
         const answered = offers.filter(offer => offer.answer !== 'declined').length;

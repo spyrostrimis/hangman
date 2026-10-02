@@ -7,10 +7,10 @@ import { createKnowledge } from '../client/src/lib/illucia/lexicon.js';
 import { parseCategories, parseLabels } from '../client/src/lib/illucia/questions.js';
 
 const CATEGORIES = parseCategories({ categories: [
-  { code: 'c', key: 'bird', kind: 'noun', question: 'Can your word mean a bird?' },
-  { code: 'o', key: 'artifact', kind: 'noun', question: 'Can your word mean a man-made object?' },
-  { code: 'F', key: 'move', kind: 'verb', question: 'Can your word mean a way of moving?' },
-  { code: 'b', key: 'animal', kind: 'noun', question: 'Can your word mean an animal?' },
+  { code: 'c', key: 'bird', kind: 'noun', question: 'Can your word mean a bird?', kindOf: { 'oewn-1-n': 'bird' } },
+  { code: 'o', key: 'artifact', kind: 'noun', question: 'Can your word mean a man-made object?', lexfiles: ['noun.artifact'] },
+  { code: 'F', key: 'move', kind: 'verb', question: 'Can your word mean a way of moving?', lexfiles: ['verb.motion'] },
+  { code: 'b', key: 'animal', kind: 'noun', question: 'Can your word mean an animal?', lexfiles: ['noun.animal'] },
 ] });
 // wren is unknown to WordNet; every other word is labelled.
 const LABELS = parseLabels('bolt o\ncrow cb\nhawk cb\nmole b\nnail o\nrake oF\nsing -\n', 4, CATEGORIES);
