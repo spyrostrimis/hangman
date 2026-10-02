@@ -5,6 +5,7 @@
     "benchmark:illucia": "node benchmark-illucia.js",
     "benchmark:illucia-tiers": "node benchmark-illucia-tiers.js",
     "benchmark:illucia-models": "node benchmark-illucia-models.js",
+    "benchmark:illucia-bets": "node benchmark-illucia-bets.js",
     "build:illucia": "python build_illucia_words.py",
     "check:illucia": "python build_illucia_words.py --check",
     "build:illucia-labels": "python build_illucia_labels.py",
