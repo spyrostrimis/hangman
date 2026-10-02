@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { simulate } from './benchmark-illucia.js';
-import { ARMS, MULTIPLIERS, askStats, loadQuestions, paired, play, pricing } from './benchmark-illucia-bets.js';
+import { ARMS, MULTIPLIERS, askStats, loadQuestions, paired, play, pricing, versus } from './benchmark-illucia-bets.js';
 import { createKnowledge } from '../client/src/lib/illucia/lexicon.js';
 import { parseCategories, parseLabels } from '../client/src/lib/illucia/questions.js';
 
@@ -75,6 +75,13 @@ test('paired comparison counts the words only one arm wins, with an exact two-si
   assert.equal(result.missesSaved, 1.25);  // (1 + 2 + 0 + 2) / 4
   assert.equal(paired(declined, declined).p, 1);  // control: identical arms
   assert.throws(() => paired(declined, [...answered].reverse()), /order/);
+});
+
+test('versus names both arms and keeps the paired counts', () => {
+  const first = [game('aaaa', false, 6), game('bbbb', true, 2)];
+  const third = [game('aaaa', true, 5), game('bbbb', true, 2)];
+  assert.deepEqual(versus(first, third, ['first', 'third']), { words: 2, first: 0.5, third: 1, difference: 0.5,
+    thirdOnly: 1, firstOnly: 0, p: 1, missesSaved: 0.5 });
 });
 
 test('pricing compares stump points over in-tier rounds WordNet knows, multiplied by answers', () => {

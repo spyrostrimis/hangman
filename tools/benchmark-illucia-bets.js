@@ -153,6 +153,14 @@ export function paired(declined, answered) {
   };
 }
 
+// Two answer arms against each other, word by word: the "to" arm minus the "from" arm.
+export function versus(fromGames, toGames, [from, to]) {
+  const result = paired(fromGames, toGames);
+  return { words: result.words, [from]: result.herWinRateDeclined, [to]: result.herWinRateAnswered,
+    difference: result.difference, [`${to}Only`]: result.armOnly, [`${from}Only`]: result.declineOnly,
+    p: result.p, missesSaved: result.missesSaved };
+}
+
 export function askStats(games, broad) {
   const offers = games.flatMap(game => game.asked);
   const firsts = games.filter(game => game.asked.length).map(game => game.asked[0]);
@@ -280,6 +288,13 @@ export async function questionsBenchmark({ seed = DEFAULT_SEED, seeds = 3, quick
       results[tier.id].byLength[length] = Object.fromEntries(ARMS.filter(arm => arm.answers).map(arm =>
         [arm.id, paired(declined, all(arm.id).filter(game => game.word.length === length))]));
     }
+    // Timing (third guess minus first chance) and categories (all minus nouns), same answers.
+    results[tier.id].timing = Object.fromEntries(['noun-1', 'noun-2', 'all-1', 'all-2'].map(suffix =>
+      [suffix, versus(all(`first-${suffix}`), all(`third-${suffix}`), ['first', 'third'])]));
+    results[tier.id].categoryChoice = Object.fromEntries(['first-1', 'first-2', 'third-1', 'third-2'].map(name => {
+      const [timing, answers] = name.split('-');
+      return [name, versus(all(`${timing}-noun-${answers}`), all(`${timing}-all-${answers}`), ['noun', 'all'])];
+    }));
     const declined = all('decline');
     results[tier.id].all = Object.fromEntries(ARMS.filter(arm => arm.answers).map(arm => {
       const answered = all(arm.id);
