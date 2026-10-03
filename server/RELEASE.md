@@ -119,3 +119,14 @@ Implementation `3a69270` (`GET /user/illucia/stats` gains `ladder` and `spent`).
 - Evidence that it is `3a69270`: its upload was 1,841.58 KiB / 593.23 KiB gzipped (local wrangler log), and a dry-run build of `483fbae` (no server changes since `3a69270`) gives exactly the same sizes; `91f8b781` was 1,840.88 / 593.10. Bindings and secrets are unchanged from `91f8b781`.
 - Unauthenticated production checks: `GET /user/illucia/stats` returns 401 and `get-best-scores` returns 200. The new fields sit behind authentication, so they are not verified in production; the local suite covers them.
 - Rollback: `wrangler rollback` to `91f8b781`.
+
+## Illucia AI limits and model setting (production, 2026-10-03)
+
+Prompted by players seeing "out of questions" all day. Production's `ai_budget` and `illucia_ai_users` showed one player at the per-player limit (10 questions, 377 neurons, all 10 requests completed): a limit, not a fault.
+
+- `be8cdab` (pushed): the fallback line now says which limit stopped her helper (this round's two questions, today's questions, or the site's allowance), on both pages.
+- `5fb110c`: `AI_USER_DAILY_QUESTIONS` 10 → 30. Worker `89fca551-b6ec-4923-aff0-4790389663c6` deployed, replacing `5c259e32`. Unauthenticated checks: `ask` 401 without a session, `get-best-scores` 200, both Illucia pages 200.
+- `af37a12` (client, pushed first; frontend live with the new `/privacy` text before the Worker changed) and `befd4b8` (Worker): `AI_MODEL` chooses the model. Production is set to `gpt-oss-120b-medium` for the owner's live trial (40 s Worker timeout, 4,096 output tokens). The page now waits 45 s and names the model in her note. Worker `f38e8003-dd3f-4eb8-8ef6-a3b60c7bd702` deployed, replacing `89fca551`. Unauthenticated checks: `ask` 401, `get-best-scores` 200.
+- **Not verified in production:** a real gpt-oss-120b question (latency, cost, binding envelope), and an authenticated limit message. At medium, each question reserves about 300 neurons until settled, so the 2,000-neuron daily budget may allow only about 7–15 questions site-wide.
+- Rollback: set `AI_MODEL` to `llama-3.3-70b` and redeploy, or `wrangler rollback` to `89fca551` (the 45 s page timeout and model note work with either).
+
