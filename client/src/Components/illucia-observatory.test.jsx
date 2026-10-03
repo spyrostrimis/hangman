@@ -520,3 +520,43 @@ it('says no bonus is possible for a word her archive does not know, and asks not
   expect(tape(view)).toEqual(['z', 'q', 'j']);
   expect(screen.getByText(/questions: Open English WordNet \(CC BY 4\.0\)/)).toBeTruthy();
 });
+
+// Your record (Observatory slice 5): the shared record, in the notebook in place of the form.
+const STATS = { games: 5, wins: 2, lostOrAbandoned: 3,
+  tiers: { apprentice: { games: 1, wins: 1, lostOrAbandoned: 0 }, scholar: { games: 0, wins: 0, lostOrAbandoned: 0 }, master: { games: 4, wins: 1, lostOrAbandoned: 3 } },
+  learned: { total: 2, recent: ['jazz', 'crane'] }, history: { lengths: { 4: 3, 5: 2 }, letters: { ...ZERO_LETTERS, a: 5, z: 3, e: 2, c: 1 } },
+  ladder: RESET, spent: { total: 1, words: ['jazz'] } };
+
+it('shows the player their record in the notebook, with a retry, and closes back to the form', async () => {
+  let fail = true;
+  serveApi({ '/user/illucia/stats': (_, requests) => (requests.length > 1 && fail ? [500, { message: 'Service unavailable.' }] : [200, STATS]) });
+  const view = mount(); await settle();
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Your record vs Illucia' })); });
+  expect(screen.getByText(/Your record could not load\./)).toBeTruthy();
+  expect(screen.queryByLabelText('Insert your secret word')).toBeNull(); // the record replaces the form
+  fail = false;
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Try again' })); });
+  const panel = screen.getByRole('region', { name: 'Your record vs Illucia' });
+  expect(panel.closest('.obs-screen')).toBeTruthy();
+  expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'Your record vs Illucia' }));
+  expect(panel.querySelector('.obs-stats-total').textContent).toBe('5 duels · you won 2 · she won or you left 3');
+  expect([...panel.querySelectorAll('tbody tr')].map(row => row.textContent)).toEqual(['Apprentice11', 'Scholar00', 'Master41']);
+  expect(screen.getByText('JAZZ · CRANE')).toBeTruthy();
+  expect(screen.getByText('Lengths: 4 letters (3) · 5 letters (2)')).toBeTruthy();
+  expect(screen.getByText('Letters: A · Z · E · C')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+  expect(screen.queryByRole('region', { name: 'Your record vs Illucia' })).toBeNull();
+  expect(screen.getByLabelText('Insert your secret word')).toBeTruthy();
+  expect(view.container.querySelector('.obs-pod')).toBeTruthy(); // Illucia stays on stage
+});
+
+it('opens the record from the end of a duel, and closes back to the form', async () => {
+  serveApi({ '/user/illucia/stats': () => [200, { ...STATS, games: 0, wins: 0, lostOrAbandoned: 0 }] });
+  mount(); await start();
+  for (let turn = 0; turn < 4 && !screen.queryByRole('heading', { name: 'Illucia wins' }); turn++) await tick();
+  expect(screen.queryByRole('button', { name: 'Your record' })).toBeTruthy();
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Your record' })); });
+  expect(screen.getByText('No duels yet. Set her a word.')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+  expect(screen.getByLabelText('Insert your secret word')).toBeTruthy();
+});

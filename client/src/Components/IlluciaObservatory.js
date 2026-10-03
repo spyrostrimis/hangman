@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import RegisteredOnly from './RegisteredOnly';
 import { useAuth } from './AuthProvider';
 import IlluciaFigure from './IlluciaFigure';
+import IlluciaRecord from './IlluciaRecord';
 import { getPattern, getRemainingMisses, getRoundStatus, MAX_MISSES } from '../lib/hangman-core.js';
 import { ALPHABET, MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, isAcceptedWord, isWordShape, parseLexicon } from '../lib/illucia/lexicon.js';
 import { toPublicState } from '../lib/illucia/public-state.js';
@@ -116,7 +117,7 @@ function rungBadge(ladder, index) {
   return VOCABULARY_TIERS[index].id === ladder.next ? { text: `Next rung · ${ladder.minLength}+ letters`, tone: 'next' } : null;
 }
 
-function Setup({ username, onStart, ladder, spent }) {
+function Setup({ username, onStart, ladder, spent, recordOpen, setRecordOpen }) {
   const [secret, setSecret] = useState('');
   const [tierId, setTierId] = useState(ladder?.rung > 0 ? ladder.next : 'scholar');
   const [error, setError] = useState('');
@@ -178,6 +179,7 @@ function Setup({ username, onStart, ladder, spent }) {
     <Pod ambient lit={AMBIENT} count={null} mood="idle" line={`Hello, ${username}. ${greeting}`} />
     <section className="obs-screen">
       <div className="obs-screen-inner">
+        {recordOpen ? <IlluciaRecord prefix="obs" onClose={() => setRecordOpen(false)} /> : <>
         <h2>Challenge Illucia</h2>
         <p className="obs-rules">You choose a secret word. She guesses letters.<br />Hits cost her nothing. <strong>Six misses and you win.</strong></p>
         <form onSubmit={submit}>
@@ -208,6 +210,8 @@ function Setup({ username, onStart, ladder, spent }) {
           </fieldset>
           {loading && <p role="status">Loading her {secret.trim().length}-letter words…</p>}
         </form>
+        <button type="button" className="obs-record" onClick={() => setRecordOpen(true)}>Your record vs Illucia</button>
+        </>}
       </div>
     </section>
   </div>;
@@ -346,7 +350,7 @@ function RoundResult({ game, status, claim, retry }) {
   </>;
 }
 
-function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch, claim, retry, spent, answer }) {
+function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch, claim, retry, spent, answer, showRecord }) {
   const { round, tier, turns } = game;
   const status = getRoundStatus(round);
   const playing = status === 'playing' && !mind.failed;
@@ -424,6 +428,7 @@ function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch, 
         <button type="button" className="obs-new" onClick={() => (scored && !confirming ? setConfirming(true) : restart())}>
           {status !== 'playing' ? (climb ? `Climb to ${tierLabel(climb.next)} (${climb.minLength}+ letters)` : 'Play again')
             : scored && confirming ? 'Leave? Counts as a loss' : 'New word'}</button>
+        {status !== 'playing' && <button type="button" onClick={showRecord}>Your record</button>}
       </div>
     </section>
     <p role="status" aria-live="polite" aria-atomic="true" className="obs-sr">{game.pending ? `She asks: ${game.pending.question.question}` : latest
@@ -437,6 +442,7 @@ function ObservatoryPage({ userId, username }) {
   const [paused, setPaused] = useState(false);
   const [fast, setFast] = useState(false);
   const rounds = useIlluciaRounds(userId, game);
+  const [recordOpen, setRecordOpen] = useState(false);
   const mind = useMemo(() => game && readMind(game), [game]);
 
   // Her letter, played when her pause is over (the turn was decided in readMind).
@@ -493,6 +499,7 @@ function ObservatoryPage({ userId, username }) {
     if (game?.ticket && getRoundStatus(game.round) === 'playing') rounds.abandon();
     setGame(null);
     setPaused(false);
+    setRecordOpen(false);
   };
   return <main className="obs-page">
     <header className="obs-heading">
@@ -502,8 +509,9 @@ function ObservatoryPage({ userId, username }) {
     {game
       ? <Game key={game.ticket?.roundId ?? game.seed} game={game} mind={mind} paused={paused} setPaused={setPaused} fast={fast} setFast={setFast}
         restart={restart} rematch={tier => begin(game.round.answer, game.assets, tier)} answer={answer}
+        showRecord={() => { setGame(null); setRecordOpen(true); }}
         claim={rounds.claimFor(game)} retry={() => rounds.retry(game)} spent={rounds.spent} />
-      : <Setup username={username} onStart={begin} ladder={rounds.ladder} spent={rounds.spent} />}
+      : <Setup username={username} onStart={begin} ladder={rounds.ladder} spent={rounds.spent} recordOpen={recordOpen} setRecordOpen={setRecordOpen} />}
     <p className="obs-credits">Vocabulary: ESDB/SCOWL · filtered with LDNOOBW · questions: Open English WordNet (CC BY 4.0). <a href="/illucia/credits.html" target="_blank" rel="noreferrer">Credits &amp; licences</a></p>
   </main>;
 }

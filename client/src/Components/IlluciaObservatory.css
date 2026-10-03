@@ -509,3 +509,28 @@
   cursor: pointer;
 }
 .obs-question-answers button:hover { border-color: var(--obs-yellow); color: var(--obs-yellow); }
+
+/* Your record vs Illucia (Observatory slice 5), shown in the notebook in place of the form. */
+.obs-stats { text-align: left; }
+.obs-stats-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.obs-stats h2 { margin: 4px 0; font-size: 22px; }
+.obs-stats h3 { margin: 14px 0 4px; font-family: bruno; font-weight: normal; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--obs-yellow); }
+.obs-stats p { margin: 6px 0; overflow-wrap: anywhere; }
+.obs-stats b { font-family: bruno; font-weight: normal; color: var(--obs-yellow); }
+.obs-stats-tiers { width: 100%; margin-top: 8px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.obs-stats-tiers th, .obs-stats-tiers td { padding: 4px 6px; text-align: left; border-bottom: 1px solid #93939333; }
+.obs-stats-tiers thead th { font-family: bruno; font-weight: normal; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #a9a8ad; }
+.obs-stats button, .obs-record {
+  min-height: 44px;
+  padding: 0 14px;
+  font-family: bruno;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #d6b8ff;
+  background: none;
+  border: 1px solid #a54ed788;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.obs-record { margin-top: 12px; }
