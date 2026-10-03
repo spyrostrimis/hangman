@@ -540,7 +540,44 @@ describe('Illucia stats', () => {
     const { cookie } = await signup();
     expect((await request('illucia/stats', { method: 'GET' })).status).toBe(401);
     expect(await stats(cookie)).toEqual({ ...tier(0, 0), tiers: { apprentice: tier(0, 0), scholar: tier(0, 0), master: tier(0, 0) },
-      learned: { total: 0, recent: [] }, history: { lengths: {}, letters: letters({}) } });
+      learned: { total: 0, recent: [] }, history: { lengths: {}, letters: letters({}) },
+      ladder: { rung: 0, next: 'apprentice', minLength: 4 }, spent: { total: 0, words: [] } });
+  });
+
+  it('shows the ladder as the next new round would find it, and the words that already paid', async () => {
+    const { cookie } = await signup();
+    const view = (rung: number, next: string, minLength: number) => ({ rung, next, minLength });
+    await won(cookie, { word: 'jazz', tier: 'apprentice' });
+    expect(await stats(cookie)).toMatchObject({ ladder: view(1, 'scholar', 5), spent: { total: 1, words: ['jazz'] } });
+    // A win that pays nothing is learned but not spent, and it resets the ladder.
+    await won(cookie, { word: 'lynx', tier: 'apprentice' });
+    expect(await stats(cookie)).toMatchObject({ ladder: view(0, 'apprentice', 4), spent: { total: 1, words: ['jazz'] },
+      learned: { total: 2 } });
+    await won(cookie, { word: 'fizz', tier: 'apprentice' });
+    const climbing = await stats(cookie);
+    expect(climbing).toMatchObject({ ladder: view(1, 'scholar', 5), spent: { total: 2 } });
+    expect([...(climbing.spent as { words: string[] }).words].sort()).toEqual(['fizz', 'jazz']);
+    // While a round is open, a new, different round would abandon it and reset the ladder;
+    // resuming the same round keeps it (the start response says so).
+    const open = await start(cookie, { word: 'crane', tier: 'scholar' });
+    expect(open.ladder).toEqual(view(1, 'scholar', 5));
+    expect((await stats(cookie)).ladder).toEqual(view(0, 'apprentice', 4));
+    expect((await start(cookie, { word: 'crane', tier: 'scholar' })).ladder).toEqual(view(1, 'scholar', 5));
+    // The stats view agrees with what the next different round finds.
+    expect((await start(cookie, { word: 'rhythm', tier: 'scholar' })).ladder).toEqual((await stats(cookie)).ladder);
+  });
+
+  it('lists at most 1,000 spent words, most recent first, with the full total', async () => {
+    const { cookie, id } = await signup();
+    await env.DB.prepare('INSERT INTO illucia_players (user_id, personality_seed) VALUES (?, 1)').bind(id).run();
+    const words = Array.from({ length: 1001 }, (_, index) => `w${index.toString(26).replace(/./g, digit => String.fromCharCode(97 + parseInt(digit, 26)))}x`);
+    await env.DB.batch(words.map((word, index) => env.DB.prepare(
+      'INSERT INTO illucia_beaten_words (user_id, word, points, paid_round_id, beaten_at) VALUES (?, ?, 30, ?, ?)').bind(id, word, `round-${index}`, index)));
+    await env.DB.prepare('INSERT INTO illucia_beaten_words (user_id, word, points, paid_round_id, beaten_at) VALUES (?, ?, 0, NULL, 5000)')
+      .bind(id, 'unpaid').run();
+    const result = await stats(cookie);
+    expect(result.spent).toEqual({ total: 1001, words: words.slice(1).reverse() });
+    expect((result.learned as { total: number }).total).toBe(1002);
   });
 
   it('counts games and wins per tier, lost or abandoned, learned words and history, leaving out the round in play', async () => {
@@ -558,7 +595,8 @@ describe('Illucia stats', () => {
     const playing = await stats(cookie);
     expect(playing).toEqual({ ...tier(3, 2), tiers: { apprentice: tier(1, 1), scholar: tier(1, 0), master: tier(1, 1) },
       learned: { total: 2, recent: ['lynx', 'jazz'] },
-      history: { lengths: { 4: 2, 5: 1 }, letters: letters({ j: 1, a: 2, z: 1, l: 1, y: 1, n: 2, x: 1, c: 1, r: 1, e: 1 }) } });
+      history: { lengths: { 4: 2, 5: 1 }, letters: letters({ j: 1, a: 2, z: 1, l: 1, y: 1, n: 2, x: 1, c: 1, r: 1, e: 1 }) },
+      ladder: { rung: 0, next: 'apprentice', minLength: 4 }, spent: { total: 1, words: ['jazz'] } });
     // Control: once the open round expires unclaimed, it is a lost or abandoned game.
     await env.DB.prepare('UPDATE illucia_rounds SET expires_at = ? WHERE id = ?').bind(Date.now() - 1, open.roundId).run();
     expect(await stats(cookie)).toMatchObject({ ...tier(4, 2), tiers: { master: tier(2, 1) },
@@ -574,7 +612,7 @@ describe('Illucia stats', () => {
     await env.DB.prepare("INSERT INTO word_counts (word, count) VALUES ('jazz', 7)").run();
     const result = await stats(cookie);
     expect(result.learned).toEqual({ total: 101, recent: words.slice(1).reverse() });
-    expect(Object.keys(result).sort()).toEqual(['games', 'history', 'learned', 'lostOrAbandoned', 'tiers', 'wins']);
+    expect(Object.keys(result).sort()).toEqual(['games', 'history', 'ladder', 'learned', 'lostOrAbandoned', 'spent', 'tiers', 'wins']);
     expect(JSON.stringify(result)).not.toContain('jazz');
   });
 });

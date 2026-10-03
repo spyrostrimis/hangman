@@ -228,19 +228,28 @@ export async function claimIlluciaRound(db: D1Database, userId: string, roundId:
 }
 
 const RECENT_LEARNED = 100;
+// Enough for the page to warn before a word is committed; the claim stays the authority.
+const SPENT_LIMIT = 1000;
 type TierRow = { tier: IlluciaTier; games: number; wins: number };
 
 // The player's own Illucia statistics. A counted round still in play is left out,
 // so "lost or abandoned" (games − wins) never includes it. word_counts is not read.
+// `ladder` is the ladder as the next new round would find it (as in a claim response), and
+// `spent` lists the words that already paid, so the page can say both before a word is committed.
 export async function illuciaStats(db: D1Database, userId: string) {
-  const [tierRows, open, history, learned, total] = await db.batch([
+  const [tierRows, open, history, learned, total, player, spent, spentTotal] = await db.batch([
     db.prepare('SELECT tier, games, wins FROM illucia_tier_stats WHERE user_id = ?').bind(userId),
     db.prepare(`SELECT word, tier FROM illucia_rounds WHERE user_id = ? AND claimed_at IS NULL AND counted = 1 AND expires_at > ?`)
       .bind(userId, Date.now()),
     db.prepare('SELECT word, plays FROM illucia_player_words WHERE user_id = ?').bind(userId),
     db.prepare('SELECT word FROM illucia_beaten_words WHERE user_id = ? ORDER BY beaten_at DESC, word LIMIT ?').bind(userId, RECENT_LEARNED),
     db.prepare('SELECT COUNT(*) AS total FROM illucia_beaten_words WHERE user_id = ?').bind(userId),
+    db.prepare('SELECT round_seq, ladder_rung, ladder_length, ladder_seq FROM illucia_players WHERE user_id = ?').bind(userId),
+    db.prepare('SELECT word FROM illucia_beaten_words WHERE user_id = ? AND points > 0 ORDER BY beaten_at DESC, word LIMIT ?')
+      .bind(userId, SPENT_LIMIT),
+    db.prepare('SELECT COUNT(*) AS total FROM illucia_beaten_words WHERE user_id = ? AND points > 0').bind(userId),
   ]);
+  const row = player.results[0] as ({ round_seq: number } & LadderRow) | undefined;
   const playing = open.results[0] as { word: string; tier: IlluciaTier } | undefined;
   const summary = (games: number, wins: number) => ({ games, wins, lostOrAbandoned: games - wins });
   const tiers = Object.fromEntries(ILLUCIA_TIERS.map(({ id }) => {
@@ -258,5 +267,7 @@ export async function illuciaStats(db: D1Database, userId: string) {
     ...summary(all.games, all.wins), tiers,
     learned: { total: (total.results[0] as { total: number }).total, recent: (learned.results as { word: string }[]).map(row => row.word) },
     history: { lengths, letters },
+    ladder: row ? ladderFor(row, row.round_seq + 1) : ladderFor({ ladder_rung: 0, ladder_length: null, ladder_seq: null }, 1),
+    spent: { total: (spentTotal.results[0] as { total: number }).total, words: (spent.results as { word: string }[]).map(entry => entry.word) },
   };
 }
