@@ -5,11 +5,15 @@ import { MemoryRouter } from 'react-router-dom';
 import IlluciaObservatory from './IlluciaObservatory';
 import { analyzeDecision } from '../lib/illucia/strategy.js';
 import { newLocalSeed } from '../lib/illucia/random.js';
+import { ILLUCIA_ALREADY_WON_MESSAGE, illuciaStumpPoints } from '../../../shared/scoring-protocol.js';
 
-vi.mock('./AuthProvider', () => ({ useAuth: () => ({ user: { id: 'test-player', username: 'tester' }, status: 'authenticated' }) }));
+const auth = vi.hoisted(() => ({ user: { id: 'test-player', username: 'tester' }, status: 'authenticated' }));
+vi.mock('./AuthProvider', () => ({ useAuth: () => auth }));
 vi.mock('../lib/illucia/strategy.js', async original => ({ ...await original(), analyzeDecision: vi.fn() }));
 vi.mock('../lib/illucia/random.js', async original => ({ ...await original(), newLocalSeed: vi.fn(() => 1234) }));
 beforeEach(async () => {
+  auth.updateScore = vi.fn();
+  auth.expireSession = vi.fn();
   const real = (await vi.importActual('../lib/illucia/strategy.js')).analyzeDecision;
   analyzeDecision.mockImplementation(real);
   analyzeDecision.mockClear();
@@ -24,7 +28,12 @@ async function start(word = 'EERIE', tier = 'Master') {
   fireEvent.click(screen.getByRole('radio', { name: new RegExp(tier) }));
   fireEvent.change(screen.getByLabelText('Insert your secret word'), { target: { value: word } });
   await act(async () => { fireEvent.submit(screen.getByRole('button', { name: 'Start the duel' }).closest('form')); });
+  // An out-of-tier word asks first ("Start anyway"); these tests start regardless.
+  const anyway = screen.queryByRole('button', { name: 'Start anyway' });
+  if (anyway) await act(async () => { fireEvent.submit(anyway.closest('form')); });
 }
+// The static word files only (the server's /user/* requests are counted separately).
+const staticCalls = () => fetch.mock.calls.filter(([url]) => !url.startsWith('/user/'));
 // Longer than any turn delay, so exactly one guess happens per tick.
 const tick = () => act(async () => { await vi.advanceTimersByTimeAsync(2300); });
 const nextGuess = view => view.container.querySelector('.obs-bar.next .obs-bar-letter')?.textContent;
@@ -36,9 +45,9 @@ it('sends only the length, keeps the secret off screen and out of the solver, an
   expect(input.type).toBe('text');
   expect(view.container.querySelector('input[type="password"]')).toBeNull();
   await start();
-  expect(fetch).toHaveBeenCalledTimes(1);
-  expect(fetch.mock.calls[0][0]).toBe('/illucia/words/5.txt');
-  expect(Object.keys(fetch.mock.calls[0][1])).toEqual(['signal']);
+  expect(staticCalls()).toHaveLength(1);
+  expect(staticCalls()[0][0]).toBe('/illucia/words/5.txt');
+  expect(Object.keys(staticCalls()[0][1])).toEqual(['signal']);
   const state = analyzeDecision.mock.calls[0][0];
   expect(state.pattern).toEqual([null, null, null, null, null]);
   expect(state).not.toHaveProperty('answer');
@@ -90,11 +99,12 @@ it('falls back inside a low tier, ends after six misses and offers a rematch at 
   for (let index = 1; index < 6; index++) await tick();
   expect(screen.getByRole('heading', { name: 'You win!' })).toBeTruthy();
   expect(screen.getByRole('img', { name: '0 of 6 misses left' })).toBeTruthy();
-  expect(screen.getByText(/Duels don't earn Hall of Fame points yet/)).toBeTruthy();
-  fireEvent.click(screen.getByRole('button', { name: 'Rematch vs Scholar' }));
+  // The server could not be reached in this fixture, so the duel was not scored.
+  expect(screen.getByText('This duel was not scored.')).toBeTruthy();
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Rematch vs Scholar' })); });
   expect(screen.getByText('Scholar')).toBeTruthy();
   expect(tape(view)).toEqual([]);
-  expect(fetch).toHaveBeenCalledTimes(1);
+  expect(staticCalls()).toHaveLength(2); // the warning's second press loads the file again
 });
 
 it('pause stops her turns and resume continues them', async () => {
@@ -110,7 +120,7 @@ it('pause stops her turns and resume continues them', async () => {
 it('rejects invalid and unlisted words without starting', async () => {
   mount(); await start('two words');
   expect(screen.getByRole('alert').textContent).toContain('A–Z only');
-  expect(fetch).not.toHaveBeenCalled();
+  expect(staticCalls()).toHaveLength(0);
   await start('zzzzz');
   expect(screen.getByRole('alert').textContent).toContain('cannot accept');
   expect(screen.getByLabelText('Insert your secret word')).toBeTruthy();
@@ -119,11 +129,11 @@ it('rejects invalid and unlisted words without starting', async () => {
 it('asks for 4-15 letters and never fetches a 3-letter word file', async () => {
   mount(); await start('cat');
   expect(screen.getByRole('alert').textContent).toBe('Choose 4–15 letters, A–Z only, with no spaces or punctuation.');
-  expect(fetch).not.toHaveBeenCalled();
+  expect(staticCalls()).toHaveLength(0);
   // Positive control: four letters pass the shape check and load that length.
   fetch.mockResolvedValue({ ok: true, text: async () => 'cats 35\n' });
   await start('cats');
-  expect(fetch.mock.calls[0][0]).toBe('/illucia/words/4.txt');
+  expect(staticCalls()[0][0]).toBe('/illucia/words/4.txt');
   expect(screen.queryByRole('alert')).toBeNull();
 });
 
@@ -223,4 +233,181 @@ it('says each level knows more words and plays more carefully, never that only h
   await start();
   expect(newLocalSeed).toHaveBeenCalledTimes(1);
   expect(analyzeDecision.mock.calls.every(call => call[2]?.seed === 1234)).toBe(true);
+});
+
+// Scored rounds and her memory (Observatory slice 3). The API is mocked with the shapes the
+// Worker sends; every other request falls through to the fixture's word file.
+const ZERO_LETTERS = Object.fromEntries([...'abcdefghijklmnopqrstuvwxyz'].map(letter => [letter, 0]));
+const RESET = { rung: 0, next: 'apprentice', minLength: 4 };
+function ticketFor(body, extra = {}) {
+  return { roundId: `round-${body.word}-${body.tier}`, word: body.word, tier: body.tier, experimental: false, seed: 4242,
+    issuedAt: 1000, expiresAt: 1000 + 1800000, serverNow: 16000,
+    points: { eligible: true, stump: illuciaStumpPoints(body.tier, body.word.length, 0) }, ladder: RESET,
+    memory: { brain: { personalitySeed: 7, games: 3, letters: { ...ZERO_LETTERS, e: 2 }, learned: [] },
+      voice: { plays: 0, beatenBefore: false, everyone: 0 } }, ...extra };
+}
+function serveApi(handlers) {
+  const base = fetch.getMockImplementation();
+  const requests = [];
+  fetch.mockImplementation(async (url, options = {}) => {
+    if (url.startsWith('/user/')) {
+      const body = options.body ? JSON.parse(options.body) : null;
+      requests.push([url, body]);
+      const [status, data] = handlers[url] ? await handlers[url](body, requests) : [404, { message: 'Not found.' }];
+      return { ok: status < 400, status, json: async () => data };
+    }
+    return base(url, options);
+  });
+  return requests;
+}
+const CRANE = 'chair 35\ncrane 35\neagle 35\nheron 35\nplate 35\nrobin 35\nstone 35\ntable 35\n';
+// Forces her letters (none in the fixture's words) so the player wins; she plays the rest herself.
+async function forceLetters(letters) {
+  const real = (await vi.importActual('../lib/illucia/strategy.js')).analyzeDecision;
+  analyzeDecision.mockImplementation((state, knowledge, options) => {
+    const decision = real(state, knowledge, options);
+    const forced = letters[state.guessedLetters.length];
+    return forced ? { ...decision, letter: forced } : decision;
+  });
+}
+const settle = () => act(async () => { await vi.advanceTimersByTimeAsync(0); });
+const points = view => view.container.querySelector('.obs-points')?.textContent;
+
+it('plays a scored round with the server seed and her memory, shows the stakes, and claims the win once', async () => {
+  fetch.mockResolvedValue({ ok: true, text: async () => CRANE });
+  const requests = serveApi({
+    '/user/illucia/stats': () => [200, { games: 0, ladder: RESET, spent: { total: 0, words: [] } }],
+    '/user/illucia/start': body => [200, ticketFor(body)],
+    '/user/illucia/claim': () => [200, { score: 180, awarded: { stump: 80, ladder: 0 }, ladder: { rung: 2, next: 'master', minLength: 6 } }],
+  });
+  await forceLetters('zqjxvk');
+  const view = mount(); await settle();
+  expect(screen.getByText('Her guessing sees only the blanks. The server keeps your word to check the result.')).toBeTruthy();
+  await start('crane', 'Scholar');
+  expect(requests.find(([url]) => url === '/user/illucia/start')[1]).toEqual({ word: 'crane', tier: 'scholar' });
+  expect(view.container.querySelector('.obs-stakes').textContent).toBe('A win is worth 80 points.');
+  expect(points(view)).toBe('80 pts');
+  for (let turn = 0; turn < 6; turn++) await tick();
+  await settle();
+  // Every decision used the server's seed and her validated memory of this player.
+  expect(analyzeDecision.mock.calls.every(call => call[2].seed === 4242)).toBe(true);
+  expect(analyzeDecision.mock.calls[0][1].brain).toMatchObject({ personalitySeed: 7, games: 3 });
+  expect(screen.getByRole('heading', { name: 'You win!' })).toBeTruthy();
+  const claims = requests.filter(([url]) => url === '/user/illucia/claim');
+  expect(claims).toEqual([['/user/illucia/claim', { roundId: 'round-crane-scholar', guesses: [...'zqjxvk'], answeredQuestions: 0 }]]);
+  expect(screen.getByText('+80 points. Your total is 180.')).toBeTruthy();
+  expect(auth.updateScore).toHaveBeenCalledWith('test-player', 180);
+  expect(screen.getByText('Ladder: next, Master with a word of 6+ letters.')).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Climb to Master (6+ letters)' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Rematch vs Master (practice, 0 points)' })).toBeTruthy();
+  await tick();
+  expect(requests.filter(([url]) => url === '/user/illucia/claim')).toHaveLength(1);
+  // Climbing: the form offers the ladder's next rung, marked on its card.
+  fireEvent.click(screen.getByRole('button', { name: 'Climb to Master (6+ letters)' }));
+  expect(screen.getByRole('radio', { name: /Master/ }).checked).toBe(true);
+  expect(view.container.querySelector('.obs-tiers label.selected .obs-rung').textContent).toBe('Next rung · 6+ letters');
+  expect(screen.getByText('Ladder: next, Master with a word of 6+ letters. +100 at the top.')).toBeTruthy();
+});
+
+it('her win claims nothing and resets the ladder; a server failure plays unscored; 401 signs out', async () => {
+  const ladder = { rung: 1, next: 'master', minLength: 5 };
+  const requests = serveApi({
+    '/user/illucia/stats': () => [200, { ladder, spent: { total: 0, words: [] } }],
+    '/user/illucia/start': body => [200, ticketFor(body, { ladder })],
+  });
+  const view = mount(); await settle();
+  // The ladder on the tier cards: Apprentice climbed, Master is the next rung.
+  expect([...view.container.querySelectorAll('.obs-rung')].map(node => node.textContent)).toEqual(['Climbed', 'Next rung · 5+ letters']);
+  await start('eerie', 'Master');
+  expect(view.container.querySelector('.obs-stakes').textContent).toBe('A win is worth 100 points. This is rung 2 of 3 on your ladder.');
+  for (let turn = 0; turn < 4 && !screen.queryByRole('heading', { name: 'Illucia wins' }); turn++) await tick();
+  expect(screen.getByText('No points this time. Your ladder resets.')).toBeTruthy();
+  expect(requests.some(([url]) => url === '/user/illucia/claim')).toBe(false);
+  fireEvent.click(screen.getByRole('button', { name: 'Play again' }));
+  expect(screen.getByText('Ladder: beat Apprentice, then Scholar, then Master in a row, each word longer, for +100.')).toBeTruthy();
+  cleanup();
+
+  serveApi({ '/user/illucia/start': () => [500, { message: 'Service unavailable.' }] });
+  const unscored = mount(); await start('eerie', 'Master');
+  expect(unscored.container.querySelector('.obs-stakes').textContent).toBe('This duel is not scored: the scorekeeper could not be reached.');
+  expect(points(unscored)).toBe('Not scored');
+  expect(newLocalSeed).toHaveBeenCalled();
+  cleanup();
+
+  serveApi({ '/user/illucia/start': () => [401, { message: 'Sign in again.' }] });
+  analyzeDecision.mockClear();
+  mount(); await start('eerie', 'Master');
+  expect(auth.expireSession).toHaveBeenCalledWith('test-player');
+  expect(analyzeDecision).not.toHaveBeenCalled();
+});
+
+it('warns before a word that pays nothing or resets the ladder, and asks twice before leaving a scored round', async () => {
+  fetch.mockResolvedValue({ ok: true, text: async () => CRANE });
+  const requests = serveApi({
+    '/user/illucia/stats': () => [200, { ladder: { rung: 1, next: 'scholar', minLength: 6 }, spent: { total: 1, words: ['crane'] } }],
+    '/user/illucia/start': body => [200, ticketFor(body, { ladder: { rung: 1, next: 'scholar', minLength: 6 },
+      points: { eligible: false, stump: 0, reason: 'ALREADY_WON' } })],
+  });
+  const view = mount(); await settle();
+  expect(screen.getByRole('radio', { name: /Scholar/ }).checked).toBe(true);
+  fireEvent.change(screen.getByLabelText('Insert your secret word'), { target: { value: 'crane' } });
+  await act(async () => { fireEvent.submit(screen.getByRole('button', { name: 'Start the duel' }).closest('form')); });
+  expect(view.container.querySelector('.obs-warning').textContent)
+    .toBe(`${ILLUCIA_ALREADY_WON_MESSAGE} This resets your ladder (next rung: Scholar with 6+ letters).`);
+  expect(requests.some(([url]) => url === '/user/illucia/start')).toBe(false);
+  await act(async () => { fireEvent.submit(screen.getByRole('button', { name: 'Start anyway' }).closest('form')); });
+  expect(view.container.querySelector('.obs-stakes').textContent).toBe(ILLUCIA_ALREADY_WON_MESSAGE);
+  expect(points(view)).toBe('No points');
+  fireEvent.click(screen.getByRole('button', { name: 'New word' }));
+  expect(screen.getByRole('button', { name: 'Leave? Counts as a loss' })).toBeTruthy();
+  expect(screen.queryByLabelText('Insert your secret word')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Leave? Counts as a loss' }));
+  // The abandoned round resets the ladder, and the next start names it as the round being left.
+  expect(screen.getByText('Ladder: beat Apprentice, then Scholar, then Master in a row, each word longer, for +100.')).toBeTruthy();
+  await start('robin', 'Master');
+  expect(requests.filter(([url]) => url === '/user/illucia/start').at(-1)[1])
+    .toEqual({ word: 'robin', tier: 'master', previousRoundId: 'round-crane-scholar' });
+});
+
+it('shows words that beat her as their own stars, and remembers the word at the end', async () => {
+  fetch.mockResolvedValue({ ok: true, text: async () => CRANE });
+  const learned = body => ticketFor(body, { memory: {
+    brain: { personalitySeed: 7, games: 2, letters: { ...ZERO_LETTERS, c: 1, r: 2, a: 1, n: 1, e: 2, o: 1, b: 1, i: 1 }, learned: ['crane', 'robin'] },
+    voice: { plays: 1, beatenBefore: true, everyone: 1 } } });
+  serveApi({ '/user/illucia/start': body => [200, learned(body)],
+    '/user/illucia/claim': () => [200, { score: 100, awarded: { stump: 0, ladder: 0 }, reason: 'ALREADY_WON', ladder: RESET }] });
+  await forceLetters('zqjxvk');
+  const view = mount(); await start('crane', 'Master');
+  expect(view.container.querySelectorAll('.obs-stars span.learned')).toHaveLength(2);
+  expect(view.container.querySelectorAll('.obs-stars span:not(.learned)').length).toBeGreaterThan(0); // positive control
+  for (let turn = 0; turn < 6; turn++) await tick();
+  await settle();
+  expect(view.container.querySelector('.obs-bubble').textContent).toMatch(/CRANE… AGAIN\?\? I learned that word from you, and it still beat me\.$/);
+  expect(view.container.querySelector('.obs-award').textContent).toBe(ILLUCIA_ALREADY_WON_MESSAGE);
+});
+
+it('reports a failed claim and saves on retry', async () => {
+  fetch.mockResolvedValue({ ok: true, text: async () => CRANE });
+  let attempts = 0;
+  const requests = serveApi({
+    '/user/illucia/start': body => [200, ticketFor(body)],
+    '/user/illucia/claim': () => (++attempts === 1 ? [500, { message: 'No.' }] : [200, { score: 100, awarded: { stump: 100, ladder: 0 }, ladder: RESET }]),
+  });
+  await forceLetters('zqjxvk');
+  mount(); await start('crane', 'Master');
+  for (let turn = 0; turn < 6; turn++) await tick();
+  await settle();
+  expect(screen.getByRole('alert').textContent).toBe('Could not confirm your points were saved. Retrying is safe.');
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Retry saving' })); });
+  expect(requests.filter(([url]) => url === '/user/illucia/claim')).toHaveLength(2);
+  expect(screen.getByText('+100 points. Your total is 100.')).toBeTruthy();
+});
+
+it('counts the letters she got right in the singular too', async () => {
+  fetch.mockResolvedValue({ ok: true, text: async () => CRANE });
+  serveApi({ '/user/illucia/start': () => [500, { message: 'Service unavailable.' }] });
+  await forceLetters('czqjxvk'); // one hit (C), then six misses
+  mount(); await start('crane', 'Master');
+  for (let turn = 0; turn < 7; turn++) await tick();
+  expect(screen.getByText('You held out for six misses. She guessed 1 letter right.')).toBeTruthy();
 });

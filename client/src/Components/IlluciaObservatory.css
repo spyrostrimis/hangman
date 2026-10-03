@@ -442,3 +442,48 @@
 .obs-bar.listed .obs-bar-fill { outline: 1px solid #d6b8ff; outline-offset: 1px; }
 .obs-bar.listed .obs-bar-letter { color: #d6b8ff; }
 .obs-bar.next .obs-bar-letter { color: var(--obs-yellow); }
+
+/* Scored rounds and her memory (Observatory slice 3). */
+.obs-hud-chips { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.obs-points {
+  padding: 3px 8px;
+  font-size: 12px;
+  letter-spacing: .1em;
+  color: var(--obs-yellow);
+  border: 1px solid #f3f40055;
+  border-radius: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.obs-stars span.learned { --size: 6px !important; background: #ffd27a; box-shadow: 0 0 10px 3px #f3b400aa; }
+.obs-rung {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 1px 6px;
+  font-family: bruno;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border-radius: 3px;
+}
+.obs-rung.next { color: var(--obs-yellow); border: 1px solid #f3f40088; }
+.obs-rung.done { color: #7ee89b; border: 1px solid #3ee07a88; }
+.obs-rung.done::before { content: "✓ "; }
+.obs-ladder { margin-top: 2px; }
+.obs-warning { color: #ffd27a; font-size: 14px; margin: 8px 0 0; }
+.obs-stakes { color: var(--obs-yellow); font-size: 13px; margin: 2px 0; }
+.obs-award { color: var(--obs-yellow); }
+.obs-retry {
+  font-family: bruno;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #d0d2d5;
+  background: none;
+  border: 1px solid #93939355;
+  min-height: 44px;
+  padding: 0 14px;
+  cursor: pointer;
+}
+@media (max-width: 800px) {
+  .obs-tiers label { flex-wrap: wrap; }
+  .obs-rung { margin-left: auto; }
+}
