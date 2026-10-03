@@ -89,3 +89,24 @@ Implementation `d0dc2e1` (×1.5/×2 question multipliers, 15 s Illucia claim flo
 - Unauthenticated production checks: Illucia start, claim and stats return 401; Hangman `round/start` 401; an unknown path 404; `get-best-scores` 200.
 - Not verified in production: the new floor and multipliers on an authenticated claim. Tickets issued under `352bfbb2` and claimed after this deploy are held to the 15 s floor.
 - Rollback: `wrangler rollback` to `352bfbb2`.
+
+## Illucia experimental AI questions, D2 (production, 2026-10-03)
+
+Implementation `8ad1349` (shared prompt and validator) and `16b9be9` (`POST /user/illucia/ask`, migration `0008`), with the `/privacy` disclosure `86067bf` and docs `b57f5c8`. Pushed to `main` together with Track B's `85357c7`, `0bf81fa` and `4ed3ea2`, after the D2 commits were rebased onto them. Design and limits are in `server/README.md`; model choice is in `tools/ILLUCIA-AI-QUESTIONS.md`.
+
+- Before release, on the combined tree at `b57f5c8`:
+  - Worker: 79 Worker/D1 tests (13 new for D2), the TypeScript check and the dry-run build pass. Each D2 guard was seen failing a test when removed.
+  - Client: 93 Node and 59 UI tests pass.
+  - Tools: 249 tests pass.
+  - The `/privacy` copy was checked in the built page.
+- The published frontend bundle (`index-Dghh-KCB.js`) contained the new `/privacy` text about 45 s after the push, before the Worker deployed.
+- Migration listing showed only `0008` pending. The first `migrations apply --remote` exited on a Windows libuv assertion before applying anything (the listing still showed `0008` pending). A non-interactive retry applied `0008_illucia_ai.sql` at 00:10:56 UTC. Production lists `ai_budget`, `illucia_ai_users`, `illucia_ai_users_day` and `illucia_rounds.ai_questions` and `ai_token`.
+- Worker version `91f8b781-d3bc-409c-894b-72862bf171ca` deployed shortly after the migration and is serving 100%, replacing `b5095175`. The new bindings are `env.AI`, `AI_ENABLED` "true", `AI_DAILY_NEURONS` 2000, `AI_DAILY_REQUESTS` 60 and `AI_USER_DAILY_QUESTIONS` 10. Route and hourly cron are unchanged. Upload 1,840.88 KiB, 593.10 KiB gzipped.
+- Unauthenticated production checks:
+  - `POST /user/illucia/ask` returns 401 without a session and 403 from a foreign origin, and `GET` returns 401.
+  - Illucia start and `/user/me` return 401.
+  - `get-best-scores` returns 200 JSON (3 rows), and `/`, `/hangman`, `/illucia` and `/privacy` return 200.
+  - `ai_budget` and `illucia_ai_users` are empty: no AI spend yet.
+- **Not verified in production:** an authenticated question (a real Workers AI call through the binding, the binding's reply envelope, the limits, settling), and CPU for the route. No page calls the route yet (E5), so nothing spends until then. Account creation by the assistant on the public site is not allowed, so the first authenticated check is Spyros's, or E5's.
+- Rollback: `wrangler rollback` to `b5095175`, or set `AI_ENABLED` to "false" and redeploy to switch the mode off. Migration `0008` only adds tables and columns that the earlier Worker ignores, so it can stay.
+
