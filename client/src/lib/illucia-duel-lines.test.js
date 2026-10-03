@@ -52,6 +52,9 @@ test('her reasoning says why, from her decision record only', () => {
     `${facts} It comes out on top, helped by my early lean towards vowels.`);
   assert.equal(line({ mode: 'exploring', choseBest: true, best: ['i', 't'], tiedWith: ['i'], vowelBonus: 0 }),
     `${facts} T and I are tied for my top pick; I have a feeling about T.`);
+  // Three or more tied letters are listed once each, not "T and I and O".
+  assert.equal(line({ mode: 'exploring', choseBest: true, best: ['i', 'o', 't'], tiedWith: ['i', 'o'], vowelBonus: 0 }),
+    `${facts} T, I and O are tied for my top pick; I have a feeling about T.`);
   assert.equal(line({ mode: 'exploring', choseBest: false, best: ['e'], tiedWith: [], vowelBonus: 0 }),
     `${facts} E scores a little higher, but T is on my shortlist and I have a feeling about it.`);
   assert.equal(line({ mode: 'exploring', choseBest: false, best: ['a', 'e', 'o'], tiedWith: [], vowelBonus: 200 }),

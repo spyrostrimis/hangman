@@ -86,7 +86,7 @@ function whyLine({ letter, mode, choseBest, best = [], tiedWith = [], vowelBonus
     return 'No more hunches: it is my best letter.';
   }
   if (choseBest) {
-    if (tiedWith.length) return `${L} and ${listLetters(tiedWith)} are tied for my top pick; I have a feeling about ${L}.`;
+    if (tiedWith.length) return `${listLetters([letter, ...tiedWith])} are tied for my top pick; I have a feeling about ${L}.`;
     return lean ? 'It comes out on top, helped by my early lean towards vowels.' : 'It comes out on top.';
   }
   const higher = best.length === 1 ? `${listLetters(best)} scores` : `${listLetters(best)} score`;
