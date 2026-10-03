@@ -7,8 +7,10 @@ import { ALPHABET, MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, isAccepte
 import { toPublicState } from '../lib/illucia/public-state.js';
 import { filterCandidates } from '../lib/illucia/candidates.js';
 import { rejectionLine } from '../lib/illucia/lines.js';
-import { greetingLine, notebookLine, openingLine, turnLine } from '../lib/illucia/observatory-lines.js';
-import { createSession, herKnowledge, previewPoints, rememberLine, roundStakes, startWarning, takeTurn, tierLabel } from '../lib/illucia/duel-session.js';
+import { greetingLine, notebookLine, openingLine, questionSmallPrint, turnLine } from '../lib/illucia/observatory-lines.js';
+import { ANSWERS, answerLine, questionLine } from '../lib/illucia/duel-lines.js';
+import { answerQuestion, createSession, herKnowledge, offerStake, previewPoints, rememberLine, roundStakes, startWarning, takeTurn, tierLabel } from '../lib/illucia/duel-session.js';
+import { loadQuestions } from '../lib/illucia-assets.js';
 import { useIlluciaRounds } from '../lib/use-illucia-rounds.js';
 import { ILLUCIA_ALREADY_WON_MESSAGE, ILLUCIA_NO_POINTS } from '../../../shared/scoring-protocol.js';
 import './IlluciaObservatory.css';
@@ -69,14 +71,15 @@ function starStyle(word) {
 }
 
 // Every star behind Illucia is a word she still considers possible.
-function Starfield({ lit = [], fading = [], ambient = false, learned = null }) {
+function Starfield({ lit = [], fading = [], ambient = false, learned = null, sideOf = null }) {
   const litSet = new Set(lit);
   const words = [...new Set([...lit, ...fading])].sort((a, b) => hash(a) - hash(b));
   const few = lit.length <= 12;
   return <div className={`obs-stars ${ambient ? 'ambient' : ''}`} aria-hidden="true">
     {words.map(word => {
       const { tone, ...style } = starStyle(word);
-      const kind = learned?.has(word) ? 'learned' : tone;
+      const side = sideOf?.(word);
+      const kind = side ? `side-${side}` : learned?.has(word) ? 'learned' : tone;
       return <span key={word} style={style} className={`${kind} ${litSet.has(word) ? (few ? 'few' : '') : 'out'}`} />;
     })}
   </div>;
@@ -88,9 +91,9 @@ function SpeechBubble({ text }) {
   return <p className="obs-bubble" key={text}>{text}</p>;
 }
 
-function Pod({ children, lit, fading, ambient, learned, count, tier, points, mood, thinking, turn, line, banner }) {
+function Pod({ children, lit, fading, ambient, learned, sideOf, count, tier, points, mood, thinking, turn, line, banner }) {
   return <section className="obs-pod" aria-label="Illucia">
-    <Starfield lit={lit} fading={fading} ambient={ambient} learned={learned} />
+    <Starfield lit={lit} fading={fading} ambient={ambient} learned={learned} sideOf={sideOf} />
     <div className="obs-hud">
       <span><small>Words in mind</small><b>{count === null ? '—' : count.toLocaleString('en-US')}</b></span>
       {tier && <span className="obs-hud-chips">
@@ -144,8 +147,9 @@ function Setup({ username, onStart, ladder, spent }) {
     setError('');
     const timeout = setTimeout(() => controller.abort(), 10000);
     try {
-      // The word list is a static file: only the length is in this request.
-      const response = await fetch(`/illucia/words/${word.length}.txt`, { signal: controller.signal });
+      // The word list and labels are static files: only the length is in these requests.
+      const options = { signal: controller.signal };
+      const [response, questions] = await Promise.all([fetch(`/illucia/words/${word.length}.txt`, options), loadQuestions(word.length, options)]);
       if (!response.ok) throw new Error('Vocabulary unavailable');
       const entries = parseLexicon(await response.text(), word.length);
       if (controller.signal.aborted) return;
@@ -161,7 +165,7 @@ function Setup({ username, onStart, ladder, spent }) {
       }
       clearTimeout(timeout);
       // Starting a round sends the word to the server (see /privacy).
-      await onStart(word, entries, tier);
+      await onStart(word, { entries, questions }, tier);
     } catch {
       if (pending.current === controller) setError('The vocabulary could not load. Please try again.');
     } finally {
@@ -210,8 +214,9 @@ function Setup({ username, onStart, ladder, spent }) {
 }
 
 // ticket: the server's round (seed, points, ladder, memory), or null when it could not start.
-function newGame(word, entries, tier, ticket = null) {
-  const session = createSession(word, { entries, questions: null }, tier, ticket);
+// assets: { entries, questions: { labels, categories } | null }. Without labels she asks nothing.
+function newGame(word, assets, tier, ticket = null) {
+  const session = createSession(word, assets, tier, ticket);
   const candidates = filterCandidates(toPublicState(session.round), session.knowledge.words);
   return {
     ...session, turns: [], fading: [],
@@ -231,7 +236,7 @@ function readMind(game) {
   const knowledge = herKnowledge(game);
   const candidates = filterCandidates(state, knowledge.words);
   // takeTurn is pure: it says what she will do, and the page plays it when her pause is over.
-  const turn = getRoundStatus(game.round) === 'playing' ? takeTurn(game) : null;
+  const turn = getRoundStatus(game.round) === 'playing' && !game.pending ? takeTurn(game) : null;
   const decision = turn?.type === 'letter' ? turn.decision : null;
   const failed = turn?.type === 'error';
   const fallback = Boolean(decision?.fallback);
@@ -281,8 +286,38 @@ function Analyzer({ round, mind, playing }) {
   </div>;
 }
 
+// Which side of her open question a word is on: 'yes', 'no', or null when her archive does not
+// know it (it stays on both sides). Her candidates only; never the secret.
+function questionSides(game) {
+  const { pending } = game;
+  if (!pending || pending.ai) return null;
+  const { labels } = game.questions;
+  const { code } = pending.question;
+  return word => {
+    const codes = labels.get(word);
+    return codes === undefined ? null : codes.includes(code) ? 'yes' : 'no';
+  };
+}
+
+// Her question, in the notebook: the stake, the small print, and the player's three choices.
+function QuestionCard({ game, onAnswer }) {
+  const heading = useRef(null);
+  useEffect(() => { heading.current?.focus(); }, []);
+  const { question } = game.pending;
+  return <div className="obs-question" role="group" aria-labelledby="obs-question-title" aria-describedby="obs-question-stake">
+    <h3 id="obs-question-title" ref={heading} tabIndex={-1}>{question.question}</h3>
+    <p id="obs-question-stake" className="obs-question-stake">{offerStake(game)}</p>
+    <div className="obs-question-answers">
+      {ANSWERS.map(choice => <button key={choice.id} type="button" onClick={() => onAnswer(choice.id)}>{choice.label}</button>)}
+    </div>
+    <p className="obs-muted">{questionSmallPrint(question)}</p>
+  </div>;
+}
+
 function Reasoning({ round, mind, tier, playing }) {
   if (!playing || mind.failed) return null;
+  if (mind.turn?.type === 'question') return <p className="obs-reasoning">Instead of a letter, she is choosing a question to ask you.</p>;
+  if (!mind.decision) return null;
   return <p className="obs-reasoning">{notebookLine(mind.decision, { tierLabel: tier.label, length: round.answer.length, fallbackShare: mind.fallbackShare })}</p>;
 }
 
@@ -311,7 +346,7 @@ function RoundResult({ game, status, claim, retry }) {
   </>;
 }
 
-function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch, claim, retry, spent }) {
+function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch, claim, retry, spent, answer }) {
   const { round, tier, turns } = game;
   const status = getRoundStatus(round);
   const playing = status === 'playing' && !mind.failed;
@@ -333,7 +368,7 @@ function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch, 
 
   return <>
     <div className="obs-grid">
-      <Pod lit={game.lit} fading={game.fading} learned={game.knowledge.learned} count={mind.candidates.length} tier={tier.label}
+      <Pod lit={game.lit} fading={game.fading} learned={game.knowledge.learned} sideOf={questionSides(game)} count={mind.candidates.length} tier={tier.label}
         points={points} mood={mood} thinking={playing && !paused} turn={turns.length} line={game.line}
         banner={status === 'solved' ? { text: 'Illucia wins', tone: 'lose' } : status === 'failed' ? { text: 'You win!', tone: 'win' } : null} />
       <section className="obs-screen">
@@ -341,13 +376,16 @@ function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch, 
           <h2 ref={heading} tabIndex={-1}>{status === 'solved' ? 'Illucia wins' : status === 'failed' ? 'You win!' : "Illucia's notebook"}</h2>
           {status === 'playing'
             ? <>
-              <p className="obs-muted">Her letter scores · turn {turns.length + 1}{mind.cutoff !== null && playing ? ' · above the dashed line: her shortlist' : ''}{paused ? ' · paused' : ''}</p>
+              <p className="obs-muted">{game.pending ? 'Her question · green stars can mean it, blue cannot, white: unknown to her archive'
+                : `Her letter scores · turn ${turns.length + 1}${mind.cutoff !== null && playing ? ' · above the dashed line: her shortlist' : ''}`}{paused ? ' · paused' : ''}</p>
               <p className="obs-stakes">{game.stakes}</p>
             </>
             : <p className="obs-reveal">The word was <strong>{round.answer.toUpperCase()}</strong></p>}
-          <Analyzer round={round} mind={mind} playing={playing} />
-          <p className="obs-sr">{playing && mind.decision ? `Her next guess is ${mind.decision.letter.toUpperCase()}.` : ''}</p>
-          <Reasoning round={round} mind={mind} tier={tier} playing={playing} />
+          {game.pending ? <QuestionCard game={game} onAnswer={answer} /> : <>
+            <Analyzer round={round} mind={mind} playing={playing} />
+            <p className="obs-sr">{playing && mind.decision ? `Her next guess is ${mind.decision.letter.toUpperCase()}.` : ''}</p>
+            <Reasoning round={round} mind={mind} tier={tier} playing={playing} />
+          </>}
           {mind.failed && <p role="alert" className="obs-error">Illucia could not continue this round. Please choose another word.</p>}
           {status !== 'playing' && <div className="obs-summary">
             <p>{status === 'solved' ? `She solved it in ${turns.length} guesses with ${remaining} ${remaining === 1 ? 'miss' : 'misses'} to spare.` : `You held out for six misses. She guessed ${turns.length - MAX_MISSES} ${turns.length - MAX_MISSES === 1 ? 'letter' : 'letters'} right.`}</p>
@@ -388,7 +426,7 @@ function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch, 
             : scored && confirming ? 'Leave? Counts as a loss' : 'New word'}</button>
       </div>
     </section>
-    <p role="status" aria-live="polite" aria-atomic="true" className="obs-sr">{latest
+    <p role="status" aria-live="polite" aria-atomic="true" className="obs-sr">{game.pending ? `She asks: ${game.pending.question.question}` : latest
       ? `Turn ${turns.length}: ${latest.letter.toUpperCase()}, ${latest.positions ? `hit, ${latest.positions} ${latest.positions === 1 ? 'position' : 'positions'}` : 'miss'}. ${remaining} misses left.${status === 'solved' ? ' Illucia wins.' : status === 'failed' ? ' You win.' : ''}`
       : 'The duel has begun.'}</p>
   </>;
@@ -403,9 +441,13 @@ function ObservatoryPage({ userId, username }) {
 
   // Her letter, played when her pause is over (the turn was decided in readMind).
   useEffect(() => {
-    if (!game || mind?.turn?.type !== 'letter' || paused) return;
+    if (!game || !['letter', 'question'].includes(mind?.turn?.type) || paused) return;
     const delay = game.turns.length === 0 ? 2200 : fast ? 700 : 1700;
     const timer = setTimeout(() => {
+      if (mind.turn.type === 'question') {
+        setGame({ ...mind.turn.session, line: questionLine(mind.turn.question, game.round.guesses.length) });
+        return;
+      }
       const { session, letter, positions } = mind.turn;
       const { round } = session;
       const candidates = filterCandidates(toPublicState(round), herKnowledge(session).words);
@@ -427,11 +469,23 @@ function ObservatoryPage({ userId, username }) {
   // The round is over: the game no longer changes, so this runs once per round.
   useEffect(() => { if (game && getRoundStatus(game.round) !== 'playing') rounds.finish(game); }, [game]);
 
-  async function begin(word, entries, tier) {
+  async function begin(word, assets, tier) {
     const started = await rounds.start(word, tier, false);
     if (!started) return;
     setPaused(false);
-    setGame(newGame(word, entries, tier, started.ticket));
+    setGame(newGame(word, assets, tier, started.ticket));
+  }
+
+  // The player answers or declines her question; the words it rules out fade from her sky.
+  function answer(choiceId) {
+    const result = answerQuestion(game, choiceId);
+    if (!result) return;
+    const { session } = result;
+    const candidates = filterCandidates(toPublicState(session.round), herKnowledge(session).words);
+    const lit = brightestStars(candidates, session.knowledge.learned);
+    const litSet = new Set(lit);
+    setGame({ ...session, lit, fading: game.lit.filter(word => !litSet.has(word)),
+      line: answerLine(result.outcome, game.round.guesses.length, result.truth) });
   }
 
   const restart = () => {
@@ -447,9 +501,9 @@ function ObservatoryPage({ userId, username }) {
     </header>
     {game
       ? <Game key={game.ticket?.roundId ?? game.seed} game={game} mind={mind} paused={paused} setPaused={setPaused} fast={fast} setFast={setFast}
-        restart={restart} rematch={tier => begin(game.round.answer, game.entries, tier)}
+        restart={restart} rematch={tier => begin(game.round.answer, game.assets, tier)} answer={answer}
         claim={rounds.claimFor(game)} retry={() => rounds.retry(game)} spent={rounds.spent} />
       : <Setup username={username} onStart={begin} ladder={rounds.ladder} spent={rounds.spent} />}
-    <p className="obs-credits">Vocabulary: ESDB/SCOWL · filtered with LDNOOBW. <a href="/illucia/credits.html" target="_blank" rel="noreferrer">Credits &amp; licences</a></p>
+    <p className="obs-credits">Vocabulary: ESDB/SCOWL · filtered with LDNOOBW · questions: Open English WordNet (CC BY 4.0). <a href="/illucia/credits.html" target="_blank" rel="noreferrer">Credits &amp; licences</a></p>
   </main>;
 }

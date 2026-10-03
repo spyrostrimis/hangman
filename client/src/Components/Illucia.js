@@ -3,11 +3,11 @@ import RegisteredOnly from './RegisteredOnly';
 import { useAuth } from './AuthProvider';
 import { getPattern, getRemainingMisses, getRoundStatus, MAX_MISSES } from '../lib/hangman-core.js';
 import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, isAcceptedWord, isWordShape, parseLexicon } from '../lib/illucia/lexicon.js';
-import { parseCategories, parseLabels } from '../lib/illucia/questions.js';
 import { rejectionLine } from '../lib/illucia/lines.js';
 import { greetingLine, openingLine } from '../lib/illucia/observatory-lines.js';
 import { AI_NOTE, ANSWERS, REPLIES, aiAnswerLine, aiFallbackLine, aiQuestionLine, answerLine, askLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from '../lib/illucia/duel-lines.js';
-import { answerQuestion, applyConsult, countWords, createSession, herKnowledge, previewPoints, rememberLine, roundStakes, startWarning, takeTurn, tierLabel } from '../lib/illucia/duel-session.js';
+import { answerQuestion, applyConsult, countWords, createSession, herKnowledge, offerStake, previewPoints, rememberLine, roundStakes, startWarning, takeTurn, tierLabel } from '../lib/illucia/duel-session.js';
+import { loadQuestions } from '../lib/illucia-assets.js';
 import { askIlluciaAi, loadIlluciaStats } from '../lib/illucia-rounds.js';
 import { useIlluciaRounds } from '../lib/use-illucia-rounds.js';
 import { ILLUCIA_ALREADY_WON_MESSAGE, ILLUCIA_NO_POINTS } from '../../../shared/scoring-protocol.js';
@@ -175,20 +175,6 @@ function Board({ entry, answer, active, onReveal }) {
   </div>;
 }
 
-// Her question labels for one length (v2 B1). Questions are optional: if they cannot load,
-// she plays letters only.
-async function loadQuestions(length, options) {
-  try {
-    const [labelsResponse, categoriesResponse] = await Promise.all([
-      fetch(`/illucia/labels/${length}.txt`, options), fetch('/illucia/labels/categories.json', options)]);
-    if (!labelsResponse.ok || !categoriesResponse.ok) return null;
-    const categories = parseCategories(await categoriesResponse.json());
-    return { categories, labels: parseLabels(await labelsResponse.text(), length, categories) };
-  } catch {
-    return null;
-  }
-}
-
 function LadderNote({ ladder }) {
   if (!ladder) return null;
   const text = ladder.rung === 0
@@ -291,14 +277,7 @@ function Composer({ onStart, ladder, spent, experimental, setExperimental }) {
 // Her question is a bet: answering helps her, declining tells her nothing. When WordNet does
 // not know the player's word, the answer cannot be checked, and the card says so first.
 function Offer({ duel, onAnswer }) {
-  const { pending } = duel;
-  const now = previewPoints(duel);
-  const next = previewPoints(duel, 1);
-  const stake = pending.ai ? 'An AI question earns nothing and cannot be checked. Answering helps her a little; declining tells her nothing.'
-    : !pending.checkable
-    ? 'My archive does not know your word, so your answer cannot be checked: no bonus possible for this word.'
-    : duel.points?.eligible ? `Answer correctly and still win: ${now} → ${next} points. Declining tells her nothing.`
-      : 'Answering helps her. Declining tells her nothing.';
+  const stake = offerStake(duel);
   return <div className="duel-msg from-player">
     <div className="duel-replies duel-offer" role="group" aria-label="Answer her question" aria-describedby="duel-offer-stake">
       <span className="duel-label">Her question · your choice</span>

@@ -102,3 +102,9 @@ export function notebookLine(decision, { tierLabel, length, fallbackShare = 0 })
   parts.push(`So ${L} is next.`);
   return parts.join(' ');
 }
+
+// The small print on the notebook's question card: true of every answer, plus the WordNet
+// credit. share is the smaller side's weight in hundredths of a percent of her candidate weight.
+export function questionSmallPrint(question) {
+  return `Either answer rules out at least ${Math.floor(question.share / 100)}% of her words, counting common ones more. Categories: Open English WordNet (CC BY 4.0).`;
+}

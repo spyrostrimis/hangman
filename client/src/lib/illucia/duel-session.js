@@ -152,6 +152,16 @@ export function answerQuestion(session, answer) {
 export const previewPoints = (session, extra = 0) => (session.points?.eligible
   ? illuciaStumpPoints(session.tier.id, session.round.answer.length, session.verified + extra) : 0);
 
+// What answering her open question is worth, said before the player chooses.
+export function offerStake(session) {
+  const { pending } = session;
+  if (pending.ai) return 'An AI question earns nothing and cannot be checked. Answering helps her a little; declining tells her nothing.';
+  if (!pending.checkable) return 'My archive does not know your word, so your answer cannot be checked: no bonus possible for this word.';
+  return session.points?.eligible
+    ? `Answer correctly and still win: ${previewPoints(session)} → ${previewPoints(session, 1)} points. Declining tells her nothing.`
+    : 'Answering helps her. Declining tells her nothing.';
+}
+
 // Whether a win in this round would climb the ladder (a preview of the server's rule).
 export function ladderStep(ladder, tier, length) {
   if (!ladder) return null;

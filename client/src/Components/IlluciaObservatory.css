@@ -487,3 +487,25 @@
   .obs-tiers label { flex-wrap: wrap; }
   .obs-rung { margin-left: auto; }
 }
+
+/* Her questions (Observatory slice 4): a card in the notebook while the duel holds, and her sky
+   split by the possible answer. */
+.obs-stars span.side-yes { background: var(--obs-green); box-shadow: 0 0 6px var(--obs-green); }
+.obs-stars span.side-no { background: #5aa7ff; box-shadow: 0 0 6px #2f7bff; }
+.obs-question { margin: 14px 0 6px; padding: 14px 12px; text-align: left; background: #05070fb0; border: 1px solid #a54ed788; border-radius: 6px; box-shadow: 0 0 10px #a54ed744; }
+.obs-question h3 { margin: 0 0 8px; font-family: bruno; font-weight: normal; font-size: 18px; line-height: 1.35; color: var(--obs-yellow); outline: none; }
+.obs-question-stake { margin: 0 0 12px; font-size: 14px; }
+.obs-question-answers { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.obs-question-answers button {
+  flex: 1 1 120px;
+  min-height: 44px;
+  font-family: bruno;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #d0d2d5;
+  background: none;
+  border: 1px solid #10cfe6aa;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.obs-question-answers button:hover { border-color: var(--obs-yellow); color: var(--obs-yellow); }

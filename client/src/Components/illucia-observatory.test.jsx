@@ -45,9 +45,10 @@ it('sends only the length, keeps the secret off screen and out of the solver, an
   expect(input.type).toBe('text');
   expect(view.container.querySelector('input[type="password"]')).toBeNull();
   await start();
-  expect(staticCalls()).toHaveLength(1);
-  expect(staticCalls()[0][0]).toBe('/illucia/words/5.txt');
-  expect(Object.keys(staticCalls()[0][1])).toEqual(['signal']);
+  // Her words and her question labels for this length: never the secret, only the length.
+  expect(staticCalls().map(call => call[0]).sort())
+    .toEqual(['/illucia/labels/5.txt', '/illucia/labels/categories.json', '/illucia/words/5.txt']);
+  for (const [, options] of staticCalls()) expect(Object.keys(options)).toEqual(['signal']);
   const state = analyzeDecision.mock.calls[0][0];
   expect(state.pattern).toEqual([null, null, null, null, null]);
   expect(state).not.toHaveProperty('answer');
@@ -104,7 +105,9 @@ it('falls back inside a low tier, ends after six misses and offers a rematch at 
   await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Rematch vs Scholar' })); });
   expect(screen.getByText('Scholar')).toBeTruthy();
   expect(tape(view)).toEqual([]);
-  expect(staticCalls()).toHaveLength(2); // the warning's second press loads the file again
+  // Static files for this length only (the warning's second press loads them again).
+  expect(new Set(staticCalls().map(call => call[0])))
+    .toEqual(new Set(['/illucia/words/4.txt', '/illucia/labels/4.txt', '/illucia/labels/categories.json']));
 });
 
 it('pause stops her turns and resume continues them', async () => {
@@ -410,4 +413,110 @@ it('counts the letters she got right in the singular too', async () => {
   mount(); await start('crane', 'Master');
   for (let turn = 0; turn < 7; turn++) await tick();
   expect(screen.getByText('You held out for six misses. She guessed 1 letter right.')).toBeTruthy();
+});
+
+// Her questions (Observatory slice 4). Four birds and four other words; she knows them all.
+const QUESTION_WORDS = ['chair', 'crane', 'eagle', 'heron', 'plate', 'robin', 'stone', 'table'];
+const BIRDS = new Set(['crane', 'eagle', 'heron', 'robin']);
+const CATEGORIES = { categories: [
+  { code: 'c', key: 'bird', kind: 'noun', question: 'Can your word mean a bird?', kindOf: { 'oewn-01505702-n': 'bird' } },
+  { code: 'o', key: 'artifact', kind: 'noun', question: 'Can your word mean a man-made object?', lexfiles: ['noun.artifact'] },
+] };
+function serveQuestions({ unknown = null, labels = true } = {}) {
+  const words = QUESTION_WORDS.map(word => `${word} 35\n`).join('');
+  const lines = QUESTION_WORDS.filter(word => word !== unknown).map(word => `${word} ${BIRDS.has(word) ? 'c' : 'o'}\n`).join('');
+  fetch.mockImplementation(async url => {
+    if (url === '/illucia/words/5.txt') return { ok: true, text: async () => words };
+    if (url === '/illucia/labels/5.txt') return labels ? { ok: true, text: async () => lines } : { ok: false };
+    if (url === '/illucia/labels/categories.json') return { ok: true, json: async () => CATEGORIES };
+    return { ok: false };
+  });
+}
+const card = view => view.container.querySelector('.obs-question');
+const sky = (view, kind) => view.container.querySelectorAll(`.obs-stars span.${kind}`).length;
+
+it('asks after two letters and holds the duel, splits her sky, and pays the multiplier for a checked answer', async () => {
+  serveQuestions();
+  const requests = serveApi({
+    '/user/illucia/start': body => [200, ticketFor(body)],
+    '/user/illucia/claim': body => [200, { score: 900, awarded: { stump: illuciaStumpPoints('master', 5, body.answeredQuestions), ladder: 0 }, ladder: RESET }],
+  });
+  await forceLetters('zqjxvk');
+  const view = mount(); await start('crane', 'Master');
+  await tick(); await tick();
+  expect(card(view)).toBeNull(); // positive control: no question before her third turn
+  // Her thinking pause before a question says so, not a letter.
+  expect(view.container.querySelector('.obs-reasoning').textContent).toBe('Instead of a letter, she is choosing a question to ask you.');
+  await tick();
+  expect(card(view).querySelector('h3').textContent).toBe('Can your word mean a bird?');
+  expect(view.container.querySelector('.obs-bubble').textContent).toMatch(/Can your word mean a bird\?$/);
+  expect(card(view).textContent).toContain('Answer correctly and still win: 100 → 150 points. Declining tells her nothing.');
+  expect(card(view).textContent).toContain('Open English WordNet (CC BY 4.0)');
+  expect([...card(view).querySelectorAll('button')].map(button => button.textContent)).toEqual(['Yes, it can', "No, it can't", 'Decline']);
+  expect(document.activeElement).toBe(card(view).querySelector('h3'));
+  // Her sky splits: four birds green, four other words blue.
+  expect([sky(view, 'side-yes'), sky(view, 'side-no')]).toEqual([4, 4]);
+  expect(view.container.querySelector('.obs-analyzer')).toBeNull();
+  // The duel holds until the player chooses.
+  await tick(); await tick();
+  expect(tape(view)).toEqual(['z', 'q']);
+  fireEvent.click(screen.getByRole('button', { name: 'Yes, it can' }));
+  expect(card(view)).toBeNull();
+  expect(points(view)).toBe('150 pts');
+  // The words it ruled out fade from her sky; the split is gone.
+  expect([sky(view, 'side-yes'), sky(view, 'side-no')]).toEqual([0, 0]);
+  expect(sky(view, 'out')).toBe(4);
+  await tick();
+  expect(tape(view)).toEqual(['z', 'q', 'j']);
+  expect(analyzeDecision.mock.calls.at(-1)[1].words).toEqual(['crane', 'eagle', 'heron', 'robin']);
+  for (let turn = 0; turn < 3; turn++) await tick();
+  await settle();
+  expect(requests.find(([url]) => url === '/user/illucia/claim')[1].answeredQuestions).toBe(1);
+  expect(screen.getByText('+150 points. Your total is 900.')).toBeTruthy();
+});
+
+it('corrects a wrong answer and pays no multiplier; a decline changes nothing', async () => {
+  serveQuestions();
+  const requests = serveApi({
+    '/user/illucia/start': body => [200, ticketFor(body)],
+    '/user/illucia/claim': () => [200, { score: 100, awarded: { stump: 100, ladder: 0 }, ladder: RESET }],
+  });
+  await forceLetters('zqjxvk');
+  let view = mount(); await start('crane', 'Master');
+  for (let turn = 0; turn < 3; turn++) await tick();
+  fireEvent.click(screen.getByRole('button', { name: "No, it can't" }));
+  expect(view.container.querySelector('.obs-bubble').textContent).toMatch(/^My archive says otherwise: your word can mean that\./);
+  expect(points(view)).toBe('100 pts');
+  for (let turn = 0; turn < 4; turn++) await tick();
+  await settle();
+  expect(requests.find(([url]) => url === '/user/illucia/claim')[1].answeredQuestions).toBe(0);
+  cleanup();
+
+  view = mount(); await start('crane', 'Master');
+  for (let turn = 0; turn < 3; turn++) await tick();
+  fireEvent.click(screen.getByRole('button', { name: 'Decline' }));
+  expect(view.container.querySelector('.obs-bubble').textContent).toMatch(/Back to letters\.$/);
+  expect([sky(view, 'side-yes'), sky(view, 'side-no'), sky(view, 'out')]).toEqual([0, 0, 0]);
+  // She learned nothing, and asks at most once per letter: a letter comes next, over all eight words.
+  await tick();
+  expect(tape(view)).toEqual(['z', 'q', 'j']);
+  expect(analyzeDecision.mock.calls.at(-1)[1].words).toEqual(QUESTION_WORDS);
+});
+
+it('says no bonus is possible for a word her archive does not know, and asks nothing without labels', async () => {
+  serveQuestions({ unknown: 'crane' });
+  serveApi({ '/user/illucia/start': body => [200, ticketFor(body)] });
+  await forceLetters('zqjxvk');
+  let view = mount(); await start('crane', 'Master');
+  for (let turn = 0; turn < 3; turn++) await tick();
+  expect(card(view).textContent).toContain('My archive does not know your word, so your answer cannot be checked: no bonus possible for this word.');
+  cleanup();
+
+  serveQuestions({ labels: false });
+  serveApi({ '/user/illucia/start': body => [200, ticketFor(body)] });
+  view = mount(); await start('crane', 'Master');
+  for (let turn = 0; turn < 3; turn++) await tick();
+  expect(card(view)).toBeNull();
+  expect(tape(view)).toEqual(['z', 'q', 'j']);
+  expect(screen.getByText(/questions: Open English WordNet \(CC BY 4\.0\)/)).toBeTruthy();
 });
