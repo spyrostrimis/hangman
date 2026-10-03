@@ -46,6 +46,7 @@ export default function Privacy() {
       <p>If you are signed in, your browser sends your word to the server when the round starts, so the server can check a win and award points. It is kept in the round record, like a Hangman round. Words that beat Illucia are kept with your account until you delete it, so the same word cannot earn points twice.</p>
       <p>So that Illucia remembers you, the server also keeps, with your account, which words you have set against Illucia and how often, your games and wins at each level, and a random number that gives her a style of her own against you.</p>
       <p>Each time a signed-in player sets a word, the server also adds one to a site-wide count for that word. The count is not linked to you or to any account, has no date, and stays after you delete your account. It is never shown as a public list.</p>
+      <p>Experimental AI mode is off unless you switch it on. In an experimental round, when Illucia asks a question, the server sends the list of words she is still considering to an AI model (Meta's Llama 3.3 70B, run by Cloudflare Workers AI), which writes the question. The list can include your word, but the model is not told which word is yours, and it is not sent your username or account. The question and its answer are not stored. To apply a daily limit, the server counts how many AI questions your account asked each day. Experimental rounds earn no points.</p>
 
       <h2>Cloudflare</h2>
       <p>Cloudflare hosts the site, the database and the images, and processes this data on our behalf under its <a href="https://www.cloudflare.com/cloudflare-customer-dpa/" {...external}>Data Processing Addendum</a>. Data may be processed outside the EU; the addendum covers this with the EU Standard Contractual Clauses and the EU–US Data Privacy Framework. See also <a href="https://www.cloudflare.com/privacypolicy/" {...external}>Cloudflare's privacy policy</a>.</p>
@@ -55,6 +56,7 @@ export default function Privacy() {
         <li><strong>Account, username and score:</strong> until you delete your account.</li>
         <li><strong>Words that beat Illucia, the words you set against her, your Illucia stats and her style setting:</strong> until you delete your account.</li>
         <li><strong>Site-wide word counts:</strong> kept, because they are not linked to anyone.</li>
+        <li><strong>Your daily count of AI questions:</strong> deleted about 2 days after that day, or when you delete your account.</li>
         <li><strong>Round records:</strong> deleted about 24 hours after the round is won or expires. Cleanup runs every hour, so it can take a little longer, and it can be delayed if the cleanup fails.</li>
         <li><strong>Session cookie:</strong> up to 24 hours.</li>
         <li><strong>Diagnostic logs:</strong> up to 3 days.</li>
@@ -62,7 +64,7 @@ export default function Privacy() {
       </ul>
 
       <h2>Deleting your account</h2>
-      <p>Sign in, open <Link to="/account">Account</Link>, enter your password and confirm. Deletion is permanent: your account, round records, the words that beat Illucia, your Illucia history and stats, and your Hall of Fame entry are removed and cannot be recovered.</p>
+      <p>Sign in, open <Link to="/account">Account</Link>, enter your password and confirm. Deletion is permanent: your account, round records, the words that beat Illucia, your Illucia history and stats, your AI question counts, and your Hall of Fame entry are removed and cannot be recovered.</p>
 
       <h2>Your rights</h2>
       <p>You can ask what data we hold about you, or ask us to correct or delete it, by writing to the contact above. You also have the right to <a href="https://www.dpa.gr/en/individuals/complaint-to-the-hellenic-dpa" {...external}>complain to the Hellenic Data Protection Authority</a>.</p>
