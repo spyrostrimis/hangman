@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   INVENT_PROMPT, SORT_PROMPT, questionInput, extractJson, questionProblems, validateReply,
-  scoreSort, answerPlacement, controlCategory, normalizeQuestionResult,
+  scoreSort, answerPlacement, controlCategory, normalizeQuestionResult, questionVocabularyProblems,
 } from './lib/illucia-question-model.js';
 import { BenchmarkStop } from './lib/illucia-model.js';
 
@@ -164,4 +164,14 @@ test('envelopes: text, chat choices, Responses output, inline think blocks; unkn
   assert.equal(think.reasoningChars, 10);
   assert.equal(think.usage, null);
   assert.throws(() => normalizeQuestionResult({ response: { a: 1 } }, BenchmarkStop), error => error instanceof BenchmarkStop);
+});
+
+test('question vocabulary: short words from the allowlist, longer ones must be known words', () => {
+  const known = new Set(['mean', 'word', 'bird', 'person', 'name', 'something']);
+  const isKnown = word => known.has(word);
+  assert.deepEqual(questionVocabularyProblems('Can your word mean a bird?', w => w === 'your' || isKnown(w)), []);
+  assert.deepEqual(questionVocabularyProblems("Can your word mean a person's name?", w => w === 'your' || isKnown(w)), []);
+  // An unknown long word and an unlisted short word are both reported; the known ones are not.
+  assert.deepEqual(questionVocabularyProblems('Can your word mean a zorbx or xyz?', w => w === 'your' || isKnown(w)), ['zorbx', 'xyz']);
+  assert.deepEqual(questionVocabularyProblems('Can your word mean a bird?', () => false), ['your', 'word', 'mean', 'bird']);
 });
