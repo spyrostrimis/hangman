@@ -20,6 +20,10 @@ export const QUESTION_MODELS = Object.freeze({
   '@cf/qwen/qwen3.8-27b': Object.freeze({ input: 40909, output: 290909 }),
   '@cf/deepseek-ai/deepseek-r1-distill-qwen-32b': Object.freeze({ input: 45170, output: 443756 }),
   '@cf/nvidia/nemotron-3-120b-a12b': Object.freeze({ input: 45455, output: 136364 }),
+  // Clef decision models (2026-10-01): they bill input tokens only, $0.24 per M (≈21,818
+  // neurons at $0.011 per 1,000 neurons); checked 2026-10-03.
+  '@cf/cloudflare/clef': Object.freeze({ input: 21818, output: 0 }),
+  '@cf/cloudflare/clef-flash': Object.freeze({ input: 21818, output: 0 }),
 });
 const RATES = Object.freeze({ ...MODELS, ...QUESTION_MODELS });
 export const PROMPT_VERSION = 'i7a-1';

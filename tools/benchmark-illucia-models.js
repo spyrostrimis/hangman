@@ -141,7 +141,8 @@ export function budgetedRequest(transport, ledger, save, { maxRequests = 1800, m
   return async (model, input) => {
     if (day() !== ledger.day) throw new BenchmarkStop('utc-day-changed');
     const reservation = neuronEstimate(model, {
-      prompt_tokens: Buffer.byteLength(JSON.stringify(input.messages)) + 256, completion_tokens: input.max_tokens,
+      // Chat models: the messages and every allowed output token. Other inputs (Clef): the whole body.
+      prompt_tokens: Buffer.byteLength(JSON.stringify(input.messages ?? input)) + 256, completion_tokens: input.max_tokens ?? 0,
     });
     if (ledger.requests >= maxRequests || ledger.reservedNeurons + reservation > maxNeurons) throw new BenchmarkStop('local-budget');
     ledger.requests++;
