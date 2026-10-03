@@ -15,7 +15,7 @@ export const AI_MAX_TOKENS = 768;
 // D1: every Llama 3.3 reply arrived within 4.8 s (p95 4.4 s).
 export const AI_TIMEOUT_MS = 6000;
 export const AI_MAX_CANDIDATES = 80;
-const DEFAULT_LIMITS = Object.freeze({ dailyNeurons: 2000, dailyRequests: 60, userDaily: 10 });
+const DEFAULT_LIMITS = Object.freeze({ dailyNeurons: 2000, dailyRequests: 60, userDaily: 30 });
 
 export type AiLimits = { enabled: boolean; dailyNeurons: number; dailyRequests: number; userDaily: number };
 type AiRunner = { run(model: string, input: object): Promise<unknown> };
