@@ -62,7 +62,7 @@ Evidence it rests on: `docs/ILLUCIA-STRENGTH.md` (tier inversion on common short
 
 ## 6. UI scope
 
-- **Only `/illucia` gets new UI.** The Observatory (`/illucia-observatory`) stays and gets no new features. It shares the brain, so its copy that says "only her vocabulary changes" must be corrected.
+- **Only `/illucia` gets new UI.** The Observatory (`/illucia-observatory`) stays and gets no new features. It shares the brain, so its copy that says "only her vocabulary changes" must be corrected. *(Replaced by Amendments 5: the Observatory now gets every feature.)*
 - `docs/DESIGN-BRIEF.md` (redesign brief) exists. New `/illucia` UI should not contradict it.
 
 ## 7. Order and parallel work
@@ -131,3 +131,10 @@ A, B and C can run as **parallel sessions in separate clones**, each committing 
 2. **The source of truth for points is the code.** The multipliers and claim floor are whatever B2's re-pricing and C3 left on `main` (`shared/` and the Worker), not the numbers in earlier amendments.
 3. **Two kinds of question in her voice:** an early narrow question is curiosity ("Can your word mean a bird?"); a late broad question is desperation, and her line says so.
 4. **Track E runs as one session**, E1 → E5 in order, one commit per step, each after Spyros has checked it in the browser.
+
+## Amendments 5 — 2026-10-03, the Observatory catches up
+
+1. **The Observatory gets every v2 feature `/illucia` has** (replaces §6's "no new features"): honest reasoning, memory, scored rounds, points, the ladder and "already won", questions, the record view and experimental AI mode, each placed in the page's existing surfaces without a conversation log. Plan and slices: `docs/planning/PLAN-observatory.md`.
+2. **One session, not two engines.** The game session (knowledge with memory, question narrowing, AI leanings, her next move, previews, the server round lifecycle) moves out of `Illucia.js` into shared modules before the Observatory uses it.
+3. **Questions hold the duel** until the player answers or declines; there is no setup toggle for them.
+4. **Both pages share one ladder and one open round**, as the server rules; 2× speed stays in scored rounds.
