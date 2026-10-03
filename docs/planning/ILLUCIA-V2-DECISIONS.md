@@ -120,3 +120,14 @@ A, B and C can run as **parallel sessions in separate clones**, each committing 
 3. **Multipliers raised:** ×1.5 for one answered question, ×2.0 for two (were ×1.25 / ×1.5). Measured break-even is ≈×1.6 and ≈×2.1–2.45, so a player who answers everything loses slightly and a selective player gains.
 4. **Claim floor raised to 15 s** (was 12 s) to hold the cheater ceiling near Hangman's: ≈333 points per round max × 4 per minute ≈ 1,330 per minute.
 5. **Nouns only in v1**, confirmed (all categories add 0.4–1.6 points for her, mostly from gotcha-prone adjective and verb questions).
+
+## Amendments 4 — 2026-10-03, after B2's broad-opener probe
+
+1. **Broad-opener chooser** (replaces the 25–75% split rule in §2.3 for v1):
+   - broad categories (e.g. "man-made object") are **held until she has ≤2 misses left**;
+   - narrow categories qualify at **≥10% of candidates on each side**;
+   - seeded variety among nearly-best questions, using A2's random generator.
+   - Probe result: broad categories open 28% of first questions (man-made 24%, was 74%); she asks in ~55% of rounds; an answered question is worth +6.1 points to her (was +7.2).
+2. **The source of truth for points is the code.** The multipliers and claim floor are whatever B2's re-pricing and C3 left on `main` (`shared/` and the Worker), not the numbers in earlier amendments.
+3. **Two kinds of question in her voice:** an early narrow question is curiosity ("Can your word mean a bird?"); a late broad question is desperation, and her line says so.
+4. **Track E runs as one session**, E1 → E5 in order, one commit per step, each after Spyros has checked it in the browser.
