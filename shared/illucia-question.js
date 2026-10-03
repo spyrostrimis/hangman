@@ -38,6 +38,7 @@ function assertCandidates(candidates) {
 }
 
 // `options` are the model's own request settings (e.g. a reasoning effort), merged last.
+/** @param {string} mode @param {string[]} candidates @param {{ question?: string | null, maxTokens: number, options?: object }} settings */
 export function questionInput(mode, candidates, { question = null, maxTokens, options = {} } = {}) {
   assertCandidates(candidates);
   if (!Number.isInteger(maxTokens) || maxTokens < 1) throw new RangeError('maxTokens is required.');

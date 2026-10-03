@@ -7,6 +7,7 @@ import { claimRound, isRoundId, startRound } from './rounds';
 import { scheduledRetention } from './retention';
 import { claimIlluciaRound, illuciaStats, isAnsweredQuestions, isIlluciaTier, startIlluciaRound } from './illucia';
 import { illuciaWordSize } from './illucia-words';
+import { areCandidates, askIllucia, readAiRound } from './illucia-ai';
 import { ILLUCIA_NOT_ACCEPTED_WORD } from '../../shared/scoring-protocol.js';
 
 type AppEnv = { Bindings: Env; Variables: { user: PublicUser } };
@@ -146,6 +147,7 @@ app.post('/user/delete-account', async c => {
     c.env.DB.prepare('DELETE FROM illucia_players WHERE user_id = ?').bind(user.id),
     c.env.DB.prepare('DELETE FROM illucia_player_words WHERE user_id = ?').bind(user.id),
     c.env.DB.prepare('DELETE FROM illucia_tier_stats WHERE user_id = ?').bind(user.id),
+    c.env.DB.prepare('DELETE FROM illucia_ai_users WHERE user_id = ?').bind(user.id),
     c.env.DB.prepare('DELETE FROM scores WHERE user_id = ?').bind(user.id),
     c.env.DB.prepare('DELETE FROM users WHERE id = ?').bind(user.id),
   ]);
@@ -194,6 +196,23 @@ app.post('/user/illucia/claim', async c => {
   const answered = input.answeredQuestions === undefined ? 0 : input.answeredQuestions as number;
   const result = await claimIlluciaRound(c.env.DB, c.get('user').id, input.roundId, input.guesses, answered);
   if ('error' in result) return c.json({ message: result.error, code: result.code, retryAfterMs: result.retryAfterMs }, result.status);
+  return c.json(result);
+});
+// Experimental AI mode: a meaning question over her candidates (v2 Track D2).
+app.post('/user/illucia/ask', async c => {
+  const input = await readInput(c);
+  if (!input || Object.keys(input).some(key => !['roundId', 'candidates'].includes(key)) || !isRoundId(input.roundId)) {
+    return failure(c, 'Invalid question request.', 400);
+  }
+  const userId = c.get('user').id;
+  const now = Date.now();
+  const round = await readAiRound(c.env.DB, userId, input.roundId, now);
+  if (!round) return failure(c, 'This round is no longer available.', 409);
+  if (!areCandidates(input.candidates, round.length)) return failure(c, 'Invalid question request.', 400);
+  const result = await askIllucia(c.env, userId, input.roundId, input.candidates, round, {
+    now, defer: work => { try { c.executionCtx.waitUntil(work); } catch { /* no context in tests */ } },
+  });
+  if ('status' in result) return failure(c, result.error, result.status);
   return c.json(result);
 });
 app.get('/user/illucia/stats', async c => c.json(await illuciaStats(c.env.DB, c.get('user').id)));

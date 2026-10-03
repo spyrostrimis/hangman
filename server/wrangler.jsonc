@@ -7,7 +7,13 @@
   "workers_dev": false,
   "preview_urls": false,
   "routes": [{ "pattern": "hangman.spyrostrimis.com/user/*", "zone_name": "spyrostrimis.com" }],
-  "vars": { "APP_ORIGIN": "https://hangman.spyrostrimis.com", "LOCAL_DEV": "false" },
+  "vars": {
+    "APP_ORIGIN": "https://hangman.spyrostrimis.com", "LOCAL_DEV": "false",
+    "AI_ENABLED": "true", "AI_DAILY_NEURONS": "2000", "AI_DAILY_REQUESTS": "60", "AI_USER_DAILY_QUESTIONS": "10"
+  },
+  // Experimental AI mode (v2 D2). Production only: the local environment has no AI binding,
+  // so local development and tests never spend the account's Workers AI allowance.
+  "ai": { "binding": "AI" },
   "d1_databases": [{ "binding": "DB", "database_name": "hangman-accounts", "database_id": "8a76ea3c-558c-430c-8d0f-f11459e45009", "migrations_dir": "migrations" }],
   "ratelimits": [
     { "name": "IP_LIMIT", "namespace_id": "26092601", "simple": { "limit": 60, "period": 60 } },
@@ -17,7 +23,10 @@
   "observability": { "enabled": true, "head_sampling_rate": 1, "logs": { "enabled": true, "invocation_logs": false } },
   "env": {
     "local": {
-      "vars": { "APP_ORIGIN": "http://localhost:5173", "LOCAL_DEV": "true" },
+      "vars": {
+        "APP_ORIGIN": "http://localhost:5173", "LOCAL_DEV": "true",
+        "AI_ENABLED": "false", "AI_DAILY_NEURONS": "2000", "AI_DAILY_REQUESTS": "60", "AI_USER_DAILY_QUESTIONS": "10"
+      },
       "d1_databases": [{ "binding": "DB", "database_name": "hangman-accounts-local", "database_id": "local", "migrations_dir": "migrations" }],
       "ratelimits": [
         { "name": "IP_LIMIT", "namespace_id": "26092603", "simple": { "limit": 60, "period": 60 } },
