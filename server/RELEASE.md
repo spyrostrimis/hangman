@@ -110,3 +110,12 @@ Implementation `8ad1349` (shared prompt and validator) and `16b9be9` (`POST /use
 - **Not verified in production:** an authenticated question (a real Workers AI call through the binding, the binding's reply envelope, the limits, settling), and CPU for the route. No page calls the route yet (E5), so nothing spends until then. Account creation by the assistant on the public site is not allowed, so the first authenticated check is Spyros's, or E5's.
 - Rollback: `wrangler rollback` to `b5095175`, or set `AI_ENABLED` to "false" and redeploy to switch the mode off. Migration `0008` only adds tables and columns that the earlier Worker ignores, so it can stay.
 
+
+## Illucia stats: ladder and spent words (2026-10-03, recorded after the fact)
+
+Implementation `3a69270` (`GET /user/illucia/stats` gains `ladder` and `spent`). No migration; production listed none pending.
+
+- Worker version `5c259e32-e56e-49df-bb82-ea69e522406b` was deployed at 12:40 UTC by an interactive `wrangler deploy` from `server/` on the owner's machine, and is serving 100%, replacing `91f8b781`. It was not recorded at the time.
+- Evidence that it is `3a69270`: its upload was 1,841.58 KiB / 593.23 KiB gzipped (local wrangler log), and a dry-run build of `483fbae` (no server changes since `3a69270`) gives exactly the same sizes; `91f8b781` was 1,840.88 / 593.10. Bindings and secrets are unchanged from `91f8b781`.
+- Unauthenticated production checks: `GET /user/illucia/stats` returns 401 and `get-best-scores` returns 200. The new fields sit behind authentication, so they are not verified in production; the local suite covers them.
+- Rollback: `wrangler rollback` to `91f8b781`.
