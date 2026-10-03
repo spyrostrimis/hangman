@@ -7,20 +7,29 @@ import { ILLUCIA_MAX_QUESTIONS } from '../../shared/scoring-protocol.js';
 import { normalizeQuestionResult, questionInput, questionVocabularyProblems, validateReply } from '../../shared/illucia-question.js';
 import { illuciaWordSize } from './illucia-words';
 
-export const AI_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
-// Neurons per million tokens, checked against Cloudflare's pricing page on 2026-10-02.
-export const AI_RATES = Object.freeze({ input: 26668, output: 204805 });
-// D1's longest Llama 3.3 reply used 310 tokens; 80 candidates need about 400.
-export const AI_MAX_TOKENS = 768;
-// D1: every Llama 3.3 reply arrived within 4.8 s (p95 4.4 s).
-export const AI_TIMEOUT_MS = 6000;
+// The models the route may use, chosen by the AI_MODEL var. Rates are neurons per million
+// tokens, checked against Cloudflare's pricing page on 2026-10-02. `label` names the model
+// to the player on every AI question.
+export const AI_MODELS = Object.freeze({
+  // The D1 pick. Its longest D1 reply used 310 tokens (80 candidates need about 400), and
+  // every reply arrived within 4.8 s (p95 4.4 s).
+  'llama-3.3-70b': Object.freeze({ id: '@cf/meta/llama-3.3-70b-instruct-fp8-fast', label: 'Llama 3.3 70B',
+    rates: Object.freeze({ input: 26668, output: 204805 }), maxTokens: 768, timeoutMs: 6000, options: Object.freeze({}) }),
+  // Owner's live trial (2026-10-03), not measured offline at this effort. At "low", D1 saw
+  // 2–25 s and up to ~1,500 output tokens; medium reasons longer, hence the ceiling and timeout.
+  'gpt-oss-120b-medium': Object.freeze({ id: '@cf/openai/gpt-oss-120b', label: 'gpt-oss-120b',
+    rates: Object.freeze({ input: 31818, output: 68182 }), maxTokens: 4096, timeoutMs: 40000,
+    options: Object.freeze({ reasoning_effort: 'medium' }) }),
+});
+export type AiModelKey = keyof typeof AI_MODELS;
+export const DEFAULT_AI_MODEL: AiModelKey = 'llama-3.3-70b';
 export const AI_MAX_CANDIDATES = 80;
 const DEFAULT_LIMITS = Object.freeze({ dailyNeurons: 2000, dailyRequests: 60, userDaily: 30 });
 
-export type AiLimits = { enabled: boolean; dailyNeurons: number; dailyRequests: number; userDaily: number };
+export type AiLimits = { enabled: boolean; model: AiModelKey; dailyNeurons: number; dailyRequests: number; userDaily: number };
 type AiRunner = { run(model: string, input: object): Promise<unknown> };
 type AiEnv = Pick<Env, 'DB'> & {
-  AI?: unknown; AI_ENABLED?: string; AI_DAILY_NEURONS?: string; AI_DAILY_REQUESTS?: string; AI_USER_DAILY_QUESTIONS?: string;
+  AI?: unknown; AI_MODEL?: string; AI_ENABLED?: string; AI_DAILY_NEURONS?: string; AI_DAILY_REQUESTS?: string; AI_USER_DAILY_QUESTIONS?: string;
 };
 
 // Configuration comes from Worker vars; a malformed value switches the mode off rather
@@ -36,12 +45,13 @@ export function aiLimits(env: AiEnv): AiLimits {
     dailyRequests: number(env.AI_DAILY_REQUESTS, DEFAULT_LIMITS.dailyRequests),
     userDaily: number(env.AI_USER_DAILY_QUESTIONS, DEFAULT_LIMITS.userDaily),
   };
-  const valid = Object.values(limits).every(value => value >= 0);
-  return { enabled: env.AI_ENABLED === 'true' && valid && typeof (env.AI as AiRunner | undefined)?.run === 'function', ...limits };
+  const model = (env.AI_MODEL ?? DEFAULT_AI_MODEL) as AiModelKey;
+  const valid = Object.values(limits).every(value => value >= 0) && Object.hasOwn(AI_MODELS, model);
+  return { enabled: env.AI_ENABLED === 'true' && valid && typeof (env.AI as AiRunner | undefined)?.run === 'function', model, ...limits };
 }
 
-export const neuronsFor = (promptTokens: number, completionTokens: number) =>
-  (promptTokens * AI_RATES.input + completionTokens * AI_RATES.output) / 1e6;
+export const neuronsFor = (model: AiModelKey, promptTokens: number, completionTokens: number) =>
+  (promptTokens * AI_MODELS[model].rates.input + completionTokens * AI_MODELS[model].rates.output) / 1e6;
 
 // The binding may return text, a chat `choices` envelope, or JSON it already parsed into
 // `response` (seen in I7a); a parsed object is re-serialized and validated like text.
@@ -64,7 +74,7 @@ export const dayOf = (now: number) => new Date(now).toISOString().slice(0, 10);
 export type AskOutcome =
   | { status: 409; error: string }
   | { ok: false; reason: 'disabled' | 'round-limit' | 'user-limit' | 'budget' | 'timeout' | 'unavailable' | 'invalid'; questionsLeft: number }
-  | { ok: true; question: string; yes: string[]; no: string[]; questionsLeft: number };
+  | { ok: true; question: string; yes: string[]; no: string[]; questionsLeft: number; model: string };
 type RoundRow = { length: number; experimental: number; claimed_at: number | null; expires_at: number; ai_questions: number };
 type Options = { now?: number; timeoutMs?: number; defer?: (work: Promise<unknown>) => void };
 
@@ -77,16 +87,17 @@ export async function readAiRound(db: D1Database, userId: string, roundId: strin
 
 // Candidates must already have passed areCandidates for this round's length.
 export async function askIllucia(env: AiEnv, userId: string, roundId: string, candidates: string[], round: RoundRow,
-  { now = Date.now(), timeoutMs = AI_TIMEOUT_MS, defer = () => {} }: Options = {}): Promise<AskOutcome> {
+  { now = Date.now(), timeoutMs, defer = () => {} }: Options = {}): Promise<AskOutcome> {
   if (round.experimental !== 1) return { status: 409, error: 'AI questions are only for experimental rounds.' };
   const left = (used: number) => Math.max(0, ILLUCIA_MAX_QUESTIONS - used);
   const limits = aiLimits(env);
   if (!limits.enabled) return { ok: false, reason: 'disabled', questionsLeft: left(round.ai_questions) };
   if (round.ai_questions >= ILLUCIA_MAX_QUESTIONS) return { ok: false, reason: 'round-limit', questionsLeft: 0 };
 
-  const input = questionInput('invent', candidates, { maxTokens: AI_MAX_TOKENS });
+  const model = AI_MODELS[limits.model];
+  const input = questionInput('invent', candidates, { maxTokens: model.maxTokens, options: model.options });
   // Worst case: every prompt byte a token, plus template overhead, and every allowed output token.
-  const reservation = neuronsFor(new TextEncoder().encode(JSON.stringify(input.messages)).length + 256, AI_MAX_TOKENS);
+  const reservation = neuronsFor(limits.model, new TextEncoder().encode(JSON.stringify(input.messages)).length + 256, model.maxTokens);
   const day = dayOf(now);
   const token = crypto.randomUUID();
   const granted = 'EXISTS (SELECT 1 FROM illucia_rounds WHERE id = ? AND ai_token = ?)';
@@ -124,15 +135,15 @@ export async function askIllucia(env: AiEnv, userId: string, roundId: string, ca
   const settle = async (usage: Usage) => {
     if (!Number.isInteger(usage?.prompt_tokens) || !Number.isInteger(usage?.completion_tokens)) return;
     await db.prepare('UPDATE ai_budget SET neurons = MAX(0, neurons - ? + ?) WHERE day = ?')
-      .bind(reservation, neuronsFor(usage!.prompt_tokens!, usage!.completion_tokens!), day).run();
+      .bind(reservation, neuronsFor(limits.model, usage!.prompt_tokens!, usage!.completion_tokens!), day).run();
   };
   const started = Date.now();
-  const call = (env.AI as AiRunner).run(AI_MODEL, input).then(readReply, () => null);
+  const call = (env.AI as AiRunner).run(model.id, input).then(readReply, () => null);
   let timer: ReturnType<typeof setTimeout> | undefined;
-  const timedOut = new Promise<'timeout'>(resolve => { timer = setTimeout(() => resolve('timeout'), timeoutMs); });
+  const timedOut = new Promise<'timeout'>(resolve => { timer = setTimeout(() => resolve('timeout'), timeoutMs ?? model.timeoutMs); });
   const result = await Promise.race([call, timedOut]);
   if (timer !== undefined) clearTimeout(timer);
-  const log = (outcome: string) => console.log(JSON.stringify({ event: 'illucia_ai', outcome, ms: Date.now() - started }));
+  const log = (outcome: string) => console.log(JSON.stringify({ event: 'illucia_ai', model: limits.model, outcome, ms: Date.now() - started }));
   if (result === 'timeout') {
     defer(call.then(late => settle(late?.usage ?? null)).catch(() => {}));
     log('timeout');
@@ -151,5 +162,5 @@ export async function askIllucia(env: AiEnv, userId: string, roundId: string, ca
   }
   log('accepted');
   // An accepted reply always has both lists.
-  return { ok: true, question: String(verdict.question).trim(), yes: verdict.yes as string[], no: verdict.no as string[], questionsLeft };
+  return { ok: true, question: String(verdict.question).trim(), yes: verdict.yes as string[], no: verdict.no as string[], questionsLeft, model: model.label };
 }

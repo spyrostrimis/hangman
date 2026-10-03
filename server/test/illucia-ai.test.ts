@@ -1,7 +1,7 @@
 import { env, applyD1Migrations } from 'cloudflare:test';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import app from '../src/index';
-import { AI_MODEL, askIllucia, readAiRound, readReply } from '../src/illucia-ai';
+import { AI_MODELS, askIllucia, readAiRound, readReply } from '../src/illucia-ai';
 import { purgeExpiredData } from '../src/retention';
 import { illuciaWordSize } from '../src/illucia-words';
 import { KDF } from '../../shared/auth-protocol.js';
@@ -64,9 +64,9 @@ describe('Illucia AI question (D2)', () => {
     const response = await ask(cookie, roundId);
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ ok: true, question: 'Can your word mean an animal?', yes: ANIMALS,
-      no: WORDS.filter(word => !ANIMALS.includes(word)), questionsLeft: 1 });
+      no: WORDS.filter(word => !ANIMALS.includes(word)), questionsLeft: 1, model: 'Llama 3.3 70B' });
     expect(calls).toHaveLength(1);
-    expect(calls[0].model).toBe(AI_MODEL);
+    expect(calls[0].model).toBe(AI_MODELS['llama-3.3-70b'].id);
     expect(calls[0].model).toBe('@cf/meta/llama-3.3-70b-instruct-fp8-fast');
     // The model never sees the player's word, round or account: only the candidates.
     expect(JSON.parse(calls[0].input.messages[1].content)).toEqual({ count: WORDS.length, candidates: WORDS });
@@ -134,12 +134,24 @@ describe('Illucia AI question (D2)', () => {
   it('is off when disabled, misconfigured or without a binding, and spends nothing', async () => {
     const { cookie } = await signup();
     const roundId = await startRound(cookie);
-    for (const setting of [{ AI_ENABLED: 'false' }, { AI_DAILY_NEURONS: 'lots' }, { AI: undefined }]) {
+    for (const setting of [{ AI_ENABLED: 'false' }, { AI_DAILY_NEURONS: 'lots' }, { AI: undefined }, { AI_MODEL: 'gpt-5' }]) {
       vars = setting;
       expect(await (await ask(cookie, roundId)).json()).toEqual({ ok: false, reason: 'disabled', questionsLeft: 2 });
     }
     expect(calls).toHaveLength(0);
     expect(await budget()).toBeNull();
+  });
+
+  it('uses the model AI_MODEL names, with its own settings and prices', async () => {
+    vars = { AI_MODEL: 'gpt-oss-120b-medium' };
+    const { cookie } = await signup();
+    const reply = await (await ask(cookie, await startRound(cookie))).json();
+    expect(reply).toMatchObject({ ok: true, model: 'gpt-oss-120b' });
+    expect(calls[0].model).toBe('@cf/openai/gpt-oss-120b');
+    expect(calls[0].input).toMatchObject({ reasoning_effort: 'medium', max_tokens: 4096 });
+    expect(JSON.parse(calls[0].input.messages[1].content)).toEqual({ count: WORDS.length, candidates: WORDS });
+    // Settled at gpt-oss-120b's rates, not Llama's.
+    expect((await budget())!.neurons).toBeCloseTo((300 * 31818 + 60 * 68182) / 1e6, 6);
   });
 
   it('rejects bad model replies, so the page falls back; each still uses a question', async () => {
