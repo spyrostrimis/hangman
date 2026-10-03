@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
-import { ANSWERS, REPLIES, answerLine, article, askLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from './illucia/duel-lines.js';
+import { ANSWERS, REPLIES, answerLine, article, askLine, memoryLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from './illucia/duel-lines.js';
 import { applyGuess, createRound } from './hangman-core.js';
 import { toPublicState } from './illucia/public-state.js';
 import { VOCABULARY_TIERS, createKnowledge, parseLexicon } from './illucia/lexicon.js';
@@ -171,4 +171,23 @@ test('her reply names the outcome; only a correction says the bonus is gone', ()
   for (const outcome of ['confirmed', 'unchecked', 'declined']) {
     for (let turn = 0; turn < 3; turn++) assert.doesNotMatch(answerLine(outcome, turn), /bonus|otherwise/);
   }
+});
+
+test('she mentions words that beat her only when some still fit', () => {
+  const decision = { mode: 'exploring', choseBest: true, best: ['t'], tiedWith: [], vowelBonus: 0 };
+  const line = learnedCandidates => reasonLine({ letter: 't', share: 40, candidates: 120, fallback: false, decision: { ...decision, learnedCandidates } });
+  assert.equal(line(0), 'T is in 40% of the 120 words I still have in mind. It comes out on top.');
+  assert.equal(line(1), 'T is in 40% of the 120 words I still have in mind. It comes out on top. One word you beat me with before still fits.');
+  assert.equal(line(3), 'T is in 40% of the 120 words I still have in mind. It comes out on top. 3 words you beat me with before still fit.');
+});
+
+test('her memory of a word: learned from you first, then your plays, then everyone\'s', () => {
+  const voice = { plays: 2, everyone: 5 };
+  assert.equal(memoryLine({ word: 'jazz', learnedIt: true, playerWon: true, voice }), 'JAZZ… AGAIN?? I learned that word from you, and it still beat me.');
+  assert.equal(memoryLine({ word: 'jazz', learnedIt: true, playerWon: false, voice }), 'JAZZ. I learned that one from you.');
+  assert.equal(memoryLine({ word: 'jazz', learnedIt: false, playerWon: true, voice }), 'JAZZ again? You have set it against me twice before.');
+  assert.equal(memoryLine({ word: 'jazz', learnedIt: false, playerWon: true, voice: { plays: 1, everyone: 1 } }), 'JAZZ again? You have set it against me once before.');
+  assert.equal(memoryLine({ word: 'jazz', learnedIt: false, playerWon: false, voice: { plays: 0, everyone: 3 } }), 'Other players have tried JAZZ on me 3 times.');
+  assert.equal(memoryLine({ word: 'jazz', learnedIt: false, playerWon: false, voice: { plays: 0, everyone: 0 } }), null);
+  assert.equal(memoryLine({ word: 'jazz', learnedIt: false, playerWon: false, voice: undefined }), null);
 });

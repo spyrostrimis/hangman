@@ -11,7 +11,7 @@ import { newLocalSeed } from '../lib/illucia/random.js';
 import { checkAnswer, chooseQuestion, narrowKnowledge, parseCategories, parseLabels } from '../lib/illucia/questions.js';
 import { rejectionLine } from '../lib/illucia/lines.js';
 import { greetingLine, openingLine } from '../lib/illucia/observatory-lines.js';
-import { ANSWERS, REPLIES, answerLine, askLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from '../lib/illucia/duel-lines.js';
+import { ANSWERS, REPLIES, answerLine, askLine, memoryLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from '../lib/illucia/duel-lines.js';
 import { claimIlluciaRound, loadIlluciaStats, startIlluciaRound } from '../lib/illucia-rounds.js';
 import { ILLUCIA_ALREADY_WON_MESSAGE, ILLUCIA_NO_POINTS, illuciaStumpPoints } from '../../../shared/scoring-protocol.js';
 import './Illucia.css';
@@ -104,6 +104,13 @@ function newDuel(word, assets, tier, ticket = null) {
   };
 }
 
+// Her memory of this word, once it is out: learned from this player, or played before.
+function remembered(duel, playerWon) {
+  const text = memoryLine({ word: duel.round.answer, learnedIt: duel.knowledge.learned.has(duel.round.answer),
+    playerWon, voice: duel.ticket?.memory?.voice });
+  return text ? [{ type: 'illucia', text }] : [];
+}
+
 function failed(duel) {
   return { ...duel, phase: 'error', log: [...duel.log, { type: 'illucia', text: 'Something went wrong in my notes. Let us start again with a new word.' }] };
 }
@@ -185,7 +192,8 @@ function reveal(duel, index) {
   const log = [...duel.log.slice(0, -1), updated];
   if (updated.revealed.length < updated.hidden.length) return { ...duel, log };
   if (getRoundStatus(duel.round) === 'solved') {
-    return { ...duel, phase: 'over', log: [...log, { type: 'illucia', text: solvedLine(duel.round.answer, duel.round.guesses.length) }] };
+    return { ...duel, phase: 'over', log: [...log, { type: 'illucia', text: solvedLine(duel.round.answer, duel.round.guesses.length) },
+      ...remembered(duel, false)] };
   }
   const { countBefore, countAfter, share } = duel.lastGuess;
   return { ...duel, log, phase: 'thinking',
@@ -203,7 +211,7 @@ function reply(duel, replyId) {
   const over = getRoundStatus(duel.round) === 'failed';
   const log = [...duel.log, { type: 'player', text: choice.text }, { type: 'illucia', text: answer },
     { type: 'board', pattern: getPattern(duel.round), hidden: [], revealed: [], final: over,
-      caption: `Turn ${turn} · ${letter.toUpperCase()} · miss` }];
+      caption: `Turn ${turn} · ${letter.toUpperCase()} · miss` }, ...(over ? remembered(duel, true) : [])];
   return { ...duel, log, phase: over ? 'over' : 'thinking', lastHit: null };
 }
 
@@ -414,6 +422,53 @@ function StatusBar({ duel, restart }) {
   </div>;
 }
 
+const top = (counts, n) => Object.entries(counts).filter(([, count]) => count > 0)
+  .sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1)).slice(0, n);
+
+// The player's record against her (v2 E4): the server's stats, loaded when opened.
+function StatsPanel({ onClose }) {
+  const [state, setState] = useState({ status: 'loading' });
+  const [attempt, setAttempt] = useState(0);
+  const heading = useRef(null);
+  useEffect(() => {
+    const controller = new AbortController();
+    setState({ status: 'loading' });
+    loadIlluciaStats({ signal: controller.signal })
+      .then(stats => setState({ status: 'ready', stats }))
+      .catch(() => { if (!controller.signal.aborted) setState({ status: 'error' }); });
+    return () => controller.abort();
+  }, [attempt]);
+  useEffect(() => { heading.current?.focus(); }, []);
+  const stats = state.stats;
+  return <section className="duel-stats" aria-labelledby="duel-stats-title">
+    <div className="duel-stats-head">
+      <h2 id="duel-stats-title" ref={heading} tabIndex={-1}>Your record vs Illucia</h2>
+      <button type="button" className="duel-new" onClick={onClose}>Close</button>
+    </div>
+    {state.status === 'loading' && <p role="status">Loading your record…</p>}
+    {state.status === 'error' && <p role="alert">Your record could not load. <button type="button" className="duel-new" onClick={() => setAttempt(value => value + 1)}>Try again</button></p>}
+    {state.status === 'ready' && stats.games === 0 && <p>No duels yet. Set her a word.</p>}
+    {state.status === 'ready' && stats.games > 0 && <>
+      <p className="duel-stats-total"><b>{stats.games}</b> {stats.games === 1 ? 'duel' : 'duels'} · you won <b>{stats.wins}</b> · she won or you left <b>{stats.lostOrAbandoned}</b></p>
+      <table className="duel-stats-tiers">
+        <thead><tr><th scope="col">Level</th><th scope="col">Duels</th><th scope="col">You won</th></tr></thead>
+        <tbody>{VOCABULARY_TIERS.map(tier => <tr key={tier.id}>
+          <th scope="row">{tier.label}</th><td>{stats.tiers?.[tier.id]?.games ?? 0}</td><td>{stats.tiers?.[tier.id]?.wins ?? 0}</td>
+        </tr>)}</tbody>
+      </table>
+      <h3>Words she learned from you</h3>
+      {stats.learned?.total > 0
+        ? <p>{stats.learned.recent.slice(0, 12).map(word => word.toUpperCase()).join(' · ')}
+          {stats.learned.total > 12 ? ` · and ${stats.learned.total - 12} more` : ''}</p>
+        : <p className="duel-muted">None yet: beat her, and she remembers the word at every level.</p>}
+      <h3>Your favourites</h3>
+      <p>Lengths: {top(stats.history?.lengths ?? {}, 3).map(([length, count]) => `${length} letters (${count})`).join(' · ') || '—'}</p>
+      <p>Letters: {top(stats.history?.letters ?? {}, 5).map(([letter]) => letter.toUpperCase()).join(' · ') || '—'}</p>
+      <p className="duel-muted">Duels in experimental mode are not counted.</p>
+    </>}
+  </section>;
+}
+
 function ClaimSummary({ duel, claim, retry }) {
   if (!duel.ticket) return <p className="duel-muted">This duel was not scored.</p>;
   if (!claim || claim.saving) return <p role="status">Saving…</p>;
@@ -435,7 +490,7 @@ function ClaimSummary({ duel, claim, retry }) {
   </>;
 }
 
-function Result({ duel, claim, spent, restart, rematch, retry }) {
+function Result({ duel, claim, spent, restart, rematch, retry, showStats }) {
   const status = getRoundStatus(duel.round);
   const misses = MAX_MISSES - getRemainingMisses(duel.round);
   const guesses = duel.round.guesses.length;
@@ -457,6 +512,7 @@ function Result({ duel, claim, spent, restart, rematch, retry }) {
           {climb ? `Climb to ${tierLabel(climb.next)} (${climb.minLength}+ letters)` : 'Play again'}</button>
         {status === 'failed' && nextTier && <button type="button" className="hm-button" onClick={() => rematch(nextTier)}>
           Rematch vs {nextTier.label}{practice ? ' (practice, 0 points)' : ''}</button>}
+        <button type="button" className="hm-button" onClick={showStats}>Your record</button>
       </div>
     </div>
   </section>;
@@ -468,6 +524,7 @@ function DuelPage({ userId, username }) {
   const [ladder, setLadder] = useState(null);
   const [spent, setSpent] = useState(() => new Set());
   const [claim, setClaim] = useState(null);
+  const [statsOpen, setStatsOpen] = useState(false);
   const bottom = useRef(null);
   const mounted = useRef(true);
   const openRound = useRef(null); // a started round not yet claimed: the next start abandons it
@@ -550,6 +607,7 @@ function DuelPage({ userId, username }) {
   }, [duel]);
 
   const restart = () => {
+    setStatsOpen(false);
     // Leaving a scored round before it is over abandons it.
     if (duel?.ticket && duel.phase !== 'over') setLadder(LADDER_RESET);
     setDuel(null);
@@ -567,6 +625,8 @@ function DuelPage({ userId, username }) {
 
     <div className="duel-log" role="log" aria-live="polite" aria-relevant="additions">
       <Message from="illucia">Hello, {username}. {greeting} I guess your secret word one letter at a time.</Message>
+      {!duel && !statsOpen && <button type="button" className="duel-new duel-record" onClick={() => setStatsOpen(true)}>Your record vs Illucia</button>}
+      {statsOpen && <StatsPanel onClose={() => setStatsOpen(false)} />}
       {!duel && <div className="duel-msg from-player"><Composer onStart={begin} ladder={ladder} spent={spent} /></div>}
       {duel?.log.map((entry, index) => entry.type === 'board'
         ? <Board key={index} entry={entry} answer={duel.round.answer} active={index === lastIndex && duel.phase === 'reveal'}
@@ -587,6 +647,7 @@ function DuelPage({ userId, username }) {
     </div>
 
     {duel?.phase === 'over' && <Result duel={duel} claim={claimFor} spent={spent} restart={restart} retry={() => save(duel)}
+      showStats={() => { setDuel(null); setStatsOpen(true); }}
       rematch={tier => begin(duel.round.answer, duel.assets, tier)} />}
 
     <div ref={bottom} className="duel-bottom" />

@@ -529,3 +529,70 @@ it('signs out on an expired session at the start, and plays unscored when the se
   expect(view.container.querySelector('.duel-stakes').textContent).toBe('This duel is not scored: the scorekeeper could not be reached.');
   expect(screen.getByLabelText('Points: Not scored')).toBeTruthy();
 });
+
+// Her record and her memory (v2 E4).
+const STATS = { games: 5, wins: 2, lostOrAbandoned: 3,
+  tiers: { apprentice: { games: 1, wins: 1, lostOrAbandoned: 0 }, scholar: { games: 0, wins: 0, lostOrAbandoned: 0 }, master: { games: 4, wins: 1, lostOrAbandoned: 3 } },
+  learned: { total: 2, recent: ['jazz', 'crane'] }, history: { lengths: { 4: 3, 5: 2 }, letters: { ...ZERO_LETTERS, a: 5, z: 3, e: 2, c: 1 } },
+  ladder: RESET, spent: { total: 1, words: ['jazz'] } };
+
+it('shows the player their record against her, from the server', async () => {
+  let fail = true;
+  serveApi({ '/user/illucia/stats': (_, requests) => (requests.length > 1 && fail ? [500, { message: 'Service unavailable.' }] : [200, STATS]) });
+  mount();
+  await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+  // The first opening fails: an error with a retry, then the record.
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Your record vs Illucia' })); });
+  expect(screen.getByText(/Your record could not load\./)).toBeTruthy();
+  fail = false;
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Try again' })); });
+  const panel = screen.getByRole('region', { name: 'Your record vs Illucia' });
+  expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'Your record vs Illucia' }));
+  expect(panel.querySelector('.duel-stats-total').textContent).toBe('5 duels · you won 2 · she won or you left 3');
+  expect([...panel.querySelectorAll('tbody tr')].map(row => row.textContent)).toEqual(['Apprentice11', 'Scholar00', 'Master41']);
+  expect(screen.getByText('JAZZ · CRANE')).toBeTruthy();
+  expect(screen.getByText('Lengths: 4 letters (3) · 5 letters (2)')).toBeTruthy();
+  expect(screen.getByText('Letters: A · Z · E · C')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+  expect(screen.queryByRole('region', { name: 'Your record vs Illucia' })).toBeNull();
+  expect(screen.getByLabelText('Your secret word')).toBeTruthy();
+});
+
+it('says when there is no record yet', async () => {
+  serveApi({ '/user/illucia/stats': () => [200, { ...STATS, games: 0, wins: 0, lostOrAbandoned: 0 }] });
+  mount();
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Your record vs Illucia' })); });
+  expect(screen.getByText('No duels yet. Set her a word.')).toBeTruthy();
+});
+
+it('remembers a word that beat her: AGAIN?? when it beats her again, and says she learned it when she solves it', async () => {
+  serveQuestions({ labels: false });
+  const learned = body => ticketFor(body, { memory: { brain: { personalitySeed: 7, games: 1, letters: { ...ZERO_LETTERS, c: 1, r: 1, a: 1, n: 1, e: 1 }, learned: [body.word] },
+    voice: { plays: 1, beatenBefore: true, everyone: 1 } } });
+  serveApi({ '/user/illucia/start': body => [200, learned(body)],
+    '/user/illucia/claim': () => [200, { score: 100, awarded: { stump: 0, ladder: 0 }, reason: 'ALREADY_WON', ladder: RESET }] });
+  let view = mount(); await start('crane', 'Master');
+  await playToHerLoss(await realDecision());
+  expect(bubbles(view.container, 'illucia')).toContain('CRANE… AGAIN?? I learned that word from you, and it still beat me.');
+  cleanup();
+
+  fetch.mockResolvedValue({ ok: true, text: async () => 'eerie 35\n' });
+  serveApi({ '/user/illucia/start': body => [200, learned(body)] });
+  view = mount(); await start('eerie', 'Master');
+  while (!screen.queryByRole('heading', { name: 'Illucia wins' })) {
+    const [tile] = hiddenTiles();
+    if (tile) fireEvent.click(tile); else await think();
+  }
+  expect(bubbles(view.container, 'illucia').at(-1)).toBe('EERIE. I learned that one from you.');
+});
+
+it('has nothing to remember about a new word', async () => {
+  serveApi({ '/user/illucia/start': body => [200, ticketFor(body)] });
+  const view = mount(); await start('eerie', 'Master');
+  while (!screen.queryByRole('heading', { name: 'Illucia wins' })) {
+    const [tile] = hiddenTiles();
+    if (tile) fireEvent.click(tile); else await think();
+  }
+  expect(bubbles(view.container, 'illucia').at(-1)).toMatch(/EERIE/);
+  expect(bubbles(view.container, 'illucia').join(' ')).not.toMatch(/learned|again|tried/i);
+});

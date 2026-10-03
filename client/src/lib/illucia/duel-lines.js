@@ -94,7 +94,11 @@ export function reasonLine({ letter, share, candidates, fallback, tierLabel, len
   if (fallback) return `None of my ${tierLabel} words fit. ${L} is in ${share}% of my ${length}-letter words.`;
   if (candidates === 1) return `Only one word is left in my notes, and it has ${article(letter)} ${L}.`;
   const facts = `${L} is in ${share}% of the ${candidates.toLocaleString('en-US')} words I still have in mind.`;
-  return decision?.mode ? `${facts} ${whyLine({ ...decision, letter })}` : facts;
+  if (!decision?.mode) return facts;
+  // Words that beat her before, from her memory of this player (history only, never this round's word).
+  const learned = decision.learnedCandidates > 0
+    ? ` ${decision.learnedCandidates === 1 ? 'One word' : `${decision.learnedCandidates} words`} you beat me with before ${decision.learnedCandidates === 1 ? 'still fits' : 'still fit'}.` : '';
+  return `${facts} ${whyLine({ ...decision, letter })}${learned}`;
 }
 
 // Her answer to the player's reply after a miss. missesLeft is after the miss. hunch is true
@@ -142,4 +146,17 @@ export function questionNote(question) {
 // truth is the archive's answer when it corrected the player.
 export function answerLine(outcome, turn, truth = null) {
   return pick(outcome, turn, { can: truth === 'yes' ? 'can mean that' : 'cannot mean that' });
+}
+
+const times = n => (n === 1 ? 'once' : n === 2 ? 'twice' : `${n} times`);
+
+// Her memory, once the word is out (v2 E4). learnedIt: the word was in her knowledge because it
+// beat this player's duels before; voice: C2's { plays, everyone } for this word (the round in
+// play left out). Returns null when she has nothing to remember.
+export function memoryLine({ word, learnedIt, playerWon, voice }) {
+  const W = word.toUpperCase();
+  if (learnedIt) return playerWon ? `${W}… AGAIN?? I learned that word from you, and it still beat me.` : `${W}. I learned that one from you.`;
+  if (voice?.plays > 0) return `${W} again? You have set it against me ${times(voice.plays)} before.`;
+  if (voice?.everyone > 0) return `Other players have tried ${W} on me ${times(voice.everyone)}.`;
+  return null;
 }

@@ -182,6 +182,18 @@
 .duel-tiers small { font-size: 12px; line-height: 1.3; color: var(--hm-muted); }
 .duel-composer .hm-button { display: block; margin: 0 auto; }
 
+/* ---------- Her record against the player (v2 E4) ---------- */
+.duel-record { align-self: flex-start; margin-left: 58px; }
+.duel-stats { padding: 14px 16px; text-align: left; background: #07091acc; border: 1px solid rgb(165 78 215 / 70%); border-radius: 12px; box-shadow: 0 0 10px rgb(165 78 215 / 45%); }
+.duel-stats-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.duel-stats h2 { margin: 0; font-family: bruno; font-weight: normal; font-size: 16px; letter-spacing: .1em; color: #d6b8ff; outline: none; }
+.duel-stats h3 { margin: 14px 0 4px; font-family: bruno; font-weight: normal; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--hm-yellow); }
+.duel-stats p { margin: 6px 0; overflow-wrap: anywhere; }
+.duel-stats b { font-family: bruno; font-weight: normal; color: var(--hm-yellow); }
+.duel-stats-tiers { width: 100%; margin-top: 8px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.duel-stats-tiers th, .duel-stats-tiers td { padding: 4px 6px; text-align: left; border-bottom: 1px solid #93939333; }
+.duel-stats-tiers thead th { font-family: bruno; font-weight: normal; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--hm-muted); }
+
 /* ---------- Points and the ladder (v2 E3) ---------- */
 .duel-points { font-family: bruno; font-size: 12px; letter-spacing: .08em; white-space: nowrap; color: var(--hm-yellow); }
 .duel-stakes { align-self: center; max-width: 520px; margin: 0; padding: 4px 12px; font-size: 13px; text-align: center; color: var(--hm-cyan); }
@@ -237,6 +249,7 @@
   .duel-offer { width: 100%; }
   .duel-offer button { flex: 1 1 100%; }
   .duel-new { padding: 6px 10px; font-size: 11px; letter-spacing: 1px; }
+  .duel-record { margin-left: 48px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
