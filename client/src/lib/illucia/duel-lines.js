@@ -36,6 +36,12 @@ const lines = {
   unchecked: ['My archive does not know your word, so I will take your word for it.'],
   corrected: ['My archive says otherwise: your word {can}. I will go by the archive, so no bonus for that one.'],
   declined: ['Fair enough. Back to letters.', 'A mystery, then. Back to letters.'],
+  // Experimental mode (v2 E5): a question written by an AI model, which can sort words wrongly.
+  aiAsk: ['I asked my AI helper for a question. {Q}', 'An experimental question, from my AI helper: {Q}'],
+  aiLean: ['Thank you. I will lean that way, but not too far: my helper can sort words wrongly.'],
+  aiLimit: ['My AI helper is out of questions for now. Back to my own method.'],
+  aiOff: ['My AI helper is switched off right now. Back to my own method.'],
+  aiFailed: ['My AI helper did not come up with a usable question. My mistake for asking; back to my own method.'],
 };
 
 function pick(event, index, values = {}) {
@@ -159,4 +165,15 @@ export function memoryLine({ word, learnedIt, playerWon, voice }) {
   if (voice?.plays > 0) return `${W} again? You have set it against me ${times(voice.plays)} before.`;
   if (voice?.everyone > 0) return `Other players have tried ${W} on me ${times(voice.everyone)}.`;
   return null;
+}
+
+// Experimental mode (v2 E5).
+export const aiQuestionLine = (question, turn) => pick('aiAsk', turn, { Q: question });
+export const AI_NOTE = 'Written by an AI model (Llama 3.3 70B on Cloudflare Workers AI). It can be wrong, so I only lean on your answer.';
+export const aiAnswerLine = (declined, turn) => pick(declined ? 'declined' : 'aiLean', turn);
+// Why her helper had no question (the Worker's reasons); she makes her normal move.
+export function aiFallbackLine(reason, turn) {
+  if (['budget', 'user-limit', 'round-limit'].includes(reason)) return pick('aiLimit', turn);
+  if (reason === 'disabled') return pick('aiOff', turn);
+  return pick('aiFailed', turn);
 }

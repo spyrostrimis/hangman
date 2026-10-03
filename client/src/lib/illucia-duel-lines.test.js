@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
-import { ANSWERS, REPLIES, answerLine, article, askLine, memoryLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from './illucia/duel-lines.js';
+import { AI_NOTE, ANSWERS, REPLIES, aiAnswerLine, aiFallbackLine, aiQuestionLine, answerLine, article, askLine, memoryLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from './illucia/duel-lines.js';
 import { applyGuess, createRound } from './hangman-core.js';
 import { toPublicState } from './illucia/public-state.js';
 import { VOCABULARY_TIERS, createKnowledge, parseLexicon } from './illucia/lexicon.js';
@@ -190,4 +190,14 @@ test('her memory of a word: learned from you first, then your plays, then everyo
   assert.equal(memoryLine({ word: 'jazz', learnedIt: false, playerWon: false, voice: { plays: 0, everyone: 3 } }), 'Other players have tried JAZZ on me 3 times.');
   assert.equal(memoryLine({ word: 'jazz', learnedIt: false, playerWon: false, voice: { plays: 0, everyone: 0 } }), null);
   assert.equal(memoryLine({ word: 'jazz', learnedIt: false, playerWon: false, voice: undefined }), null);
+});
+
+test('experimental lines: her helper\'s question, her lean, and failures she owns', () => {
+  assert.equal(aiQuestionLine('Can your word mean something that flies?', 0), 'I asked my AI helper for a question. Can your word mean something that flies?');
+  assert.match(AI_NOTE, /AI model .* It can be wrong/);
+  assert.match(aiAnswerLine(false, 0), /lean that way/);
+  assert.match(aiAnswerLine(true, 0), /Back to letters/);
+  for (const reason of ['budget', 'user-limit', 'round-limit']) assert.match(aiFallbackLine(reason, 0), /out of questions/);
+  assert.match(aiFallbackLine('disabled', 0), /switched off/);
+  for (const reason of ['timeout', 'unavailable', 'invalid']) assert.match(aiFallbackLine(reason, 0), /My mistake for asking/);
 });

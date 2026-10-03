@@ -596,3 +596,90 @@ it('has nothing to remember about a new word', async () => {
   expect(bubbles(view.container, 'illucia').at(-1)).toMatch(/EERIE/);
   expect(bubbles(view.container, 'illucia').join(' ')).not.toMatch(/learned|again|tried/i);
 });
+
+// Experimental AI mode (v2 E5), against a mocked /user/illucia/ask: no real model is called.
+const experimentalTicket = body => ticketFor(body, { experimental: true, points: { eligible: false, stump: 0, reason: 'EXPERIMENTAL' } });
+async function startExperimental(word = 'crane') {
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Experimental AI mode' }));
+  await start(word, 'Master');
+}
+
+it('keeps experimental mode off by default and warns when it is switched on', async () => {
+  serveQuestions();
+  const requests = serveApi({ '/user/illucia/start': body => [200, ticketFor(body)] });
+  mount();
+  const toggle = screen.getByRole('checkbox', { name: 'Experimental AI mode' });
+  expect(toggle.checked).toBe(false);
+  expect(screen.queryByText(/uses an AI model/)).toBeNull();
+  fireEvent.click(toggle);
+  expect(screen.getByText('Experimental: Illucia uses an AI model and can make mistakes. No points, and it resets your ladder.')).toBeTruthy();
+  fireEvent.click(toggle);
+  // Normal mode never calls the AI route, even when a question is due (she asks WordNet's instead).
+  await start('crane', 'Master');
+  await forceMisses(await realDecision());
+  expect(requests.find(([url]) => url === '/user/illucia/start')[1]).toEqual({ word: 'crane', tier: 'master' });
+  expect(screen.getByText(/Can your word mean a bird\?$/)).toBeTruthy();
+  expect(requests.some(([url]) => url === '/user/illucia/ask')).toBe(false);
+});
+
+it('asks her AI helper instead of WordNet, leans on the answer without ruling words out, and claims nothing', async () => {
+  serveQuestions();
+  const requests = serveApi({
+    '/user/illucia/start': body => [200, experimentalTicket(body)],
+    '/user/illucia/ask': body => [200, { ok: true, question: 'Can your word mean something that flies?',
+      yes: body.candidates.filter(word => BIRDS.has(word)), no: body.candidates.filter(word => !BIRDS.has(word)), questionsLeft: 1 }],
+  });
+  const view = mount(); await startExperimental();
+  expect(requests.find(([url]) => url === '/user/illucia/start')[1]).toEqual({ word: 'crane', tier: 'master', experimental: true });
+  expect(view.container.querySelector('.duel-stakes').textContent).toBe('Experimental mode: I may ask my AI helper for questions. This duel earns no points.');
+  expect(screen.getByLabelText('Points: No points')).toBeTruthy();
+  await forceMisses(await realDecision());
+  const ask = requests.filter(([url]) => url === '/user/illucia/ask');
+  expect(ask).toEqual([['/user/illucia/ask', { roundId: 'round-crane-master', candidates: QUESTION_WORDS }]]);
+  expect(bubbles(view.container, 'illucia').at(-1)).toMatch(/Can your word mean something that flies\?$/);
+  expect(bubbles(view.container, 'illucia').join(' ')).not.toMatch(/a bird\?/);
+  expect(view.container.querySelectorAll('.duel-bubble small')[2].textContent).toMatch(/^Written by an AI model/);
+  expect(screen.getByText(/An AI question earns nothing and cannot be checked/)).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Yes, it can' }));
+  const real = await realDecision();
+  analyzeDecision.mockImplementationOnce((...args) => ({ ...real(...args), letter: 'j' }));
+  await think();
+  // Every word is still possible; the birds now weigh three times as much.
+  const knowledge = analyzeDecision.mock.calls.at(-1)[1];
+  expect(knowledge.words).toEqual(QUESTION_WORDS);
+  expect(knowledge.weights.get('heron')).toBe(30);
+  expect(knowledge.weights.get('table')).toBe(10);
+  fireEvent.click(screen.getByRole('button', { name: 'Oops, wrong' }));
+  // Her second AI question (one left) is declined inside playToHerLoss.
+  await playToHerLoss(real, ['x', 'v', 'k']);
+  expect(requests.filter(([url]) => url === '/user/illucia/ask')).toHaveLength(2);
+  expect(screen.getByText('Experimental duels earn no points.')).toBeTruthy();
+  expect(requests.some(([url]) => url === '/user/illucia/claim')).toBe(false);
+});
+
+it('owns a failed AI question and makes her normal move, once per letter', async () => {
+  serveQuestions();
+  const requests = serveApi({
+    '/user/illucia/start': body => [200, experimentalTicket(body)],
+    '/user/illucia/ask': () => [200, { ok: false, reason: 'budget', questionsLeft: 2 }],
+  });
+  const view = mount(); await startExperimental();
+  await forceMisses(await realDecision());
+  expect(bubbles(view.container, 'illucia').at(-1)).toBe('My AI helper is out of questions for now. Back to my own method.');
+  const calls = analyzeDecision.mock.calls.length;
+  await think();
+  expect(analyzeDecision.mock.calls.length).toBe(calls + 1);
+  expect(requests.filter(([url]) => url === '/user/illucia/ask')).toHaveLength(1);
+});
+
+it('treats a network failure or a sort that is not a partition as a failed question', async () => {
+  serveQuestions();
+  serveApi({
+    '/user/illucia/start': body => [200, experimentalTicket(body)],
+    '/user/illucia/ask': body => [200, { ok: true, question: 'Can your word mean a bird?', yes: ['crane', 'zebra'], no: body.candidates.slice(2), questionsLeft: 1 }],
+  });
+  const view = mount(); await startExperimental();
+  await forceMisses(await realDecision());
+  expect(bubbles(view.container, 'illucia').at(-1)).toBe('My AI helper did not come up with a usable question. My mistake for asking; back to my own method.');
+  expect(screen.queryByRole('button', { name: 'Yes, it can' })).toBeNull();
+});

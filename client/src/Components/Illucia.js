@@ -8,11 +8,11 @@ import { toPublicState } from '../lib/illucia/public-state.js';
 import { filterCandidates } from '../lib/illucia/candidates.js';
 import { analyzeDecision } from '../lib/illucia/strategy.js';
 import { newLocalSeed } from '../lib/illucia/random.js';
-import { checkAnswer, chooseQuestion, narrowKnowledge, parseCategories, parseLabels } from '../lib/illucia/questions.js';
+import { EARLIEST_TURN, MAX_QUESTIONS, checkAnswer, chooseQuestion, narrowKnowledge, parseCategories, parseLabels } from '../lib/illucia/questions.js';
 import { rejectionLine } from '../lib/illucia/lines.js';
 import { greetingLine, openingLine } from '../lib/illucia/observatory-lines.js';
-import { ANSWERS, REPLIES, answerLine, askLine, memoryLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from '../lib/illucia/duel-lines.js';
-import { claimIlluciaRound, loadIlluciaStats, startIlluciaRound } from '../lib/illucia-rounds.js';
+import { AI_NOTE, ANSWERS, REPLIES, aiAnswerLine, aiFallbackLine, aiQuestionLine, answerLine, askLine, memoryLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from '../lib/illucia/duel-lines.js';
+import { askIlluciaAi, claimIlluciaRound, loadIlluciaStats, startIlluciaRound } from '../lib/illucia-rounds.js';
 import { ILLUCIA_ALREADY_WON_MESSAGE, ILLUCIA_NO_POINTS, illuciaStumpPoints } from '../../../shared/scoring-protocol.js';
 import './Illucia.css';
 
@@ -21,6 +21,11 @@ import './Illucia.css';
 // Game code decides every hit and miss; the player's replies are only words.
 
 const THINK_MS = 1100;
+// Experimental mode (v2 E5): she asks her AI helper only over 2-80 candidates, and leans on the
+// answer rather than trusting it: words on the answered side weigh this many times more.
+const AI_MAX_CANDIDATES = 80;
+const AI_LEAN = 3;
+const EXPERIMENTAL_WARNING = 'Experimental: Illucia uses an AI model and can make mistakes. No points, and it resets your ladder.';
 // Vocabulary and temperament (lexicon.js): Apprentice has the widest shortlist, Master the narrowest.
 const TIER_NOTES = {
   apprentice: 'Common words only. Plays on hunches.',
@@ -53,9 +58,17 @@ function ladderStep(ladder, tier, length) {
 
 const countWords = (round, knowledge) => filterCandidates(toPublicState(round), knowledge.words).length;
 
-// Her vocabulary after the questions answered so far (unknown words stay on both sides).
-const herKnowledge = duel => (duel.questions
-  ? narrowKnowledge(duel.knowledge, duel.questions.labels, duel.offers, duel.questions.categories) : duel.knowledge);
+// Her vocabulary after the questions answered so far (unknown words stay on both sides). In
+// experimental mode, each answered AI question makes the words its model sorted to that side
+// weigh more; no word is ruled out, because the model's sort can be wrong.
+function herKnowledge(duel) {
+  const narrowed = duel.questions && !duel.experimental
+    ? narrowKnowledge(duel.knowledge, duel.questions.labels, duel.offers, duel.questions.categories) : duel.knowledge;
+  if (!duel.leanings?.length) return narrowed;
+  const weights = new Map(narrowed.weights);
+  for (const { side } of duel.leanings) for (const word of side) if (weights.has(word)) weights.set(word, weights.get(word) * AI_LEAN);
+  return Object.freeze({ ...narrowed, weights });
+}
 
 // Her knowledge for this round. With a ticket, her memory of the player (C2's brain: their letter
 // habits, her personality, words that beat her) joins it; the voice data never does.
@@ -70,6 +83,9 @@ function knowledgeFor(entries, tier, ticket, length) {
 function stakesLog(ticket, tier, length) {
   if (!ticket) return [{ type: 'stakes', text: 'This duel is not scored: the scorekeeper could not be reached.' }];
   const { points } = ticket;
+  if (points.reason === ILLUCIA_NO_POINTS.experimental) {
+    return [{ type: 'stakes', text: 'Experimental mode: I may ask my AI helper for questions. This duel earns no points.' }];
+  }
   if (points.reason === ILLUCIA_NO_POINTS.alreadyWon) return [{ type: 'illucia', text: ILLUCIA_ALREADY_WON_MESSAGE }];
   if (points.reason === ILLUCIA_NO_POINTS.outsideTier) {
     return [{ type: 'stakes', text: `${tier.label} does not know this word, so this duel earns no points.` }];
@@ -91,6 +107,8 @@ function newDuel(word, assets, tier, ticket = null) {
     // The server's round seed; a local one when the duel is not scored.
     round, assets, entries: assets.entries, questions: assets.questions, knowledge, tier, seed: ticket ? ticket.seed : newLocalSeed(),
     ticket, points: ticket?.points ?? null,
+    // Experimental mode: AI questions instead of WordNet ones, while the server allows them.
+    experimental: Boolean(ticket?.experimental), aiLeft: MAX_QUESTIONS, aiTriedAt: -1, leanings: [], consult: null,
     phase: 'thinking', lastGuess: null, lastHit: null,
     // Questions offered so far ({ code, answer }), the guess count when she last asked, and the
     // answers that were checked against WordNet and right (they earn the bonus).
@@ -109,6 +127,20 @@ function remembered(duel, playerWon) {
   const text = memoryLine({ word: duel.round.answer, learnedIt: duel.knowledge.learned.has(duel.round.answer),
     playerWon, voice: duel.ticket?.memory?.voice });
   return text ? [{ type: 'illucia', text }] : [];
+}
+
+// Her helper's reply: a question to put to the player, or a line owning the failure and her normal move.
+function consulted(duel, reply) {
+  const turn = duel.round.guesses.length;
+  // The server's count, never more than she has left: each question she asks uses one.
+  const server = Number.isInteger(reply.questionsLeft) ? reply.questionsLeft : duel.aiLeft;
+  const aiLeft = Math.min(server, reply.ok ? duel.aiLeft - 1 : duel.aiLeft);
+  if (!reply.ok) {
+    return { ...duel, phase: 'thinking', consult: null, aiLeft, log: [...duel.log, { type: 'illucia', text: aiFallbackLine(reply.reason, turn) }] };
+  }
+  return { ...duel, phase: 'question', consult: null, aiLeft, askedAt: turn,
+    pending: { ai: true, checkable: false, question: { question: reply.question, yes: reply.yes, no: reply.no } },
+    log: [...duel.log, { type: 'illucia', text: aiQuestionLine(reply.question, turn), note: AI_NOTE }] };
 }
 
 function failed(duel) {
@@ -132,6 +164,14 @@ function answer(duel, choiceId) {
   if (duel.phase !== 'question' || !choice) return duel;
   const { question } = duel.pending;
   const turn = duel.round.guesses.length;
+  if (duel.pending.ai) {
+    // An AI question cannot be checked and earns nothing; an answer makes her lean that way.
+    const declined = choice.id === 'declined';
+    const side = choice.id === 'yes' ? question.yes : question.no;
+    return { ...duel, pending: null, phase: 'thinking', lastHit: null,
+      leanings: declined ? duel.leanings : [...duel.leanings, { side }],
+      log: [...duel.log, { type: 'player', text: choice.text }, { type: 'illucia', text: aiAnswerLine(declined, turn) }] };
+  }
   const truth = checkAnswer(duel.questions.labels, duel.round.answer, question.code);
   let outcome = 'declined';
   let recorded = 'declined';
@@ -149,7 +189,14 @@ function answer(duel, choiceId) {
 // from public state only. Then she waits for the player.
 function guess(duel) {
   const state = toPublicState(duel.round);
-  if (duel.questions && duel.askedAt < duel.round.guesses.length) {
+  const guessed = duel.round.guesses.length;
+  if (duel.experimental && duel.ticket && duel.aiLeft > 0 && duel.aiTriedAt < guessed && duel.askedAt < guessed && guessed >= EARLIEST_TURN) {
+    const candidates = filterCandidates(state, herKnowledge(duel).words);
+    if (candidates.length >= 2 && candidates.length <= AI_MAX_CANDIDATES) {
+      return { ...duel, phase: 'consulting', aiTriedAt: guessed, consult: [...candidates].sort() };
+    }
+  }
+  if (duel.questions && !duel.experimental && duel.askedAt < duel.round.guesses.length) {
     let question = null;
     try {
       question = chooseQuestion(state, duel.knowledge, duel.questions.labels, duel.questions.categories, duel.offers, { seed: duel.seed });
@@ -282,7 +329,8 @@ function LadderNote({ ladder }) {
 
 // Before a word is committed: does it pay, and does it keep the ladder? (A preview from the
 // player's stats; the server decides.)
-function startWarning(word, entries, tier, ladder, spent) {
+function startWarning(word, entries, tier, ladder, spent, experimental) {
+  if (experimental) return '';
   const notes = [];
   const size = entries.find(entry => entry.word === word)?.size ?? 70;
   const outside = size > tier.maxSize;
@@ -295,7 +343,7 @@ function startWarning(word, entries, tier, ladder, spent) {
   return notes.join(' ');
 }
 
-function Composer({ onStart, ladder, spent }) {
+function Composer({ onStart, ladder, spent, experimental, setExperimental }) {
   const [secret, setSecret] = useState('');
   const [tierId, setTierId] = useState(ladder?.rung > 0 ? ladder.next : 'scholar');
   const [error, setError] = useState('');
@@ -337,7 +385,7 @@ function Composer({ onStart, ladder, spent }) {
         return;
       }
       const tier = VOCABULARY_TIERS.find(value => value.id === tierId);
-      const note = startWarning(word, entries, tier, ladder, spent);
+      const note = startWarning(word, entries, tier, ladder, spent, experimental);
       if (note && warning?.key !== `${word}:${tier.id}`) {
         setWarning({ key: `${word}:${tier.id}`, text: note });
         return;
@@ -370,6 +418,11 @@ function Composer({ onStart, ladder, spent }) {
           <small>{TIER_NOTES[tier.id]}</small>
         </label>)}
       </div>
+      <label className="duel-experimental">
+        <input type="checkbox" checked={experimental} onChange={event => setExperimental(event.target.checked)} aria-describedby="duel-experimental-note" />
+        Experimental AI mode
+      </label>
+      {experimental && <p id="duel-experimental-note" className="duel-warning">{EXPERIMENTAL_WARNING}</p>}
       {warned && <p className="duel-warning" role="status">{warning.text}</p>}
       <button type="submit" className="hm-button primary">{warned ? 'Start anyway' : 'Start the duel'}</button>
     </fieldset>
@@ -383,7 +436,8 @@ function Offer({ duel, onAnswer }) {
   const { pending } = duel;
   const now = previewPoints(duel);
   const next = duel.points?.eligible ? illuciaStumpPoints(duel.tier.id, duel.round.answer.length, duel.verified + 1) : 0;
-  const stake = !pending.checkable
+  const stake = pending.ai ? 'An AI question earns nothing and cannot be checked. Answering helps her a little; declining tells her nothing.'
+    : !pending.checkable
     ? 'My archive does not know your word, so your answer cannot be checked: no bonus possible for this word.'
     : duel.points?.eligible ? `Answer correctly and still win: ${now} → ${next} points. Declining tells her nothing.`
       : 'Answering helps her. Declining tells her nothing.';
@@ -471,6 +525,7 @@ function StatsPanel({ onClose }) {
 
 function ClaimSummary({ duel, claim, retry }) {
   if (!duel.ticket) return <p className="duel-muted">This duel was not scored.</p>;
+  if (duel.experimental) return <p className="duel-muted">Experimental duels earn no points.</p>;
   if (!claim || claim.saving) return <p role="status">Saving…</p>;
   if (claim.error) return <>
     <p role="alert">{claim.error}</p>
@@ -525,6 +580,8 @@ function DuelPage({ userId, username }) {
   const [spent, setSpent] = useState(() => new Set());
   const [claim, setClaim] = useState(null);
   const [statsOpen, setStatsOpen] = useState(false);
+  // Off on every page load; kept for the next duel on this page only.
+  const [experimental, setExperimental] = useState(false);
   const bottom = useRef(null);
   const mounted = useRef(true);
   const openRound = useRef(null); // a started round not yet claimed: the next start abandons it
@@ -551,6 +608,16 @@ function DuelPage({ userId, username }) {
     return () => clearTimeout(timer);
   }, [duel]);
 
+  // Experimental mode: ask her AI helper; a stale reply (new word, page left) is dropped.
+  useEffect(() => {
+    if (duel?.phase !== 'consulting') return;
+    const controller = new AbortController();
+    askIlluciaAi({ roundId: duel.ticket.roundId, candidates: duel.consult, signal: controller.signal })
+      .then(reply => setDuel(current => (current === duel ? consulted(current, reply) : current)))
+      .catch(() => {});
+    return () => controller.abort();
+  }, [duel]);
+
   // Keep the newest exchange in view as the conversation grows downwards.
   useEffect(() => {
     if (!duel) return;
@@ -558,10 +625,10 @@ function DuelPage({ userId, username }) {
     bottom.current?.scrollIntoView?.({ behavior: reduce ? 'auto' : 'smooth', block: 'end' });
   }, [duel?.log.length, duel?.phase]);
 
-  async function begin(word, assets, tier) {
+  async function begin(word, assets, tier, mode = experimental) {
     let ticket = null;
     try {
-      ticket = await startIlluciaRound({ word, tier: tier.id, previousRoundId: openRound.current });
+      ticket = await startIlluciaRound({ word, tier: tier.id, previousRoundId: openRound.current, experimental: mode });
     } catch (error) {
       if (error.status === 401) { expireSession(userId); return; }
     }
@@ -569,6 +636,8 @@ function DuelPage({ userId, username }) {
     // A new scored round abandons the open one, which resets the ladder.
     if (ticket && openRound.current && openRound.current !== ticket.roundId) setLadder(LADDER_RESET);
     openRound.current = ticket?.roundId ?? openRound.current;
+    // Experimental rounds break the ladder.
+    if (ticket?.experimental) setLadder(LADDER_RESET);
     setClaim(null);
     setDuel(newDuel(word, assets, tier, ticket));
   }
@@ -601,7 +670,7 @@ function DuelPage({ userId, username }) {
   // The round is over: a win is claimed (the duel no longer changes, so this runs once; a repeated
   // claim would get the stored award back); her win resets the ladder.
   useEffect(() => {
-    if (!duel?.ticket || duel.phase !== 'over') return;
+    if (!duel?.ticket || duel.phase !== 'over' || duel.experimental) return;
     if (getRoundStatus(duel.round) === 'solved') setLadder(LADDER_RESET);
     else void save(duel);
   }, [duel]);
@@ -627,13 +696,14 @@ function DuelPage({ userId, username }) {
       <Message from="illucia">Hello, {username}. {greeting} I guess your secret word one letter at a time.</Message>
       {!duel && !statsOpen && <button type="button" className="duel-new duel-record" onClick={() => setStatsOpen(true)}>Your record vs Illucia</button>}
       {statsOpen && <StatsPanel onClose={() => setStatsOpen(false)} />}
-      {!duel && <div className="duel-msg from-player"><Composer onStart={begin} ladder={ladder} spent={spent} /></div>}
+      {!duel && <div className="duel-msg from-player"><Composer onStart={(word, assets, tier) => begin(word, assets, tier)} ladder={ladder} spent={spent}
+        experimental={experimental} setExperimental={setExperimental} /></div>}
       {duel?.log.map((entry, index) => entry.type === 'board'
         ? <Board key={index} entry={entry} answer={duel.round.answer} active={index === lastIndex && duel.phase === 'reveal'}
           onReveal={position => setDuel(current => reveal(current, position))} />
         : entry.type === 'stakes' ? <p key={index} className="duel-stakes">{entry.text}</p>
           : <Message key={index} from={entry.type} note={entry.note}>{entry.text}</Message>)}
-      {duel?.phase === 'thinking' && <div className="duel-msg from-illucia" aria-hidden="true">
+      {(duel?.phase === 'thinking' || duel?.phase === 'consulting') && <div className="duel-msg from-illucia" aria-hidden="true">
         <Avatar /><div className="duel-bubble duel-typing"><span /><span /><span /></div>
       </div>}
       {duel?.phase === 'reply' && <div className="duel-msg from-player">
@@ -648,7 +718,7 @@ function DuelPage({ userId, username }) {
 
     {duel?.phase === 'over' && <Result duel={duel} claim={claimFor} spent={spent} restart={restart} retry={() => save(duel)}
       showStats={() => { setDuel(null); setStatsOpen(true); }}
-      rematch={tier => begin(duel.round.answer, duel.assets, tier)} />}
+      rematch={tier => begin(duel.round.answer, duel.assets, tier, duel.experimental)} />}
 
     <div ref={bottom} className="duel-bottom" />
     <p className="duel-credits">Vocabulary: ESDB/SCOWL · filtered with LDNOOBW · questions: Open English WordNet (CC BY 4.0). <a href="/illucia/credits.html" target="_blank" rel="noreferrer">Credits &amp; licences</a></p>

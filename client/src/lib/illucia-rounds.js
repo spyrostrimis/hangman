@@ -51,3 +51,25 @@ export async function loadIlluciaStats({ signal } = {}) {
   return { ...stats, ladder: isLadder(stats?.ladder) ? stats.ladder : null,
     spent: Array.isArray(stats?.spent?.words) ? stats.spent.words : null };
 }
+
+// Experimental mode (v2 E5): ask the Worker's AI route for a meaning question over her candidates
+// (2-80, sorted). The model never sees the board, the player or which word is theirs. Any failure
+// is { ok: false }, and she makes her normal move.
+export async function askIlluciaAi({ roundId, candidates, signal }) {
+  let reply;
+  try {
+    reply = await apiRequest('/user/illucia/ask', { method: 'POST', signal, timeout: 9000, body: { roundId, candidates } });
+  } catch (error) {
+    if (signal?.aborted) throw error;
+    return { ok: false, reason: 'unavailable' };
+  }
+  if (!reply?.ok) return { ok: false, reason: typeof reply?.reason === 'string' ? reply.reason : 'invalid', questionsLeft: reply?.questionsLeft };
+  // The Worker validated the sort; check again that it is a partition of what she sent.
+  const known = new Set(candidates);
+  const sorted = Array.isArray(reply.yes) && Array.isArray(reply.no) ? [...reply.yes, ...reply.no] : [];
+  if (typeof reply.question !== 'string' || !reply.question.trim() || sorted.length !== candidates.length
+    || new Set(sorted).size !== sorted.length || sorted.some(word => !known.has(word))) {
+    return { ok: false, reason: 'invalid', questionsLeft: reply.questionsLeft };
+  }
+  return { ok: true, question: reply.question.trim(), yes: reply.yes, no: reply.no, questionsLeft: reply.questionsLeft };
+}
