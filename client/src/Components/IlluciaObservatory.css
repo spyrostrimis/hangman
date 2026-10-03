@@ -534,3 +534,7 @@
   cursor: pointer;
 }
 .obs-record { margin-top: 12px; }
+
+/* Experimental AI mode (Observatory slice 6): off on every page load. */
+.obs-experimental { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; margin-top: 10px; font-size: 14px; cursor: pointer; }
+.obs-experimental input { width: 20px; height: 20px; min-width: 0 !important; min-height: 0 !important; accent-color: var(--obs-yellow); }

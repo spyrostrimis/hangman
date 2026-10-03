@@ -9,9 +9,10 @@ import { toPublicState } from '../lib/illucia/public-state.js';
 import { filterCandidates } from '../lib/illucia/candidates.js';
 import { rejectionLine } from '../lib/illucia/lines.js';
 import { greetingLine, notebookLine, openingLine, questionSmallPrint, turnLine } from '../lib/illucia/observatory-lines.js';
-import { ANSWERS, answerLine, questionLine } from '../lib/illucia/duel-lines.js';
-import { answerQuestion, createSession, herKnowledge, offerStake, previewPoints, rememberLine, roundStakes, startWarning, takeTurn, tierLabel } from '../lib/illucia/duel-session.js';
+import { AI_NOTE, ANSWERS, aiAnswerLine, aiFallbackLine, aiQuestionLine, answerLine, questionLine } from '../lib/illucia/duel-lines.js';
+import { EXPERIMENTAL_WARNING, answerQuestion, applyConsult, createSession, herKnowledge, offerStake, previewPoints, rememberLine, roundStakes, startWarning, takeTurn, tierLabel } from '../lib/illucia/duel-session.js';
 import { loadQuestions } from '../lib/illucia-assets.js';
+import { askIlluciaAi } from '../lib/illucia-rounds.js';
 import { useIlluciaRounds } from '../lib/use-illucia-rounds.js';
 import { ILLUCIA_ALREADY_WON_MESSAGE, ILLUCIA_NO_POINTS } from '../../../shared/scoring-protocol.js';
 import './IlluciaObservatory.css';
@@ -117,7 +118,7 @@ function rungBadge(ladder, index) {
   return VOCABULARY_TIERS[index].id === ladder.next ? { text: `Next rung · ${ladder.minLength}+ letters`, tone: 'next' } : null;
 }
 
-function Setup({ username, onStart, ladder, spent, recordOpen, setRecordOpen }) {
+function Setup({ username, onStart, ladder, spent, recordOpen, setRecordOpen, experimental, setExperimental }) {
   const [secret, setSecret] = useState('');
   const [tierId, setTierId] = useState(ladder?.rung > 0 ? ladder.next : 'scholar');
   const [error, setError] = useState('');
@@ -159,7 +160,7 @@ function Setup({ username, onStart, ladder, spent, recordOpen, setRecordOpen }) 
         return;
       }
       const tier = VOCABULARY_TIERS.find(value => value.id === tierId);
-      const note = startWarning(word, entries, tier, ladder, spent, false);
+      const note = startWarning(word, entries, tier, ladder, spent, experimental);
       if (note && warning?.key !== `${word}:${tier.id}`) {
         setWarning({ key: `${word}:${tier.id}`, text: note });
         return;
@@ -205,6 +206,11 @@ function Setup({ username, onStart, ladder, spent, recordOpen, setRecordOpen }) 
             {ladder && <p className="obs-muted obs-ladder">{ladder.rung === 0
               ? 'Ladder: beat Apprentice, then Scholar, then Master in a row, each word longer, for +100.'
               : `Ladder: next, ${tierLabel(ladder.next)} with a word of ${ladder.minLength}+ letters. +100 at the top.`}</p>}
+            <label className="obs-experimental">
+              <input type="checkbox" checked={experimental} onChange={event => setExperimental(event.target.checked)} aria-describedby="obs-experimental-note" />
+              Experimental AI mode
+            </label>
+            {experimental && <p id="obs-experimental-note" className="obs-warning">{EXPERIMENTAL_WARNING}</p>}
             {warned && <p className="obs-warning" role="status">{warning.text}</p>}
             <button type="submit" className="obs-start">{warned ? 'Start anyway' : 'Start the duel'}</button>
           </fieldset>
@@ -240,7 +246,7 @@ function readMind(game) {
   const knowledge = herKnowledge(game);
   const candidates = filterCandidates(state, knowledge.words);
   // takeTurn is pure: it says what she will do, and the page plays it when her pause is over.
-  const turn = getRoundStatus(game.round) === 'playing' && !game.pending ? takeTurn(game) : null;
+  const turn = getRoundStatus(game.round) === 'playing' && !game.pending && !game.consult ? takeTurn(game) : null;
   const decision = turn?.type === 'letter' ? turn.decision : null;
   const failed = turn?.type === 'error';
   const fallback = Boolean(decision?.fallback);
@@ -263,7 +269,7 @@ function readMind(game) {
   }
   const fallbackShare = fallback
     ? Math.round(game.knowledge.frequency[decision.letter] / Math.max(1, game.knowledge.words.length) * 100) : 0;
-  return { state, candidates, turn, decision, failed, fallback, scores, lean, shortlist, cutoff, fallbackShare };
+  return { state, candidates, turn, decision, failed, fallback, scores, lean, shortlist, cutoff, fallbackShare, consulting: Boolean(game.consult) };
 }
 
 function Analyzer({ round, mind, playing }) {
@@ -294,7 +300,12 @@ function Analyzer({ round, mind, playing }) {
 // know it (it stays on both sides). Her candidates only; never the secret.
 function questionSides(game) {
   const { pending } = game;
-  if (!pending || pending.ai) return null;
+  if (!pending) return null;
+  if (pending.ai) {
+    const yes = new Set(pending.question.yes);
+    const no = new Set(pending.question.no);
+    return word => (yes.has(word) ? 'yes' : no.has(word) ? 'no' : null);
+  }
   const { labels } = game.questions;
   const { code } = pending.question;
   return word => {
@@ -314,13 +325,14 @@ function QuestionCard({ game, onAnswer }) {
     <div className="obs-question-answers">
       {ANSWERS.map(choice => <button key={choice.id} type="button" onClick={() => onAnswer(choice.id)}>{choice.label}</button>)}
     </div>
-    <p className="obs-muted">{questionSmallPrint(question)}</p>
+    <p className="obs-muted">{game.pending.ai ? AI_NOTE : questionSmallPrint(question)}</p>
   </div>;
 }
 
 function Reasoning({ round, mind, tier, playing }) {
   if (!playing || mind.failed) return null;
-  if (mind.turn?.type === 'question') return <p className="obs-reasoning">Instead of a letter, she is choosing a question to ask you.</p>;
+  if (mind.consulting) return <p className="obs-reasoning">She is asking her AI helper for a question about the words she still has in mind.</p>;
+  if (mind.turn?.type === 'question' || mind.turn?.type === 'consult') return <p className="obs-reasoning">Instead of a letter, she is choosing a question to ask you.</p>;
   if (!mind.decision) return null;
   return <p className="obs-reasoning">{notebookLine(mind.decision, { tierLabel: tier.label, length: round.answer.length, fallbackShare: mind.fallbackShare })}</p>;
 }
@@ -330,6 +342,7 @@ function Reasoning({ round, mind, tier, playing }) {
 function RoundResult({ game, status, claim, retry }) {
   const { ticket } = game;
   if (!ticket) return <p className="obs-muted">This duel was not scored.</p>;
+  if (game.experimental) return <p className="obs-muted">Experimental duels earn no points.</p>;
   if (status === 'solved') return <p className="obs-muted">No points this time.{ticket.ladder?.rung > 0 ? ' Your ladder resets.' : ''}</p>;
   if (!claim || claim.saving) return <p role="status">Saving…</p>;
   if (claim.error) return <>
@@ -373,14 +386,15 @@ function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch, 
   return <>
     <div className="obs-grid">
       <Pod lit={game.lit} fading={game.fading} learned={game.knowledge.learned} sideOf={questionSides(game)} count={mind.candidates.length} tier={tier.label}
-        points={points} mood={mood} thinking={playing && !paused} turn={turns.length} line={game.line}
+        points={points} mood={mood} thinking={(playing && !paused) || Boolean(game.consult)} turn={turns.length} line={game.line}
         banner={status === 'solved' ? { text: 'Illucia wins', tone: 'lose' } : status === 'failed' ? { text: 'You win!', tone: 'win' } : null} />
       <section className="obs-screen">
         <div className="obs-screen-inner">
           <h2 ref={heading} tabIndex={-1}>{status === 'solved' ? 'Illucia wins' : status === 'failed' ? 'You win!' : "Illucia's notebook"}</h2>
           {status === 'playing'
             ? <>
-              <p className="obs-muted">{game.pending ? 'Her question · green stars can mean it, blue cannot, white: unknown to her archive'
+              <p className="obs-muted">{game.pending ? (game.pending.ai ? 'Her AI helper\'s question · green stars: its yes, blue: its no'
+                : 'Her question · green stars can mean it, blue cannot, white: unknown to her archive')
                 : `Her letter scores · turn ${turns.length + 1}${mind.cutoff !== null && playing ? ' · above the dashed line: her shortlist' : ''}`}{paused ? ' · paused' : ''}</p>
               <p className="obs-stakes">{game.stakes}</p>
             </>
@@ -443,13 +457,19 @@ function ObservatoryPage({ userId, username }) {
   const [fast, setFast] = useState(false);
   const rounds = useIlluciaRounds(userId, game);
   const [recordOpen, setRecordOpen] = useState(false);
+  // Off on every page load; kept for the next duel on this page only.
+  const [experimental, setExperimental] = useState(false);
   const mind = useMemo(() => game && readMind(game), [game]);
 
   // Her letter, played when her pause is over (the turn was decided in readMind).
   useEffect(() => {
-    if (!game || !['letter', 'question'].includes(mind?.turn?.type) || paused) return;
+    if (!game || !['letter', 'question', 'consult'].includes(mind?.turn?.type) || paused) return;
     const delay = game.turns.length === 0 ? 2200 : fast ? 700 : 1700;
     const timer = setTimeout(() => {
+      if (mind.turn.type === 'consult') {
+        setGame({ ...mind.turn.session, consult: mind.turn.candidates });
+        return;
+      }
       if (mind.turn.type === 'question') {
         setGame({ ...mind.turn.session, line: questionLine(mind.turn.question, game.round.guesses.length) });
         return;
@@ -472,11 +492,27 @@ function ObservatoryPage({ userId, username }) {
     return () => clearTimeout(timer);
   }, [game, mind, paused, fast]);
 
+  // Experimental mode: ask her AI helper; a stale reply (new word, page left) is dropped.
+  useEffect(() => {
+    if (!game?.consult) return;
+    const controller = new AbortController();
+    const asked = game;
+    askIlluciaAi({ roundId: asked.ticket.roundId, candidates: asked.consult, signal: controller.signal })
+      .then(reply => setGame(current => {
+        if (current !== asked) return current;
+        const turn = current.round.guesses.length;
+        const next = { ...applyConsult(current, reply), consult: null };
+        return { ...next, line: reply.ok ? aiQuestionLine(reply.question, turn) : aiFallbackLine(reply.reason, turn) };
+      }))
+      .catch(() => {});
+    return () => controller.abort();
+  }, [game]);
+
   // The round is over: the game no longer changes, so this runs once per round.
   useEffect(() => { if (game && getRoundStatus(game.round) !== 'playing') rounds.finish(game); }, [game]);
 
-  async function begin(word, assets, tier) {
-    const started = await rounds.start(word, tier, false);
+  async function begin(word, assets, tier, mode = experimental) {
+    const started = await rounds.start(word, tier, mode);
     if (!started) return;
     setPaused(false);
     setGame(newGame(word, assets, tier, started.ticket));
@@ -490,8 +526,9 @@ function ObservatoryPage({ userId, username }) {
     const candidates = filterCandidates(toPublicState(session.round), herKnowledge(session).words);
     const lit = brightestStars(candidates, session.knowledge.learned);
     const litSet = new Set(lit);
+    const turn = game.round.guesses.length;
     setGame({ ...session, lit, fading: game.lit.filter(word => !litSet.has(word)),
-      line: answerLine(result.outcome, game.round.guesses.length, result.truth) });
+      line: result.ai ? aiAnswerLine(result.outcome === 'declined', turn) : answerLine(result.outcome, turn, result.truth) });
   }
 
   const restart = () => {
@@ -508,10 +545,11 @@ function ObservatoryPage({ userId, username }) {
     </header>
     {game
       ? <Game key={game.ticket?.roundId ?? game.seed} game={game} mind={mind} paused={paused} setPaused={setPaused} fast={fast} setFast={setFast}
-        restart={restart} rematch={tier => begin(game.round.answer, game.assets, tier)} answer={answer}
+        restart={restart} rematch={tier => begin(game.round.answer, game.assets, tier, game.experimental)} answer={answer}
         showRecord={() => { setGame(null); setRecordOpen(true); }}
         claim={rounds.claimFor(game)} retry={() => rounds.retry(game)} spent={rounds.spent} />
-      : <Setup username={username} onStart={begin} ladder={rounds.ladder} spent={rounds.spent} recordOpen={recordOpen} setRecordOpen={setRecordOpen} />}
+      : <Setup username={username} onStart={begin} ladder={rounds.ladder} spent={rounds.spent} recordOpen={recordOpen} setRecordOpen={setRecordOpen}
+        experimental={experimental} setExperimental={setExperimental} />}
     <p className="obs-credits">Vocabulary: ESDB/SCOWL · filtered with LDNOOBW · questions: Open English WordNet (CC BY 4.0). <a href="/illucia/credits.html" target="_blank" rel="noreferrer">Credits &amp; licences</a></p>
   </main>;
 }

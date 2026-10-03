@@ -49,6 +49,10 @@ One commit each, pushed to `main` for Spyros to check on the live site. No serve
 5. **Your record** view.
 6. **Experimental AI** switch.
 
+## Status (2026-10-03)
+
+All slices are committed and pushed to `main`, one commit each, so the frontend is published: slice 0 `5353e69`, the parity-harness fix `079d666`, slice 1 `42aace4`, slice 2 `3e9b2e9`, slice 3 `4bce708`, slice 4 `9067f7e`, slice 5 `27c34bd`, slice 6 in the commit that adds this section. No Worker change was needed. Each slice was tested (unit and component tests, each seen failing when its feature was broken), page parity stayed 108/108 on both pages, and each was run in the browser against the local Worker. Checking on the live site is Spyros's.
+
 ## Known issues in today's Observatory (fixed by the slices above)
 
 - The bars count plain words while she decides on weighted scores, so the highlighted "next" bar is sometimes not the tallest (slice 2).

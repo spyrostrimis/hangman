@@ -7,7 +7,7 @@ import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, isAcceptedWord, isW
 import { rejectionLine } from '../lib/illucia/lines.js';
 import { greetingLine, openingLine } from '../lib/illucia/observatory-lines.js';
 import { AI_NOTE, ANSWERS, REPLIES, aiAnswerLine, aiFallbackLine, aiQuestionLine, answerLine, askLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from '../lib/illucia/duel-lines.js';
-import { answerQuestion, applyConsult, countWords, createSession, herKnowledge, offerStake, previewPoints, rememberLine, roundStakes, startWarning, takeTurn, tierLabel } from '../lib/illucia/duel-session.js';
+import { EXPERIMENTAL_WARNING, answerQuestion, applyConsult, countWords, createSession, herKnowledge, offerStake, previewPoints, rememberLine, roundStakes, startWarning, takeTurn, tierLabel } from '../lib/illucia/duel-session.js';
 import { loadQuestions } from '../lib/illucia-assets.js';
 import { askIlluciaAi } from '../lib/illucia-rounds.js';
 import { useIlluciaRounds } from '../lib/use-illucia-rounds.js';
@@ -21,7 +21,6 @@ import './Illucia.css';
 // Observatory (lib/illucia/duel-session.js); this page adds the conversation log and its phases.
 
 const THINK_MS = 1100;
-const EXPERIMENTAL_WARNING = 'Experimental: Illucia uses an AI model and can make mistakes. No points, and it resets your ladder.';
 // Vocabulary and temperament (lexicon.js): Apprentice has the widest shortlist, Master the narrowest.
 const TIER_NOTES = {
   apprentice: 'Common words only. Plays on hunches.',

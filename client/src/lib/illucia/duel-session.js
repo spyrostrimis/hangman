@@ -18,6 +18,7 @@ import { ILLUCIA_ALREADY_WON_MESSAGE, ILLUCIA_NO_POINTS, illuciaStumpPoints } fr
 // answer rather than trusting it: words on the answered side weigh this many times more.
 export const AI_MAX_CANDIDATES = 80;
 export const AI_LEAN = 3;
+export const EXPERIMENTAL_WARNING = 'Experimental: Illucia uses an AI model and can make mistakes. No points, and it resets your ladder.';
 export const tierLabel = id => VOCABULARY_TIERS.find(tier => tier.id === id)?.label ?? id;
 // The ladder as the next round finds it after a loss, an abandoned round or a 0-point win.
 export const LADDER_RESET = Object.freeze({ rung: 0, next: 'apprentice', minLength: MIN_WORD_LENGTH });
