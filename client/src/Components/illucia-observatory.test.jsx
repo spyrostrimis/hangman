@@ -635,7 +635,7 @@ it('owns a failed AI question and makes her normal move, once per letter', async
   await start('crane', 'Master');
   await tick(); await tick(); await tick();
   await settle();
-  expect(view.container.querySelector('.obs-bubble').textContent).toBe('My AI helper is out of questions for now. Back to my own method.');
+  expect(view.container.querySelector('.obs-bubble').textContent).toBe("My AI helper has used up today's allowance for the whole site. It is back after midnight UTC; until then, my own method.");
   expect(card(view)).toBeNull();
   await tick();
   expect(tape(view)).toEqual(['z', 'q', 'j']);

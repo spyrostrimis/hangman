@@ -665,7 +665,7 @@ it('owns a failed AI question and makes her normal move, once per letter', async
   });
   const view = mount(); await startExperimental();
   await forceMisses(await realDecision());
-  expect(bubbles(view.container, 'illucia').at(-1)).toBe('My AI helper is out of questions for now. Back to my own method.');
+  expect(bubbles(view.container, 'illucia').at(-1)).toBe("My AI helper has used up today's allowance for the whole site. It is back after midnight UTC; until then, my own method.");
   const calls = analyzeDecision.mock.calls.length;
   await think();
   expect(analyzeDecision.mock.calls.length).toBe(calls + 1);

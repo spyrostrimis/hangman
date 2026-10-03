@@ -200,7 +200,11 @@ test('experimental lines: her helper\'s question, her lean, and failures she own
   assert.match(AI_NOTE, /AI model .* It can be wrong/);
   assert.match(aiAnswerLine(false, 0), /lean that way/);
   assert.match(aiAnswerLine(true, 0), /Back to letters/);
-  for (const reason of ['budget', 'user-limit', 'round-limit']) assert.match(aiFallbackLine(reason, 0), /out of questions/);
+  // Each limit says which one stopped her helper.
+  assert.match(aiFallbackLine('round-limit', 0), /two questions this round/);
+  assert.match(aiFallbackLine('user-limit', 0), /You have used up today's AI questions/);
+  assert.match(aiFallbackLine('budget', 0), /allowance for the whole site/);
+  assert.equal(new Set(['round-limit', 'user-limit', 'budget'].map(reason => aiFallbackLine(reason, 0))).size, 3);
   assert.match(aiFallbackLine('disabled', 0), /switched off/);
   for (const reason of ['timeout', 'unavailable', 'invalid']) assert.match(aiFallbackLine(reason, 0), /My mistake for asking/);
 });

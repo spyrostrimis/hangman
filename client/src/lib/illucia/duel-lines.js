@@ -39,7 +39,10 @@ const lines = {
   // Experimental mode (v2 E5): a question written by an AI model, which can sort words wrongly.
   aiAsk: ['I asked my AI helper for a question. {Q}', 'An experimental question, from my AI helper: {Q}'],
   aiLean: ['Thank you. I will lean that way, but not too far: my helper can sort words wrongly.'],
-  aiLimit: ['My AI helper is out of questions for now. Back to my own method.'],
+  // Which limit stopped her helper, so a player can tell a used-up day from a fault.
+  aiRoundLimit: ['My AI helper has asked its two questions this round. Back to my own method.'],
+  aiUserLimit: ["You have used up today's AI questions. My helper is back after midnight UTC; until then, my own method."],
+  aiBudget: ["My AI helper has used up today's allowance for the whole site. It is back after midnight UTC; until then, my own method."],
   aiOff: ['My AI helper is switched off right now. Back to my own method.'],
   aiFailed: ['My AI helper did not come up with a usable question. My mistake for asking; back to my own method.'],
 };
@@ -173,7 +176,9 @@ export const AI_NOTE = 'Written by an AI model (Llama 3.3 70B on Cloudflare Work
 export const aiAnswerLine = (declined, turn) => pick(declined ? 'declined' : 'aiLean', turn);
 // Why her helper had no question (the Worker's reasons); she makes her normal move.
 export function aiFallbackLine(reason, turn) {
-  if (['budget', 'user-limit', 'round-limit'].includes(reason)) return pick('aiLimit', turn);
+  if (reason === 'round-limit') return pick('aiRoundLimit', turn);
+  if (reason === 'user-limit') return pick('aiUserLimit', turn);
+  if (reason === 'budget') return pick('aiBudget', turn);
   if (reason === 'disabled') return pick('aiOff', turn);
   return pick('aiFailed', turn);
 }
