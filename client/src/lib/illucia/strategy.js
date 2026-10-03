@@ -164,6 +164,12 @@ function temperamentDecision(publicState, knowledge, candidates, guessed, baseTe
     shortlist: options.map((value, index) => ({ letter: value, share: shareOf(value),
       chance: Math.floor(odds[index] * 10000 / totalOdds) }))
       .sort((a, b) => score(b.letter) - score(a.letter) || (a.letter < b.letter ? -1 : 1)),
+    // Every letter she could pick, for a display of her scores (the Observatory's bars), all in
+    // hundredths of a percent: weighted share, vowel bonus, and the score she compares. The
+    // shortlist is exactly the letters scoring above `cutoff`; careful mode has no cutoff.
+    letters: eligible.map(value => ({ letter: value, share: shareOf(value), bonus: bonusFor(value),
+      score: Math.floor(score(value) / (candidateWeight * scale)) })),
+    cutoff: careful ? null : Math.floor(cutoff / (candidateWeight * scale)),
   };
 }
 

@@ -421,3 +421,24 @@
 @media (prefers-reduced-motion: reduce) {
   .obs-page *, .obs-page *::before { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* Her letter scores (Observatory slice 2): the dashed line is her shortlist cut-off, letters
+   above it are outlined, and a vowel's violet top is her early lean towards vowels. */
+.obs-bar-fill { position: relative; }
+.obs-bar-lean {
+  position: absolute;
+  inset: 0 0 auto;
+  height: calc(var(--l) * 100%);
+  background: repeating-linear-gradient(to top, var(--obs-violet) 0 5px, transparent 5px 7px);
+}
+.obs-bar-cut {
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  bottom: calc(var(--cut) * 100%);
+  border-top: 1px dashed #d6b8ffaa;
+  pointer-events: none;
+}
+.obs-bar.listed .obs-bar-fill { outline: 1px solid #d6b8ff; outline-offset: 1px; }
+.obs-bar.listed .obs-bar-letter { color: #d6b8ff; }
+.obs-bar.next .obs-bar-letter { color: var(--obs-yellow); }

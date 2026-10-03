@@ -139,14 +139,81 @@ it('shows a recoverable error when the solver fails instead of inventing an outc
   expect(tape(view)).toEqual(['e']);
 });
 
-it('explains a weighted choice without claiming her letter is in the most words', async () => {
-  // A is in one common word; B is in two rare ones. Weighting picks A, which is in fewer words.
+// Her letter scores (Observatory slice 2): the bars and the reasoning come from her decision record.
+const bar = (view, letter) => [...view.container.querySelectorAll('.obs-bar')].find(node => node.querySelector('.obs-bar-letter').textContent === letter);
+const barHeight = (view, letter) => Number(bar(view, letter).querySelector('.obs-bar-fill')?.style.getPropertyValue('--h') ?? 0);
+
+it('draws her weighted score, not a plain word count, and explains the choice from her record', async () => {
+  // A is in one common word; B is in two rare ones. Counting words, B would be taller; weighting, A is.
   fetch.mockResolvedValue({ ok: true, text: async () => 'aaaa 35\nbbbb 70\nbbbc 70\n' });
   const view = mount(); await start('aaaa', 'Master');
   expect(nextGuess(view)).toBe('a');
-  expect(view.container.querySelector('.obs-reasoning').textContent).toBe(
-    'A appears in 33% of the 3 words she still has in mind. She weighs common words above rare ones, ' +
-    'and A is on her shortlist. So A is next.');
+  expect(barHeight(view, 'a')).toBe(1);
+  expect(barHeight(view, 'b')).toBeLessThan(0.5);
+  expect(barHeight(view, 'b')).toBeGreaterThan(0); // positive control: B is drawn
+  const decision = analyzeDecision.mock.results.at(-1).value;
+  expect(view.container.querySelector('.obs-reasoning').textContent)
+    .toBe(`Counting common words more, A covers ${Math.round(decision.share / 100)}% of the 3 words she still has in mind. ` +
+      'It comes out on top, helped by her early lean towards vowels. So A is next.');
+  // Her early vowel lean is drawn as the violet top of A's bar.
+  expect(bar(view, 'a').querySelector('.obs-bar-lean')).toBeTruthy();
+  expect(bar(view, 'b').querySelector('.obs-bar-lean')).toBeNull();
+});
+
+it('never calls a hunch her top pick', async () => {
+  fetch.mockResolvedValue({ ok: true, text: async () => 'aaaa 35\nbbbb 70\nbbbc 70\n' });
+  const real = (await vi.importActual('../lib/illucia/strategy.js')).analyzeDecision;
+  analyzeDecision.mockImplementation((...args) => ({ ...real(...args), choseBest: false, best: ['b'] }));
+  const view = mount(); await start('aaaa', 'Master');
+  const text = view.container.querySelector('.obs-reasoning').textContent;
+  expect(text).toContain('B scores a little higher, but A is on her shortlist and she has a feeling about it.');
+  expect(text).not.toContain('comes out on top');
+});
+
+// 20 four-letter strings, no vowels: B is in 12 (60%), C in 11 (55%), D in 9 (45%). Apprentice's
+// shortlist reaches 10 points below her best, so B and C are on it and D is not.
+const FILLER = 'fghjklmnprstvw';
+const SHARES = Array.from({ length: 20 }, (_, i) => {
+  const core = (i < 12 ? 'b' : '') + (i >= 9 ? 'c' : '') + (i < 9 ? 'd' : '');
+  return (core + FILLER[i % 14] + FILLER[(i + 7) % 14] + FILLER[(i + 3) % 14]).slice(0, 4);
+}).sort();
+
+it('outlines her shortlist above a dashed cut-off while she explores, and only her best letter once careful', async () => {
+  fetch.mockResolvedValue({ ok: true, text: async () => SHARES.map(word => `${word} 35\n`).join('') });
+  const view = mount(); await start(SHARES[0], 'Apprentice');
+  const decision = analyzeDecision.mock.results.at(-1).value;
+  expect(decision.mode).toBe('exploring');
+  expect(new Set(SHARES).size).toBe(20); // fixture check: 20 distinct words, B and C on her shortlist
+  expect(decision.shortlist.map(entry => entry.letter).sort()).toEqual(['b', 'c']);
+  const listed = () => [...view.container.querySelectorAll('.obs-bar.listed .obs-bar-letter')].map(node => node.textContent).sort();
+  expect(listed()).toEqual(['b', 'c']);
+  expect(view.container.querySelectorAll('.obs-bar-cut').length).toBe(26);
+  expect(view.container.textContent).toContain('above the dashed line: her shortlist');
+  expect(view.container.querySelector('.obs-reasoning').textContent).toMatch(/Her odds: [BC] \d+% · [BC] \d+%\./);
+  cleanup();
+
+  // Four forced misses (Q, X, Y, Z are in no word) leave her two: careful, strictly her best letter.
+  const real = (await vi.importActual('../lib/illucia/strategy.js')).analyzeDecision;
+  analyzeDecision.mockImplementation((state, knowledge, options) => {
+    const decision = real(state, knowledge, options);
+    const forced = 'qxyz'[state.guessedLetters.length];
+    return forced ? { ...decision, letter: forced } : decision;
+  });
+  const careful = mount(); await start(SHARES[0], 'Apprentice');
+  for (let turn = 0; turn < 4; turn++) await tick();
+  expect(screen.getByRole('img', { name: '2 of 6 misses left' })).toBeTruthy();
+  const record = analyzeDecision.mock.results.at(-1).value;
+  expect(record.mode).toBe('careful');
+  expect(careful.container.querySelectorAll('.obs-bar-cut').length).toBe(0);
+  expect([...careful.container.querySelectorAll('.obs-bar.listed .obs-bar-letter')].map(node => node.textContent)).toEqual(['b']);
+  expect(careful.container.querySelector('.obs-reasoning').textContent).toContain('No more hunches: it is her best letter.');
+  expect(careful.container.textContent).not.toContain('above the dashed line');
+});
+
+it('calls the words she still considers "still possible", not her shortlist', async () => {
+  fetch.mockResolvedValue({ ok: true, text: async () => 'eerie 35\nsense 35\nthree 35\n' });
+  const view = mount(); await start('eerie');
+  expect(view.container.querySelector('.obs-shortlist').textContent).toBe('Words still possible: eerie · sense · three');
 });
 
 it('says each level knows more words and plays more carefully, never that only her vocabulary changes', async () => {

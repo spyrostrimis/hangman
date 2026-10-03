@@ -9,7 +9,7 @@ import { filterCandidates } from '../lib/illucia/candidates.js';
 import { analyzeDecision } from '../lib/illucia/strategy.js';
 import { newLocalSeed } from '../lib/illucia/random.js';
 import { rejectionLine } from '../lib/illucia/lines.js';
-import { greetingLine, openingLine, turnLine } from '../lib/illucia/observatory-lines.js';
+import { greetingLine, notebookLine, openingLine, turnLine } from '../lib/illucia/observatory-lines.js';
 import './IlluciaObservatory.css';
 
 const STAR_LIMIT = 220;
@@ -181,7 +181,11 @@ function newGame(word, entries, tier) {
   };
 }
 
-// Everything Illucia can see this turn, derived from public state only.
+// Everything Illucia can see this turn, derived from public state only. The bars show what she
+// decides on: her score per letter from her decision record (common words count more, plus her
+// early vowel lean, whose part is `lean`); in a fallback, her tier's plain letter counts (the
+// fallback is unweighted); with no decision (the round is over), the weighted share of the words
+// still possible. shortlist: the letters she may pick; cutoff: the score they must beat.
 function readMind(game) {
   const state = toPublicState(game.round);
   const candidates = filterCandidates(state, game.knowledge.words);
@@ -191,26 +195,45 @@ function readMind(game) {
     try { decision = analyzeDecision(state, game.knowledge, { seed: game.seed }); } catch { failed = true; }
   }
   const fallback = Boolean(decision?.fallback);
-  const pool = fallback ? game.knowledge.words : candidates;
-  const counts = Object.fromEntries([...ALPHABET].map(letter => [letter, 0]));
-  if (fallback) Object.assign(counts, game.knowledge.frequency);
-  else for (const word of candidates) for (const letter of new Set(word)) counts[letter]++;
-  return { state, candidates, decision, failed, fallback, counts, total: pool.length };
+  const scores = Object.fromEntries([...ALPHABET].map(letter => [letter, 0]));
+  const lean = {};
+  let shortlist = new Set();
+  let cutoff = null;
+  if (decision?.letters) {
+    const kept = 10000 - (decision.priorWeight ?? 0);
+    for (const entry of decision.letters) {
+      scores[entry.letter] = entry.score;
+      if (entry.bonus > 0) lean[entry.letter] = Math.floor(entry.bonus * kept / 10000);
+    }
+    shortlist = new Set(decision.shortlist.map(entry => entry.letter));
+    cutoff = decision.cutoff;
+  } else if (fallback) {
+    Object.assign(scores, game.knowledge.frequency);
+  } else {
+    for (const word of candidates) for (const letter of new Set(word)) scores[letter] += game.knowledge.weights.get(word);
+  }
+  const fallbackShare = fallback
+    ? Math.round(game.knowledge.frequency[decision.letter] / Math.max(1, game.knowledge.words.length) * 100) : 0;
+  return { state, candidates, decision, failed, fallback, scores, lean, shortlist, cutoff, fallbackShare };
 }
 
 function Analyzer({ round, mind, playing }) {
   const pattern = getPattern(round);
   const next = playing ? mind.decision?.letter : null;
-  const max = Math.max(1, ...[...ALPHABET].filter(letter => !round.guesses.includes(letter)).map(letter => mind.counts[letter]));
+  const max = Math.max(1, ...[...ALPHABET].filter(letter => !round.guesses.includes(letter)).map(letter => mind.scores[letter]));
+  const cut = playing && mind.cutoff !== null ? Math.max(0, Math.min(1, mind.cutoff / max)) : null;
   return <div className="obs-analyzer" aria-hidden="true">
     {[...ALPHABET].map(letter => {
       const used = round.guesses.includes(letter);
       const state = used ? (pattern.includes(letter) ? 'hit' : 'miss') : letter === next ? 'next' : '';
-      const height = used ? 0 : mind.counts[letter] / max;
-      return <div key={letter} className={`obs-bar ${state}`}>
-        <div className="obs-bar-track">
+      const height = used ? 0 : mind.scores[letter] / max;
+      const lean = playing && mind.lean[letter] && mind.scores[letter] ? Math.min(1, mind.lean[letter] / mind.scores[letter]) : 0;
+      const listed = playing && !used && mind.shortlist.has(letter);
+      return <div key={letter} className={`obs-bar ${state} ${listed ? 'listed' : ''}`}>
+        <div className="obs-bar-track" style={cut === null ? undefined : { '--cut': cut }}>
+          {cut !== null && <span className="obs-bar-cut" />}
           {used ? <span className="obs-bar-cap">{state === 'hit' ? '✓' : '×'}</span>
-            : <span className="obs-bar-fill" style={{ '--h': height }} />}
+            : <span className="obs-bar-fill" style={{ '--h': height }}>{lean > 0 && <span className="obs-bar-lean" style={{ '--l': lean }} />}</span>}
         </div>
         <span className="obs-bar-letter">{letter}</span>
       </div>;
@@ -219,14 +242,8 @@ function Analyzer({ round, mind, playing }) {
 }
 
 function Reasoning({ round, mind, tier, playing }) {
-  if (!playing) return null;
-  if (mind.failed) return null;
-  const letter = mind.decision.letter.toUpperCase();
-  const share = Math.round(mind.counts[mind.decision.letter] / Math.max(1, mind.total) * 100);
-  if (mind.fallback) {
-    return <p className="obs-reasoning">None of her {tier.label} words fit this pattern. She falls back on habit: <b>{letter}</b> appears in {share}% of her {round.answer.length}-letter words, so <b>{letter}</b> is next.</p>;
-  }
-  return <p className="obs-reasoning"><b>{letter}</b> appears in {share}% of the {mind.total.toLocaleString('en-US')} words she still has in mind. She weighs common words above rare ones, and <b>{letter}</b> is on her shortlist. So <b>{letter}</b> is next.</p>;
+  if (!playing || mind.failed) return null;
+  return <p className="obs-reasoning">{notebookLine(mind.decision, { tierLabel: tier.label, length: round.answer.length, fallbackShare: mind.fallbackShare })}</p>;
 }
 
 function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch }) {
@@ -240,7 +257,7 @@ function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch }
   const nextTier = VOCABULARY_TIERS[VOCABULARY_TIERS.indexOf(tier) + 1];
   const heading = useRef(null);
   useEffect(() => { if (status !== 'playing') heading.current?.focus(); }, [status]);
-  const shortlist = mind.candidates.length <= 10 ? mind.candidates : null;
+  const possible = mind.candidates.length <= 10 ? mind.candidates : null;
 
   return <>
     <div className="obs-grid">
@@ -251,7 +268,7 @@ function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch }
         <div className="obs-screen-inner">
           <h2 ref={heading} tabIndex={-1}>{status === 'solved' ? 'Illucia wins' : status === 'failed' ? 'You win!' : "Illucia's notebook"}</h2>
           {status === 'playing'
-            ? <p className="obs-muted">Letter scan · turn {turns.length + 1}{paused ? ' · paused' : ''}</p>
+            ? <p className="obs-muted">Her letter scores · turn {turns.length + 1}{mind.cutoff !== null && playing ? ' · above the dashed line: her shortlist' : ''}{paused ? ' · paused' : ''}</p>
             : <p className="obs-reveal">The word was <strong>{round.answer.toUpperCase()}</strong></p>}
           <Analyzer round={round} mind={mind} playing={playing} />
           <p className="obs-sr">{playing && mind.decision ? `Her next guess is ${mind.decision.letter.toUpperCase()}.` : ''}</p>
@@ -262,7 +279,7 @@ function Game({ game, mind, paused, setPaused, fast, setFast, restart, rematch }
             <p>Final suspects: {mind.candidates.length ? mind.candidates.slice(0, 5).join(', ') : `none left in her ${tier.label} vocabulary`}{mind.candidates.length > 5 ? ` (5 of ${mind.candidates.length})` : ''}.</p>
             <p className="obs-muted">Duels don't earn Hall of Fame points yet.</p>
           </div>}
-          {status === 'playing' && shortlist && shortlist.length > 0 && <p className="obs-shortlist">On her shortlist: {shortlist.join(' · ')}</p>}
+          {status === 'playing' && possible && possible.length > 0 && <p className="obs-shortlist">Words still possible: {possible.join(' · ')}</p>}
         </div>
       </section>
     </div>

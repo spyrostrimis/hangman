@@ -135,9 +135,9 @@ How signed-in Hangman scoring works today (full design, release evidence and lim
 
 From `client/`, run `npm run dev` for the Vite development server, `npm run build` for a production build, and `npm run preview` to serve the production build locally. `.claude/launch.json` defines `client-preview` (vite preview on port 4173) for the desktop app's browser pane.
 
-From `tools/`, run `npm test` (248 tests, 2026-10-03; needs Python 3.12+ on PATH) and `node validate.js ../client/src/data/words.json`. Illucia: `python tools/build_illucia_words.py --check` from the repo root (about a minute), `python tools/build_illucia_labels.py --check` (about 80 seconds), `npm run benchmark:illucia` and `npm run benchmark:illucia-tiers` (several minutes each). The pipeline is local-only and never runs in production.
+From `tools/`, run `npm test` (249 tests, 2026-10-03; needs Python 3.12+ on PATH) and `node validate.js ../client/src/data/words.json`. Illucia: `python tools/build_illucia_words.py --check` from the repo root (about a minute), `python tools/build_illucia_labels.py --check` (about 80 seconds), `npm run benchmark:illucia` and `npm run benchmark:illucia-tiers` (several minutes each). The pipeline is local-only and never runs in production.
 
-From `client/`, run `npm test` (111 Node tests), `npm run test:ui` (84 React component tests), and `npm run build`. From `server/`, run `npm run setup:local`, `npm run types`, `npm run check`, `npm test` (81 Workers/D1 integration tests), and `npm run build` (dry run). User-visible CSS, responsive art, navigation, popovers, forms, and loading states still need manual browser verification in proportion to the change.
+From `client/`, run `npm test` (115 Node tests), `npm run test:ui` (87 React component tests), and `npm run build`. From `server/`, run `npm run setup:local`, `npm run types`, `npm run check`, `npm test` (81 Workers/D1 integration tests), and `npm run build` (dry run). User-visible CSS, responsive art, navigation, popovers, forms, and loading states still need manual browser verification in proportion to the change.
 
 ## DEPLOYMENT
 
@@ -214,7 +214,7 @@ The reverse game: the player sets a secret word; Illucia guesses one letter at a
 Two pages are live for signed-in players (guests see "Only for registered players"):
 
 - `/illucia` — the duel, rebuilt as a scrolling conversation (`4148ce2`). Illucia asks for a letter and explains her guess; on a hit the player taps the grey tiles to reveal it, on a miss the player replies; game code decides every hit, tile position and miss. Scripted lines in `duel-lines.js`.
-- `/illucia-observatory` (`97f0a24`) — Illucia's character art, a star field of the words she still considers and a letter-count analyser; pause, 2× speed and rematch at the next tier. Scripted lines in `observatory-lines.js`.
+- `/illucia-observatory` (`97f0a24`) — Illucia's character art, a star field of the words she still considers and a letter-score analyser (since Observatory slice 2: her score per letter from the decision record's `letters`, her shortlist outlined above a dashed `cutoff`, a vowel's early lean as a violet top; the reasoning line `notebookLine` comes from the same record); pause, 2× speed and rematch at the next tier. Scripted lines in `observatory-lines.js`.
 
 How it works today. `docs/planning/PLAN-illucia.md` holds the build history and measurements; `docs/ILLUCIA-I4.md` the first page's evidence; `docs/ILLUCIA-STRENGTH.md` her strength on both live pages. Bullets marked *(v2 replaces)* describe live code that the agreed v2 design changes; see ILLUCIA V2 below.
 

@@ -62,3 +62,43 @@ export function turnLine(round, positions, count, previousTurns, tierLabel) {
     word: status === 'playing' ? '' : round.answer.toUpperCase(),
   });
 }
+
+// "B", "B and I", "B, I and O".
+const listLetters = letters => {
+  const names = letters.map(value => value.toUpperCase());
+  return names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
+};
+const percent = hundredths => `${Math.round(hundredths / 100)}%`;
+
+// The notebook's reasoning under the bars: why she picks this letter, in the third person, from
+// her decision record (strategy.js) and nothing else. "Top" and "scores higher" mean the score
+// the bars show (common words count more, plus her early vowel lean and the player's habits).
+// fallbackShare: in a fallback, the percentage of her tier's words of this length with the letter.
+export function notebookLine(decision, { tierLabel, length, fallbackShare = 0 }) {
+  const L = decision.letter.toUpperCase();
+  if (decision.fallback) {
+    return `None of her ${tierLabel} words fit this pattern. She falls back on habit: ${L} appears in ${fallbackShare}% of her ${length}-letter words, so ${L} is next.`;
+  }
+  if (decision.candidateCount === 1) return `Only one word is left in her notes, and it has ${'aefhilmnorsx'.includes(decision.letter) ? 'an' : 'a'} ${L}. So ${L} is next.`;
+  const words = decision.candidateCount.toLocaleString('en-US');
+  const parts = [`Counting common words more, ${L} covers ${percent(decision.share)} of the ${words} words she still has in mind.`];
+  if (decision.mode === 'careful') {
+    parts.push(decision.tiedWith.length ? `No more hunches: it is tied with ${listLetters(decision.tiedWith)} for her best letter.` : 'No more hunches: it is her best letter.');
+  } else {
+    const lean = decision.vowelBonus > 0;
+    if (decision.choseBest && decision.tiedWith.length) parts.push(`${listLetters([decision.letter, ...decision.tiedWith])} are tied for her top pick; she has a feeling about ${L}.`);
+    else if (decision.choseBest) parts.push(lean ? 'It comes out on top, helped by her early lean towards vowels.' : 'It comes out on top.');
+    else {
+      parts.push(`${listLetters(decision.best)} ${decision.best.length === 1 ? 'scores' : 'score'} a little higher, but ${L} is on her shortlist and she has a feeling about it.`);
+      if (lean) parts.push('Early on, she leans towards vowels.');
+    }
+    if (decision.shortlist.length > 1) {
+      parts.push(`Her odds: ${decision.shortlist.map(entry => `${entry.letter.toUpperCase()} ${percent(entry.chance)}`).join(' · ')}.`);
+    }
+  }
+  if (decision.learnedCandidates > 0) {
+    parts.push(decision.learnedCandidates === 1 ? 'One word you beat her with before still fits.' : `${decision.learnedCandidates} words you beat her with before still fit.`);
+  }
+  parts.push(`So ${L} is next.`);
+  return parts.join(' ');
+}

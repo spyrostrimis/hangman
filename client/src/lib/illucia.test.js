@@ -448,6 +448,41 @@ test('the vowel bonus lifts vowels early, fades, never rescues a letter in no wo
   assert.deepEqual(analyzeDecision(exploringLate, knowledge, { seed: 1, temperament: { ...apprentice, vowelTurns: 10 } }).best, ['a']);
 });
 
+test('the decision record lists every eligible letter with the score she compares, and her shortlist cut-off', () => {
+  const state = toPublicState(createRound(SHARES_WORDS[0]));
+  const decision = analyzeDecision(state, sharesKnowledge(), { seed: 3, temperament: tierTemperament('apprentice') });
+  const byLetter = Object.fromEntries(decision.letters.map(entry => [entry.letter, entry]));
+  // No vowels and no memory: each score is exactly the weighted share.
+  assert.deepEqual([byLetter.b, byLetter.c, byLetter.d], [
+    { letter: 'b', share: 6000, bonus: 0, score: 6000 }, { letter: 'c', share: 5500, bonus: 0, score: 5500 },
+    { letter: 'd', share: 4500, bonus: 0, score: 4500 }]);
+  assert.ok(!byLetter.a && !byLetter.q); // letters in no candidate are not listed
+  assert.equal(decision.cutoff, 6000 - tierTemperament('apprentice').shortlist);
+  // Careful mode has no cut-off: only the best letter is on her shortlist.
+  const careful = analyzeDecision(toPublicState(roundAfter(SHARES_WORDS[0], 'qxyz')), sharesKnowledge(), { seed: 0, temperament: tierTemperament('apprentice') });
+  assert.equal(careful.cutoff, null);
+
+  // With a vowel bonus and a memory of the player, the shortlist is still exactly the letters above the cut-off.
+  const pad = 'cdfghjklmnprstvw';
+  const words = Array.from({ length: 100 }, (_, i) =>
+    (i < 60 ? 'b' : 'q') + (i >= 43 ? 'a' : 'z') + pad[i % 16] + pad[Math.floor(i / 16) % 16]);
+  const letters = Object.fromEntries([...'abcdefghijklmnopqrstuvwxyz'].map(letter => [letter, 0]));
+  const brain = toBrain({ personalitySeed: 9, games: 50, letters: { ...letters, q: 50, z: 40 }, learned: [] }, 4);
+  const knowledge = createKnowledge(entriesOf(words.map(word => `${word} 35`).join('\n')), 35, commonnessWeight, brain);
+  let withBonus = 0;
+  for (let seed = 0; seed < 40; seed++) {
+    const record = analyzeDecision(toPublicState(createRound(words[0])), knowledge, { seed, temperament: tierTemperament('apprentice') });
+    const listed = new Set(record.shortlist.map(entry => entry.letter));
+    for (const entry of record.letters) {
+      assert.ok(listed.has(entry.letter) ? entry.score >= record.cutoff : entry.score <= record.cutoff, JSON.stringify(entry));
+      if (entry.bonus > 0) { withBonus++; assert.ok('aeiou'.includes(entry.letter)); }
+    }
+    const top = Math.max(...record.letters.map(entry => entry.score));
+    assert.deepEqual(record.best, record.letters.filter(entry => entry.score === top).map(entry => entry.letter));
+  }
+  assert.ok(withBonus > 0); // the fixture does exercise the vowel bonus
+});
+
 test('the same seed and board always give the same decision', () => {
   const state = toPublicState(createRound(SHARES_WORDS[0]));
   const temperament = tierTemperament('apprentice');
