@@ -1,32 +1,145 @@
 # Illucia's questions: how much they help her (B2)
 
-Measured 2026-10-02 with her strict `'count'` policy, which is A1's play (commonness-weighted
-count, no round seed). A2's temperament is now on `main` but is not measured here; that
-re-run comes with the follow-up. Measurement only; no page uses the questions yet (E2).
+Two measurements. Neither is a page: no page uses the questions yet (E2).
+
+- **Current rules, her A2 temperament** (2026-10-03): 8 seeded games per word. This is
+  the measurement to use.
+- **First rules, strict policy** (2026-10-02): A1's play, 3 word samples. It is kept for
+  the record below.
 
 - Module: `client/src/lib/illucia/questions.js` (`chooseQuestion`, `narrowKnowledge`,
-  `checkAnswer`, `parseLabels`, `parseCategories`)
+  `checkAnswer`, `parseLabels`, `parseCategories`; `QUESTION_RULES`, `B2_RULES`)
 - Script: `tools/benchmark-illucia-bets.js` (questions are an optional bet; D1's model
-  runner has the `-questions` name). Report: `tools/benchmarks/illucia-bets.json`
-- Run: `npm run benchmark:illucia-bets` from `tools/` (3 seeds, about 23 minutes on
-  16 cores). For a check, use `node benchmark-illucia-bets.js --quick --output <file>`
-  (about a minute).
+  runner has the `-questions` name).
+- Reports: `tools/benchmarks/illucia-bets-a2.json` (current rules) and
+  `tools/benchmarks/illucia-bets.json` (first rules).
+- Runs from `tools/`:
+  - `npm run benchmark:illucia-bets-a2`: about 42 minutes on 16 cores;
+  - `npm run benchmark:illucia-bets`: about 23 minutes;
+  - for a check, add `--quick --output <file>` (1–6 minutes).
 
 ## How she asks
 
-- **Split rule.** A question qualifies if each answer rules out at least 25% of her
-  candidate weight. The weights are the commonness weights (10/3/1), and words WordNet
-  doesn't know count in the total. She asks the qualifying question whose worse answer
-  rules out the most; ties go by category order.
+- **Split rule.** A question qualifies if each answer rules out enough of her candidate
+  weight. The weights are the commonness weights (10/3/1), and words WordNet doesn't know
+  count in the total. A **broad** category (a whole WordNet lexicographer file: person,
+  man-made object, animal, …) needs 25% per side. A **narrow** one (a "kind of" class:
+  bird, fruit, tool, …) needs 10%.
+- **Holding broad questions.** Broad questions wait until she has at most 2 misses left.
+  Narrow ones may come as soon as they qualify.
+- **Choice.** Each qualifying question scores its worse answer's share, plus 10 points if
+  it is narrow. With her round seed she picks among the questions within 10 points of
+  the best, better ones more likely (A2's letter rule, on a salted seed so it never
+  repeats her letter draw). Without a seed she takes strictly the best; ties go by
+  category order.
+- **Tags.** Each question in her decision record is tagged `early-narrow` or `late-broad`,
+  and carries her shortlist with each question's share and chance. E1 can give her a
+  different line for a desperate broad question.
 - **When.** Not before her third guess (`earliestTurn` 2). She makes at most 2 offers per
   round, and a declined offer counts. She never asks about a category twice. By default
   she asks noun categories only.
 - **Answers.** YES keeps her candidates labelled with the category; NO keeps those
   without it. Unknown words stay on both sides. A decline tells her nothing.
-- **Boundary.** She sees the public board, her vocabulary, the public labels and the
-  answers. Only `checkAnswer`, which is game code, sees the secret word.
+- **Boundary.** She sees the public board, her vocabulary, the public labels, the answers
+  and her round seed. Only `checkAnswer`, which is game code, sees the secret word.
+- **B2's first rules** (`B2_RULES`): 25% per side for every category, no holding, strictly
+  the best. They are measured below for comparison.
 
-## Benchmark design
+## Current rules with her A2 temperament (2026-10-03)
+
+**Design.** The strength word sets a–d (5,241 words, the default sample), with 8 seeded
+games per word (`roundSeed`, as in A2's strength benchmark), at every tier, in seven
+arms:
+
+- decline every question (the control);
+- B2's rules, answering the first question or both;
+- the current rules, answering the first question or both;
+- two selective players on the current rules: one answers only on 7+ letters, the other
+  only while at most one letter shows.
+
+The seed drives both her letters and her question pick. The player is honest and
+declines when WordNet doesn't know the word. Nouns only, not before her third guess.
+Statistics cover lengths 4–10 (29,760 games per tier). Games are paired by word and
+seed. A word's 8 seeds are not independent, so game-level p-values are approximate; the
+gate's per-word test is not affected.
+
+**Positive control.** The decline arm equals her own seeded play: **125,784 of 125,784
+games match.**
+
+### The opener
+
+| Tier | Broad first question, B2 rules → current | "Man-made object" first, B2 → current | Distinct first questions per word, B2 → current |
+|---|---|---|---|
+| Apprentice | 98.3% → **26.2%** | 75.2% → **22.2%** | 1.25 → 1.99 |
+| Scholar | 98.5% → **26.8%** | 75.1% → **22.6%** | 1.17 → 1.77 |
+| Master | 98.2% → **27.4%** | 75.2% → **22.9%** | 1.10 → 1.54 |
+
+The target was met: a broad category opens about a quarter of first questions. The most
+common openers are now a part of the body, man-made object (late), job, tool, mammal,
+clothing, container and building.
+
+- **Timing.** First questions come later, at turns 3–6 rather than mostly turn 2. They
+  come with far fewer candidates left: median 12 / 16 / 22, against 86 / 125 / 199 under
+  B2's rules.
+- **Tags.** About 72% of all questions are `early-narrow` and 28% `late-broad`.
+- **Frequency.** She asks in 55–57% of rounds, against 63–70% under B2's rules.
+
+### Her strength
+
+Her win rate, declining first and then answering, with the current rules (B2's rules in
+brackets):
+
+| Tier | Declined | One answered | Two answered |
+|---|---:|---:|---:|
+| Apprentice | 50.9% | 53.4% (55.0%) | 55.8% (57.6%) |
+| Scholar | 65.5% | 68.2% (69.9%) | 70.9% (72.5%) |
+| Master | 78.7% | 81.7% (83.3%) | 84.4% (85.8%) |
+
+**Strength cost of the current rules.** Against B2's rules, with the same answers, she
+wins 1.7 points less with one answer and 1.5–1.8 points less with two. Every tier shows
+p < 10⁻³⁰ at the game level. An answered question is still clearly worth having: +2.5–3.0
+points for one and +5.0–5.7 for two, mostly on 4–6-letter words (+13–15 points at 4
+letters with two).
+
+**Tier-order gate** (per-word win fractions, as in A2): PASS for declining, B2's rules
+and the current rules (0 of 171 comparisons fail each). The only near misses are
+4-letter rare words with Apprentice ahead of Scholar, plus 5-letter common words with
+Scholar ahead of Master when declining. Holm's correction clears them all.
+
+### Pricing at ×1.5 / ×2.0
+
+These are points ratios against declining every question (95% interval). Above 1, the
+strategy pays.
+
+| Tier | Answers the first only | Answers both | Only on 7+ letters | Only while ≤1 letter shows | Hindsight bound |
+|---|---:|---:|---:|---:|---:|
+| Apprentice | 1.11 (1.09–1.14) | 1.03 (0.99–1.06) | 1.00 | 1.08 (1.07–1.10) | 1.58 |
+| Scholar | 1.11 (1.08–1.13) | 0.99 (0.97–1.02) | 0.99 | 1.07 (1.05–1.08) | 1.52 |
+| Master | 1.12 (1.10–1.14) | 1.02 (1.00–1.05) | 1.00 | 1.06 (1.05–1.07) | 1.51 |
+| *B2 rules, answers both* | | *0.77 / 0.79 / 0.82* | | | |
+
+Break-even multipliers under the current rules: about ×1.3 for one answered question
+(1.29–1.31) and ×1.75–1.85 for two.
+
+- **Answer-all is now about even, not losing.** Answering both questions earns 0.99–1.03
+  of the decline strategy's points. The "loses more than about 10%" condition for
+  proposing new multipliers is **not met**, so this report proposes none.
+- **Answering the first question pays.** It earns 11–12% more than declining. ×1.5 is
+  above its break-even of about ×1.3.
+- **Simple selective play wins.** Answering only while at most one letter shows earns
+  6–8% more than declining, and the hindsight bound rises to 1.51–1.58.
+
+The questions now help her less (they come later, often narrow), so the same multipliers
+pay the player more than under B2's rules.
+
+**If answer-all should lose slightly,** as originally intended, the numbers point to
+about ×1.25 for one answer and ×1.75 for two. That would also lower Track C's cheater
+ceiling. It is an owner decision; nothing was changed.
+
+## First rules, strict policy (2026-10-02): design
+
+Measured with her strict `'count'` policy (A1's play, no round seed) and B2's first rules
+(`B2_RULES`), before her current rules existed.
 
 - **Words.** The strength sets: a (manifest), b (common 4–6 letters), c (trickster) and
   d (balanced, 4–15 letters). Each is played at every tier, in eleven arms.
@@ -44,7 +157,7 @@ re-run comes with the follow-up. Measurement only; no page uses the questions ye
 - **Positive control.** The decline arm must equal the strength benchmark's own play,
   move for move: **15,723 of 15,723 games match.**
 
-## Results
+## First rules, strict policy: results
 
 ### How much answering helps her
 
@@ -209,11 +322,13 @@ at the new values, where only the simplest rules were measured.
 - These are her win rates against fixed word lists, not against real players. Set b's
   "common" words are a seeded sample of ESDB size-35 words.
 - The strict policy has no randomness within a round, so the seeds vary only the word
-  samples. Under A2's temperament, each seed will also drive her round randomness.
+  samples (first-rules measurement). In the current-rules measurement each seed also
+  drives her round randomness.
 - The re-run with ×1.5 / ×2.0 reproduced the first run (×1.25 / ×1.5) exactly: all 10,397
   shared values, including the old pricing, are identical.
 - The honest player answers by WordNet's any-meaning rule. A real player who answers by
   the meaning they had in mind may be corrected. Her information is the same either way
   (she filters on the true label), but that player loses the bonus.
-- She picks the best split with no randomness. The same board always gets the same
-  question until the planned follow-up adds seeded variety among nearly-best questions.
+- Under B2's first rules she picked the best split with no randomness, so the same board
+  always got the same question. The current rules pick among nearly-best questions with
+  her round seed (measured above).
