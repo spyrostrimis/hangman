@@ -683,3 +683,127 @@ it('treats a network failure or a sort that is not a partition as a failed quest
   expect(bubbles(view.container, 'illucia').at(-1)).toBe('My AI helper did not come up with a usable question. My mistake for asking; back to my own method.');
   expect(screen.queryByRole('button', { name: 'Yes, it can' })).toBeNull();
 });
+
+// Characterization of the round lifecycle before it moves into shared modules (Observatory
+// slice 1). Written against the unmodified page; the extraction must keep every one green.
+async function playToHerWin() {
+  while (!screen.queryByRole('heading', { name: 'Illucia wins' })) {
+    const [tile] = hiddenTiles();
+    if (tile) fireEvent.click(tile); else await think();
+  }
+}
+
+it('names the ladder step a win would make: start, climb or top', async () => {
+  fetch.mockImplementation(async url => ({ ok: true, text: async () => (url.endsWith('/6.txt') ? 'banana 35\n' : 'eerie 35\n') }));
+  const stakes = async (word, tier, ladder) => {
+    serveApi({ '/user/illucia/start': body => [200, ticketFor(body, { ladder })] });
+    const view = mount(); await start(word, tier);
+    const text = view.container.querySelector('.duel-stakes').textContent;
+    cleanup();
+    return text;
+  };
+  expect(await stakes('banana', 'Apprentice', RESET)).toBe('A win is worth 90 points. A win starts your ladder.');
+  expect(await stakes('eerie', 'Master', { rung: 1, next: 'master', minLength: 5 })).toBe('A win is worth 100 points. This is rung 2 of 3 on your ladder.');
+  expect(await stakes('banana', 'Master', { rung: 2, next: 'master', minLength: 6 })).toBe('A win is worth 150 points. Win, and your ladder is complete: +100.');
+  // Positive control for "no step": a word shorter than the rung needs.
+  expect(await stakes('eerie', 'Master', { rung: 2, next: 'master', minLength: 6 })).toBe('A win is worth 100 points.');
+});
+
+it('warns before an out-of-tier word and says the duel earns no points', async () => {
+  fetch.mockResolvedValue({ ok: true, text: async () => 'abcd 35\nwxyz 70\n' });
+  const requests = serveApi({ '/user/illucia/start': body => [200, ticketFor(body, { points: { eligible: false, stump: 0, reason: 'OUTSIDE_TIER' } })] });
+  const view = mount();
+  fireEvent.click(screen.getByRole('radio', { name: /Apprentice/ }));
+  fireEvent.change(screen.getByLabelText('Your secret word'), { target: { value: 'wxyz' } });
+  await act(async () => { fireEvent.submit(screen.getByRole('button', { name: 'Start the duel' }).closest('form')); });
+  expect(screen.getByText('Apprentice does not know this word: you can still win, but it earns no points.')).toBeTruthy();
+  expect(requests.some(([url]) => url === '/user/illucia/start')).toBe(false);
+  await act(async () => { fireEvent.submit(screen.getByRole('button', { name: 'Start anyway' }).closest('form')); });
+  expect(view.container.querySelector('.duel-stakes').textContent).toBe('Apprentice does not know this word, so this duel earns no points.');
+  expect(screen.getByLabelText('Points: No points')).toBeTruthy();
+});
+
+it('her win in a scored round claims nothing and resets the ladder', async () => {
+  const ladder = { rung: 1, next: 'master', minLength: 5 };
+  const requests = serveApi({
+    '/user/illucia/stats': () => [200, { ladder, spent: { total: 0, words: [] } }],
+    '/user/illucia/start': body => [200, ticketFor(body, { ladder })],
+  });
+  mount();
+  await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+  await start('eerie', 'Master');
+  await playToHerWin();
+  expect(screen.getByText('No points this time. Your ladder resets.')).toBeTruthy();
+  expect(requests.some(([url]) => url === '/user/illucia/claim')).toBe(false);
+  fireEvent.click(screen.getByRole('button', { name: 'Play again' }));
+  expect(screen.getByText('Ladder: beat Apprentice, then Scholar, then Master in a row, each word longer, for +100.')).toBeTruthy();
+});
+
+it('reports a failed claim: retry after a server error, none after a conflict, sign-out after 401', async () => {
+  serveQuestions({ labels: false });
+  const claim = async status => {
+    let attempts = 0;
+    const requests = serveApi({
+      '/user/illucia/start': body => [200, ticketFor(body)],
+      '/user/illucia/claim': () => (++attempts === 1 ? [status, { message: 'No.' }] : [200, { score: 100, awarded: { stump: 100, ladder: 0 }, ladder: RESET }]),
+    });
+    mount(); await start('crane', 'Master');
+    await playToHerLoss(await realDecision());
+    return requests;
+  };
+  const requests = await claim(500);
+  expect(screen.getByRole('alert').textContent).toBe('Could not confirm your points were saved. Retrying is safe.');
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Retry saving' })); });
+  expect(requests.filter(([url]) => url === '/user/illucia/claim')).toHaveLength(2);
+  expect(screen.getByText('+100 points. Your total is 100.')).toBeTruthy();
+  cleanup();
+
+  await claim(409);
+  expect(screen.getByRole('alert').textContent).toBe('This round can no longer earn points.');
+  expect(screen.queryByRole('button', { name: 'Retry saving' })).toBeNull();
+  cleanup();
+
+  await claim(401);
+  expect(auth.expireSession).toHaveBeenCalledWith('test-player');
+  expect(screen.getByRole('alert').textContent).toBe('Your session expired, so these points could not be saved.');
+});
+
+it('a rematch keeps the word and the mode at the next tier', async () => {
+  fetch.mockResolvedValue({ ok: true, text: async () => 'crane 35\n' });
+  const requests = serveApi({
+    '/user/illucia/stats': () => [200, { ladder: { rung: 1, next: 'scholar', minLength: 5 }, spent: { total: 0, words: [] } }],
+    '/user/illucia/start': body => [200, body.experimental ? experimentalTicket(body) : ticketFor(body)],
+    '/user/illucia/claim': () => [200, { score: 100, awarded: { stump: 80, ladder: 0 }, ladder: { rung: 2, next: 'master', minLength: 6 } }],
+  });
+  mount();
+  await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+  await start('crane', 'Scholar');
+  await playToHerLoss(await realDecision());
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: /^Rematch vs Master/ })); });
+  // The claimed round is closed, so the rematch names no round to leave.
+  expect(requests.filter(([url]) => url === '/user/illucia/start').at(-1)[1]).toEqual({ word: 'crane', tier: 'master' });
+  cleanup();
+
+  // Experimental: the rematch stays experimental, and the round broke the ladder.
+  mount();
+  await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+  expect(screen.getByText('Ladder: next, Scholar with a word of 5+ letters. +100 at the top.')).toBeTruthy();
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Experimental AI mode' }));
+  await start('crane', 'Scholar');
+  await playToHerLoss(await realDecision());
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Rematch vs Master' })); });
+  // An experimental win is never claimed, so its round is still open and the rematch leaves it.
+  expect(requests.filter(([url]) => url === '/user/illucia/start').at(-1)[1])
+    .toEqual({ word: 'crane', tier: 'master', experimental: true, previousRoundId: 'round-crane-scholar' });
+  cleanup();
+
+  // The experimental round alone breaks the ladder: no round was left, and nothing was claimed.
+  mount();
+  await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+  expect(screen.getByText('Ladder: next, Scholar with a word of 5+ letters. +100 at the top.')).toBeTruthy();
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Experimental AI mode' }));
+  await start('crane', 'Scholar');
+  await playToHerLoss(await realDecision());
+  fireEvent.click(screen.getByRole('button', { name: 'Play again' }));
+  expect(screen.getByText('Ladder: beat Apprentice, then Scholar, then Master in a row, each word longer, for +100.')).toBeTruthy();
+});
