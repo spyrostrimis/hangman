@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import RegisteredOnly from './RegisteredOnly';
 import { useAuth } from './AuthProvider';
 import { applyGuess, createRound, getPattern, getRemainingMisses, getRoundStatus, MAX_MISSES } from '../lib/hangman-core.js';
-import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, createKnowledge, isAcceptedWord, isWordShape, parseLexicon } from '../lib/illucia/lexicon.js';
+import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, commonnessWeight, createKnowledge, isAcceptedWord, isWordShape, parseLexicon } from '../lib/illucia/lexicon.js';
+import { toBrain } from '../lib/illucia/brain.js';
 import { toPublicState } from '../lib/illucia/public-state.js';
 import { filterCandidates } from '../lib/illucia/candidates.js';
 import { analyzeDecision } from '../lib/illucia/strategy.js';
@@ -11,6 +12,8 @@ import { checkAnswer, chooseQuestion, narrowKnowledge, parseCategories, parseLab
 import { rejectionLine } from '../lib/illucia/lines.js';
 import { greetingLine, openingLine } from '../lib/illucia/observatory-lines.js';
 import { ANSWERS, REPLIES, answerLine, askLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from '../lib/illucia/duel-lines.js';
+import { claimIlluciaRound, loadIlluciaStats, startIlluciaRound } from '../lib/illucia-rounds.js';
+import { ILLUCIA_ALREADY_WON_MESSAGE, ILLUCIA_NO_POINTS, illuciaStumpPoints } from '../../../shared/scoring-protocol.js';
 import './Illucia.css';
 
 // Play vs AI as a conversation that scrolls down: Illucia asks for a letter,
@@ -30,7 +33,22 @@ export default function Illucia() {
   if (status === 'loading') return <p role="status">Checking your session…</p>;
   if (status === 'error') return <div className="duel-page"><p>Cannot check your session right now.</p><button onClick={refresh}>Try again</button></div>;
   if (!user) return <RegisteredOnly from="/illucia" />;
-  return <DuelPage key={user.id} username={user.username} />;
+  return <DuelPage key={user.id} userId={user.id} username={user.username} />;
+}
+
+const tierLabel = id => VOCABULARY_TIERS.find(tier => tier.id === id)?.label ?? id;
+// The ladder as the next round finds it after a loss, an abandoned round or a 0-point win.
+const LADDER_RESET = Object.freeze({ rung: 0, next: 'apprentice', minLength: MIN_WORD_LENGTH });
+
+// What a win pays now: the server's stump points, with the multiplier for answers that were
+// checked and right (a preview; the claim's award is the server's).
+const previewPoints = duel => (duel.points?.eligible ? illuciaStumpPoints(duel.tier.id, duel.round.answer.length, duel.verified) : 0);
+
+// Whether a win in this round would climb the ladder (a preview of the server's rule).
+function ladderStep(ladder, tier, length) {
+  if (!ladder) return null;
+  if (tier.id === 'apprentice') return ladder.rung === 0 ? 'start' : null;
+  return ladder.rung > 0 && tier.id === ladder.next && length >= ladder.minLength ? (ladder.rung === 2 ? 'top' : 'climb') : null;
 }
 
 const countWords = (round, knowledge) => filterCandidates(toPublicState(round), knowledge.words).length;
@@ -39,13 +57,40 @@ const countWords = (round, knowledge) => filterCandidates(toPublicState(round), 
 const herKnowledge = duel => (duel.questions
   ? narrowKnowledge(duel.knowledge, duel.questions.labels, duel.offers, duel.questions.categories) : duel.knowledge);
 
+// Her knowledge for this round. With a ticket, her memory of the player (C2's brain: their letter
+// habits, her personality, words that beat her) joins it; the voice data never does.
+function knowledgeFor(entries, tier, ticket, length) {
+  if (ticket?.memory?.brain) {
+    try { return createKnowledge(entries, tier.maxSize, commonnessWeight, toBrain(ticket.memory.brain, length)); } catch { /* play without memory */ }
+  }
+  return createKnowledge(entries, tier.maxSize);
+}
+
+// What this round is worth, said once at the start.
+function stakesLog(ticket, tier, length) {
+  if (!ticket) return [{ type: 'stakes', text: 'This duel is not scored: the scorekeeper could not be reached.' }];
+  const { points } = ticket;
+  if (points.reason === ILLUCIA_NO_POINTS.alreadyWon) return [{ type: 'illucia', text: ILLUCIA_ALREADY_WON_MESSAGE }];
+  if (points.reason === ILLUCIA_NO_POINTS.outsideTier) {
+    return [{ type: 'stakes', text: `${tier.label} does not know this word, so this duel earns no points.` }];
+  }
+  if (!points.eligible) return [{ type: 'stakes', text: 'This duel earns no points.' }];
+  const step = ladderStep(ticket.ladder, tier, length);
+  const ladder = step === 'top' ? ' Win, and your ladder is complete: +100.'
+    : step === 'climb' ? ` This is rung ${ticket.ladder.rung + 1} of 3 on your ladder.`
+      : step === 'start' ? ' A win starts your ladder.' : '';
+  return [{ type: 'stakes', text: `A win is worth ${points.stump} points.${ladder}` }];
+}
+
 // assets: { entries, questions: { labels, categories } | null }. Without labels she asks nothing.
-function newDuel(word, assets, tier) {
-  const knowledge = createKnowledge(assets.entries, tier.maxSize);
+// ticket: the server's round (seed, points, ladder, memory), or null when it could not start.
+function newDuel(word, assets, tier, ticket = null) {
+  const knowledge = knowledgeFor(assets.entries, tier, ticket, word.length);
   const round = createRound(word);
   return {
-    // A local seed for her temperament until the server's round seed arrives (E3).
-    round, assets, entries: assets.entries, questions: assets.questions, knowledge, tier, seed: newLocalSeed(),
+    // The server's round seed; a local one when the duel is not scored.
+    round, assets, entries: assets.entries, questions: assets.questions, knowledge, tier, seed: ticket ? ticket.seed : newLocalSeed(),
+    ticket, points: ticket?.points ?? null,
     phase: 'thinking', lastGuess: null, lastHit: null,
     // Questions offered so far ({ code, answer }), the guess count when she last asked, and the
     // answers that were checked against WordNet and right (they earn the bonus).
@@ -53,6 +98,7 @@ function newDuel(word, assets, tier) {
     log: [
       { type: 'player', text: `My word is ready: ${word.length} letters. You get the ${tier.label} vocabulary.` },
       { type: 'illucia', text: openingLine(word.length, countWords(round, knowledge)) },
+      ...stakesLog(ticket, tier, word.length),
       { type: 'board', pattern: getPattern(round), hidden: [], revealed: [], caption: 'Start' },
     ],
   };
@@ -214,13 +260,46 @@ async function loadQuestions(length, options) {
   }
 }
 
-function Composer({ onStart }) {
+function LadderNote({ ladder }) {
+  if (!ladder) return null;
+  const text = ladder.rung === 0
+    ? 'Ladder: beat Apprentice, then Scholar, then Master in a row, each word longer, for +100.'
+    : `Ladder: next, ${tierLabel(ladder.next)} with a word of ${ladder.minLength}+ letters. +100 at the top.`;
+  return <div className="duel-ladder" aria-label={`Ladder: ${ladder.rung} of 3 rungs climbed`}>
+    <ol aria-hidden="true">{VOCABULARY_TIERS.map((tier, index) =>
+      <li key={tier.id} className={index < ladder.rung ? 'done' : index === ladder.rung ? 'next' : ''}>{tier.label}</li>)}</ol>
+    <p className="duel-muted">{text}</p>
+  </div>;
+}
+
+// Before a word is committed: does it pay, and does it keep the ladder? (A preview from the
+// player's stats; the server decides.)
+function startWarning(word, entries, tier, ladder, spent) {
+  const notes = [];
+  const size = entries.find(entry => entry.word === word)?.size ?? 70;
+  const outside = size > tier.maxSize;
+  if (outside) notes.push(`${tier.label} does not know this word: you can still win, but it earns no points.`);
+  else if (spent.has(word)) notes.push(ILLUCIA_ALREADY_WON_MESSAGE);
+  const pays = !outside && !spent.has(word);
+  if (ladder?.rung > 0 && (!pays || tier.id !== ladder.next || word.length < ladder.minLength)) {
+    notes.push(`This resets your ladder (next rung: ${tierLabel(ladder.next)} with ${ladder.minLength}+ letters).`);
+  }
+  return notes.join(' ');
+}
+
+function Composer({ onStart, ladder, spent }) {
   const [secret, setSecret] = useState('');
-  const [tierId, setTierId] = useState('scholar');
+  const [tierId, setTierId] = useState(ladder?.rung > 0 ? ladder.next : 'scholar');
   const [error, setError] = useState('');
+  const [warning, setWarning] = useState(null); // { key, text }: a second press starts anyway
   const [loading, setLoading] = useState(false);
   const pending = useRef(null);
+  const chosen = useRef(false);
   useEffect(() => () => { pending.current?.abort(); pending.current = null; }, []);
+  // The ladder may arrive after the form: offer its next rung unless the player already chose.
+  useEffect(() => { if (!chosen.current && ladder?.rung > 0) setTierId(ladder.next); }, [ladder]);
+  const key = `${secret.trim().toLowerCase()}:${tierId}`;
+  const warned = warning?.key === key;
 
   async function submit(event) {
     event.preventDefault();
@@ -236,7 +315,7 @@ function Composer({ onStart }) {
     setError('');
     const timeout = setTimeout(() => controller.abort(), 10000);
     try {
-      // Only the length is sent. Never put the secret in a URL or request body.
+      // The word lists and labels are static files: only the length is in these requests.
       const options = { signal: controller.signal };
       const [response, questions] = await Promise.all([
         fetch(`/illucia/words/${word.length}.txt`, options),
@@ -249,8 +328,15 @@ function Composer({ onStart }) {
         setError(rejectionLine(word.length));
         return;
       }
-      setSecret('');
-      onStart(word, { entries, questions }, VOCABULARY_TIERS.find(value => value.id === tierId));
+      const tier = VOCABULARY_TIERS.find(value => value.id === tierId);
+      const note = startWarning(word, entries, tier, ladder, spent);
+      if (note && warning?.key !== `${word}:${tier.id}`) {
+        setWarning({ key: `${word}:${tier.id}`, text: note });
+        return;
+      }
+      clearTimeout(timeout);
+      // Starting a round sends the word to the server (see /privacy).
+      await onStart(word, { entries, questions }, tier);
     } catch {
       if (pending.current === controller) setError('The vocabulary could not load. Please try again.');
     } finally {
@@ -265,16 +351,19 @@ function Composer({ onStart }) {
       {/* Not type="password": browsers would offer to save and sync the word as a credential. */}
       <input id="duel-secret" type="text" autoComplete="off" autoCorrect="off" autoCapitalize="none" spellCheck={false} maxLength={15}
         value={secret} onChange={event => setSecret(event.target.value)} aria-describedby="duel-trust duel-validation" aria-invalid={Boolean(error)} />
-      <p id="duel-trust" className="duel-muted">{secret.trim() ? `${secret.trim().length} letters · ` : ''}Illucia plays blind, from the blanks alone.</p>
+      <p id="duel-trust" className="duel-muted">{secret.trim() ? `${secret.trim().length} letters · ` : ''}Her guessing sees only the blanks. The server keeps your word to check the result.</p>
       <p id="duel-validation" role="alert">{error}</p>
+      <LadderNote ladder={ladder} />
       <div className="duel-tiers" role="radiogroup" aria-label="Her vocabulary">
         {VOCABULARY_TIERS.map(tier => <label key={tier.id} className={tierId === tier.id ? 'selected' : ''}>
-          <input type="radio" name="duel-tier" value={tier.id} checked={tierId === tier.id} onChange={() => setTierId(tier.id)} />
+          <input type="radio" name="duel-tier" value={tier.id} checked={tierId === tier.id}
+            onChange={() => { chosen.current = true; setTierId(tier.id); }} />
           <b>{tier.label}</b>
           <small>{TIER_NOTES[tier.id]}</small>
         </label>)}
       </div>
-      <button type="submit" className="hm-button primary">Start the duel</button>
+      {warned && <p className="duel-warning" role="status">{warning.text}</p>}
+      <button type="submit" className="hm-button primary">{warned ? 'Start anyway' : 'Start the duel'}</button>
     </fieldset>
     {loading && <p role="status">Loading her {secret.trim().length}-letter words…</p>}
   </form>;
@@ -282,20 +371,29 @@ function Composer({ onStart }) {
 
 // Her question is a bet: answering helps her, declining tells her nothing. When WordNet does
 // not know the player's word, the answer cannot be checked, and the card says so first.
-function Offer({ pending, onAnswer }) {
+function Offer({ duel, onAnswer }) {
+  const { pending } = duel;
+  const now = previewPoints(duel);
+  const next = duel.points?.eligible ? illuciaStumpPoints(duel.tier.id, duel.round.answer.length, duel.verified + 1) : 0;
+  const stake = !pending.checkable
+    ? 'My archive does not know your word, so your answer cannot be checked: no bonus possible for this word.'
+    : duel.points?.eligible ? `Answer correctly and still win: ${now} → ${next} points. Declining tells her nothing.`
+      : 'Answering helps her. Declining tells her nothing.';
   return <div className="duel-msg from-player">
     <div className="duel-replies duel-offer" role="group" aria-label="Answer her question" aria-describedby="duel-offer-stake">
       <span className="duel-label">Her question · your choice</span>
-      <p id="duel-offer-stake" className="duel-stake">{pending.checkable
-        ? 'Answering helps her. Declining tells her nothing.'
-        : 'My archive does not know your word, so your answer cannot be checked: no bonus possible for this word.'}</p>
+      <p id="duel-offer-stake" className="duel-stake">{stake}</p>
       {ANSWERS.map(choice => <button key={choice.id} type="button" onClick={() => onAnswer(choice.id)}>{choice.label}</button>)}
     </div>
   </div>;
 }
 
 function StatusBar({ duel, restart }) {
+  const [confirming, setConfirming] = useState(false);
   const remaining = getRemainingMisses(duel.round);
+  // Leaving a scored round counts as a loss and resets the ladder, so it takes a second press.
+  const scored = Boolean(duel.ticket) && duel.phase !== 'over' && duel.phase !== 'error';
+  const points = !duel.ticket ? 'Not scored' : duel.points?.eligible ? `${previewPoints(duel)} pts` : 'No points';
   const knowledge = useMemo(() => herKnowledge(duel), [duel.knowledge, duel.questions, duel.offers]);
   const current = useMemo(() => countWords(duel.round, knowledge), [duel.round, knowledge]);
   // Until the player shows her the tiles, she only knows what she knew before the guess.
@@ -309,36 +407,84 @@ function StatusBar({ duel, restart }) {
       <span className="duel-chip">{duel.tier.label}</span>
       <span><small>Words in mind</small><b>{words.toLocaleString('en-US')}</b></span>
       <span className="duel-your-word"><small>Your word</small><b>{duel.round.answer.toUpperCase()}</b></span>
+      <span className="duel-points" aria-label={`Points: ${points}`}>{points}</span>
     </div>
-    <button type="button" className="duel-new" onClick={restart}>New word</button>
+    <button type="button" className="duel-new" onClick={() => (scored && !confirming ? setConfirming(true) : restart())}>
+      {scored && confirming ? 'Leave? Counts as a loss' : 'New word'}</button>
   </div>;
 }
 
-function Result({ duel, restart, rematch }) {
+function ClaimSummary({ duel, claim, retry }) {
+  if (!duel.ticket) return <p className="duel-muted">This duel was not scored.</p>;
+  if (!claim || claim.saving) return <p role="status">Saving…</p>;
+  if (claim.error) return <>
+    <p role="alert">{claim.error}</p>
+    {claim.canRetry && <button type="button" className="hm-button" onClick={retry}>Retry saving</button>}
+  </>;
+  const { awarded, score, reason, ladder } = claim.result;
+  let points;
+  if (awarded.stump > 0) {
+    const ladderPart = awarded.ladder > 0 ? `, and +${awarded.ladder} for completing your ladder` : '';
+    points = `+${awarded.stump} points${ladderPart}. Your total is ${score.toLocaleString('en-US')}.`;
+  } else if (reason === ILLUCIA_NO_POINTS.alreadyWon) points = ILLUCIA_ALREADY_WON_MESSAGE;
+  else if (reason === ILLUCIA_NO_POINTS.outsideTier) points = `${duel.tier.label} does not know ${duel.round.answer.toUpperCase()}, so this win earns no points.`;
+  else points = 'This win earns no points.';
+  return <>
+    <p className="duel-award" role="status">{points}</p>
+    {ladder?.rung > 0 && <p className="duel-muted">Ladder: next, {tierLabel(ladder.next)} with a word of {ladder.minLength}+ letters.</p>}
+  </>;
+}
+
+function Result({ duel, claim, spent, restart, rematch, retry }) {
   const status = getRoundStatus(duel.round);
   const misses = MAX_MISSES - getRemainingMisses(duel.round);
   const guesses = duel.round.guesses.length;
   const nextTier = VOCABULARY_TIERS[VOCABULARY_TIERS.indexOf(duel.tier) + 1];
   const heading = useRef(null);
   useEffect(() => { heading.current?.focus(); }, []);
+  const climb = status === 'failed' && claim?.result?.ladder?.rung > 0 ? claim.result.ladder : null;
+  // Once a word has paid, the same word earns nothing at any level, and a 0-point win resets the ladder.
+  const practice = spent.has(duel.round.answer);
   return <section className="hm-screen duel-result" aria-labelledby="duel-result-title">
     <div className="hm-screen-inner">
       <h2 id="duel-result-title" ref={heading} tabIndex={-1}>{status === 'solved' ? 'Illucia wins' : 'You win'}</h2>
       <p>The word was <strong>{duel.round.answer.toUpperCase()}</strong>.</p>
       <p>{guesses} guesses: {guesses - misses} {guesses - misses === 1 ? 'hit' : 'hits'}, {misses} {misses === 1 ? 'miss' : 'misses'}.</p>
-      <p className="duel-muted">Duels don't earn Hall of Fame points yet.</p>
+      {status === 'failed' && <ClaimSummary duel={duel} claim={claim} retry={retry} />}
+      {status === 'solved' && duel.ticket && <p className="duel-muted">No points this time.{duel.ticket.ladder?.rung > 0 ? ' Your ladder resets.' : ''}</p>}
       <div className="duel-result-actions">
-        <button type="button" className="hm-button primary" onClick={restart}>Play again</button>
-        {status === 'failed' && nextTier && <button type="button" className="hm-button" onClick={() => rematch(nextTier)}>Rematch vs {nextTier.label}</button>}
+        <button type="button" className="hm-button primary" onClick={restart}>
+          {climb ? `Climb to ${tierLabel(climb.next)} (${climb.minLength}+ letters)` : 'Play again'}</button>
+        {status === 'failed' && nextTier && <button type="button" className="hm-button" onClick={() => rematch(nextTier)}>
+          Rematch vs {nextTier.label}{practice ? ' (practice, 0 points)' : ''}</button>}
       </div>
     </div>
   </section>;
 }
 
-function DuelPage({ username }) {
+function DuelPage({ userId, username }) {
+  const { updateScore, expireSession } = useAuth();
   const [duel, setDuel] = useState(null);
+  const [ladder, setLadder] = useState(null);
+  const [spent, setSpent] = useState(() => new Set());
+  const [claim, setClaim] = useState(null);
   const bottom = useRef(null);
+  const mounted = useRef(true);
+  const openRound = useRef(null); // a started round not yet claimed: the next start abandons it
+  const active = useRef(null);
+  active.current = duel;
   const greeting = useMemo(() => greetingLine(username?.length ?? 0), [username]);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
+
+  // The ladder and the words that already paid, so the form can warn before a word is committed.
+  useEffect(() => {
+    const controller = new AbortController();
+    loadIlluciaStats({ signal: controller.signal }).then(stats => {
+      if (stats.ladder) setLadder(stats.ladder);
+      if (stats.spent) setSpent(new Set(stats.spent));
+    }).catch(() => {});
+    return () => controller.abort();
+  }, []);
 
   // Her turn runs once per thinking pause. The guess is computed here, not in
   // a state updater, so StrictMode's double-invoked updaters never run the solver twice.
@@ -355,8 +501,61 @@ function DuelPage({ username }) {
     bottom.current?.scrollIntoView?.({ behavior: reduce ? 'auto' : 'smooth', block: 'end' });
   }, [duel?.log.length, duel?.phase]);
 
-  const restart = () => setDuel(null);
+  async function begin(word, assets, tier) {
+    let ticket = null;
+    try {
+      ticket = await startIlluciaRound({ word, tier: tier.id, previousRoundId: openRound.current });
+    } catch (error) {
+      if (error.status === 401) { expireSession(userId); return; }
+    }
+    if (!mounted.current) return;
+    // A new scored round abandons the open one, which resets the ladder.
+    if (ticket && openRound.current && openRound.current !== ticket.roundId) setLadder(LADDER_RESET);
+    openRound.current = ticket?.roundId ?? openRound.current;
+    setClaim(null);
+    setDuel(newDuel(word, assets, tier, ticket));
+  }
+
+  async function save(round) {
+    const { ticket } = round;
+    setClaim({ roundId: ticket.roundId, saving: true });
+    try {
+      const result = await claimIlluciaRound(ticket, round.round.guesses, round.verified,
+        { stillWanted: () => mounted.current && active.current === round });
+      if (!result || !mounted.current) return;
+      updateScore(userId, result.score);
+      setLadder(result.ladder ?? LADDER_RESET);
+      if (result.awarded.stump > 0 || result.reason === ILLUCIA_NO_POINTS.alreadyWon) {
+        setSpent(current => new Set([...current, round.round.answer]));
+      }
+      if (openRound.current === ticket.roundId) openRound.current = null;
+      if (active.current === round) setClaim({ roundId: ticket.roundId, saving: false, result });
+    } catch (error) {
+      if (!mounted.current) return;
+      if (error.status === 401) expireSession(userId);
+      if (active.current === round) setClaim({ roundId: ticket.roundId, saving: false,
+        canRetry: !error.status || error.status >= 500 || error.status === 429 || error.status === 200,
+        error: error.status === 401 ? 'Your session expired, so these points could not be saved.'
+          : error.status === 409 ? 'This round can no longer earn points.'
+            : 'Could not confirm your points were saved. Retrying is safe.' });
+    }
+  }
+
+  // The round is over: a win is claimed (the duel no longer changes, so this runs once; a repeated
+  // claim would get the stored award back); her win resets the ladder.
+  useEffect(() => {
+    if (!duel?.ticket || duel.phase !== 'over') return;
+    if (getRoundStatus(duel.round) === 'solved') setLadder(LADDER_RESET);
+    else void save(duel);
+  }, [duel]);
+
+  const restart = () => {
+    // Leaving a scored round before it is over abandons it.
+    if (duel?.ticket && duel.phase !== 'over') setLadder(LADDER_RESET);
+    setDuel(null);
+  };
   const lastIndex = duel ? duel.log.length - 1 : -1;
+  const claimFor = duel && claim?.roundId === duel.ticket?.roundId ? claim : null;
 
   return <div className="duel-page">
     <header className="duel-heading">
@@ -364,15 +563,16 @@ function DuelPage({ username }) {
       <p className="hm-subtitle">Play vs AI · a duel, letter by letter</p>
     </header>
 
-    {duel && <StatusBar duel={duel} restart={restart} />}
+    {duel && <StatusBar key={duel.ticket?.roundId ?? duel.seed} duel={duel} restart={restart} />}
 
     <div className="duel-log" role="log" aria-live="polite" aria-relevant="additions">
       <Message from="illucia">Hello, {username}. {greeting} I guess your secret word one letter at a time.</Message>
-      {!duel && <div className="duel-msg from-player"><Composer onStart={(word, assets, tier) => setDuel(newDuel(word, assets, tier))} /></div>}
+      {!duel && <div className="duel-msg from-player"><Composer onStart={begin} ladder={ladder} spent={spent} /></div>}
       {duel?.log.map((entry, index) => entry.type === 'board'
         ? <Board key={index} entry={entry} answer={duel.round.answer} active={index === lastIndex && duel.phase === 'reveal'}
           onReveal={position => setDuel(current => reveal(current, position))} />
-        : <Message key={index} from={entry.type} note={entry.note}>{entry.text}</Message>)}
+        : entry.type === 'stakes' ? <p key={index} className="duel-stakes">{entry.text}</p>
+          : <Message key={index} from={entry.type} note={entry.note}>{entry.text}</Message>)}
       {duel?.phase === 'thinking' && <div className="duel-msg from-illucia" aria-hidden="true">
         <Avatar /><div className="duel-bubble duel-typing"><span /><span /><span /></div>
       </div>}
@@ -382,12 +582,12 @@ function DuelPage({ username }) {
           {REPLIES.map(choice => <button key={choice.id} type="button" onClick={() => setDuel(current => reply(current, choice.id))}>{choice.text}</button>)}
         </div>
       </div>}
-      {duel?.phase === 'question' && <Offer pending={duel.pending} onAnswer={id => setDuel(current => answer(current, id))} />}
+      {duel?.phase === 'question' && <Offer duel={duel} onAnswer={id => setDuel(current => answer(current, id))} />}
       {duel?.phase === 'error' && <div className="duel-result-actions"><button type="button" className="hm-button primary" onClick={restart}>New word</button></div>}
     </div>
 
-    {duel?.phase === 'over' && <Result duel={duel} restart={restart}
-      rematch={tier => setDuel(newDuel(duel.round.answer, duel.assets, tier))} />}
+    {duel?.phase === 'over' && <Result duel={duel} claim={claimFor} spent={spent} restart={restart} retry={() => save(duel)}
+      rematch={tier => begin(duel.round.answer, duel.assets, tier)} />}
 
     <div ref={bottom} className="duel-bottom" />
     <p className="duel-credits">Vocabulary: ESDB/SCOWL · filtered with LDNOOBW · questions: Open English WordNet (CC BY 4.0). <a href="/illucia/credits.html" target="_blank" rel="noreferrer">Credits &amp; licences</a></p>

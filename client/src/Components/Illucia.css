@@ -182,6 +182,19 @@
 .duel-tiers small { font-size: 12px; line-height: 1.3; color: var(--hm-muted); }
 .duel-composer .hm-button { display: block; margin: 0 auto; }
 
+/* ---------- Points and the ladder (v2 E3) ---------- */
+.duel-points { font-family: bruno; font-size: 12px; letter-spacing: .08em; white-space: nowrap; color: var(--hm-yellow); }
+.duel-stakes { align-self: center; max-width: 520px; margin: 0; padding: 4px 12px; font-size: 13px; text-align: center; color: var(--hm-cyan); }
+.duel-ladder { margin: 10px 0 0; }
+.duel-ladder ol { display: flex; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.duel-ladder li { flex: 1; padding: 3px 4px; font-family: bruno; font-size: 10px; letter-spacing: .1em; text-align: center; text-transform: uppercase;
+  color: var(--hm-muted); border: 1px solid #93939344; border-radius: 4px; }
+.duel-ladder li.done { color: #0b0c10; background: var(--hm-yellow); border-color: var(--hm-yellow); }
+.duel-ladder li.done::after { content: " ✓"; }
+.duel-ladder li.next { color: var(--hm-yellow); border-color: var(--hm-yellow); box-shadow: 0 0 6px #edee0288; }
+.duel-warning { margin: 0 0 10px; font-size: 14px; color: #ffd27a; }
+.duel-award { font-family: bruno; letter-spacing: .06em; color: var(--hm-yellow); }
+
 .duel-replies { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; max-width: 520px; }
 .duel-replies .duel-label { width: 100%; text-align: right; color: var(--hm-muted); }
 .duel-stake { width: 100%; margin: 0; font-size: 14px; text-align: right; color: var(--hm-cyan); }
