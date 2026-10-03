@@ -27,6 +27,15 @@ const lines = {
   oopsEnd: ['Six misses. You win. Well played.', 'That was my last chance. You win, fair and square.'],
   smartEnd: ['Fine. You win this one. I am writing your word down for next time.', 'Six misses. Say it, then. You outsmarted me.'],
   solved: ['{word}. Quod erat demonstrandum.', '{word}! Solved in {turns} guesses.', 'It was {word}. Want to try something harder?'],
+  // Her questions (v2 E2). An early narrow question is curiosity; a broad one, held back until
+  // she has 2 or fewer misses left, is desperation.
+  curious: ['Something different. {Q}', 'A question, out of curiosity. {Q}', 'Humour me. {Q}'],
+  desperate: ['{n} {chances} left. Time for broad strokes. {Q}', 'I am running out of chances. Desperate times: {Q}',
+    'Fine. A broad one, and I am not proud of it. {Q}'],
+  confirmed: ['Thank you. That helps.', 'Noted. My list just got shorter.', 'Excellent. Filing that away.'],
+  unchecked: ['My archive does not know your word, so I will take your word for it.'],
+  corrected: ['My archive says otherwise: your word {can}. I will go by the archive, so no bonus for that one.'],
+  declined: ['Fair enough. Back to letters.', 'A mystery, then. Back to letters.'],
 };
 
 function pick(event, index, values = {}) {
@@ -104,3 +113,33 @@ export function replyLine(replyId, { letter, turn, count, share, length, missesL
 }
 
 export const solvedLine = (word, turns) => pick('solved', turns, { word: word.toUpperCase(), turns });
+
+// The player's three choices when she asks (v2 E2): answer either way, or decline.
+export const ANSWERS = Object.freeze([
+  Object.freeze({ id: 'yes', label: 'Yes, it can', text: 'Yes, it can.' }),
+  Object.freeze({ id: 'no', label: "No, it can't", text: "No, it can't." }),
+  Object.freeze({ id: 'declined', label: 'Decline', text: "I'd rather not say." }),
+]);
+
+// Her question, in her voice: curious for an early narrow one, desperate for a late broad one
+// (chooseQuestion's tag). The question text is the category's own.
+export function questionLine(question, turn) {
+  if (question.tag === 'late-broad') {
+    const n = question.missesLeft;
+    return pick('desperate', turn, { Q: question.question, n: NUMBER_WORDS[n] ?? n, chances: n === 1 ? 'chance' : 'chances' });
+  }
+  return pick('curious', turn, { Q: question.question });
+}
+
+// The small print under her question: true of every answer, plus the WordNet credit.
+// share is the smaller side's weight in hundredths of a percent of her candidate weight.
+export function questionNote(question) {
+  const ruled = Math.floor(question.share / 100);
+  return `Either answer rules out at least ${ruled}% of my words, counting common ones more. Categories: Open English WordNet (CC BY 4.0).`;
+}
+
+// Her reply once the player has chosen. outcome: 'confirmed' | 'unchecked' | 'corrected' | 'declined';
+// truth is the archive's answer when it corrected the player.
+export function answerLine(outcome, turn, truth = null) {
+  return pick(outcome, turn, { can: truth === 'yes' ? 'can mean that' : 'cannot mean that' });
+}

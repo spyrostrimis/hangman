@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
-import { REPLIES, article, askLine, reasonLine, replyLine, solvedLine } from './illucia/duel-lines.js';
+import { ANSWERS, REPLIES, answerLine, article, askLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from './illucia/duel-lines.js';
 import { applyGuess, createRound } from './hangman-core.js';
 import { toPublicState } from './illucia/public-state.js';
 import { VOCABULARY_TIERS, createKnowledge, parseLexicon } from './illucia/lexicon.js';
@@ -142,4 +142,33 @@ test('she never counts words she no longer has, and says "word" for one', () => 
 
 test('the word appears only in the solved line, filled in by code', () => {
   assert.equal(solvedLine('example', 7), 'EXAMPLE! Solved in 7 guesses.');
+});
+
+test('an early narrow question sounds curious, a late broad one desperate', () => {
+  const bird = { question: 'Can your word mean a bird?', tag: 'early-narrow', missesLeft: 4, share: 3349 };
+  const object = { question: 'Can your word mean a man-made object?', tag: 'late-broad', missesLeft: 2, share: 4100 };
+  assert.equal(questionLine(bird, 2), 'Humour me. Can your word mean a bird?');
+  assert.equal(questionLine(bird, 3), 'Something different. Can your word mean a bird?');
+  assert.equal(questionLine(object, 3), 'Two chances left. Time for broad strokes. Can your word mean a man-made object?');
+  assert.equal(questionLine({ ...object, missesLeft: 1 }, 3), 'One chance left. Time for broad strokes. Can your word mean a man-made object?');
+  assert.equal(questionLine(object, 4), 'I am running out of chances. Desperate times: Can your word mean a man-made object?');
+  for (let turn = 0; turn < 6; turn++) {
+    assert.doesNotMatch(questionLine(bird, turn), /chance|Desperate|broad/);
+    assert.match(questionLine(object, turn), /chance|Desperate|broad/);
+  }
+});
+
+test('her question note is true of either answer and credits WordNet', () => {
+  assert.equal(questionNote({ share: 3349 }),
+    'Either answer rules out at least 33% of my words, counting common ones more. Categories: Open English WordNet (CC BY 4.0).');
+});
+
+test('her reply names the outcome; only a correction says the bonus is gone', () => {
+  assert.deepEqual(ANSWERS.map(choice => [choice.id, choice.label]), [['yes', 'Yes, it can'], ['no', "No, it can't"], ['declined', 'Decline']]);
+  assert.equal(answerLine('corrected', 0, 'yes'), 'My archive says otherwise: your word can mean that. I will go by the archive, so no bonus for that one.');
+  assert.equal(answerLine('corrected', 0, 'no'), 'My archive says otherwise: your word cannot mean that. I will go by the archive, so no bonus for that one.');
+  assert.equal(answerLine('unchecked', 1), 'My archive does not know your word, so I will take your word for it.');
+  for (const outcome of ['confirmed', 'unchecked', 'declined']) {
+    for (let turn = 0; turn < 3; turn++) assert.doesNotMatch(answerLine(outcome, turn), /bonus|otherwise/);
+  }
 });

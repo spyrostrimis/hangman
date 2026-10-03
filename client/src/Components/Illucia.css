@@ -184,6 +184,7 @@
 
 .duel-replies { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; max-width: 520px; }
 .duel-replies .duel-label { width: 100%; text-align: right; color: var(--hm-muted); }
+.duel-stake { width: 100%; margin: 0; font-size: 14px; text-align: right; color: var(--hm-cyan); }
 
 /* ---------- End of the duel ---------- */
 .duel-result { margin-top: 22px; }
@@ -219,6 +220,9 @@
   .duel-tiers label { flex-direction: row; align-items: baseline; gap: 10px; }
   .duel-tiers b { flex: 0 0 92px; }
   .duel-new, .duel-replies button { min-height: 44px; }
+  /* Her question's three choices stack full width on phones. */
+  .duel-offer { width: 100%; }
+  .duel-offer button { flex: 1 1 100%; }
   .duel-new { padding: 6px 10px; font-size: 11px; letter-spacing: 1px; }
 }
 

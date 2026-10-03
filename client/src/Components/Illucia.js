@@ -7,9 +7,10 @@ import { toPublicState } from '../lib/illucia/public-state.js';
 import { filterCandidates } from '../lib/illucia/candidates.js';
 import { analyzeDecision } from '../lib/illucia/strategy.js';
 import { newLocalSeed } from '../lib/illucia/random.js';
+import { checkAnswer, chooseQuestion, narrowKnowledge, parseCategories, parseLabels } from '../lib/illucia/questions.js';
 import { rejectionLine } from '../lib/illucia/lines.js';
 import { greetingLine, openingLine } from '../lib/illucia/observatory-lines.js';
-import { REPLIES, askLine, reasonLine, replyLine, solvedLine } from '../lib/illucia/duel-lines.js';
+import { ANSWERS, REPLIES, answerLine, askLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from '../lib/illucia/duel-lines.js';
 import './Illucia.css';
 
 // Play vs AI as a conversation that scrolls down: Illucia asks for a letter,
@@ -34,12 +35,21 @@ export default function Illucia() {
 
 const countWords = (round, knowledge) => filterCandidates(toPublicState(round), knowledge.words).length;
 
-function newDuel(word, entries, tier) {
-  const knowledge = createKnowledge(entries, tier.maxSize);
+// Her vocabulary after the questions answered so far (unknown words stay on both sides).
+const herKnowledge = duel => (duel.questions
+  ? narrowKnowledge(duel.knowledge, duel.questions.labels, duel.offers, duel.questions.categories) : duel.knowledge);
+
+// assets: { entries, questions: { labels, categories } | null }. Without labels she asks nothing.
+function newDuel(word, assets, tier) {
+  const knowledge = createKnowledge(assets.entries, tier.maxSize);
   const round = createRound(word);
   return {
     // A local seed for her temperament until the server's round seed arrives (E3).
-    round, entries, knowledge, tier, seed: newLocalSeed(), phase: 'thinking', lastGuess: null, lastHit: null,
+    round, assets, entries: assets.entries, questions: assets.questions, knowledge, tier, seed: newLocalSeed(),
+    phase: 'thinking', lastGuess: null, lastHit: null,
+    // Questions offered so far ({ code, answer }), the guess count when she last asked, and the
+    // answers that were checked against WordNet and right (they earn the bonus).
+    offers: [], askedAt: -1, verified: 0, pending: null,
     log: [
       { type: 'player', text: `My word is ready: ${word.length} letters. You get the ${tier.label} vocabulary.` },
       { type: 'illucia', text: openingLine(word.length, countWords(round, knowledge)) },
@@ -52,11 +62,50 @@ function failed(duel) {
   return { ...duel, phase: 'error', log: [...duel.log, { type: 'illucia', text: 'Something went wrong in my notes. Let us start again with a new word.' }] };
 }
 
-// Her turn: pick a letter from public state only, then wait for the player.
+// Her question (v2 E2): chosen from public state, her vocabulary, the public labels and her
+// seed. Only after she chose does game code look at the secret, to say whether the answer
+// can be checked.
+function ask(duel, question) {
+  const turn = duel.round.guesses.length;
+  const checkable = checkAnswer(duel.questions.labels, duel.round.answer, question.code) !== null;
+  return { ...duel, phase: 'question', askedAt: turn, pending: { question, checkable },
+    log: [...duel.log, { type: 'illucia', text: questionLine(question, turn), note: questionNote(question) }] };
+}
+
+// The player answers or declines. A known word's answer is checked: a wrong one is corrected and
+// she filters on the archive's answer. An unknown word's answer is taken on trust, with no bonus.
+function answer(duel, choiceId) {
+  const choice = ANSWERS.find(value => value.id === choiceId);
+  if (duel.phase !== 'question' || !choice) return duel;
+  const { question } = duel.pending;
+  const turn = duel.round.guesses.length;
+  const truth = checkAnswer(duel.questions.labels, duel.round.answer, question.code);
+  let outcome = 'declined';
+  let recorded = 'declined';
+  if (choice.id !== 'declined') {
+    outcome = truth === null ? 'unchecked' : truth === choice.id ? 'confirmed' : 'corrected';
+    recorded = truth ?? choice.id;
+  }
+  const next = { ...duel, offers: [...duel.offers, { code: question.code, answer: recorded }],
+    verified: duel.verified + (outcome === 'confirmed' ? 1 : 0), pending: null, phase: 'thinking', lastHit: null };
+  return { ...next, log: [...duel.log, { type: 'player', text: choice.text },
+    { type: 'illucia', text: answerLine(outcome, turn, truth) }] };
+}
+
+// Her turn: a question if one qualifies (at most one per letter guessed), otherwise a letter
+// from public state only. Then she waits for the player.
 function guess(duel) {
   const state = toPublicState(duel.round);
+  if (duel.questions && duel.askedAt < duel.round.guesses.length) {
+    let question = null;
+    try {
+      question = chooseQuestion(state, duel.knowledge, duel.questions.labels, duel.questions.categories, duel.offers, { seed: duel.seed });
+    } catch { question = null; }
+    if (question) return ask(duel, question);
+  }
+  const knowledge = herKnowledge(duel);
   let decision;
-  try { decision = analyzeDecision(state, duel.knowledge, { seed: duel.seed }); } catch { return failed(duel); }
+  try { decision = analyzeDecision(state, knowledge, { seed: duel.seed }); } catch { return failed(duel); }
   const { letter } = decision;
   const round = applyGuess(duel.round, letter);
   if (!letter || round === duel.round) return failed(duel);
@@ -65,6 +114,7 @@ function guess(duel) {
   const positions = after.flatMap((value, index) => (value === letter && before[index] === null ? [index] : []));
   const L = letter.toUpperCase();
   const share = decision.fallback
+    // The fallback counts letters over her whole tier at this length, unnarrowed.
     ? Math.round(duel.knowledge.frequency[letter] / Math.max(1, duel.knowledge.words.length) * 100)
     : Math.round(decision.hitCount / decision.candidateCount * 100);
   const note = reasonLine({ letter, share, candidates: decision.candidateCount, fallback: decision.fallback,
@@ -72,7 +122,7 @@ function guess(duel) {
   const turn = round.guesses.length;
   // hunch: she chose a letter below her best, so no line may call it the statistically smart move.
   const lastGuess = { letter, positions, share, hunch: decision.choseBest === false,
-    countBefore: decision.candidateCount, countAfter: countWords(round, duel.knowledge) };
+    countBefore: decision.candidateCount, countAfter: countWords(round, knowledge) };
   const log = [...duel.log, { type: 'illucia', text: askLine(letter, turn, duel.lastHit), note }];
   if (positions.length) {
     return { ...duel, round, lastGuess, phase: 'reveal',
@@ -150,6 +200,20 @@ function Board({ entry, answer, active, onReveal }) {
   </div>;
 }
 
+// Her question labels for one length (v2 B1). Questions are optional: if they cannot load,
+// she plays letters only.
+async function loadQuestions(length, options) {
+  try {
+    const [labelsResponse, categoriesResponse] = await Promise.all([
+      fetch(`/illucia/labels/${length}.txt`, options), fetch('/illucia/labels/categories.json', options)]);
+    if (!labelsResponse.ok || !categoriesResponse.ok) return null;
+    const categories = parseCategories(await categoriesResponse.json());
+    return { categories, labels: parseLabels(await labelsResponse.text(), length, categories) };
+  } catch {
+    return null;
+  }
+}
+
 function Composer({ onStart }) {
   const [secret, setSecret] = useState('');
   const [tierId, setTierId] = useState('scholar');
@@ -173,7 +237,11 @@ function Composer({ onStart }) {
     const timeout = setTimeout(() => controller.abort(), 10000);
     try {
       // Only the length is sent. Never put the secret in a URL or request body.
-      const response = await fetch(`/illucia/words/${word.length}.txt`, { signal: controller.signal });
+      const options = { signal: controller.signal };
+      const [response, questions] = await Promise.all([
+        fetch(`/illucia/words/${word.length}.txt`, options),
+        loadQuestions(word.length, options),
+      ]);
       if (!response.ok) throw new Error('Vocabulary unavailable');
       const entries = parseLexicon(await response.text(), word.length);
       if (controller.signal.aborted) return;
@@ -182,7 +250,7 @@ function Composer({ onStart }) {
         return;
       }
       setSecret('');
-      onStart(word, entries, VOCABULARY_TIERS.find(value => value.id === tierId));
+      onStart(word, { entries, questions }, VOCABULARY_TIERS.find(value => value.id === tierId));
     } catch {
       if (pending.current === controller) setError('The vocabulary could not load. Please try again.');
     } finally {
@@ -212,9 +280,24 @@ function Composer({ onStart }) {
   </form>;
 }
 
+// Her question is a bet: answering helps her, declining tells her nothing. When WordNet does
+// not know the player's word, the answer cannot be checked, and the card says so first.
+function Offer({ pending, onAnswer }) {
+  return <div className="duel-msg from-player">
+    <div className="duel-replies duel-offer" role="group" aria-label="Answer her question" aria-describedby="duel-offer-stake">
+      <span className="duel-label">Her question · your choice</span>
+      <p id="duel-offer-stake" className="duel-stake">{pending.checkable
+        ? 'Answering helps her. Declining tells her nothing.'
+        : 'My archive does not know your word, so your answer cannot be checked: no bonus possible for this word.'}</p>
+      {ANSWERS.map(choice => <button key={choice.id} type="button" onClick={() => onAnswer(choice.id)}>{choice.label}</button>)}
+    </div>
+  </div>;
+}
+
 function StatusBar({ duel, restart }) {
   const remaining = getRemainingMisses(duel.round);
-  const current = useMemo(() => countWords(duel.round, duel.knowledge), [duel.round, duel.knowledge]);
+  const knowledge = useMemo(() => herKnowledge(duel), [duel.knowledge, duel.questions, duel.offers]);
+  const current = useMemo(() => countWords(duel.round, knowledge), [duel.round, knowledge]);
   // Until the player shows her the tiles, she only knows what she knew before the guess.
   const words = duel.phase === 'reveal' ? duel.lastGuess.countBefore : current;
   return <div className="duel-status">
@@ -285,7 +368,7 @@ function DuelPage({ username }) {
 
     <div className="duel-log" role="log" aria-live="polite" aria-relevant="additions">
       <Message from="illucia">Hello, {username}. {greeting} I guess your secret word one letter at a time.</Message>
-      {!duel && <div className="duel-msg from-player"><Composer onStart={(word, entries, tier) => setDuel(newDuel(word, entries, tier))} /></div>}
+      {!duel && <div className="duel-msg from-player"><Composer onStart={(word, assets, tier) => setDuel(newDuel(word, assets, tier))} /></div>}
       {duel?.log.map((entry, index) => entry.type === 'board'
         ? <Board key={index} entry={entry} answer={duel.round.answer} active={index === lastIndex && duel.phase === 'reveal'}
           onReveal={position => setDuel(current => reveal(current, position))} />
@@ -299,13 +382,14 @@ function DuelPage({ username }) {
           {REPLIES.map(choice => <button key={choice.id} type="button" onClick={() => setDuel(current => reply(current, choice.id))}>{choice.text}</button>)}
         </div>
       </div>}
+      {duel?.phase === 'question' && <Offer pending={duel.pending} onAnswer={id => setDuel(current => answer(current, id))} />}
       {duel?.phase === 'error' && <div className="duel-result-actions"><button type="button" className="hm-button primary" onClick={restart}>New word</button></div>}
     </div>
 
     {duel?.phase === 'over' && <Result duel={duel} restart={restart}
-      rematch={tier => setDuel(newDuel(duel.round.answer, duel.entries, tier))} />}
+      rematch={tier => setDuel(newDuel(duel.round.answer, duel.assets, tier))} />}
 
     <div ref={bottom} className="duel-bottom" />
-    <p className="duel-credits">Vocabulary: ESDB/SCOWL · filtered with LDNOOBW. <a href="/illucia/credits.html" target="_blank" rel="noreferrer">Credits &amp; licences</a></p>
+    <p className="duel-credits">Vocabulary: ESDB/SCOWL · filtered with LDNOOBW · questions: Open English WordNet (CC BY 4.0). <a href="/illucia/credits.html" target="_blank" rel="noreferrer">Credits &amp; licences</a></p>
   </div>;
 }

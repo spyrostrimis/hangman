@@ -38,9 +38,10 @@ it('sends only the length, hides her hits until the player shows them, and plays
   expect(screen.getByLabelText('Your secret word').type).toBe('text');
   expect(view.container.querySelector('input[type="password"]')).toBeNull();
   await start();
-  expect(fetch).toHaveBeenCalledTimes(1);
-  expect(fetch.mock.calls[0][0]).toBe('/illucia/words/5.txt');
-  expect(Object.keys(fetch.mock.calls[0][1])).toEqual(['signal']);
+  // Her words and her question labels for this length: never the secret, only the length.
+  expect(fetch.mock.calls.map(call => call[0]).sort())
+    .toEqual(['/illucia/labels/5.txt', '/illucia/labels/categories.json', '/illucia/words/5.txt']);
+  for (const [, options] of fetch.mock.calls) expect(Object.keys(options)).toEqual(['signal']);
 
   await think();
   const state = analyzeDecision.mock.calls[0][0];
@@ -122,7 +123,7 @@ it('waits for the player to answer a miss, answers that reply, and ends at six m
   expect([...view.container.querySelectorAll('.duel-board')].at(-1).querySelectorAll('.duel-tile.missed')).toHaveLength(4);
   expect(screen.getByRole('button', { name: 'Rematch vs Scholar' })).toBeTruthy();
   expect(screen.queryByRole('button', { name: 'Oops, wrong' })).toBeNull();
-  expect(fetch).toHaveBeenCalledTimes(1);
+  expect(fetch).toHaveBeenCalledTimes(3);
 });
 
 it('shows her count from before the guess until the player reveals the tiles', async () => {
@@ -168,6 +169,7 @@ it('rejects invalid and unlisted words without starting', async () => {
   expect(fetch).not.toHaveBeenCalled();
   await start('zzzzz');
   expect(screen.getByRole('alert').textContent).toContain('cannot accept');
+  expect(fetch.mock.calls.some(call => call[0].includes('zzzzz'))).toBe(false);
   expect(screen.getByLabelText('Your secret word')).toBeTruthy();
 });
 
@@ -178,7 +180,7 @@ it('asks for 4-15 letters and never fetches a 3-letter word file', async () => {
   // Positive control: four letters pass the shape check and load that length.
   fetch.mockResolvedValue({ ok: true, text: async () => 'cats 35\n' });
   await start('cats');
-  expect(fetch.mock.calls[0][0]).toBe('/illucia/words/4.txt');
+  expect(fetch.mock.calls.map(call => call[0])).toContain('/illucia/words/4.txt');
   expect(screen.queryByRole('alert')).toBeNull();
 });
 
@@ -212,4 +214,120 @@ it('calls her miss a hunch, not the smart move, when she chose below her best', 
   expect(await lastLine()).toBe('Statistically it was the smart move. Statistics can be rude.');
   analyzeDecision.mockImplementation((...args) => ({ ...real(...args), choseBest: false }));
   expect(await lastLine()).toBe('It was a hunch. Hunches can be rude.');
+});
+
+// Questions (v2 E2). Four birds and four other words; she knows them all. The secret's label
+// decides whether an answer can be checked.
+const QUESTION_WORDS = ['chair', 'crane', 'eagle', 'heron', 'plate', 'robin', 'stone', 'table'];
+const CATEGORIES = { categories: [
+  { code: 'c', key: 'bird', kind: 'noun', question: 'Can your word mean a bird?', kindOf: { 'oewn-01505702-n': 'bird' } },
+  { code: 'o', key: 'artifact', kind: 'noun', question: 'Can your word mean a man-made object?', lexfiles: ['noun.artifact'] },
+] };
+const BIRDS = new Set(['crane', 'eagle', 'heron', 'robin']);
+// mammals: a second narrow category (chair and plate, as a fixture) that qualifies straight after the first.
+const MAMMAL = { code: 'd', key: 'mammal', kind: 'noun', question: 'Can your word mean a mammal?', kindOf: { 'oewn-01864419-n': 'mammal' } };
+function serveQuestions({ unknown = null, labels = true, mammals = false } = {}) {
+  const words = QUESTION_WORDS.map(word => `${word} 35\n`).join('');
+  const code = word => (BIRDS.has(word) ? 'c' : mammals && ['chair', 'plate'].includes(word) ? 'do' : 'o');
+  const lines = QUESTION_WORDS.filter(word => word !== unknown).map(word => `${word} ${code(word)}\n`).join('');
+  const categories = mammals ? { categories: [CATEGORIES.categories[0], MAMMAL, CATEGORIES.categories[1]] } : CATEGORIES;
+  fetch.mockImplementation(async url => {
+    if (url === '/illucia/words/5.txt') return { ok: true, text: async () => words };
+    if (url === '/illucia/labels/5.txt') return labels ? { ok: true, text: async () => lines } : { ok: false };
+    if (url === '/illucia/labels/categories.json') return { ok: true, json: async () => categories };
+    return { ok: false };
+  });
+}
+// Her first two letters miss every word (Z, then Q), so all eight are still possible when she may ask.
+async function forceMisses(real, forced = ['z', 'q']) {
+  analyzeDecision.mockImplementation((state, knowledge, options) => {
+    const decision = real(state, knowledge, options);
+    return forced.length ? { ...decision, letter: forced.shift() } : decision;
+  });
+  for (let miss = 0; miss < 2; miss++) {
+    await think();
+    fireEvent.click(screen.getByRole('button', { name: 'Oops, wrong' }));
+  }
+  await think();
+  return forced;
+}
+const choices = () => screen.queryAllByRole('button', { name: /^(Yes, it can|No, it can't|Decline)$/ }).map(button => button.textContent);
+const realDecision = async () => (await vi.importActual('../lib/illucia/strategy.js')).analyzeDecision;
+
+it('asks a curious question after two letters, corrects a wrong answer and filters on the archive', async () => {
+  serveQuestions();
+  const view = mount(); await start('crane');
+  await forceMisses(await realDecision());
+  // Positive control: before the question she considered all eight words.
+  expect(analyzeDecision.mock.calls.at(-1)[1].words).toEqual(QUESTION_WORDS);
+  const calls = analyzeDecision.mock.calls.length;
+  // The broad category is held back (4 misses left), so the narrow one comes first, curiously.
+  expect(bubbles(view.container, 'illucia').at(-1)).toMatch(/Can your word mean a bird\?$/);
+  expect(bubbles(view.container, 'illucia').at(-1)).not.toMatch(/Desperate|broad/);
+  expect(view.container.querySelectorAll('.duel-bubble small')[2].textContent).toContain('Open English WordNet (CC BY 4.0)');
+  expect(choices()).toEqual(['Yes, it can', "No, it can't", 'Decline']);
+  expect(screen.getByText('Answering helps her. Declining tells her nothing.')).toBeTruthy();
+  expect(analyzeDecision.mock.calls.length).toBe(calls); // the question used her turn
+
+  fireEvent.click(screen.getByRole('button', { name: "No, it can't" }));
+  expect(bubbles(view.container, 'player').at(-1)).toBe("No, it can't.");
+  expect(bubbles(view.container, 'illucia').at(-1)).toMatch(/^My archive says otherwise: your word can mean that\./);
+  expect(choices()).toEqual([]);
+  // Her next move is a letter, not another question, over the birds only.
+  await think();
+  expect(analyzeDecision.mock.calls.length).toBe(calls + 1);
+  expect(analyzeDecision.mock.calls.at(-1)[1].words).toEqual(['crane', 'eagle', 'heron', 'robin']);
+  expect(screen.getByText(/questions: Open English WordNet \(CC BY 4\.0\)/)).toBeTruthy();
+});
+
+it('says no bonus is possible for a word WordNet does not know, and takes the answer on trust', async () => {
+  serveQuestions({ unknown: 'crane' });
+  const view = mount(); await start('crane');
+  await forceMisses(await realDecision());
+  expect(screen.getByText(/no bonus possible for this word/)).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Yes, it can' }));
+  expect(bubbles(view.container, 'illucia').at(-1)).toBe('My archive does not know your word, so I will take your word for it.');
+  await think();
+  // The unknown word stays on both sides; YES keeps the labelled birds.
+  expect(analyzeDecision.mock.calls.at(-1)[1].words).toEqual(['crane', 'eagle', 'heron', 'robin']);
+});
+
+it('learns nothing from a declined question, asks at most once per letter, and plays letters only when the labels cannot load', async () => {
+  serveQuestions({ mammals: true });
+  const view = mount(); await start('crane');
+  await forceMisses(await realDecision());
+  expect(bubbles(view.container, 'illucia').at(-1)).toMatch(/a bird\?$/);
+  fireEvent.click(screen.getByRole('button', { name: 'Decline' }));
+  expect(bubbles(view.container, 'player').at(-1)).toBe("I'd rather not say.");
+  // The mammal question qualifies now, but she guesses a letter first.
+  const calls = analyzeDecision.mock.calls.length;
+  await think();
+  expect(analyzeDecision.mock.calls.length).toBe(calls + 1);
+  expect(analyzeDecision.mock.calls.at(-1)[1].words).toEqual(QUESTION_WORDS);
+  cleanup();
+
+  serveQuestions({ labels: false });
+  mount(); await start('crane');
+  await forceMisses(await realDecision());
+  expect(choices()).toEqual([]);
+  expect(analyzeDecision).toHaveBeenCalledTimes(calls + 4);
+});
+
+it('holds the broad question until two chances are left, then asks it desperately', async () => {
+  serveQuestions();
+  const view = mount(); await start('crane');
+  const forced = await forceMisses(await realDecision(), ['z', 'q', 'j', 'x']);
+  fireEvent.click(screen.getByRole('button', { name: 'Decline' }));
+  // Turn 3 (three chances left): no question, the broad one is still held.
+  await think();
+  expect(choices()).toEqual([]);
+  fireEvent.click(screen.getByRole('button', { name: 'Oops, wrong' }));
+  await think();
+  fireEvent.click(screen.getByRole('button', { name: 'Oops, wrong' }));
+  expect(forced).toEqual([]);
+  await think();
+  expect(screen.getByRole('img', { name: 'Her chances: 2 of 6' })).toBeTruthy();
+  expect(bubbles(view.container, 'illucia').at(-1)).toMatch(/Can your word mean a man-made object\?$/);
+  expect(bubbles(view.container, 'illucia').at(-1)).toMatch(/^(Two chances left\. Time for broad strokes|I am running out of chances|Fine\. A broad one)/);
+  expect(choices()).toEqual(['Yes, it can', "No, it can't", 'Decline']);
 });
