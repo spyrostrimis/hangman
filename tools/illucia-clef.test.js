@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { aboutWord, clefInputs, clefUsage, clefProbabilities, clefSort, CLEF_MAX_QUESTIONS } from './lib/illucia-clef.js';
+import { aboutWord, clefInputs, clefUsage, clefProbabilities, clefReserveTokens, clefSort, CLEF_MAX_QUESTIONS } from './lib/illucia-clef.js';
 
 const words = n => Array.from({ length: n }, (_, i) => `w${String.fromCharCode(97 + Math.floor(i / 26))}${String.fromCharCode(97 + (i % 26))}x`.replace(/\d/g, ''));
 
@@ -39,4 +39,15 @@ test('sorting splits at the threshold, keeping candidate order', () => {
   const p = { crane: 0.98, eagle: 0.5, table: 0.0127, robin: 0.49 };
   assert.deepEqual(clefSort(p, ['crane', 'eagle', 'robin', 'table']), { yes: ['crane', 'eagle'], no: ['robin', 'table'], yesShare: 0.5 });
   assert.deepEqual(clefSort(p, ['crane', 'eagle', 'robin', 'table'], 0.9).yes, ['crane']);
+});
+
+test('the reservation covers the measured Clef input tokens, where bytes alone fall short', () => {
+  // Measured 2026-10-03: 894 input tokens for 9 candidates, 3,294 for 36.
+  for (const [n, measured] of [[9, 894], [36, 3294]]) {
+    const [input] = clefInputs('@cf/cloudflare/clef', words(n), 'Can your word mean a man-made object?');
+    assert.ok(clefReserveTokens(input) > measured, `${n}: ${clefReserveTokens(input)} <= ${measured}`);
+  }
+  // Measured 91–99 tokens per candidate; the reservation must not depend on the request bytes alone.
+  const [input] = clefInputs('@cf/cloudflare/clef', words(36), 'Can your word mean a man-made object?');
+  assert.ok(clefReserveTokens(input) - Buffer.byteLength(JSON.stringify(input)) - 256 >= 36 * 120);
 });

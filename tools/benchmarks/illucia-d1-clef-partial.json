@@ -1,0 +1,654 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-03T19:50:01.248Z",
+  "status": "stopped",
+  "configuration": {
+    "models": [
+      "@cf/cloudflare/clef",
+      "@cf/cloudflare/clef-flash"
+    ],
+    "state": "An English word game. Each question asks about the word it names. A word counts as YES if ANY of its meanings fits, even a less common one (\"crane\" can mean a bird).",
+    "threshold": 0.5,
+    "evenSplit": [
+      0.25,
+      0.75
+    ],
+    "maxRunNeurons": 200,
+    "statesSha256": "4ddaee886368cbe7f44bde2512a66f443a0b33d7429bb4a973a17fcbf09d68e1",
+    "llamaQuestions": 15,
+    "pricingChecked": "2026-10-03",
+    "neuronRates": "21,818 per M input tokens ($0.24 per M), no output charge"
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32"
+  },
+  "requests": [
+    {
+      "state": "4-apprentice",
+      "model": "@cf/cloudflare/clef",
+      "task": "control",
+      "question": "Can your word mean a man-made object?",
+      "mode": "sort",
+      "outcome": "accepted",
+      "strictJson": true,
+      "yes": [
+        "bowl",
+        "coil",
+        "foil"
+      ],
+      "no": [
+        "boil",
+        "foul",
+        "fowl",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.3333333333333333,
+      "probabilities": {
+        "boil": 0.22,
+        "bowl": 0.9751,
+        "coil": 0.8135,
+        "foil": 0.8413,
+        "foul": 0.0666,
+        "fowl": 0.0311,
+        "howl": 0.0822,
+        "toil": 0.205,
+        "yowl": 0.0414
+      },
+      "milliseconds": 680.2012000000001,
+      "usage": {
+        "prompt_tokens": 894,
+        "completion_tokens": 0
+      },
+      "estimatedNeurons": 19.505292,
+      "visibleChars": 0,
+      "finishReason": "stop"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/cloudflare/clef-flash",
+      "task": "control",
+      "question": "Can your word mean a man-made object?",
+      "mode": "sort",
+      "outcome": "accepted",
+      "strictJson": true,
+      "yes": [
+        "bowl",
+        "coil",
+        "foil"
+      ],
+      "no": [
+        "boil",
+        "foul",
+        "fowl",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.3333333333333333,
+      "probabilities": {
+        "boil": 0.0806,
+        "bowl": 0.9713,
+        "coil": 0.8662,
+        "foil": 0.9382,
+        "foul": 0.0359,
+        "fowl": 0.0228,
+        "howl": 0.0125,
+        "toil": 0.0744,
+        "yowl": 0.0108
+      },
+      "milliseconds": 553.3243999999997,
+      "usage": {
+        "prompt_tokens": 894,
+        "completion_tokens": 0
+      },
+      "estimatedNeurons": 19.505292,
+      "visibleChars": 0,
+      "finishReason": "stop"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/cloudflare/clef",
+      "task": "llama",
+      "question": "Can your word mean a bird?",
+      "mode": "invent",
+      "outcome": "uneven",
+      "strictJson": true,
+      "yes": [
+        "fowl"
+      ],
+      "no": [
+        "boil",
+        "bowl",
+        "coil",
+        "foil",
+        "foul",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.1111111111111111,
+      "probabilities": {
+        "boil": 0.051,
+        "bowl": 0.3883,
+        "coil": 0.0709,
+        "foil": 0.0848,
+        "foul": 0.2235,
+        "fowl": 0.9799,
+        "howl": 0.0706,
+        "toil": 0.0703,
+        "yowl": 0.115
+      },
+      "milliseconds": 425.3890000000001,
+      "usage": {
+        "prompt_tokens": 876,
+        "completion_tokens": 0
+      },
+      "estimatedNeurons": 19.112568,
+      "visibleChars": 0,
+      "finishReason": "stop"
+    },
+    {
+      "state": "4-apprentice",
+      "model": "@cf/cloudflare/clef-flash",
+      "task": "llama",
+      "question": "Can your word mean a bird?",
+      "mode": "invent",
+      "outcome": "uneven",
+      "strictJson": true,
+      "yes": [
+        "fowl"
+      ],
+      "no": [
+        "boil",
+        "bowl",
+        "coil",
+        "foil",
+        "foul",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.1111111111111111,
+      "probabilities": {
+        "boil": 0.0124,
+        "bowl": 0.0819,
+        "coil": 0.0448,
+        "foil": 0.0468,
+        "foul": 0.1248,
+        "fowl": 0.9616,
+        "howl": 0.0383,
+        "toil": 0.0131,
+        "yowl": 0.2005
+      },
+      "milliseconds": 434.03600000000006,
+      "usage": {
+        "prompt_tokens": 876,
+        "completion_tokens": 0
+      },
+      "estimatedNeurons": 19.112568,
+      "visibleChars": 0,
+      "finishReason": "stop"
+    },
+    {
+      "state": "4-scholar",
+      "model": "@cf/cloudflare/clef",
+      "task": "control",
+      "question": "Can your word mean a man-made object?",
+      "mode": "sort",
+      "outcome": "uneven",
+      "strictJson": true,
+      "yes": [
+        "ales",
+        "axes",
+        "cues",
+        "dies",
+        "dyes",
+        "hoes",
+        "pies",
+        "ties"
+      ],
+      "no": [
+        "aces",
+        "ages",
+        "apes",
+        "ares",
+        "awes",
+        "ayes",
+        "byes",
+        "does",
+        "dues",
+        "foes",
+        "goes",
+        "hies",
+        "hues",
+        "ices",
+        "ides",
+        "ines",
+        "ives",
+        "lies",
+        "odes",
+        "ones",
+        "ores",
+        "owes",
+        "roes",
+        "rues",
+        "toes",
+        "vies",
+        "woes",
+        "yves"
+      ],
+      "yesShare": 0.2222222222222222,
+      "probabilities": {
+        "aces": 0.3899,
+        "ages": 0.0495,
+        "ales": 0.6848,
+        "apes": 0.0213,
+        "ares": 0.241,
+        "awes": 0.0719,
+        "axes": 0.9308,
+        "ayes": 0.0825,
+        "byes": 0.1334,
+        "cues": 0.8876,
+        "dies": 0.8531,
+        "does": 0.0572,
+        "dues": 0.0555,
+        "dyes": 0.7004,
+        "foes": 0.019,
+        "goes": 0.066,
+        "hies": 0.1017,
+        "hoes": 0.9344,
+        "hues": 0.2386,
+        "ices": 0.3506,
+        "ides": 0.1317,
+        "ines": 0.2818,
+        "ives": 0.3872,
+        "lies": 0.2597,
+        "odes": 0.086,
+        "ones": 0.4089,
+        "ores": 0.0296,
+        "owes": 0.0287,
+        "pies": 0.6139,
+        "roes": 0.1373,
+        "rues": 0.3713,
+        "ties": 0.7611,
+        "toes": 0.103,
+        "vies": 0.2946,
+        "woes": 0.1349,
+        "yves": 0.1384
+      },
+      "milliseconds": 937.1869000000002,
+      "usage": {
+        "prompt_tokens": 3294,
+        "completion_tokens": 0
+      },
+      "estimatedNeurons": 71.868492,
+      "visibleChars": 0,
+      "finishReason": "stop"
+    }
+  ],
+  "stopReason": "run-budget",
+  "finishedAt": "2026-10-03T19:50:04.284Z",
+  "summary": {
+    "@cf/cloudflare/clef": {
+      "control": {
+        "requests": 2,
+        "sent": 2,
+        "outcomes": {
+          "accepted": 1,
+          "uneven": 1
+        },
+        "acceptedRate": 0.5,
+        "strictJsonRate": 1,
+        "validListsRate": 1,
+        "invalidRate": 0,
+        "split": {
+          "meanYesShare": 0.2778,
+          "meanDistanceFromHalf": 0.2222,
+          "inBand": 1,
+          "withValidLists": 2
+        },
+        "accuracy": {
+          "scoredRequests": 2,
+          "unmappedQuestions": 0,
+          "labelled": 41,
+          "correct": 34,
+          "falseYes": 2,
+          "falseNo": 5,
+          "wordnetYes": 14,
+          "wordnetNo": 27,
+          "accuracy": 0.8293,
+          "falseYesRate": 0.0741,
+          "falseNoRate": 0.3571,
+          "answerChecked": 2,
+          "answerMisfiled": 1
+        },
+        "latencyMs": {
+          "p50": 680.2012,
+          "p95": 937.1869,
+          "max": 937.1869,
+          "within3s": 1,
+          "within5s": 1,
+          "within8s": 1,
+          "acceptedWithin3s": 0.5,
+          "acceptedWithin8s": 0.5
+        },
+        "tokens": {
+          "requestsWithUsage": 2,
+          "meanPrompt": 2094,
+          "meanCompletion": 0,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 0,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 91.3738,
+          "estimatedPerRequest": 45.6869,
+          "providerReportedTotal": 0,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "4-apprentice",
+            "codes": [
+              "o"
+            ],
+            "labelled": 9,
+            "unlabelled": 0,
+            "correct": 9,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 3,
+            "wordnetNo": 6,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": []
+          },
+          {
+            "state": "4-scholar",
+            "codes": [
+              "o"
+            ],
+            "labelled": 32,
+            "unlabelled": 4,
+            "correct": 25,
+            "falseYes": 2,
+            "falseNo": 5,
+            "wordnetYes": 11,
+            "wordnetNo": 21,
+            "answer": {
+              "wordnet": true,
+              "said": false,
+              "misfiled": true
+            },
+            "disagreements": [
+              "+ales",
+              "+dyes",
+              "-aces",
+              "-goes",
+              "-ices",
+              "-rues",
+              "-toes"
+            ]
+          }
+        ]
+      },
+      "llamaQuestions": {
+        "requests": 1,
+        "sent": 1,
+        "outcomes": {
+          "uneven": 1
+        },
+        "acceptedRate": 0,
+        "strictJsonRate": 1,
+        "validListsRate": 1,
+        "invalidRate": 0,
+        "split": {
+          "meanYesShare": 0.1111,
+          "meanDistanceFromHalf": 0.3889,
+          "inBand": 0,
+          "withValidLists": 1
+        },
+        "accuracy": {
+          "scoredRequests": 1,
+          "unmappedQuestions": 0,
+          "labelled": 9,
+          "correct": 9,
+          "falseYes": 0,
+          "falseNo": 0,
+          "wordnetYes": 1,
+          "wordnetNo": 8,
+          "accuracy": 1,
+          "falseYesRate": 0,
+          "falseNoRate": 0,
+          "answerChecked": 1,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 425.389,
+          "p95": 425.389,
+          "max": 425.389,
+          "within3s": 1,
+          "within5s": 1,
+          "within8s": 1,
+          "acceptedWithin3s": 0,
+          "acceptedWithin8s": 0
+        },
+        "tokens": {
+          "requestsWithUsage": 1,
+          "meanPrompt": 876,
+          "meanCompletion": 0,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 0,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 19.1126,
+          "estimatedPerRequest": 19.1126,
+          "providerReportedTotal": 0,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "4-apprentice",
+            "codes": [
+              "c"
+            ],
+            "labelled": 9,
+            "unlabelled": 0,
+            "correct": 9,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 8,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": []
+          }
+        ],
+        "agreementWithLlama": {
+          "words": 9,
+          "agree": 6,
+          "rate": 0.6667
+        }
+      }
+    },
+    "@cf/cloudflare/clef-flash": {
+      "control": {
+        "requests": 1,
+        "sent": 1,
+        "outcomes": {
+          "accepted": 1
+        },
+        "acceptedRate": 1,
+        "strictJsonRate": 1,
+        "validListsRate": 1,
+        "invalidRate": 0,
+        "split": {
+          "meanYesShare": 0.3333,
+          "meanDistanceFromHalf": 0.1667,
+          "inBand": 1,
+          "withValidLists": 1
+        },
+        "accuracy": {
+          "scoredRequests": 1,
+          "unmappedQuestions": 0,
+          "labelled": 9,
+          "correct": 9,
+          "falseYes": 0,
+          "falseNo": 0,
+          "wordnetYes": 3,
+          "wordnetNo": 6,
+          "accuracy": 1,
+          "falseYesRate": 0,
+          "falseNoRate": 0,
+          "answerChecked": 1,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 553.3244,
+          "p95": 553.3244,
+          "max": 553.3244,
+          "within3s": 1,
+          "within5s": 1,
+          "within8s": 1,
+          "acceptedWithin3s": 1,
+          "acceptedWithin8s": 1
+        },
+        "tokens": {
+          "requestsWithUsage": 1,
+          "meanPrompt": 894,
+          "meanCompletion": 0,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 0,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 19.5053,
+          "estimatedPerRequest": 19.5053,
+          "providerReportedTotal": 0,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "4-apprentice",
+            "codes": [
+              "o"
+            ],
+            "labelled": 9,
+            "unlabelled": 0,
+            "correct": 9,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 3,
+            "wordnetNo": 6,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": []
+          }
+        ]
+      },
+      "llamaQuestions": {
+        "requests": 1,
+        "sent": 1,
+        "outcomes": {
+          "uneven": 1
+        },
+        "acceptedRate": 0,
+        "strictJsonRate": 1,
+        "validListsRate": 1,
+        "invalidRate": 0,
+        "split": {
+          "meanYesShare": 0.1111,
+          "meanDistanceFromHalf": 0.3889,
+          "inBand": 0,
+          "withValidLists": 1
+        },
+        "accuracy": {
+          "scoredRequests": 1,
+          "unmappedQuestions": 0,
+          "labelled": 9,
+          "correct": 9,
+          "falseYes": 0,
+          "falseNo": 0,
+          "wordnetYes": 1,
+          "wordnetNo": 8,
+          "accuracy": 1,
+          "falseYesRate": 0,
+          "falseNoRate": 0,
+          "answerChecked": 1,
+          "answerMisfiled": 0
+        },
+        "latencyMs": {
+          "p50": 434.036,
+          "p95": 434.036,
+          "max": 434.036,
+          "within3s": 1,
+          "within5s": 1,
+          "within8s": 1,
+          "acceptedWithin3s": 0,
+          "acceptedWithin8s": 0
+        },
+        "tokens": {
+          "requestsWithUsage": 1,
+          "meanPrompt": 876,
+          "meanCompletion": 0,
+          "meanReportedReasoning": null,
+          "meanHiddenApprox": 0,
+          "cutOffByLength": 0
+        },
+        "neurons": {
+          "estimatedTotal": 19.1126,
+          "estimatedPerRequest": 19.1126,
+          "providerReportedTotal": 0,
+          "requestsWithoutUsage": 0
+        },
+        "perState": [
+          {
+            "state": "4-apprentice",
+            "codes": [
+              "c"
+            ],
+            "labelled": 9,
+            "unlabelled": 0,
+            "correct": 9,
+            "falseYes": 0,
+            "falseNo": 0,
+            "wordnetYes": 1,
+            "wordnetNo": 8,
+            "answer": {
+              "wordnet": false,
+              "said": false,
+              "misfiled": false
+            },
+            "disagreements": []
+          }
+        ],
+        "agreementWithLlama": {
+          "words": 9,
+          "agree": 6,
+          "rate": 0.6667
+        }
+      }
+    }
+  },
+  "budget": {
+    "day": "2026-10-03",
+    "requests": 6,
+    "reservedNeurons": 160.62411600000001,
+    "maxRequests": 1800,
+    "maxNeurons": 10000,
+    "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
+  }
+}

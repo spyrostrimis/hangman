@@ -32,6 +32,10 @@ export function clefInputs(model, candidates, question) {
   return inputs;
 }
 
+// Clef's hidden template costs about 90 input tokens per question (measured 2026-10-03), more
+// than the request's bytes; reserve 150 per question plus the bytes.
+export const clefReserveTokens = input => Object.keys(input.questions ?? {}).length * 150 + Buffer.byteLength(JSON.stringify(input)) + 256;
+
 // Clef's usage counts input tokens only; returned in the ledger's shape (also accepted in it).
 export function clefUsage(raw) {
   const input = raw?.usage?.input_tokens ?? raw?.usage?.prompt_tokens;

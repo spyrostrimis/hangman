@@ -137,12 +137,16 @@ export async function atomicJson(path, value) {
 }
 
 // Reserve before dispatch and persist across runs. Failed calls retain reservations.
-export function budgetedRequest(transport, ledger, save, { maxRequests = 1800, maxNeurons = 10000, day = () => new Date().toISOString().slice(0, 10) } = {}) {
+// `promptTokens` overrides the prompt reservation for models whose hidden template outgrows
+// the request bytes (Clef).
+const bytesPlusTemplate = input => Buffer.byteLength(JSON.stringify(input.messages ?? input)) + 256;
+export function budgetedRequest(transport, ledger, save, { maxRequests = 1800, maxNeurons = 10000, day = () => new Date().toISOString().slice(0, 10),
+  promptTokens = bytesPlusTemplate } = {}) {
   return async (model, input) => {
     if (day() !== ledger.day) throw new BenchmarkStop('utc-day-changed');
     const reservation = neuronEstimate(model, {
       // Chat models: the messages and every allowed output token. Other inputs (Clef): the whole body.
-      prompt_tokens: Buffer.byteLength(JSON.stringify(input.messages ?? input)) + 256, completion_tokens: input.max_tokens ?? 0,
+      prompt_tokens: promptTokens(input), completion_tokens: input.max_tokens ?? 0,
     });
     if (ledger.requests >= maxRequests || ledger.reservedNeurons + reservation > maxNeurons) throw new BenchmarkStop('local-budget');
     ledger.requests++;
@@ -261,7 +265,7 @@ export const DAILY_MAX_NEURONS = 10000;
 
 // The live-run setup shared by I7a and D1: credentials held in memory only, the exclusive
 // local lock, and the dated daily ledger with its budgeted request wrapper.
-export async function openLiveSession({ wrangler = false, transportOptions = {} } = {}) {
+export async function openLiveSession({ wrangler = false, transportOptions = {}, promptTokens } = {}) {
   let token = process.env.CLOUDFLARE_API_TOKEN;
   if (wrangler) {
     try {
@@ -285,7 +289,7 @@ export async function openLiveSession({ wrangler = false, transportOptions = {} 
         !Number.isFinite(ledger.reservedNeurons) || ledger.reservedNeurons < 0) throw new Error('Invalid budget ledger.');
     return {
       request: budgetedRequest(transport, ledger, value => atomicJson(ledgerPath, value),
-        { maxRequests: DAILY_MAX_REQUESTS, maxNeurons: DAILY_MAX_NEURONS }),
+        { maxRequests: DAILY_MAX_REQUESTS, maxNeurons: DAILY_MAX_NEURONS, ...(promptTokens ? { promptTokens } : {}) }),
       budget: () => ({ ...ledger, maxRequests: DAILY_MAX_REQUESTS, maxNeurons: DAILY_MAX_NEURONS,
         scope: 'local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons' }),
       close,

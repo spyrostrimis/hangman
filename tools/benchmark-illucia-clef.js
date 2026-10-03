@@ -12,7 +12,7 @@ import { atomicJson, openLiveSession } from './benchmark-illucia-models.js';
 import { limitRun, summarizeGroup } from './benchmark-illucia-questions.js';
 import { neuronEstimate, BenchmarkStop } from './lib/illucia-model.js';
 import { MIN_YES_SHARE, MAX_YES_SHARE } from './lib/illucia-question-model.js';
-import { CLEF_MODELS, CLEF_STATE, clefInputs, clefProbabilities, clefSort, clefUsage } from './lib/illucia-clef.js';
+import { CLEF_MODELS, CLEF_STATE, clefInputs, clefProbabilities, clefReserveTokens, clefSort, clefUsage } from './lib/illucia-clef.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const json = async path => JSON.parse(await readFile(resolve(ROOT, 'tools/benchmarks', path), 'utf8'));
@@ -57,6 +57,8 @@ export async function runClef({ request, models, states, questions, checkpoint =
       if (invented) tasks.push({ task: 'llama', question: invented.question });
       for (const { task, question } of tasks) {
         for (const model of models) {
+          // A sort kept from a stopped run (--resume) is not repeated.
+          if (report.requests.some(r => r.state === state.id && r.model === model && r.task === task && r.yes)) continue;
           const result = await clefSortRequest(request, model, state.candidates, question);
           report.requests.push({ state: state.id, model, task, question, mode: task === 'control' ? 'sort' : 'invent', ...result });
           await checkpoint(report);
@@ -116,11 +118,19 @@ async function main() {
   const questions = llamaQuestions([await json('illucia-d1-llama70b.json'), await json('illucia-d1-llama70b-part2.json')]);
   const models = Object.keys(CLEF_MODELS);
   const maxRunNeurons = Number(value('--max-run-neurons') ?? 200);
-  const session = await openLiveSession({ wrangler: args.includes('--wrangler-auth'),
+  const session = await openLiveSession({ wrangler: args.includes('--wrangler-auth'), promptTokens: clefReserveTokens,
     // The ledger settles from prompt_tokens; Clef reports input_tokens.
     transportOptions: { timeoutMs: 30000, normalize: raw => ({ ...raw, usage: clefUsage(raw) }) } });
   try {
+    // --resume keeps a stopped report's completed sorts and runs only the rest.
+    let kept = [];
+    if (args.includes('--resume')) {
+      const previous = JSON.parse(await readFile(resolve(output), 'utf8'));
+      if (previous.status !== 'stopped') throw new Error('Only a stopped report can be resumed.');
+      kept = previous.requests.filter(r => r.yes);
+    }
     const report = {
+      requests: kept, ...(kept.length ? { resumedWith: kept.length } : {}),
       schemaVersion: 1, startedAt: new Date().toISOString(), status: 'running',
       configuration: { models, state: CLEF_STATE, threshold: 0.5, evenSplit: [MIN_YES_SHARE, MAX_YES_SHARE], maxRunNeurons,
         statesSha256: statesFile.statesSha256, llamaQuestions: questions.length, pricingChecked: '2026-10-03',
@@ -128,7 +138,7 @@ async function main() {
       environment: { node: process.version, platform: process.platform },
     };
     const request = limitRun(session.request, () => session.budget().reservedNeurons, maxRunNeurons,
-      (model, input) => neuronEstimate(model, { prompt_tokens: Buffer.byteLength(JSON.stringify(input)) + 256, completion_tokens: 0 }));
+      (model, input) => neuronEstimate(model, { prompt_tokens: clefReserveTokens(input), completion_tokens: 0 }));
     const checkpoint = current => atomicJson(resolve(output), { ...current, budget: session.budget() });
     await runClef({ request, models, states: statesFile.states, questions, checkpoint, report });
     report.summary = summarizeClef(report, statesFile, mapping, questions);

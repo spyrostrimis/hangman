@@ -288,6 +288,63 @@ On the four shared states: 1/4 usable (Llama 3.3 70B 3/4, Gemma 4/4). Nemotron i
 contender with this prompt. Its narrow questions might respond to prompt tuning, which
 belongs on a held-out set.
 
+## Clef: a decision model as the sorter (2026-10-03, `benchmarks/illucia-d1-clef.json`)
+
+Cloudflare's Clef (`@cf/cloudflare/clef`, 27B) and Clef-flash (`@cf/cloudflare/clef-flash`,
+9B), released 2026-10-01, return a probability for each typed yes/no question instead of
+text. They cannot write Illucia's question, but they can sort her candidates under one.
+
+**Method** (`lib/illucia-clef.js`, `benchmark-illucia-clef.js`):
+- **Requests:** one "noul" question per candidate ("Can the word "crane" mean a bird?"), at
+  most 64 per request, under a fixed context that states the any-meaning rule. A word is YES
+  at probability ≥ 0.5. The request carries the question and the candidates only.
+- **Two tasks on the 21 frozen states:**
+  - the WordNet control question, as in D1's sort table;
+  - each of Llama 3.3 70B's 15 accepted invented questions from its full run. These are
+    scored against WordNet where the reviewed mapping allows (6 questions), and compared
+    word by word with Llama's own lists.
+- **Workers Free:** both models run on it.
+
+**Cost was first underestimated by a factor of 1,000.** Clef bills input tokens only
+($0.24 per M, about 21,818 neurons per M), but each question costs about 90–99 input tokens
+through its hidden template. A sort therefore costs about 2.5 neurons per candidate: 19.5
+for 9 words, 72 for 36. The runs went as follows:
+- **Probe run:** stopped at its 200-neuron ceiling after 5 sorts. Kept as
+  `illucia-d1-clef-partial.json`.
+- **First full run:** stopped on `reservation-exceeded`, because the ledger's reservation
+  (request bytes) was smaller than Clef's template on one request. Clef now reserves 150
+  tokens per question plus the bytes.
+- **Completion:** the run was resumed from its completed sorts (`--resume`, 12 kept) and
+  finished all 72 sorts. Measured: 3,823 neurons; the day's ledger total is 4,107 with both
+  stopped attempts.
+
+**Sorting under the WordNet question (21 states, 500 labelled words):**
+
+| Sorter | Valid lists | Agrees with WordNet | False YES | False NO | Real word on the wrong side | p50 / p95 | Neurons / sort |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| **Clef-flash** | **21/21** | **91.4%** | 3.5% | 23.8% | 2/17 | **0.56 / 1.19 s** | ~60 |
+| Clef | 21/21 | 90.6% | 4.8% | 23.0% | 2/17 | 0.93 / 1.74 s | ~60 |
+| Gemma 4 26B A4B (D1) | 21/21 | 90.2% | 2.9% | 30.2% | 1/17 | 2.9 / 5.5 s | ~6 |
+| Llama 3.3 70B (D1) | 17/21 | 80.3% | 18.5% | 23.6% | 2/14 | 1.8 / 3.9 s | ~33 |
+
+**Under Llama's own questions:**
+- **Against WordNet (6 mapped questions, 119 words):** Clef-flash agrees 95.0% and Clef
+  94.1%. Llama's own lists, on its mapped questions, agreed 84%.
+- **Against Llama's lists (all 15 questions, 318 words):** Clef agrees 80.5% and Clef-flash
+  79.6%.
+- **The real word:** never on the wrong side (0/5 where WordNet knows it).
+
+**Reading:**
+- **Accuracy:** Clef-flash is the most accurate sorter tested. It matches Gemma, and makes
+  far fewer false YES than Llama.
+- **Speed and reliability:** it is fast (every sort within 1.2 s), and it never produced
+  malformed lists, since it returns one probability per word by construction.
+- **Cost:** a sort costs about 60 neurons, more than Llama's whole question-and-sort (~38).
+  A "Llama writes, Clef-flash sorts" pairing would cost about 80–100 neurons per question.
+  The site's 2,000-neuron daily budget would then allow about 20–25 questions.
+- **Use in production:** that would be a D2 change (a second model call per question), not
+  decided here.
+
 ## Stopped run: reasoning on (`benchmarks/illucia-d1-reasoning-on.json`)
 
 The first run used each model's default reasoning (gpt-oss-20b at "low"), a 4,096-token
