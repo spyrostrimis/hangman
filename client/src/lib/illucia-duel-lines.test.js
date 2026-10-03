@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
-import { AI_NOTE, ANSWERS, REPLIES, aiAnswerLine, aiFallbackLine, aiQuestionLine, answerLine, article, askLine, memoryLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from './illucia/duel-lines.js';
+import { aiNote, ANSWERS, REPLIES, aiAnswerLine, aiFallbackLine, aiQuestionLine, answerLine, article, askLine, memoryLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from './illucia/duel-lines.js';
 import { applyGuess, createRound } from './hangman-core.js';
 import { toPublicState } from './illucia/public-state.js';
 import { VOCABULARY_TIERS, createKnowledge, parseLexicon } from './illucia/lexicon.js';
@@ -197,7 +197,8 @@ test('her memory of a word: learned from you first, then your plays, then everyo
 
 test('experimental lines: her helper\'s question, her lean, and failures she owns', () => {
   assert.equal(aiQuestionLine('Can your word mean something that flies?', 0), 'I asked my AI helper for a question. Can your word mean something that flies?');
-  assert.match(AI_NOTE, /AI model .* It can be wrong/);
+  assert.equal(aiNote('gpt-oss-120b'), 'Written by an AI model (gpt-oss-120b, on Cloudflare Workers AI). It can be wrong, so I only lean on your answer.');
+  assert.equal(aiNote(null), 'Written by an AI model (on Cloudflare Workers AI). It can be wrong, so I only lean on your answer.');
   assert.match(aiAnswerLine(false, 0), /lean that way/);
   assert.match(aiAnswerLine(true, 0), /Back to letters/);
   // Each limit says which one stopped her helper.

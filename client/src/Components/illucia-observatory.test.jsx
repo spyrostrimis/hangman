@@ -587,7 +587,8 @@ it('asks her AI helper instead of WordNet, splits her sky by its sort, leans on 
   const requests = serveApi({
     '/user/illucia/start': body => [200, experimentalTicket(body)],
     '/user/illucia/ask': body => [200, { ok: true, question: 'Can your word mean something that flies?',
-      yes: body.candidates.filter(word => BIRDS.has(word)), no: body.candidates.filter(word => !BIRDS.has(word)), questionsLeft: 1 }],
+      yes: body.candidates.filter(word => BIRDS.has(word)), no: body.candidates.filter(word => !BIRDS.has(word)), questionsLeft: 1,
+      model: 'gpt-oss-120b' }],
   });
   await forceLetters('zqjxvk');
   const view = mount();
@@ -601,7 +602,8 @@ it('asks her AI helper instead of WordNet, splits her sky by its sort, leans on 
   expect(requests.filter(([url]) => url === '/user/illucia/ask')).toEqual([['/user/illucia/ask', { roundId: 'round-crane-master', candidates: QUESTION_WORDS }]]);
   expect(card(view).querySelector('h3').textContent).toBe('Can your word mean something that flies?');
   expect(view.container.querySelector('.obs-bubble').textContent).toMatch(/Can your word mean something that flies\?$/);
-  expect(card(view).textContent).toMatch(/Written by an AI model/);
+  // Her note names the model the Worker says answered.
+  expect(card(view).textContent).toContain('Written by an AI model (gpt-oss-120b, on Cloudflare Workers AI).');
   expect(card(view).textContent).toContain('An AI question earns nothing and cannot be checked.');
   expect([sky(view, 'side-yes'), sky(view, 'side-no')]).toEqual([4, 4]);
   fireEvent.click(screen.getByRole('button', { name: 'Yes, it can' }));

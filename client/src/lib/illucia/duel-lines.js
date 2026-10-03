@@ -172,7 +172,8 @@ export function memoryLine({ word, learnedIt, playerWon, voice }) {
 
 // Experimental mode (v2 E5).
 export const aiQuestionLine = (question, turn) => pick('aiAsk', turn, { Q: question });
-export const AI_NOTE = 'Written by an AI model (Llama 3.3 70B on Cloudflare Workers AI). It can be wrong, so I only lean on your answer.';
+// Names the model the Worker says answered; the Worker's model can change.
+export const aiNote = model => `Written by an AI model (${model ? `${model}, ` : ''}on Cloudflare Workers AI). It can be wrong, so I only lean on your answer.`;
 export const aiAnswerLine = (declined, turn) => pick(declined ? 'declined' : 'aiLean', turn);
 // Why her helper had no question (the Worker's reasons); she makes her normal move.
 export function aiFallbackLine(reason, turn) {

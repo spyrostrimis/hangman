@@ -58,7 +58,9 @@ export async function loadIlluciaStats({ signal } = {}) {
 export async function askIlluciaAi({ roundId, candidates, signal }) {
   let reply;
   try {
-    reply = await apiRequest('/user/illucia/ask', { method: 'POST', signal, timeout: 9000, body: { roundId, candidates } });
+    // Longer than the Worker's own timeout for the slowest model it may use (40 s), so the
+    // Worker's answer, a question or a reason, always arrives.
+    reply = await apiRequest('/user/illucia/ask', { method: 'POST', signal, timeout: 45000, body: { roundId, candidates } });
   } catch (error) {
     if (signal?.aborted) throw error;
     return { ok: false, reason: 'unavailable' };
@@ -71,5 +73,7 @@ export async function askIlluciaAi({ roundId, candidates, signal }) {
     || new Set(sorted).size !== sorted.length || sorted.some(word => !known.has(word))) {
     return { ok: false, reason: 'invalid', questionsLeft: reply.questionsLeft };
   }
-  return { ok: true, question: reply.question.trim(), yes: reply.yes, no: reply.no, questionsLeft: reply.questionsLeft };
+  // The model's name, shown in her note; anything unexpected is left out rather than displayed.
+  const model = typeof reply.model === 'string' && /^[\w .-]{1,40}$/.test(reply.model) ? reply.model : null;
+  return { ok: true, question: reply.question.trim(), yes: reply.yes, no: reply.no, questionsLeft: reply.questionsLeft, model };
 }

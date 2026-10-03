@@ -9,7 +9,7 @@ import { toPublicState } from '../lib/illucia/public-state.js';
 import { filterCandidates } from '../lib/illucia/candidates.js';
 import { rejectionLine } from '../lib/illucia/lines.js';
 import { greetingLine, notebookLine, openingLine, questionSmallPrint, turnLine } from '../lib/illucia/observatory-lines.js';
-import { AI_NOTE, ANSWERS, aiAnswerLine, aiFallbackLine, aiQuestionLine, answerLine, questionLine } from '../lib/illucia/duel-lines.js';
+import { aiNote, ANSWERS, aiAnswerLine, aiFallbackLine, aiQuestionLine, answerLine, questionLine } from '../lib/illucia/duel-lines.js';
 import { EXPERIMENTAL_WARNING, answerQuestion, applyConsult, createSession, herKnowledge, offerStake, previewPoints, rememberLine, roundStakes, startWarning, takeTurn, tierLabel } from '../lib/illucia/duel-session.js';
 import { loadQuestions } from '../lib/illucia-assets.js';
 import { askIlluciaAi } from '../lib/illucia-rounds.js';
@@ -325,7 +325,7 @@ function QuestionCard({ game, onAnswer }) {
     <div className="obs-question-answers">
       {ANSWERS.map(choice => <button key={choice.id} type="button" onClick={() => onAnswer(choice.id)}>{choice.label}</button>)}
     </div>
-    <p className="obs-muted">{game.pending.ai ? AI_NOTE : questionSmallPrint(question)}</p>
+    <p className="obs-muted">{game.pending.ai ? aiNote(game.pending.question.model) : questionSmallPrint(question)}</p>
   </div>;
 }
 

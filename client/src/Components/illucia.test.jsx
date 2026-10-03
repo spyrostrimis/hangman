@@ -627,7 +627,8 @@ it('asks her AI helper instead of WordNet, leans on the answer without ruling wo
   const requests = serveApi({
     '/user/illucia/start': body => [200, experimentalTicket(body)],
     '/user/illucia/ask': body => [200, { ok: true, question: 'Can your word mean something that flies?',
-      yes: body.candidates.filter(word => BIRDS.has(word)), no: body.candidates.filter(word => !BIRDS.has(word)), questionsLeft: 1 }],
+      yes: body.candidates.filter(word => BIRDS.has(word)), no: body.candidates.filter(word => !BIRDS.has(word)), questionsLeft: 1,
+      model: '<img src=x>' }],
   });
   const view = mount(); await startExperimental();
   expect(requests.find(([url]) => url === '/user/illucia/start')[1]).toEqual({ word: 'crane', tier: 'master', experimental: true });
@@ -638,7 +639,8 @@ it('asks her AI helper instead of WordNet, leans on the answer without ruling wo
   expect(ask).toEqual([['/user/illucia/ask', { roundId: 'round-crane-master', candidates: QUESTION_WORDS }]]);
   expect(bubbles(view.container, 'illucia').at(-1)).toMatch(/Can your word mean something that flies\?$/);
   expect(bubbles(view.container, 'illucia').join(' ')).not.toMatch(/a bird\?/);
-  expect(view.container.querySelectorAll('.duel-bubble small')[2].textContent).toMatch(/^Written by an AI model/);
+  // A model name that is not plain text is left out rather than shown (the Observatory test shows a valid one).
+  expect(view.container.querySelectorAll('.duel-bubble small')[2].textContent).toBe('Written by an AI model (on Cloudflare Workers AI). It can be wrong, so I only lean on your answer.');
   expect(screen.getByText(/An AI question earns nothing and cannot be checked/)).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: 'Yes, it can' }));
   const real = await realDecision();

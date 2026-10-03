@@ -6,7 +6,7 @@ import { getPattern, getRemainingMisses, getRoundStatus, MAX_MISSES } from '../l
 import { MAX_WORD_LENGTH, MIN_WORD_LENGTH, VOCABULARY_TIERS, isAcceptedWord, isWordShape, parseLexicon } from '../lib/illucia/lexicon.js';
 import { rejectionLine } from '../lib/illucia/lines.js';
 import { greetingLine, openingLine } from '../lib/illucia/observatory-lines.js';
-import { AI_NOTE, ANSWERS, REPLIES, aiAnswerLine, aiFallbackLine, aiQuestionLine, answerLine, askLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from '../lib/illucia/duel-lines.js';
+import { aiNote, ANSWERS, REPLIES, aiAnswerLine, aiFallbackLine, aiQuestionLine, answerLine, askLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from '../lib/illucia/duel-lines.js';
 import { EXPERIMENTAL_WARNING, answerQuestion, applyConsult, countWords, createSession, herKnowledge, offerStake, previewPoints, rememberLine, roundStakes, startWarning, takeTurn, tierLabel } from '../lib/illucia/duel-session.js';
 import { loadQuestions } from '../lib/illucia-assets.js';
 import { askIlluciaAi } from '../lib/illucia-rounds.js';
@@ -62,7 +62,7 @@ function consulted(duel, reply) {
   const turn = duel.round.guesses.length;
   const next = { ...applyConsult(duel, reply), consult: null };
   if (!reply.ok) return { ...next, phase: 'thinking', log: [...duel.log, { type: 'illucia', text: aiFallbackLine(reply.reason, turn) }] };
-  return { ...next, phase: 'question', log: [...duel.log, { type: 'illucia', text: aiQuestionLine(reply.question, turn), note: AI_NOTE }] };
+  return { ...next, phase: 'question', log: [...duel.log, { type: 'illucia', text: aiQuestionLine(reply.question, turn), note: aiNote(reply.model) }] };
 }
 
 function failed(duel) {

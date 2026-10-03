@@ -120,7 +120,7 @@ export function applyConsult(session, reply) {
   const aiLeft = Math.min(server, reply.ok ? session.aiLeft - 1 : session.aiLeft);
   if (!reply.ok) return { ...session, aiLeft };
   return { ...session, aiLeft, askedAt: turn,
-    pending: { ai: true, checkable: false, question: { question: reply.question, yes: reply.yes, no: reply.no } } };
+    pending: { ai: true, checkable: false, question: { question: reply.question, yes: reply.yes, no: reply.no, model: reply.model ?? null } } };
 }
 
 // The player answers her open question: 'yes', 'no' or 'declined'. Returns null when there is
