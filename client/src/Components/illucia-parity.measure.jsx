@@ -37,6 +37,10 @@ async function startGame(container, prefix, word, tier) {
   fireEvent.click(container.querySelector(`input[name="${prefix}-tier"][value="${tier}"]`));
   fireEvent.change(container.querySelector(`#${prefix}-secret`), { target: { value: word } });
   await act(async () => { fireEvent.submit(container.querySelector(`#${prefix}-secret`).closest('form')); });
+  // The duel page warns before an out-of-tier word (since E3); the second press starts anyway.
+  if (/Start anyway/.test(container.querySelector('button[type="submit"]')?.textContent ?? '')) {
+    await act(async () => { fireEvent.submit(container.querySelector(`#${prefix}-secret`).closest('form')); });
+  }
 }
 
 // The player's part on the duel page: show every hit tile, answer every miss.
