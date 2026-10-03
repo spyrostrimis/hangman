@@ -17,10 +17,11 @@ import './Illucia.css';
 // Game code decides every hit and miss; the player's replies are only words.
 
 const THINK_MS = 1100;
+// Vocabulary and temperament (lexicon.js): Apprentice has the widest shortlist, Master the narrowest.
 const TIER_NOTES = {
-  apprentice: 'Common words only.',
-  scholar: 'Everyday and less common words.',
-  master: 'Every word she accepts.',
+  apprentice: 'Common words only. Plays on hunches.',
+  scholar: 'Everyday and less common words. A little more careful.',
+  master: 'Every word she accepts. The most careful.',
 };
 
 export default function Illucia() {
@@ -67,9 +68,11 @@ function guess(duel) {
     ? Math.round(duel.knowledge.frequency[letter] / Math.max(1, duel.knowledge.words.length) * 100)
     : Math.round(decision.hitCount / decision.candidateCount * 100);
   const note = reasonLine({ letter, share, candidates: decision.candidateCount, fallback: decision.fallback,
-    tierLabel: duel.tier.label, length: state.length });
+    tierLabel: duel.tier.label, length: state.length, decision });
   const turn = round.guesses.length;
-  const lastGuess = { letter, positions, share, countBefore: decision.candidateCount, countAfter: countWords(round, duel.knowledge) };
+  // hunch: she chose a letter below her best, so no line may call it the statistically smart move.
+  const lastGuess = { letter, positions, share, hunch: decision.choseBest === false,
+    countBefore: decision.candidateCount, countAfter: countWords(round, duel.knowledge) };
   const log = [...duel.log, { type: 'illucia', text: askLine(letter, turn, duel.lastHit), note }];
   if (positions.length) {
     return { ...duel, round, lastGuess, phase: 'reveal',
@@ -88,19 +91,19 @@ function reveal(duel, index) {
   if (getRoundStatus(duel.round) === 'solved') {
     return { ...duel, phase: 'over', log: [...log, { type: 'illucia', text: solvedLine(duel.round.answer, duel.round.guesses.length) }] };
   }
-  const { countBefore, countAfter } = duel.lastGuess;
+  const { countBefore, countAfter, share } = duel.lastGuess;
   return { ...duel, log, phase: 'thinking',
-    lastHit: { positions: updated.hidden.length, single: countAfter === 1 && countBefore > 1 } };
+    lastHit: { positions: updated.hidden.length, share, single: countAfter === 1 && countBefore > 1 } };
 }
 
 // The player answers a miss; she answers back, and the unchanged row follows.
 function reply(duel, replyId) {
   const choice = REPLIES.find(value => value.id === replyId);
   if (duel.phase !== 'reply' || !choice) return duel;
-  const { letter, share, countAfter } = duel.lastGuess;
+  const { letter, share, countAfter, hunch } = duel.lastGuess;
   const missesLeft = getRemainingMisses(duel.round);
   const turn = duel.round.guesses.length;
-  const answer = replyLine(replyId, { letter, turn, count: countAfter, share, length: duel.round.answer.length, missesLeft });
+  const answer = replyLine(replyId, { letter, turn, count: countAfter, share, length: duel.round.answer.length, missesLeft, hunch });
   const over = getRoundStatus(duel.round) === 'failed';
   const log = [...duel.log, { type: 'player', text: choice.text }, { type: 'illucia', text: answer },
     { type: 'board', pattern: getPattern(duel.round), hidden: [], revealed: [], final: over,

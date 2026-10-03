@@ -1,12 +1,27 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { readFileSync } from 'node:fs';
 import { REPLIES, article, askLine, reasonLine, replyLine, solvedLine } from './illucia/duel-lines.js';
+import { applyGuess, createRound } from './hangman-core.js';
+import { toPublicState } from './illucia/public-state.js';
+import { VOCABULARY_TIERS, createKnowledge, parseLexicon } from './illucia/lexicon.js';
+import { analyzeDecision } from './illucia/strategy.js';
 
 test('letters take "an" when their English name starts with a vowel sound', () => {
   assert.deepEqual([...'aefhilmnorsx'].map(article), Array(12).fill('an'));
   assert.deepEqual([...'bcdgjkpqtuvwyz'].map(article), Array(14).fill('a'));
   assert.equal(askLine('s', 0), 'Is there an S?');
   assert.equal(askLine('t', 0), 'Is there a T?');
+});
+
+test('she says she expected a hit only when most of her words had the letter', () => {
+  // Turn 2 is the "As expected." reaction; positive control first.
+  assert.equal(askLine('e', 2, { positions: 1, share: 70 }), 'As expected. Let me try E.');
+  assert.equal(askLine('e', 2, { positions: 1, share: 50 }), 'As expected. Let me try E.');
+  assert.equal(askLine('e', 2, { positions: 1, share: 49 }), 'A pleasant surprise. Let me try E.');
+  assert.equal(askLine('e', 2, { positions: 1 }), 'A pleasant surprise. Let me try E.');
+  // Other reactions make no claim and ignore the share.
+  assert.equal(askLine('e', 1, { positions: 1, share: 10 }), 'There it is. E?');
 });
 
 test('she reacts to the hit she just saw, in words, then asks', () => {
@@ -25,6 +40,83 @@ test('her reasoning is singular with one word left and names the tier on fallbac
     'Only one word is left in my notes, and it has an M.');
   assert.equal(reasonLine({ letter: 's', share: 46, candidates: 0, fallback: true, tierLabel: 'Apprentice', length: 6 }),
     'None of my Apprentice words fit. S is in 46% of my 6-letter words.');
+});
+
+test('her reasoning says why, from her decision record only', () => {
+  const facts = 'T is in 40% of the 120 words I still have in mind.';
+  const line = decision => reasonLine({ letter: 't', share: 40, candidates: 120, fallback: false, decision });
+  // No record (a strict policy): the facts alone.
+  assert.equal(line(null), facts);
+  assert.equal(line({ mode: 'exploring', choseBest: true, best: ['t'], tiedWith: [], vowelBonus: 0 }), `${facts} It comes out on top.`);
+  assert.equal(line({ mode: 'exploring', choseBest: true, best: ['t'], tiedWith: [], vowelBonus: 300 }),
+    `${facts} It comes out on top, helped by my early lean towards vowels.`);
+  assert.equal(line({ mode: 'exploring', choseBest: true, best: ['i', 't'], tiedWith: ['i'], vowelBonus: 0 }),
+    `${facts} T and I are tied for my top pick; I have a feeling about T.`);
+  assert.equal(line({ mode: 'exploring', choseBest: false, best: ['e'], tiedWith: [], vowelBonus: 0 }),
+    `${facts} E scores a little higher, but T is on my shortlist and I have a feeling about it.`);
+  assert.equal(line({ mode: 'exploring', choseBest: false, best: ['a', 'e', 'o'], tiedWith: [], vowelBonus: 200 }),
+    `${facts} A, E and O score a little higher, but T is on my shortlist and I have a feeling about it. Early on, I lean towards vowels.`);
+  assert.equal(line({ mode: 'careful', choseBest: true, best: ['t'], tiedWith: [], vowelBonus: 0 }), `${facts} No more hunches: it is my best letter.`);
+  assert.equal(line({ mode: 'careful', choseBest: true, best: ['s', 't'], tiedWith: ['s'], vowelBonus: 0 }),
+    `${facts} No more hunches: it is tied with S for my best letter, and I picked T.`);
+});
+
+test('every reasoning line matches what her real temperament did, at every tier', () => {
+  const entries = parseLexicon(readFileSync(new URL('../../public/illucia/words/5.txt', import.meta.url), 'utf8'), 5);
+  // Fresh board, an early hit, and a careful board (two misses left) on a common word.
+  const boards = [createRound('crane'), ['e'].reduce(applyGuess, createRound('crane')),
+    [...'uiosd'].reduce(applyGuess, createRound('crane'))];
+  // A tiny fixture where A and B are in every word, so they always tie: ties are rare on the real list.
+  const tied = parseLexicon('abcd 35\nabef 35\nabgh 35\n', 4);
+  const cases = VOCABULARY_TIERS.flatMap(tier => [
+    ...boards.map(round => [createKnowledge(entries, tier.maxSize), round]),
+    [createKnowledge(tied, tier.maxSize), createRound('abcd')],
+    [createKnowledge(tied, tier.maxSize), [...'uvwx'].reduce(applyGuess, createRound('abcd'))],
+  ]);
+  const seen = { top: 0, lean: 0, tie: 0, hunch: 0, careful: 0 };
+  for (const [knowledge, round] of cases) {
+    for (let seed = 0; seed < 150; seed++) {
+      const decision = analyzeDecision(toPublicState(round), knowledge, { seed });
+      const text = reasonLine({ letter: decision.letter, share: 0, candidates: decision.candidateCount, fallback: false, decision });
+      const L = decision.letter.toUpperCase();
+      if (decision.mode === 'careful') {
+        seen.careful++;
+        assert.equal(decision.choseBest, true);
+        assert.match(text, /No more hunches/);
+      } else {
+        assert.doesNotMatch(text, /No more hunches/);
+      }
+      if (decision.choseBest) {
+        assert.doesNotMatch(text, /a little higher/);
+        if (decision.tiedWith.length) { seen.tie++; assert.match(text, /tied/); }
+      } else {
+        seen.hunch++;
+        assert.equal(decision.mode, 'exploring');
+        assert.match(text, /a little higher, but . is on my shortlist/);
+        for (const letter of decision.best) assert.ok(text.includes(letter.toUpperCase()), text);
+        assert.ok(decision.shortlist.some(option => option.letter === decision.letter));
+        assert.ok(!decision.best.includes(decision.letter));
+      }
+      if (decision.mode === 'exploring' && decision.choseBest && !decision.tiedWith.length) {
+        seen.top++;
+        assert.match(text, /It comes out on top/);
+      }
+      assert.equal(/lean towards vowels/.test(text), decision.mode === 'exploring' && decision.vowelBonus > 0);
+      if (decision.vowelBonus > 0) seen.lean++;
+      assert.ok(text.startsWith(`${L} is in`), text);
+    }
+  }
+  // Positive controls: each kind of line really occurred, so none of the checks above is vacuous.
+  for (const [kind, count] of Object.entries(seen)) assert.ok(count > 0, `no ${kind} decisions`);
+});
+
+test('she calls a miss the smart move only when it was her best letter', () => {
+  // Turn 4 is the first "smart" line.
+  const base = { letter: 'b', turn: 4, count: 40, share: 30, length: 7, missesLeft: 5 };
+  assert.equal(replyLine('smart', base), 'Statistically it was the smart move. Statistics can be rude.');
+  assert.equal(replyLine('smart', { ...base, hunch: true }), 'It was a hunch. Hunches can be rude.');
+  // Other lines are true either way.
+  assert.equal(replyLine('smart', { ...base, turn: 1, hunch: true }), 'B was in 30% of my words. I stand by it.');
 });
 
 test('her answer depends on the reply, counts her chances, and concedes at six misses', () => {

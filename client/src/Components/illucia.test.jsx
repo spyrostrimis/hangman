@@ -4,7 +4,7 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom';
 import Illucia from './Illucia';
 import { analyzeDecision } from '../lib/illucia/strategy.js';
-import { replyLine } from '../lib/illucia/duel-lines.js';
+import { reasonLine, replyLine } from '../lib/illucia/duel-lines.js';
 import { newLocalSeed } from '../lib/illucia/random.js';
 
 vi.mock('./AuthProvider', () => ({ useAuth: () => ({ user: { id: 'test-player', username: 'tester' }, status: 'authenticated' }) }));
@@ -131,6 +131,13 @@ it('shows her count from before the guess until the player reveals the tiles', a
   const words = () => view.container.querySelector('.duel-status-facts b').textContent;
   expect(words()).toBe('3');
   await think();
+  // Her note explains this decision, from its own record: the facts, then why.
+  const first = analyzeDecision.mock.results[0].value;
+  const note = view.container.querySelector('.duel-bubble small').textContent;
+  expect(first.candidateCount).toBe(3);
+  expect(note).toBe(reasonLine({ letter: first.letter, share: Math.round(first.hitCount / 3 * 100),
+    candidates: 3, fallback: first.fallback, tierLabel: 'Master', length: 5, decision: first }));
+  expect(note).toMatch(/words I still have in mind\. \S/);
   expect(hiddenTiles().length).toBeGreaterThan(0);
   expect(words()).toBe('3');
   hiddenTiles().forEach(tile => fireEvent.click(tile));
@@ -185,4 +192,24 @@ it('gives each round its own seed and passes it to every decision', async () => 
   fireEvent.click(screen.getByRole('button', { name: 'New word' }));
   await start();
   expect(newLocalSeed).toHaveBeenCalledTimes(2);
+});
+
+it('calls her miss a hunch, not the smart move, when she chose below her best', async () => {
+  fetch.mockResolvedValue({ ok: true, text: async () => 'abcd 35\nabef 35\nabgh 35\nwxyz 70\n' });
+  const real = (await vi.importActual('../lib/illucia/strategy.js')).analyzeDecision;
+  const lastLine = async () => {
+    const view = mount(); await start('wxyz', 'Apprentice');
+    for (let miss = 1; miss <= 4; miss++) {
+      await think();
+      // Turn 4 is her first "smart" line.
+      fireEvent.click(screen.getByRole('button', { name: miss === 4 ? "That wasn't so smart ;)" : 'Oops, wrong' }));
+    }
+    const line = bubbles(view.container, 'illucia').at(-1);
+    cleanup();
+    return line;
+  };
+  // Positive control: her real decisions on this board are best letters.
+  expect(await lastLine()).toBe('Statistically it was the smart move. Statistics can be rude.');
+  analyzeDecision.mockImplementation((...args) => ({ ...real(...args), choseBest: false }));
+  expect(await lastLine()).toBe('It was a hunch. Hunches can be rude.');
 });
