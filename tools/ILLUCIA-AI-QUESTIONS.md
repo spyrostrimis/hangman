@@ -314,6 +314,32 @@ adjective or adverb?", "a noun that refers to …"). The validator lets them thr
 without reasoning. The sort task was not run: the invent result decides it, and the rest of
 the day's 5,000-neuron test budget would not have covered it.
 
+### Broader question wording, re-scored (2026-10-04, no new model calls)
+
+Owner's decision: accept any wording that asks what the word can be or stand for, not only
+"Can your word mean". The validator (`shared/illucia-question.js`, also the Worker's) now
+accepts "Can your word mean / be / refer to / describe / stand for / name …". It rejects
+questions about grammar (noun, verb, adjective, adverb, part of speech, …) under any
+opening, because those ask about the word, not its meaning. Letter talk stays rejected, and
+the prompt is unchanged.
+
+Every saved invent reply was re-validated under both rules. Under the old rules the
+re-scoring reproduced every recorded outcome.
+
+| Model (setting) | Replies | Usable, old rules | Usable, new rules | What changed |
+|---|---:|---:|---:|---|
+| Llama 3.3 70B | 21 | 15 | **14** | "Can your word mean an adverb?" now rejected (grammar) |
+| Gemma 4 26B A4B (off) | 21 | 10 | 10 | nothing |
+| Qwen3 30B A3B (off) | 21 | 5 | 5 | nothing (its one rejected question asks about a plural) |
+| GLM-4.7 Flash (off) | 21 | 4 | 4 | nothing |
+| gpt-oss-120b (low) | 6 | 1 | **3** | "be a proper name…", "refer to a tangible, physical object…" now accepted; "an action (a verb)" now rejected |
+| Nemotron 3 120B (low) | 21 | 11 | 9 | 3 grammar questions now rejected; 1 "be used to describe…" accepted; 1 more fails the Worker's vocabulary screen (8 live) |
+
+The four reasoning-off models almost never broke the wording rule. Their failures were
+uneven splits (27) and wrong lists (21), which the wording does not touch. Broadening helps
+the models that ignore the requested opening (gpt-oss-120b), and the grammar rule removes
+questions that were never about meaning.
+
 ## Clef: a decision model as the sorter (2026-10-03, `benchmarks/illucia-d1-clef.json`)
 
 Cloudflare's Clef (`@cf/cloudflare/clef`, 27B) and Clef-flash (`@cf/cloudflare/clef-flash`,

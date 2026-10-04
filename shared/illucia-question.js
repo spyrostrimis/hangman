@@ -130,16 +130,22 @@ export function extractJson(text) {
 }
 
 const LETTER_TALK = /\b(letters?|spell\w*|vowels?|consonants?|syllables?|rhym\w*|alphabet\w*|(starts?|begins?|ends?) with|pronounc\w*|plural)\b/i;
+// Grammar is not meaning: "Can your word mean a verb?" asks about the word, not what it means.
+const GRAMMAR_TALK = /\b(nouns?|verbs?|adjectives?|adverbs?|pronouns?|prepositions?|conjunctions?|interjections?|parts? of speech|singular|tenses?|prefix\w*|suffix\w*|grammar\w*|describing words?)\b/i;
+// Openings accepted since 2026-10-04 (owner's decision): any wording that asks what the word
+// can be or stand for. The prompt still asks for "Can your word mean".
+const OPENING = /^can your word (mean|be|refer to|describe|stand for|name)\b/i;
 
 // Blocked: LDNOOBW entries and project block terms, matched as whole words or phrases.
 export function questionProblems(question, blocked = []) {
   const problems = [];
   if (typeof question !== 'string') return ['not-a-string'];
   if (question.length > MAX_QUESTION_LENGTH) problems.push('too-long');
-  if (!/^can your word mean\b/i.test(question.trim())) problems.push('wrong-opening');
+  if (!OPENING.test(question.trim())) problems.push('wrong-opening');
   if (!question.trim().endsWith('?')) problems.push('no-question-mark');
   if (!/^[\x20-\x7e]+$/.test(question)) problems.push('non-ascii');
   if (LETTER_TALK.test(question) || /["'][a-z]["']/i.test(question)) problems.push('about-letters');
+  if (GRAMMAR_TALK.test(question)) problems.push('about-grammar');
   const text = ` ${question.toLowerCase().replace(/[^a-z]+/g, ' ')} `;
   if (blocked.some(term => text.includes(` ${term} `))) problems.push('blocked-term');
   return problems;

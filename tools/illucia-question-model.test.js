@@ -44,6 +44,18 @@ test('questions must be meaning questions in the game\'s wording', () => {
   assert.deepEqual(questionProblems('Can your word mean a bird?'), []);
   assert.deepEqual(questionProblems('Can your word mean something you wear?'), []);
   assert.ok(questionProblems('Does your word start with a vowel?').includes('wrong-opening'));
+  // Broader openings (2026-10-04), with "mean" as the positive control.
+  for (const q of ['Can your word be a surname?', 'Can your word refer to a mental health condition?',
+    "Can your word describe a person's behavior?", 'Can your word stand for a place?', 'Can your word mean a place?']) {
+    assert.deepEqual(questionProblems(q), [], q);
+  }
+  assert.ok(questionProblems('Can your word sound like a bird?').includes('wrong-opening'));
+  // Grammar is rejected under any opening; the same question without grammar is not.
+  for (const q of ['Can your word mean a verb?', 'Can your word be a noun that is a type of object?',
+    'Can your word mean an adjective or adverb?', 'Can your word be a describing word (an adjective)?']) {
+    assert.ok(questionProblems(q).includes('about-grammar'), q);
+  }
+  assert.deepEqual(questionProblems('Can your word be a type of object?'), []);
   assert.ok(questionProblems('Can your word mean a bird').includes('no-question-mark'));
   for (const q of ['Can your word mean a word with two vowels?', 'Can your word mean something that rhymes with cat?',
     'Can your word mean a word that ends with "s"?', "Can your word mean a word containing 'e'?"]) {
