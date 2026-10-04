@@ -20,6 +20,11 @@ export const AI_MODELS = Object.freeze({
   'gpt-oss-120b-medium': Object.freeze({ id: '@cf/openai/gpt-oss-120b', label: 'gpt-oss-120b',
     rates: Object.freeze({ input: 31818, output: 68182 }), maxTokens: 4096, timeoutMs: 40000,
     options: Object.freeze({ reasoning_effort: 'medium' }) }),
+  // The same model at its lowest effort (it has no "off"). D1 at low: 2–25 s, up to ~1,500
+  // output tokens; owner's choice for production from 2026-10-04.
+  'gpt-oss-120b-low': Object.freeze({ id: '@cf/openai/gpt-oss-120b', label: 'gpt-oss-120b',
+    rates: Object.freeze({ input: 31818, output: 68182 }), maxTokens: 4096, timeoutMs: 40000,
+    options: Object.freeze({ reasoning_effort: 'low' }) }),
 });
 export type AiModelKey = keyof typeof AI_MODELS;
 export const DEFAULT_AI_MODEL: AiModelKey = 'llama-3.3-70b';

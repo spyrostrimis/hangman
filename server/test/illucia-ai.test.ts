@@ -154,6 +154,14 @@ describe('Illucia AI question (D2)', () => {
     expect((await budget())!.neurons).toBeCloseTo((300 * 31818 + 60 * 68182) / 1e6, 6);
   });
 
+  it('runs gpt-oss-120b at its lowest effort when AI_MODEL says low', async () => {
+    vars = { AI_MODEL: 'gpt-oss-120b-low' };
+    const { cookie } = await signup();
+    expect(await (await ask(cookie, await startRound(cookie))).json()).toMatchObject({ ok: true, model: 'gpt-oss-120b' });
+    expect(calls[0].model).toBe('@cf/openai/gpt-oss-120b');
+    expect(calls[0].input).toMatchObject({ reasoning_effort: 'low', max_tokens: 4096 });
+  });
+
   it('rejects bad model replies, so the page falls back; each still uses a question', async () => {
     const { cookie } = await signup();
     const cases: [() => Promise<unknown>, string][] = [
