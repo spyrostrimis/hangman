@@ -137,7 +137,7 @@ Prompted by players seeing "out of questions" all day. Production's `ai_budget` 
 
 ## Illucia AI: Llama writes, Clef-flash sorts, broader wording (production, 2026-10-04)
 
-- `21f63ad` (validator: "Can your word mean / be / refer to / describe / stand for / name …", grammar questions rejected), `bd7c32b` (her note and `/privacy` for two models; pushed first, live with `index-VEtYctTa.js` before the Worker changed) and `dbde29c` (`AI_MODEL` `llama-3.3-70b-clef-flash`: Llama 3.3 70B writes the question, Clef-flash sorts the candidates).
+- `21f63ad` (validator: "Can your word mean / be / refer to / describe / stand for / name …", grammar questions rejected), `e80f59d` (her note and `/privacy` for two models; pushed first, live with `index-VEtYctTa.js` before the Worker changed) and `dbde29c` (`AI_MODEL` `llama-3.3-70b-clef-flash`: Llama 3.3 70B writes the question, Clef-flash sorts the candidates).
 - Before release: 88 Worker/D1 tests (5 new for the pipeline, each seen failing when its guard was removed), type check and dry-run build; client 115 Node and 101 UI tests and build; tools Clef and question tests. `/privacy` text checked in the built page.
 - Worker `c94ae21e-284c-4fae-883b-ea084456a0ee` deployed, replacing `f003ec88`. Unauthenticated checks: `ask` 401, `get-best-scores` 200, `/illucia`, `/illucia-observatory` and `/privacy` 200.
 - **Not verified in production:** a real question through both models (binding envelopes, latency, cost). Expected about 100 neurons a question; the 2,000-neuron daily budget then allows roughly 15–20 site-wide.
