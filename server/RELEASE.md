@@ -130,3 +130,7 @@ Prompted by players seeing "out of questions" all day. Production's `ai_budget` 
 - **Not verified in production:** a real gpt-oss-120b question (latency, cost, binding envelope), and an authenticated limit message. At medium, each question reserves about 300 neurons until settled, so the 2,000-neuron daily budget may allow only about 7–15 questions site-wide.
 - Rollback: set `AI_MODEL` to `llama-3.3-70b` and redeploy, or `wrangler rollback` to `89fca551` (the 45 s page timeout and model note work with either).
 
+
+## Illucia AI model at low reasoning (production, 2026-10-04)
+
+`78d9f03`: `AI_MODEL` `gpt-oss-120b-medium` → `gpt-oss-120b-low` (owner's choice; the model has no "off"). Worker `f003ec88-ba2c-484d-a935-c2c610fa750b` deployed, replacing `f38e8003`. 83 Worker/D1 tests and the type check passed. Unauthenticated check: `ask` 401. Not verified in production: a real question at low. Rollback: set `AI_MODEL` back and redeploy, or `wrangler rollback` to `f38e8003`.
