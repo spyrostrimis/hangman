@@ -56,10 +56,13 @@ type AiEnv = Pick<Env, 'DB'> & {
 };
 
 // Configuration comes from Worker vars; a malformed value switches the mode off rather
-// than raising a limit.
+// than raising a limit. "none" means no limit (the site and per-player caps were removed on
+// 2026-10-04; Cloudflare's free daily allowance stays the hard backstop).
+export const NO_LIMIT = Number.MAX_SAFE_INTEGER;
 export function aiLimits(env: AiEnv): AiLimits {
   const number = (value: string | undefined, fallback: number) => {
     if (value === undefined) return fallback;
+    if (value === 'none') return NO_LIMIT;
     const parsed = Number(value);
     return Number.isFinite(parsed) && parsed >= 0 ? parsed : -1;
   };
@@ -98,11 +101,18 @@ export type AskOutcome =
   | { status: 409; error: string }
   | { ok: false; reason: 'disabled' | 'round-limit' | 'user-limit' | 'budget' | 'timeout' | 'unavailable' | 'invalid'; questionsLeft: number }
   | { ok: true; question: string; yes: string[]; no: string[]; questionsLeft: number; model: string };
-type RoundRow = { length: number; experimental: number; claimed_at: number | null; expires_at: number; ai_questions: number };
-type Options = { now?: number; timeoutMs?: number; defer?: (work: Promise<unknown>) => void };
+type RoundRow = { length: number; experimental: number; claimed_at: number | null; expires_at: number; ai_questions: number;
+  word: string; seq: number; tier: string };
+// What happened, for the log (illucia_ai_log); filled in as the request runs.
+export type AiTrace = {
+  modelKey?: string; inventor?: string; sorter?: string | null; outcome?: string; question?: string | null;
+  questionProblems?: string[]; inventMs?: number; sortMs?: number; inventYes?: string[] | null;
+  probabilities?: Record<string, number> | null; inventNeurons?: number; sortNeurons?: number;
+};
+type Options = { now?: number; timeoutMs?: number; defer?: (work: Promise<unknown>) => void; trace?: AiTrace };
 
 export async function readAiRound(db: D1Database, userId: string, roundId: string, now: number) {
-  const round = await db.prepare(`SELECT length(word) AS length, experimental, claimed_at, expires_at, ai_questions
+  const round = await db.prepare(`SELECT length(word) AS length, experimental, claimed_at, expires_at, ai_questions, word, seq, tier
     FROM illucia_rounds WHERE id = ? AND user_id = ?`).bind(roundId, userId).first<RoundRow>();
   if (!round || round.claimed_at !== null || round.expires_at <= now) return null;
   return round;
@@ -110,14 +120,23 @@ export async function readAiRound(db: D1Database, userId: string, roundId: strin
 
 // Candidates must already have passed areCandidates for this round's length.
 export async function askIllucia(env: AiEnv, userId: string, roundId: string, candidates: string[], round: RoundRow,
-  { now = Date.now(), timeoutMs, defer = () => {} }: Options = {}): Promise<AskOutcome> {
+  { now = Date.now(), timeoutMs, defer = () => {}, trace = {} }: Options = {}): Promise<AskOutcome> {
   if (round.experimental !== 1) return { status: 409, error: 'AI questions are only for experimental rounds.' };
   const left = (used: number) => Math.max(0, ILLUCIA_MAX_QUESTIONS - used);
   const limits = aiLimits(env);
-  if (!limits.enabled) return { ok: false, reason: 'disabled', questionsLeft: left(round.ai_questions) };
-  if (round.ai_questions >= ILLUCIA_MAX_QUESTIONS) return { ok: false, reason: 'round-limit', questionsLeft: 0 };
+  trace.modelKey = limits.model;
+  if (!limits.enabled) {
+    trace.outcome = 'disabled';
+    return { ok: false, reason: 'disabled', questionsLeft: left(round.ai_questions) };
+  }
+  if (round.ai_questions >= ILLUCIA_MAX_QUESTIONS) {
+    trace.outcome = 'round-limit';
+    return { ok: false, reason: 'round-limit', questionsLeft: 0 };
+  }
 
   const model = AI_MODELS[limits.model];
+  trace.inventor = model.label;
+  trace.sorter = model.sorter?.label ?? null;
   const input = questionInput('invent', candidates, { maxTokens: model.maxTokens, options: model.options });
   // Worst cases: every prompt byte a token, plus template overhead, and every allowed output
   // token; for the sorter, its measured per-question template too (clefReserveTokens).
@@ -153,18 +172,19 @@ export async function askIllucia(env: AiEnv, userId: string, roundId: string, ca
   if (!state) return { status: 409, error: 'This round is no longer available.' };
   const questionsLeft = left(state.ai_questions);
   if (state.granted !== 1) {
-    if (state.ai_questions >= ILLUCIA_MAX_QUESTIONS) return { ok: false, reason: 'round-limit', questionsLeft: 0 };
-    if (state.userQuestions >= limits.userDaily) return { ok: false, reason: 'user-limit', questionsLeft };
-    return { ok: false, reason: 'budget', questionsLeft };
+    const reason = state.ai_questions >= ILLUCIA_MAX_QUESTIONS ? 'round-limit' : state.userQuestions >= limits.userDaily ? 'user-limit' : 'budget';
+    trace.outcome = reason;
+    return { ok: false, reason, questionsLeft: reason === 'round-limit' ? 0 : questionsLeft };
   }
 
   // Replace each part of the reservation with measured usage when it arrives, even after a
   // timeout; a part that never ran is released.
   type Usage = { prompt_tokens?: number | null; completion_tokens?: number | null } | null | undefined;
   const settle = async (reserved: number, rates: Rates, usage: Usage) => {
-    if (!Number.isInteger(usage?.prompt_tokens) || !Number.isInteger(usage?.completion_tokens)) return;
-    await db.prepare('UPDATE ai_budget SET neurons = MAX(0, neurons - ? + ?) WHERE day = ?')
-      .bind(reserved, neuronsFor(rates, usage!.prompt_tokens!, usage!.completion_tokens!), day).run();
+    if (!Number.isInteger(usage?.prompt_tokens) || !Number.isInteger(usage?.completion_tokens)) return null;
+    const measured = neuronsFor(rates, usage!.prompt_tokens!, usage!.completion_tokens!);
+    await db.prepare('UPDATE ai_budget SET neurons = MAX(0, neurons - ? + ?) WHERE day = ?').bind(reserved, measured, day).run();
+    return measured;
   };
   const releaseSort = () => (model.sorter ? settle(sortReservation, model.sorter.rates, { prompt_tokens: 0, completion_tokens: 0 }) : null);
   const race = async <T,>(work: Promise<T>, ms: number) => {
@@ -175,7 +195,10 @@ export async function askIllucia(env: AiEnv, userId: string, roundId: string, ca
     return result;
   };
   const started = Date.now();
-  const log = (outcome: string) => console.log(JSON.stringify({ event: 'illucia_ai', model: limits.model, outcome, ms: Date.now() - started }));
+  const log = (outcome: string) => {
+    trace.outcome = outcome;
+    console.log(JSON.stringify({ event: 'illucia_ai', model: limits.model, outcome, ms: Date.now() - started }));
+  };
   const fail = (reason: 'timeout' | 'unavailable' | 'invalid', outcome: string = reason) => {
     log(outcome);
     return { ok: false as const, reason, questionsLeft };
@@ -183,18 +206,23 @@ export async function askIllucia(env: AiEnv, userId: string, roundId: string, ca
 
   const call = (env.AI as AiRunner).run(model.id, input).then(readReply, () => null);
   const result = await race(call, timeoutMs ?? model.timeoutMs);
+  trace.inventMs = Date.now() - started;
   if (result === 'timeout') {
     defer(call.then(late => settle(inventReservation, model.rates, late?.usage ?? null)).catch(() => {}));
     await releaseSort();
     return fail('timeout');
   }
-  await settle(inventReservation, model.rates, result?.usage ?? null);
+  trace.inventNeurons = (await settle(inventReservation, model.rates, result?.usage ?? null)) ?? undefined;
   if (!result) {
     await releaseSort();
     return fail('unavailable');
   }
   const verdict = validateReply(result.response, candidates, { mode: 'invent' });
   const known = (word: string) => illuciaWordSize(word) !== null;
+  trace.question = typeof verdict.question === 'string' ? verdict.question.trim() : null;
+  trace.questionProblems = [...(verdict.problems ?? []),
+    ...(typeof verdict.question === 'string' ? questionVocabularyProblems(verdict.question, known).map((word: string) => `unknown-word:${word}`) : [])];
+  trace.inventYes = verdict.yes ?? null;
   if (!model.sorter) {
     if (verdict.outcome !== 'accepted' || questionVocabularyProblems(verdict.question, known).length) return fail('invalid');
     log('accepted');
@@ -221,14 +249,18 @@ export async function askIllucia(env: AiEnv, userId: string, roundId: string, ca
       ? settle(sortReservation, sorter.rates, { prompt_tokens: (tokens as number[]).reduce((a, b) => a + b, 0), completion_tokens: 0 })
       : null;
   };
+  const sortStarted = Date.now();
   const sorted = await race(sorting, sorter.timeoutMs);
+  trace.sortMs = Date.now() - sortStarted;
   if (sorted === 'timeout') {
     defer(sorting.then(settleSort).catch(() => {}));
     return fail('timeout', 'sort-timeout');
   }
-  await settleSort(sorted);
+  trace.sortNeurons = (await settleSort(sorted)) ?? undefined;
   if (sorted.some(reply => !reply?.probabilities)) return fail('unavailable', 'sort-unavailable');
-  const split = clefSort(Object.assign({}, ...sorted.map(reply => reply!.probabilities)), candidates);
+  const probabilities = Object.assign({}, ...sorted.map(reply => reply!.probabilities));
+  trace.probabilities = probabilities;
+  const split = clefSort(probabilities, candidates);
   if (split.yesShare < MIN_YES_SHARE || split.yesShare > MAX_YES_SHARE) return fail('invalid', 'sort-uneven');
   log('accepted');
   return { ok: true, question, yes: split.yes, no: split.no, questionsLeft, model: `${model.label} and ${sorter.label}` };

@@ -7,7 +7,8 @@ import { claimRound, isRoundId, startRound } from './rounds';
 import { scheduledRetention } from './retention';
 import { claimIlluciaRound, illuciaStats, isAnsweredQuestions, isIlluciaTier, startIlluciaRound } from './illucia';
 import { illuciaWordSize } from './illucia-words';
-import { areCandidates, askIllucia, readAiRound } from './illucia-ai';
+import { areCandidates, askIllucia, readAiRound, type AiTrace } from './illucia-ai';
+import { isGuessList, writeAiLog, recordAiAnswer } from './illucia-ai-log';
 import { ILLUCIA_NOT_ACCEPTED_WORD } from '../../shared/scoring-protocol.js';
 
 type AppEnv = { Bindings: Env; Variables: { user: PublicUser } };
@@ -143,6 +144,8 @@ app.post('/user/delete-account', async c => {
     c.env.DB.prepare('INSERT INTO deleted_accounts (id, deleted_at) VALUES (?, ?) ON CONFLICT(id) DO NOTHING').bind(user.id, Date.now()),
     c.env.DB.prepare('DELETE FROM rounds WHERE user_id = ?').bind(user.id),
     c.env.DB.prepare('DELETE FROM illucia_beaten_words WHERE user_id = ?').bind(user.id),
+    // Before the rounds go: log rows still linked to this account through a round.
+    c.env.DB.prepare('DELETE FROM illucia_ai_log WHERE round_id IN (SELECT id FROM illucia_rounds WHERE user_id = ?)').bind(user.id),
     c.env.DB.prepare('DELETE FROM illucia_rounds WHERE user_id = ?').bind(user.id),
     c.env.DB.prepare('DELETE FROM illucia_players WHERE user_id = ?').bind(user.id),
     c.env.DB.prepare('DELETE FROM illucia_player_words WHERE user_id = ?').bind(user.id),
@@ -201,7 +204,8 @@ app.post('/user/illucia/claim', async c => {
 // Experimental AI mode: a meaning question over her candidates (v2 Track D2).
 app.post('/user/illucia/ask', async c => {
   const input = await readInput(c);
-  if (!input || Object.keys(input).some(key => !['roundId', 'candidates'].includes(key)) || !isRoundId(input.roundId)) {
+  if (!input || Object.keys(input).some(key => !['roundId', 'candidates', 'guesses'].includes(key)) || !isRoundId(input.roundId)
+    || (input.guesses !== undefined && !isGuessList(input.guesses))) {
     return failure(c, 'Invalid question request.', 400);
   }
   const userId = c.get('user').id;
@@ -209,11 +213,25 @@ app.post('/user/illucia/ask', async c => {
   const round = await readAiRound(c.env.DB, userId, input.roundId, now);
   if (!round) return failure(c, 'This round is no longer available.', 409);
   if (!areCandidates(input.candidates, round.length)) return failure(c, 'Invalid question request.', 400);
+  const trace: AiTrace = {};
   const result = await askIllucia(c.env, userId, input.roundId, input.candidates, round, {
-    now, defer: work => { try { c.executionCtx.waitUntil(work); } catch { /* no context in tests */ } },
+    now, trace, defer: work => { try { c.executionCtx.waitUntil(work); } catch { /* no context in tests */ } },
   });
   if ('status' in result) return failure(c, result.error, result.status);
-  return c.json(result);
+  // Every attempt is logged (illucia_ai_log); the page sends the player's answer with the id.
+  const logId = await writeAiLog(c.env.DB, { now, roundId: input.roundId, round, candidates: input.candidates,
+    guesses: (input.guesses as string[] | undefined) ?? null, trace, result });
+  return c.json({ ...result, logId });
+});
+// The player's answer to an AI question, for the log only (no points, nothing else changes).
+app.post('/user/illucia/ai-answer', async c => {
+  const input = await readInput(c);
+  if (!input || Object.keys(input).some(key => !['roundId', 'logId', 'answer'].includes(key)) || !isRoundId(input.roundId)
+    || !isRoundId(input.logId) || !['yes', 'no', 'declined'].includes(input.answer as string)) {
+    return failure(c, 'Invalid answer.', 400);
+  }
+  const saved = await recordAiAnswer(c.env.DB, c.get('user').id, input.roundId, input.logId, input.answer as 'yes' | 'no' | 'declined');
+  return saved ? c.json({ ok: true }) : failure(c, 'That question is not open for an answer.', 409);
 });
 app.get('/user/illucia/stats', async c => c.json(await illuciaStats(c.env.DB, c.get('user').id)));
 app.notFound(c => c.json({ message: 'Not found.' }, 404));

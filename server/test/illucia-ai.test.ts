@@ -60,7 +60,7 @@ beforeEach(async () => {
   reply = async () => good();
   clefYes = word => (ANIMALS.includes(word) ? 0.9 : 0.1);
   clefReply = clefDefault;
-  await env.DB.batch(['illucia_ai_users', 'ai_budget', 'illucia_beaten_words', 'illucia_player_words', 'illucia_tier_stats', 'word_counts',
+  await env.DB.batch(['illucia_ai_log', 'illucia_ai_users', 'ai_budget', 'illucia_beaten_words', 'illucia_player_words', 'illucia_tier_stats', 'word_counts',
     'illucia_rounds', 'illucia_players', 'rounds', 'scores', 'users', 'deleted_accounts']
     .map(table => env.DB.prepare(`DELETE FROM ${table}`)));
 });
@@ -76,7 +76,7 @@ describe('Illucia AI question (D2)', () => {
     const roundId = await startRound(cookie);
     const response = await ask(cookie, roundId);
     expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({ ok: true, question: 'Can your word mean an animal?', yes: ANIMALS,
+    expect(await response.json()).toEqual({ logId: expect.any(String), ok: true, question: 'Can your word mean an animal?', yes: ANIMALS,
       no: WORDS.filter(word => !ANIMALS.includes(word)), questionsLeft: 1, model: 'Llama 3.3 70B' });
     expect(calls).toHaveLength(1);
     expect(calls[0].model).toBe(AI_MODELS['llama-3.3-70b'].id);
@@ -114,7 +114,7 @@ describe('Illucia AI question (D2)', () => {
     const roundId = await startRound(cookie);
     expect(await (await ask(cookie, roundId)).json()).toMatchObject({ ok: true, questionsLeft: 1 });
     expect(await (await ask(cookie, roundId)).json()).toMatchObject({ ok: true, questionsLeft: 0 });
-    expect(await (await ask(cookie, roundId)).json()).toEqual({ ok: false, reason: 'round-limit', questionsLeft: 0 });
+    expect(await (await ask(cookie, roundId)).json()).toEqual({ logId: expect.any(String), ok: false, reason: 'round-limit', questionsLeft: 0 });
     expect(calls).toHaveLength(2);
   });
 
@@ -127,7 +127,7 @@ describe('Illucia AI question (D2)', () => {
     await ask(cookie, first);
     const second = await startRound(cookie, true, 'quiz');
     expect(await (await ask(cookie, second)).json()).toMatchObject({ ok: true, questionsLeft: 1 });
-    expect(await (await ask(cookie, second)).json()).toEqual({ ok: false, reason: 'user-limit', questionsLeft: 1 });
+    expect(await (await ask(cookie, second)).json()).toEqual({ logId: expect.any(String), ok: false, reason: 'user-limit', questionsLeft: 1 });
     // Another player is unaffected.
     expect(await (await ask(other.cookie, await startRound(other.cookie))).json()).toMatchObject({ ok: true });
   });
@@ -136,11 +136,11 @@ describe('Illucia AI question (D2)', () => {
     const { cookie } = await signup();
     vars = { AI_DAILY_NEURONS: '100' };
     const roundId = await startRound(cookie);
-    expect(await (await ask(cookie, roundId)).json()).toEqual({ ok: false, reason: 'budget', questionsLeft: 2 });
+    expect(await (await ask(cookie, roundId)).json()).toEqual({ logId: expect.any(String), ok: false, reason: 'budget', questionsLeft: 2 });
     expect(calls).toHaveLength(0);
     vars = { AI_DAILY_REQUESTS: '1' };
     expect(await (await ask(cookie, roundId)).json()).toMatchObject({ ok: true });
-    expect(await (await ask(cookie, roundId)).json()).toEqual({ ok: false, reason: 'budget', questionsLeft: 1 });
+    expect(await (await ask(cookie, roundId)).json()).toEqual({ logId: expect.any(String), ok: false, reason: 'budget', questionsLeft: 1 });
     expect(calls).toHaveLength(1);
   });
 
@@ -149,7 +149,7 @@ describe('Illucia AI question (D2)', () => {
     const roundId = await startRound(cookie);
     for (const setting of [{ AI_ENABLED: 'false' }, { AI_DAILY_NEURONS: 'lots' }, { AI: undefined }, { AI_MODEL: 'gpt-5' }]) {
       vars = setting;
-      expect(await (await ask(cookie, roundId)).json()).toEqual({ ok: false, reason: 'disabled', questionsLeft: 2 });
+      expect(await (await ask(cookie, roundId)).json()).toEqual({ logId: expect.any(String), ok: false, reason: 'disabled', questionsLeft: 2 });
     }
     expect(calls).toHaveLength(0);
     expect(await budget()).toBeNull();
@@ -265,7 +265,7 @@ describe('Llama writes, Clef-flash sorts (AI_MODEL llama-3.3-70b-clef-flash)', (
       no: ['boat', 'cake', 'lamp', 'tree', 'yarn'] }) });
     const { cookie } = await signup();
     const result = await (await ask(cookie, await startRound(cookie))).json();
-    expect(result).toEqual({ ok: true, question: 'Can your word be an animal?', yes: ANIMALS,
+    expect(result).toEqual({ logId: expect.any(String), ok: true, question: 'Can your word be an animal?', yes: ANIMALS,
       no: WORDS.filter(word => !ANIMALS.includes(word)), questionsLeft: 1, model: 'Llama 3.3 70B and Clef-flash' });
     expect(calls.map(c => c.model)).toEqual(['@cf/meta/llama-3.3-70b-instruct-fp8-fast', '@cf/cloudflare/clef-flash']);
     const clef = calls[1].input as unknown as ClefInput;
@@ -347,6 +347,108 @@ describe('Llama writes, Clef-flash sorts (AI_MODEL llama-3.3-70b-clef-flash)', (
     finish();
     await Promise.all(deferred);
     expect((await budget())!.neurons).toBeCloseTo(llamaNeurons + clefNeurons(WORDS.length), 6);
+  });
+});
+
+describe('The AI question log (illucia_ai_log)', () => {
+  const pipeline = { AI_MODEL: 'llama-3.3-70b-clef-flash' };
+  const rows = async () => (await env.DB.prepare('SELECT * FROM illucia_ai_log ORDER BY created_at').all()).results as Record<string, unknown>[];
+  const answer = (cookie: string, body: object) => request('illucia/ai-answer', { cookie, body });
+
+  it('logs the board, candidates, models, question, sort and timings of an accepted question', async () => {
+    vars = pipeline;
+    const { cookie } = await signup();
+    const roundId = await startRound(cookie);
+    // The page sends the letters guessed so far; the board is worked out from the round's word.
+    const response = await request('illucia/ask', { cookie, body: { roundId, candidates: WORDS, guesses: ['e', 'a', 'z', 's'] } });
+    const reply = await response.json() as { ok: boolean; logId: string };
+    expect(reply.ok).toBe(true);
+    const [row] = await rows();
+    expect(row).toMatchObject({
+      id: reply.logId, round_id: roundId, round_seq: 1, tier: 'master', word: 'jazz', word_length: 4,
+      turn: 4, guesses: 'eazs', pattern: '_a zz'.replace(' ', ''), missed: 'es', misses_left: 4,
+      candidate_count: WORDS.length, candidates: WORDS.join(' '),
+      model_key: 'llama-3.3-70b-clef-flash', inventor: 'Llama 3.3 70B', sorter: 'Clef-flash',
+      outcome: 'accepted', reason: null, question: 'Can your word mean an animal?', question_problems: null,
+      yes_words: ANIMALS.join(' '), yes_count: 3, no_count: 5, yes_share: 3 / 8, word_side: null, answer: null,
+      invent_yes: ANIMALS.join(' '),
+    });
+    expect(row.invent_ms).toEqual(expect.any(Number));
+    expect(row.sort_ms).toEqual(expect.any(Number));
+    expect(JSON.parse(row.probabilities as string)).toMatchObject({ bird: 0.9, boat: 0.1 });
+    expect(row.invent_neurons).toBeCloseTo((300 * 26668 + 60 * 204805) / 1e6, 6);
+    expect(row.sort_neurons).toBeCloseTo((90 * WORDS.length * 21818) / 1e6, 6);
+  });
+
+  it('logs failed attempts with their reason and the rejected question', async () => {
+    vars = pipeline;
+    reply = async () => good('Can your word mean a verb?');
+    const { cookie } = await signup();
+    const result = await (await ask(cookie, await startRound(cookie))).json() as { ok: boolean; logId: string };
+    expect(result.ok).toBe(false);
+    const [row] = await rows();
+    expect(row).toMatchObject({ id: result.logId, outcome: 'invalid-question', reason: 'invalid',
+      question: 'Can your word mean a verb?', question_problems: 'about-grammar', yes_words: null, guesses: null, pattern: null });
+  });
+
+  it('records where the hidden word landed when it is a candidate', async () => {
+    vars = pipeline;
+    const { cookie } = await signup();
+    const roundId = await startRound(cookie, true, 'bird');
+    await ask(cookie, roundId);
+    expect((await rows())[0]).toMatchObject({ word: 'bird', word_side: 'yes' });
+  });
+
+  it('records the player\'s answer once, only for an accepted question in their own round', async () => {
+    vars = pipeline;
+    const { cookie } = await signup();
+    const other = await signup('Other');
+    const roundId = await startRound(cookie);
+    const { logId } = await (await ask(cookie, roundId)).json() as { logId: string };
+    expect((await answer(other.cookie, { roundId, logId, answer: 'yes' })).status).toBe(409);
+    expect((await answer(cookie, { roundId, logId, answer: 'maybe' })).status).toBe(400);
+    expect((await answer(cookie, { roundId, logId, answer: 'no' })).status).toBe(200);
+    expect((await answer(cookie, { roundId, logId, answer: 'yes' })).status).toBe(409);
+    expect((await rows())[0]).toMatchObject({ answer: 'no', answered_at: expect.any(Number) });
+    // A failed attempt has no answer to record.
+    reply = async () => good('Can your word mean a verb?');
+    const failed = await (await ask(cookie, roundId)).json() as { logId: string };
+    expect((await answer(cookie, { roundId, logId: failed.logId, answer: 'declined' })).status).toBe(409);
+  });
+
+  it('rejects malformed guesses before calling any model', async () => {
+    vars = pipeline;
+    const { cookie } = await signup();
+    const roundId = await startRound(cookie);
+    for (const guesses of [['e', 'e'], ['E'], 'eas', [1]]) {
+      expect((await request('illucia/ask', { cookie, body: { roundId, candidates: WORDS, guesses } })).status).toBe(400);
+    }
+    expect(calls).toHaveLength(0);
+    expect((await request('illucia/ask', { cookie, body: { roundId, candidates: WORDS, guesses: ['e'] } })).status).toBe(200);
+  });
+
+  it('"none" removes the site and per-player caps', async () => {
+    vars = { ...pipeline, AI_DAILY_NEURONS: 'none', AI_DAILY_REQUESTS: 'none', AI_USER_DAILY_QUESTIONS: 'none' };
+    const { cookie } = await signup();
+    for (const word of ['jazz', 'quiz', 'fizz']) {
+      const roundId = await startRound(cookie, true, word);
+      expect(await (await ask(cookie, roundId)).json()).toMatchObject({ ok: true });
+      expect(await (await ask(cookie, roundId)).json()).toMatchObject({ ok: true });
+    }
+    // Positive control: a numeric per-player cap still stops the same player.
+    vars = { ...pipeline, AI_USER_DAILY_QUESTIONS: '6' };
+    expect(await (await ask(cookie, await startRound(cookie, true, 'buzz'))).json()).toMatchObject({ ok: false, reason: 'user-limit' });
+  });
+
+  it('deletes the log rows still linked to an account with it', async () => {
+    vars = pipeline;
+    const { cookie } = await signup();
+    const other = await signup('Other');
+    await ask(cookie, await startRound(cookie));
+    await ask(other.cookie, await startRound(other.cookie));
+    expect(await rows()).toHaveLength(2);
+    expect((await request('delete-account', { cookie, body: { credential: 'cd'.repeat(32) } })).status).toBe(200);
+    expect((await rows()).map(row => row.round_id)).toHaveLength(1);
   });
 });
 

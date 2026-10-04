@@ -30,6 +30,7 @@ Fake salts and generic errors reduce username enumeration, not eliminate it: reg
 | POST | `/user/illucia/start` | Authenticate; `{word, tier, experimental?, previousRoundId?}` commits the player's word for an Illucia round. The same word, tier and mode resumes the open Illucia round; anything else, or naming it as `previousRoundId`, abandons it. Returns `{roundId, word, tier, experimental, seed, issuedAt, expiresAt, serverNow, points, ladder, memory}`, or 400 `NOT_ACCEPTED_WORD`. `memory.brain` (personality seed, games, letter counts, learned words of this length) is history without the current round; `memory.voice` (earlier plays of this word by the player and by everyone, whether it beat her before) is for her lines only |
 | POST | `/user/illucia/claim` | Authenticate; `{roundId, guesses, answeredQuestions?}` rules-checks a loss for Illucia (her sixth miss is the last guess) at least 15 s after issue and awards stump points and any ladder bonus once; returns `{score, awarded: {stump, ladder}, reason?, ladder}` on success or a successful retry |
 | POST | `/user/illucia/ask` | Authenticate; `{roundId, candidates}` in an open **experimental** round: Llama 3.3 70B invents a yes/no meaning question over 2–80 sorted, distinct accepted words of the round's length. Returns `{ok: true, question, yes, no, questionsLeft}`, or `{ok: false, reason, questionsLeft}` with `reason` one of `disabled`, `round-limit`, `user-limit`, `budget`, `timeout`, `unavailable`, `invalid`, after which the page makes her normal move. 400 for bad input, 409 for a round that is not open, not yours or not experimental. See below |
+| POST | `/user/illucia/ai-answer` | Authenticate; `{roundId, logId, answer}` (`yes`, `no` or `declined`) adds the player's answer to the log row of an accepted AI question in their own round, once. Returns `{ok: true}`, 400 for bad input, 409 otherwise. For the log only: no points, nothing else changes |
 | GET | `/user/illucia/stats` | Authenticate; the player's own normal-mode stats: `{games, wins, lostOrAbandoned, tiers, learned: {total, recent}, history: {lengths, letters}, ladder: {rung, next, minLength}, spent: {total, words}}`. `recent` is the 100 most recently learned words; a counted round still in play is left out. `ladder` is the ladder as the next new round would find it (as in a claim response; an open round would be abandoned by a different one, so it reads rung 0 then). `spent` lists up to 1,000 most recent words that already paid, so the page can warn before a word is committed; the claim stays the authority. Global word counts are not included |
 
 Mutations require JSON and an exact trusted Origin. All responses are `no-store`; request bodies are capped at 2 KiB. Native rate-limit bindings allow 60 requests/IP/minute and 10 signup/login/deletion attempts/normalized username/minute. These are approximate, per Cloudflare location, not a global anti-abuse guarantee; shared networks can hit the IP limit. No raw request bodies or exception messages are logged.
@@ -82,6 +83,21 @@ Illucia's per-player memory (`illucia_player_words`, `illucia_tier_stats`, `illu
 - **Data:** `illucia_ai_users(user_id, day, questions)` is deleted with the account and swept two days after its day; `ai_budget(day, requests, neurons)` has no account. Questions and answers are not stored. Logs record only an outcome and a duration.
 - **Allowance:** the budget counts only this route. Other Workers AI use on the account (the I7a/D1 tools) shares Cloudflare's 10,000 free neurons a day. Workers Free refuses requests beyond the allowance, and the page then falls back.
 - **Local and tests:** the `local` environment has no AI binding, so development and tests never call Workers AI; tests inject a fake binding.
+
+### The AI question log (migration 0009, 2026-10-04)
+
+Every `/user/illucia/ask` attempt writes one `illucia_ai_log` row. It records:
+- **the round:** its number, tier, hidden word and turn, the letters guessed (sent by the page as `guesses`, optional), and the pattern, missed letters and misses left worked out from them;
+- **the candidates:** the count and the list;
+- **the models:** the setting and both models' names;
+- **what happened:** the outcome and reason, the question even if rejected (with the problems found), Llama's own YES list, the final YES list and split, and the side the hidden word landed on;
+- **the numbers:** Clef's probabilities, invent, sort and total milliseconds, and neurons per model.
+
+The reply carries `logId`, and the page sends the player's answer to `/user/illucia/ai-answer`.
+
+There is no username. A row links to an account only through `round_id` while the round record exists (about 24 hours), and account deletion removes the rows still linked. There is no expiry: rows are kept until the owner deletes them (disclosed on `/privacy`). `tools/read-illucia-ai-log.js` downloads the log to ignored `tools/output/` and prints a summary per model setting.
+
+**Caps:** since 2026-10-04 production sets `AI_DAILY_NEURONS`, `AI_DAILY_REQUESTS` and `AI_USER_DAILY_QUESTIONS` to `none` (no limit). Two questions per round remain a game rule. Cloudflare's free 10,000 neurons a day, shared with local tests, is the hard backstop: Workers Free refuses requests beyond it, and the page falls back.
 
 ## Retention and diagnostic logs
 
