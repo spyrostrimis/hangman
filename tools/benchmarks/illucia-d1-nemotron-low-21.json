@@ -1,0 +1,1107 @@
+{
+  "schemaVersion": 1,
+  "phase": "run",
+  "startedAt": "2026-10-04T14:51:16.626Z",
+  "status": "complete",
+  "configuration": {
+    "models": [
+      "@cf/nvidia/nemotron-3-120b-a12b"
+    ],
+    "modes": [
+      "invent"
+    ],
+    "promptVersion": "d1-1",
+    "prompts": {
+      "invent": "You help Illucia, a Hangman player, narrow down a hidden English word by its MEANING. The user message is a JSON object whose \"candidates\" field lists every word the hidden word could be.\n1. Invent ONE yes/no question about what the word can mean: what kind of thing, action or quality it is. Start it with \"Can your word mean\" and end it with \"?\". It must not be about letters, spelling, sounds, rhymes or length.\n2. A word is YES if ANY of its meanings fits, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n3. Choose a question that puts roughly half of the candidates in YES and half in NO.\n4. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"question\": \"...\", \"yes\": [\"...\"], \"no\": [\"...\"]}",
+      "sort": "Sort English words by MEANING. The user message is a JSON object with a yes/no \"question\" and a \"candidates\" list.\n1. A word is YES if ANY of its meanings fits the question, even a less common one (\"crane\" is YES for \"Can your word mean a bird?\"). Otherwise it is NO.\n2. Put EVERY candidate in exactly one list, spelled exactly as given. Do not add, drop or repeat words.\nReply with only one JSON object and nothing else: {\"yes\": [\"...\"], \"no\": [\"...\"]}"
+    },
+    "promptSha256": "1b85eda7ffdac6d528d315e22cc412da16cc78ad908d179233edb4585023a2d2",
+    "statesSha256": "4ddaee886368cbe7f44bde2512a66f443a0b33d7429bb4a973a17fcbf09d68e1",
+    "temperature": 0,
+    "seed": 20261002,
+    "maxTokens": 2048,
+    "modelOptions": {
+      "@cf/qwen/qwen3-30b-a3b-fp8": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/google/gemma-4-26b-a4b-it": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/zai-org/glm-4.7-flash": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "@cf/openai/gpt-oss-20b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/openai/gpt-oss-120b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/qwen/qwen3.8-27b": {
+        "reasoning_effort": "low"
+      },
+      "@cf/nvidia/nemotron-3-120b-a12b": {
+        "chat_template_kwargs": {
+          "enable_thinking": true,
+          "low_effort": true
+        }
+      }
+    },
+    "requestTimeoutMs": 60000,
+    "stateIds": "all",
+    "retries": 0,
+    "timeoutsBeforeSkip": 3,
+    "evenSplit": [
+      0.25,
+      0.75
+    ],
+    "blockedTerms": 421,
+    "neuronRates": {
+      "@cf/nvidia/nemotron-3-120b-a12b": {
+        "input": 45455,
+        "output": 136364
+      }
+    },
+    "pricingChecked": "2026-10-02",
+    "maxRunNeurons": 5000
+  },
+  "environment": {
+    "node": "v24.18.1",
+    "platform": "win32"
+  },
+  "requests": [
+    {
+      "state": "4-apprentice",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 6491.5713000000005,
+      "inputSha256": "e1ffc51d2a28f0f05ef7db5f477b27afefdc2018433858bb0898f4cf12fb1ccd",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean something that can be wet?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "boil",
+        "bowl",
+        "foil",
+        "fowl"
+      ],
+      "no": [
+        "coil",
+        "foul",
+        "howl",
+        "toil",
+        "yowl"
+      ],
+      "yesShare": 0.4444444444444444,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 273,
+        "completion_tokens": 659,
+        "reasoning_tokens": null,
+        "neurons": 101.909
+      },
+      "estimatedNeurons": 102.273091,
+      "providerReportedNeurons": 101.909,
+      "reasoningChars": 1768,
+      "visibleChars": 152,
+      "response": "\n\n{\"question\": \"Can your word mean something that can be wet?\", \"yes\": [\"boil\", \"bowl\", \"foil\", \"fowl\"], \"no\": [\"coil\", \"foul\", \"howl\", \"toil\", \"yowl\"]}"
+    },
+    {
+      "state": "4-scholar",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 17724.5729,
+      "inputSha256": "b1599e3cc81eaae0e537cd78fbcf841deeb96dcbad29b503f5f24cbf3126e049",
+      "outcome": "unparseable",
+      "strictJson": false,
+      "envelope": "choices",
+      "finishReason": "length",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 336,
+        "completion_tokens": 2048,
+        "reasoning_tokens": null,
+        "neurons": 293.648
+      },
+      "estimatedNeurons": 294.546352,
+      "providerReportedNeurons": 293.648,
+      "reasoningChars": 6518,
+      "visibleChars": 0,
+      "response": ""
+    },
+    {
+      "state": "4-master",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 2910.679900000003,
+      "inputSha256": "1d369a83387c786855968c14af995cfe2bfef9696a9663f5b91fe766a5261b5e",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a verb?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "born",
+        "cord",
+        "cork",
+        "corm",
+        "corn",
+        "dork",
+        "dorm",
+        "ford",
+        "fork",
+        "form",
+        "fort",
+        "gory",
+        "horn",
+        "lord",
+        "lorn",
+        "morn",
+        "norm",
+        "pork",
+        "port",
+        "torn",
+        "tort",
+        "word",
+        "work",
+        "worm",
+        "worn",
+        "wort",
+        "york"
+      ],
+      "no": [
+        "borg",
+        "bork",
+        "bort",
+        "boru",
+        "corf",
+        "cory",
+        "dorp",
+        "dory",
+        "forb",
+        "gorp",
+        "kory",
+        "lori",
+        "lory",
+        "mort",
+        "nori",
+        "norw",
+        "tori",
+        "tory",
+        "zorn"
+      ],
+      "yesShare": 0.5869565217391305,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 368,
+        "completion_tokens": 290,
+        "reasoning_tokens": null,
+        "neurons": 56
+      },
+      "estimatedNeurons": 56.273,
+      "providerReportedNeurons": 56,
+      "reasoningChars": 393,
+      "visibleChars": 429,
+      "response": "\n\n{\"question\": \"Can your word mean a verb?\", \"yes\": [\"born\", \"cord\", \"cork\", \"corm\", \"corn\", \"dork\", \"dorm\", \"ford\", \"fork\", \"form\", \"fort\", \"gory\", \"horn\", \"lord\", \"lorn\", \"morn\", \"norm\", \"pork\", \"port\", \"torn\", \"tort\", \"word\", \"work\", \"worm\", \"worn\", \"wort\", \"york\"], \"no\": [\"borg\", \"bork\", \"bort\", \"boru\", \"corf\", \"cory\", \"dorp\", \"dory\", \"forb\", \"gorp\", \"kory\", \"lori\", \"lory\", \"mort\", \"nori\", \"norw\", \"tori\", \"tory\", \"zorn\"]}"
+    },
+    {
+      "state": "5-apprentice",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 17479.7859,
+      "inputSha256": "0ee3961efd70a7ca134646fded26564eed19f2eccb9e64ced75aed0bd0b57314",
+      "outcome": "unparseable",
+      "strictJson": false,
+      "envelope": "choices",
+      "finishReason": "length",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 468,
+        "completion_tokens": 2048,
+        "reasoning_tokens": null,
+        "neurons": 299.588
+      },
+      "estimatedNeurons": 300.546412,
+      "providerReportedNeurons": 299.588,
+      "reasoningChars": 5817,
+      "visibleChars": 0,
+      "response": ""
+    },
+    {
+      "state": "5-scholar",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 7933.231700000004,
+      "inputSha256": "a9b5043ce1c937da98b444ae7027b1926aac76501e98507c4c43b79f0226beb2",
+      "outcome": "rejected-question",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word be a surname?",
+      "problems": [
+        "wrong-opening"
+      ],
+      "sets": {
+        "missing": [
+          "gaffe"
+        ],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": null,
+      "no": null,
+      "yesShare": null,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 437,
+        "completion_tokens": 1113,
+        "reasoning_tokens": null,
+        "neurons": 171.03300000000002
+      },
+      "estimatedNeurons": 171.636967,
+      "providerReportedNeurons": 171.03300000000002,
+      "reasoningChars": 2386,
+      "visibleChars": 910,
+      "response": "\n\n{\n  \"question\": \"Can your word be a surname?\",\n  \"yes\": [\n    \"badge\",\n    \"baize\",\n    \"barge\",\n    \"basie\",\n    \"baste\",\n    \"bathe\",\n    \"cache\",\n    \"cadge\",\n    \"cadre\",\n    \"canoe\",\n    \"carve\",\n    \"caste\",\n    \"cause\",\n    \"dance\",\n    \"dante\",\n    \"farce\",\n    \"gauge\",\n    \"gauze\",\n    \"hague\",\n    \"harte\",\n    \"haste\",\n    \"jaime\",\n    \"jamie\",\n    \"janie\",\n    \"jayne\",\n    \"katie\",\n    \"madge\",\n    \"maine\",\n    \"maize\",\n    \"mamie\"\n  ],\n  \"no\": [\n    \"mange\",\n    \"manse\",\n    \"marge\",\n    \"marie\",\n    \"marne\",\n    \"matte\",\n    \"maude\",\n    \"mauve\",\n    \"maybe\",\n    \"nacre\",\n    \"naive\",\n    \"padre\",\n    \"paige\",\n    \"paine\",\n    \"parse\",\n    \"paste\",\n    \"pause\",\n    \"payne\",\n    \"raise\",\n    \"range\",\n    \"sabre\",\n    \"sadie\",\n    \"sauce\",\n    \"tahoe\",\n    \"taine\",\n    \"taste\",\n    \"taupe\",\n    \"vague\",\n    \"vance\",\n    \"waite\",\n    \"waive\",\n    \"waste\",\n    \"wayne\",\n    \"zaire\"\n  ]\n}"
+    },
+    {
+      "state": "5-master",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 13767.380400000002,
+      "inputSha256": "e1dd2963ca4822db7b173768afb41b718b690ae9ea9163b253c8fea1e2d6a27f",
+      "outcome": "unparseable",
+      "strictJson": false,
+      "envelope": "choices",
+      "finishReason": "length",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 312,
+        "completion_tokens": 2048,
+        "reasoning_tokens": null,
+        "neurons": 292.56800000000004
+      },
+      "estimatedNeurons": 293.455432,
+      "providerReportedNeurons": 292.56800000000004,
+      "reasoningChars": 6064,
+      "visibleChars": 0,
+      "response": ""
+    },
+    {
+      "state": "6-apprentice",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 4417.4581000000035,
+      "inputSha256": "0e7367bed1171b6ffa09469095ff40ded36b532d3a72cea2bfcb576bb33c5c14",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a type of fabric or material?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "bluing",
+        "busing",
+        "buying",
+        "cluing",
+        "crying",
+        "cubing",
+        "curing",
+        "drying",
+        "duding",
+        "duping",
+        "during",
+        "flying",
+        "frying",
+        "fuming",
+        "fusing",
+        "luring"
+      ],
+      "no": [
+        "musing",
+        "muting",
+        "plying",
+        "prying",
+        "puking",
+        "ruling",
+        "shying",
+        "skying",
+        "spring",
+        "spying",
+        "string",
+        "truing",
+        "trying",
+        "tubing",
+        "typing",
+        "upping"
+      ],
+      "yesShare": 0.5,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 344,
+        "completion_tokens": 510,
+        "reasoning_tokens": null,
+        "neurons": 84.84
+      },
+      "estimatedNeurons": 85.18216,
+      "providerReportedNeurons": 84.84,
+      "reasoningChars": 1365,
+      "visibleChars": 403,
+      "response": "\n\n{\"question\": \"Can your word mean a type of fabric or material?\", \"yes\": [\"bluing\", \"busing\", \"buying\", \"cluing\", \"crying\", \"cubing\", \"curing\", \"drying\", \"duding\", \"duping\", \"during\", \"flying\", \"frying\", \"fuming\", \"fusing\", \"luring\"], \"no\": [\"musing\", \"muting\", \"plying\", \"prying\", \"puking\", \"ruling\", \"shying\", \"skying\", \"spring\", \"spying\", \"string\", \"truing\", \"trying\", \"tubing\", \"typing\", \"upping\"]}"
+    },
+    {
+      "state": "6-scholar",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 1256.1775999999954,
+      "inputSha256": "4ee6851fbe68ea0b8506a914dd33b666051a811b6eb054a84397a28acc1664e9",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a person's name?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "edison",
+        "elijah",
+        "elinor",
+        "elisha",
+        "ericka"
+      ],
+      "no": [
+        "edicts",
+        "editor",
+        "enigma",
+        "evicts",
+        "evilly",
+        "exists"
+      ],
+      "yesShare": 0.45454545454545453,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 281,
+        "completion_tokens": 173,
+        "reasoning_tokens": null,
+        "neurons": 36.173
+      },
+      "estimatedNeurons": 36.363827,
+      "providerReportedNeurons": 36.173,
+      "reasoningChars": 294,
+      "visibleChars": 179,
+      "response": "\n{\"question\": \"Can your word mean a person's name?\", \"yes\": [\"edison\", \"elijah\", \"elinor\", \"elisha\", \"ericka\"], \"no\": [\"edicts\", \"editor\", \"enigma\", \"evicts\", \"evilly\", \"exists\"]}"
+    },
+    {
+      "state": "6-master",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 9475.640700000004,
+      "inputSha256": "60d1991cff8a361479ccc2e36a54aba5332596efdf22b60383c8dd9cb9b1fe11",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean an adjective or adverb?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "deadly",
+        "deafly",
+        "deftly",
+        "dewily",
+        "featly",
+        "pebbly",
+        "weakly"
+      ],
+      "no": [
+        "becalm",
+        "behalf",
+        "behold",
+        "cecily",
+        "dekalb",
+        "fecula",
+        "megilp",
+        "pedalo"
+      ],
+      "yesShare": 0.4666666666666667,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 300,
+        "completion_tokens": 1519,
+        "reasoning_tokens": null,
+        "neurons": 220.084
+      },
+      "estimatedNeurons": 220.773416,
+      "providerReportedNeurons": 220.084,
+      "reasoningChars": 5071,
+      "visibleChars": 227,
+      "response": "\n\n{\"question\": \"Can your word mean an adjective or adverb?\", \"yes\": [\"deadly\", \"pebbly\", \"deafly\", \"deftly\", \"dewily\", \"featly\", \"weakly\"], \"no\": [\"becalm\", \"behalf\", \"behold\", \"cecily\", \"dekalb\", \"fecula\", \"megilp\", \"pedalo\"]}"
+    },
+    {
+      "state": "7-apprentice",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 2985.293300000005,
+      "inputSha256": "20f7e118496bd6f818273d48abd463479ce286830abce213c0dc6611255da2a1",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean to be a legal action or procedure?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "arrests",
+        "attests",
+        "digests",
+        "divests",
+        "forests"
+      ],
+      "no": [
+        "infests",
+        "ingests",
+        "invests",
+        "molests",
+        "priests"
+      ],
+      "yesShare": 0.5,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 278,
+        "completion_tokens": 404,
+        "reasoning_tokens": null,
+        "neurons": 67.45400000000001
+      },
+      "estimatedNeurons": 67.727546,
+      "providerReportedNeurons": 67.45400000000001,
+      "reasoningChars": 1326,
+      "visibleChars": 197,
+      "response": "\n{\"question\": \"Can your word mean to be a legal action or procedure?\", \"yes\": [\"arrests\", \"attests\", \"digests\", \"divests\", \"forests\"], \"no\": [\"infests\", \"ingests\", \"invests\", \"molests\", \"priests\"]}"
+    },
+    {
+      "state": "7-scholar",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 4781.617799999993,
+      "inputSha256": "b4fbceb356d60438d6bbb3057656e6133c41256301029a3ec856690d76fa730e",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a feeling or emotion?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "abducts",
+        "abounds",
+        "abscond",
+        "absorbs",
+        "accords",
+        "accosts",
+        "account",
+        "acronym",
+        "adjourn",
+        "adjunct",
+        "adjusts",
+        "affords",
+        "affront",
+        "aground",
+        "alcohol",
+        "alfonso",
+        "alfonzo",
+        "allyson",
+        "almonds",
+        "alumnus",
+        "amorous",
+        "amounts",
+        "anchors"
+      ],
+      "no": [
+        "anchovy",
+        "anthony",
+        "antonym",
+        "anybody",
+        "apology",
+        "apropos",
+        "arbutus",
+        "arduous",
+        "armfuls",
+        "arnulfo",
+        "arroyos",
+        "artwork",
+        "assorts",
+        "astound",
+        "asylums",
+        "atrophy",
+        "atropos",
+        "attucks",
+        "audubon",
+        "augusts",
+        "authors",
+        "autopsy",
+        "autumns",
+        "awfully"
+      ],
+      "yesShare": 0.48936170212765956,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 403,
+        "completion_tokens": 502,
+        "reasoning_tokens": null,
+        "neurons": 86.40700000000001
+      },
+      "estimatedNeurons": 86.773093,
+      "providerReportedNeurons": 86.40700000000001,
+      "reasoningChars": 1200,
+      "visibleChars": 546,
+      "response": "\n{\"question\": \"Can your word mean a feeling or emotion?\", \"yes\": [\"abducts\",\"abounds\",\"abscond\",\"absorbs\",\"accords\",\"accosts\",\"account\",\"acronym\",\"adjourn\",\"adjunct\",\"adjusts\",\"affords\",\"affront\",\"aground\",\"alcohol\",\"alfonso\",\"alfonzo\",\"allyson\",\"almonds\",\"alumnus\",\"amorous\",\"amounts\",\"anchors\"], \"no\": [\"anchovy\",\"anthony\",\"antonym\",\"anybody\",\"apology\",\"apropos\",\"arbutus\",\"arduous\",\"armfuls\",\"arnulfo\",\"arroyos\",\"artwork\",\"assorts\",\"astound\",\"asylums\",\"atrophy\",\"atropos\",\"attucks\",\"audubon\",\"augusts\",\"authors\",\"autopsy\",\"autumns\",\"awfully\"]}"
+    },
+    {
+      "state": "7-master",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 11832.5199,
+      "inputSha256": "2e2d7d80f55a6113f4c7e4d35bc16bdd9e8ab01b6099281f767a64ce69c65f5d",
+      "outcome": "wrong-lists",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean to move in a twisting or spiraling motion?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": [
+          "twirled",
+          "whirled",
+          "whorled",
+          "wiggled",
+          "wobbled",
+          "rippled",
+          "rimpled",
+          "mizzled",
+          "jiggled",
+          "jingled",
+          "joggled",
+          "giggled",
+          "gobbled",
+          "googled",
+          "growled",
+          "hobbled",
+          "hoppled",
+          "kibbled",
+          "kittled",
+          "mingled",
+          "nibbled",
+          "niggled",
+          "nobbled",
+          "pickled",
+          "pimpled",
+          "pootled",
+          "poppled",
+          "prowled",
+          "riffled",
+          "tickled",
+          "tingled",
+          "tinkled",
+          "tippled",
+          "toggled",
+          "tootled",
+          "toppled",
+          "trifled",
+          "tripled",
+          "vittled",
+          "wimpled",
+          "winkled"
+        ]
+      },
+      "yes": null,
+      "no": null,
+      "yesShare": null,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 449,
+        "completion_tokens": 1681,
+        "reasoning_tokens": null,
+        "neurons": 248.82100000000003
+      },
+      "estimatedNeurons": 249.637179,
+      "providerReportedNeurons": 248.82100000000003,
+      "reasoningChars": 3711,
+      "visibleChars": 1173,
+      "response": "\n{\"question\": \"Can your word mean to move in a twisting or spiraling motion?\", \"yes\": [\"twirled\", \"whirled\", \"whorled\", \"wiggled\", \"wobbled\", \"rippled\", \"rimpled\", \"fizzled\", \"mizzled\", \"jiggled\", \"jingled\", \"joggled\", \"giggled\", \"gobbled\", \"googled\", \"growled\", \"hobbled\", \"hoppled\", \"kibbled\", \"kittled\", \"mingled\", \"nibbled\", \"niggled\", \"nobbled\", \"pickled\", \"pimpled\", \"pootled\", \"poppled\", \"prowled\", \"riffled\", \"tickled\", \"tingled\", \"tinkled\", \"tippled\", \"toggled\", \"tootled\", \"toppled\", \"trifled\", \"tripled\", \"vittled\", \"wiggled\", \"wimpled\", \"winkled\", \"wobbled\"], \"no\": [\"bingled\", \"bobbled\", \"boggled\", \"bottled\", \"broiled\", \"circled\", \"cobbled\", \"coffled\", \"footled\", \"foozled\", \"giggled\", \"gobbled\", \"goggled\", \"googled\", \"growled\", \"higgled\", \"hobbled\", \"hoppled\", \"jiggled\", \"jingled\", \"joggled\", \"kibbled\", \"kittled\", \"mingled\", \"mizzled\", \"mottled\", \"nibbled\", \"niggled\", \"nobbled\", \"pickled\", \"pimpled\", \"pootled\", \"poppled\", \"prowled\", \"riffled\", \"rimpled\", \"rippled\", \"tickled\", \"tingled\", \"tinkled\", \"tippled\", \"toggled\", \"tootled\", \"toppled\", \"trifled\", \"tripled\", \"twirled\", \"vittled\", \"whirled\", \"whorled\", \"wiggled\", \"wimpled\", \"winkled\", \"wobbled\"]}"
+    },
+    {
+      "state": "8-apprentice",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 9703.644,
+      "inputSha256": "16827d85e38521d080c297c682e021aa574f680f3d4d11b47b5666efb7837684",
+      "outcome": "wrong-lists",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a person?",
+      "problems": [],
+      "sets": {
+        "missing": [
+          "pimplier",
+          "touchier"
+        ],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": null,
+      "no": null,
+      "yesShare": null,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 420,
+        "completion_tokens": 1555,
+        "reasoning_tokens": null,
+        "neurons": 230.38000000000002
+      },
+      "estimatedNeurons": 231.13712,
+      "providerReportedNeurons": 230.38000000000002,
+      "reasoningChars": 4360,
+      "visibleChars": 798,
+      "response": "\n{\n  \"question\": \"Can your word mean a person?\",\n  \"yes\": [\n    \"analyzer\",\n    \"attacker\",\n    \"cavalier\",\n    \"commoner\",\n    \"compiler\",\n    \"computer\",\n    \"commuter\",\n    \"follower\",\n    \"lawmaker\",\n    \"milliner\",\n    \"onlooker\",\n    \"pacifier\",\n    \"taxpayer\",\n    \"thatcher\",\n    \"villager\"\n  ],\n  \"no\": [\n    \"awfuller\",\n    \"bubblier\",\n    \"catchier\",\n    \"chalkier\",\n    \"chattier\",\n    \"chillier\",\n    \"choppier\",\n    \"chubbier\",\n    \"chummier\",\n    \"chunkier\",\n    \"clammier\",\n    \"cucumber\",\n    \"faultier\",\n    \"filthier\",\n    \"flabbier\",\n    \"floppier\",\n    \"fluffier\",\n    \"gloomier\",\n    \"guiltier\",\n    \"hangover\",\n    \"hollower\",\n    \"jauntier\",\n    \"knottier\",\n    \"laughter\",\n    \"manpower\",\n    \"mightier\",\n    \"pullover\",\n    \"quainter\",\n    \"wobblier\",\n    \"woollier\"\n  ]\n}"
+    },
+    {
+      "state": "8-scholar",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 4832.1131999999925,
+      "inputSha256": "a905ce1b04abcd294a2f1b66b7c40459a5a83176c472c994bde3645459c832e0",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean to cause excitement or interest?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "enticing",
+        "exciting",
+        "exhibits"
+      ],
+      "no": [
+        "emailing",
+        "envision",
+        "excising",
+        "excision",
+        "expiring"
+      ],
+      "yesShare": 0.375,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 272,
+        "completion_tokens": 790,
+        "reasoning_tokens": null,
+        "neurons": 119.68
+      },
+      "estimatedNeurons": 120.09132,
+      "providerReportedNeurons": 119.68,
+      "reasoningChars": 3017,
+      "visibleChars": 182,
+      "response": "\n\n{\"question\": \"Can your word mean to cause excitement or interest?\", \"yes\": [\"enticing\", \"exciting\", \"exhibits\"], \"no\": [\"emailing\", \"envision\", \"excising\", \"excision\", \"expiring\"]}"
+    },
+    {
+      "state": "8-master",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 2493.179099999994,
+      "inputSha256": "2ac01898bbff625aa17fde0ea5162751cf72f0f661eb7296e640650e347756d8",
+      "outcome": "uneven",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a country?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "colombia",
+        "mongolia"
+      ],
+      "no": [
+        "boltonia",
+        "columbia",
+        "dyslogia",
+        "dystonia",
+        "dystopia",
+        "fostoria",
+        "monrovia",
+        "myotonia",
+        "photopia",
+        "scotopia",
+        "strontia",
+        "suburbia",
+        "syncytia"
+      ],
+      "yesShare": 0.13333333333333333,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 306,
+        "completion_tokens": 377,
+        "reasoning_tokens": null,
+        "neurons": 65.042
+      },
+      "estimatedNeurons": 65.318458,
+      "providerReportedNeurons": 65.042,
+      "reasoningChars": 993,
+      "visibleChars": 243,
+      "response": "\n{\"question\": \"Can your word mean a country?\", \"yes\": [\"colombia\", \"mongolia\"], \"no\": [\"boltonia\", \"columbia\", \"dyslogia\", \"dystonia\", \"dystopia\", \"fostoria\", \"monrovia\", \"myotonia\", \"photopia\", \"scotopia\", \"strontia\", \"suburbia\", \"syncytia\"]}"
+    },
+    {
+      "state": "9-apprentice",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 11689.684400000013,
+      "inputSha256": "c5ff2276bb78a32824a43b77a6c7437da2de388603dce9b4c0bd0606e456baf6",
+      "outcome": "rejected-question",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word be used to describe a person's behavior or attitude?",
+      "problems": [
+        "wrong-opening"
+      ],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "behaviors",
+        "certainty",
+        "delusions",
+        "devotions",
+        "ferocious",
+        "headfirst",
+        "reactions",
+        "relations",
+        "tenacious",
+        "weaklings",
+        "yearnings"
+      ],
+      "no": [
+        "beautiful",
+        "certainly",
+        "demotions",
+        "geraniums",
+        "headlight",
+        "melodious",
+        "memorials",
+        "negations",
+        "restricts",
+        "teachings",
+        "technical",
+        "vexations",
+        "yearlings"
+      ],
+      "yesShare": 0.4583333333333333,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 325,
+        "completion_tokens": 1517,
+        "reasoning_tokens": null,
+        "neurons": 220.937
+      },
+      "estimatedNeurons": 221.637063,
+      "providerReportedNeurons": 220.937,
+      "reasoningChars": 5611,
+      "visibleChars": 412,
+      "response": "\n{\"question\": \"Can your word be used to describe a person's behavior or attitude?\", \"yes\": [\"behaviors\", \"certainty\", \"delusions\", \"devotions\", \"ferocious\", \"headfirst\", \"reactions\", \"relations\", \"tenacious\", \"weaklings\", \"yearnings\"], \"no\": [\"beautiful\", \"certainly\", \"demotions\", \"geraniums\", \"headlight\", \"memorials\", \"melodious\", \"negations\", \"restricts\", \"teachings\", \"technical\", \"vexations\", \"yearlings\"]}"
+    },
+    {
+      "state": "9-scholar",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 12756.959499999997,
+      "inputSha256": "78bb6c9d94afdce01f273973e45de4a2e26959782a172c7b32cfa4759baa32de",
+      "outcome": "unparseable",
+      "strictJson": false,
+      "envelope": "choices",
+      "finishReason": "length",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 311,
+        "completion_tokens": 2048,
+        "reasoning_tokens": null,
+        "neurons": 292.523
+      },
+      "estimatedNeurons": 293.409977,
+      "providerReportedNeurons": 292.523,
+      "reasoningChars": 6778,
+      "visibleChars": 0,
+      "response": ""
+    },
+    {
+      "state": "9-master",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 2051.7014999999956,
+      "inputSha256": "22cfae47151293f88e0f4342f0dafff97a9e0e9bd9115281fb7d1f495159e536",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a type of disease or medical condition?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "abraxases",
+        "acariases",
+        "ananiases",
+        "anaphases",
+        "antabuses",
+        "diapauses",
+        "diaphyses",
+        "lithiases",
+        "mydriases",
+        "parabases",
+        "paralyses",
+        "purchases"
+      ],
+      "no": [
+        "anacruses",
+        "appraises",
+        "arbutuses",
+        "bauhauses",
+        "calamuses",
+        "caritases",
+        "catabases",
+        "catalases",
+        "catalyses",
+        "catharses",
+        "chlamyses",
+        "cutpurses",
+        "cyathuses",
+        "czardases",
+        "databases",
+        "famuluses",
+        "grampuses",
+        "incubuses",
+        "jugginses",
+        "katabases",
+        "katharses",
+        "linctuses",
+        "lychnises",
+        "marquises",
+        "minibuses",
+        "minimuses",
+        "mugginses",
+        "paradises",
+        "parulises",
+        "rhachises",
+        "thalluses"
+      ],
+      "yesShare": 0.27906976744186046,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 422,
+        "completion_tokens": 250,
+        "reasoning_tokens": null,
+        "neurons": 52.989999999999995
+      },
+      "estimatedNeurons": 53.27301,
+      "providerReportedNeurons": 52.989999999999995,
+      "reasoningChars": 209,
+      "visibleChars": 611,
+      "response": "\n\n{\"question\": \"Can your word mean a type of disease or medical condition?\", \"yes\": [\"abraxases\",\"acariases\",\"ananiases\",\"anaphases\",\"antabuses\",\"diapauses\",\"diaphyses\",\"lithiases\",\"mydriases\",\"parabases\",\"paralyses\",\"purchases\"], \"no\": [\"anacruses\",\"appraises\",\"arbutuses\",\"bauhauses\",\"calamuses\",\"caritases\",\"catabases\",\"catalases\",\"catalyses\",\"catharses\",\"chlamyses\",\"cutpurses\",\"cyathuses\",\"czardases\",\"databases\",\"famuluses\",\"grampuses\",\"incubuses\",\"jugginses\",\"katabases\",\"katharses\",\"linctuses\",\"lychnises\",\"marquises\",\"minibuses\",\"minimuses\",\"mugginses\",\"paradises\",\"parulises\",\"rhachises\",\"thalluses\"]}"
+    },
+    {
+      "state": "10-apprentice",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 12906.299700000003,
+      "inputSha256": "74dffac4d1663416854adabe46786ea3bf8fd2f2a0b776b4067050eea98e1f2b",
+      "outcome": "unparseable",
+      "strictJson": false,
+      "envelope": "choices",
+      "finishReason": "length",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 284,
+        "completion_tokens": 2048,
+        "reasoning_tokens": null,
+        "neurons": 291.308
+      },
+      "estimatedNeurons": 292.182692,
+      "providerReportedNeurons": 291.308,
+      "reasoningChars": 8106,
+      "visibleChars": 0,
+      "response": ""
+    },
+    {
+      "state": "10-scholar",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 12578.772399999987,
+      "inputSha256": "444d98eb7bc7d16e03f724b93e9ee738dabf23fdfbb9a507d34c60b02b64514e",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean a noun that refers to a type of artistic style or motif?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "arabesques",
+        "archetypes",
+        "grotesques",
+        "travesties"
+      ],
+      "no": [
+        "grapevines",
+        "promenaded",
+        "promenades",
+        "prosecuted",
+        "prosecutes",
+        "proselyted",
+        "proselytes",
+        "travestied"
+      ],
+      "yesShare": 0.3333333333333333,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 298,
+        "completion_tokens": 1715,
+        "reasoning_tokens": null,
+        "neurons": 246.65
+      },
+      "estimatedNeurons": 247.40985,
+      "providerReportedNeurons": 246.65,
+      "reasoningChars": 6060,
+      "visibleChars": 262,
+      "response": "\n{\"question\":\"Can your word mean a noun that refers to a type of artistic style or motif?\",\"yes\":[\"arabesques\",\"archetypes\",\"grotesques\",\"travesties\"],\"no\":[\"grapevines\",\"promenaded\",\"promenades\",\"prosecuted\",\"prosecutes\",\"proselyted\",\"proselytes\",\"travestied\"]}"
+    },
+    {
+      "state": "10-master",
+      "model": "@cf/nvidia/nemotron-3-120b-a12b",
+      "mode": "invent",
+      "milliseconds": 4370.034200000024,
+      "inputSha256": "82fbe0045e3ab1ed4045f9af4ebfe495a5b610dace2335836ae88fe7f8a554aa",
+      "outcome": "accepted",
+      "strictJson": true,
+      "extraKeys": [],
+      "question": "Can your word mean to release or emit something?",
+      "problems": [],
+      "sets": {
+        "missing": [],
+        "extra": [],
+        "duplicated": []
+      },
+      "yes": [
+        "ejaculated",
+        "ejaculates",
+        "evaginated",
+        "evaginates",
+        "evaporated",
+        "evaporates"
+      ],
+      "no": [
+        "elaborated",
+        "elaborates",
+        "eradicated",
+        "eradicates",
+        "exarchates"
+      ],
+      "yesShare": 0.5454545454545454,
+      "envelope": "choices",
+      "finishReason": "stop",
+      "providerModel": "@cf/nvidia/nemotron-3-120b-a12b",
+      "usage": {
+        "prompt_tokens": 290,
+        "completion_tokens": 536,
+        "reasoning_tokens": null,
+        "neurons": 85.946
+      },
+      "estimatedNeurons": 86.273054,
+      "providerReportedNeurons": 85.946,
+      "reasoningChars": 1777,
+      "visibleChars": 236,
+      "response": "\n{\"question\": \"Can your word mean to release or emit something?\", \"yes\": [\"ejaculated\", \"ejaculates\", \"evaporated\", \"evaporates\", \"evaginated\", \"evaginates\"], \"no\": [\"elaborated\", \"elaborates\", \"eradicated\", \"eradicates\", \"exarchates\"]}"
+    }
+  ],
+  "finishedAt": "2026-10-04T14:54:11.087Z",
+  "budget": {
+    "day": "2026-10-04",
+    "requests": 21,
+    "reservedNeurons": 3575.921019,
+    "maxRequests": 1800,
+    "maxNeurons": 10000,
+    "scope": "local I7a runs today; excludes other account usage; token-derived estimates, not billed neurons"
+  }
+}

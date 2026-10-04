@@ -288,6 +288,32 @@ On the four shared states: 1/4 usable (Llama 3.3 70B 3/4, Gemma 4/4). Nemotron i
 contender with this prompt. Its narrow questions might respond to prompt tuning, which
 belongs on a held-out set.
 
+### Nemotron 3 120B at low reasoning, all 21 boards (2026-10-04)
+
+`benchmarks/illucia-d1-nemotron-low-21.json`. The invent task on all 21 frozen states, with
+`chat_template_kwargs: {enable_thinking: true, low_effort: true}`, a 60 s timeout and a
+5,000-neuron run ceiling. It cost 3,576 neurons for 21 requests, about 170 each.
+
+| | Nemotron 3 120B (low) | Llama 3.3 70B (no reasoning) |
+|---|---:|---:|
+| Usable questions | 11/21 | 15/21 |
+| Usable within 3 s / 8 s | 4 / 9 | 11 / 15 |
+| p50 / p95 / max | 7.9 / 17.5 / 17.7 s | 2.2 / 4.4 / 4.8 s |
+| Neurons per question | ~170 | ~38 |
+
+Why the others failed:
+- **Out of tokens:** 5 replies hit the 2,048-token ceiling still reasoning (13–18 s, about
+  295 neurons each, no answer).
+- **Wrong wording:** 2 broke it ("Can your word be a surname?").
+- **Wrong lists or uneven split:** 2 wrong lists, 1 uneven.
+
+Three of the 11 usable questions ask about grammar rather than meaning ("a verb?", "an
+adjective or adverb?", "a noun that refers to …"). The validator lets them through.
+
+**Verdict:** low reasoning makes Nemotron slower, costlier and no better than Llama 3.3 70B
+without reasoning. The sort task was not run: the invent result decides it, and the rest of
+the day's 5,000-neuron test budget would not have covered it.
+
 ## Clef: a decision model as the sorter (2026-10-03, `benchmarks/illucia-d1-clef.json`)
 
 Cloudflare's Clef (`@cf/cloudflare/clef`, 27B) and Clef-flash (`@cf/cloudflare/clef-flash`,
