@@ -143,3 +143,12 @@ Prompted by players seeing "out of questions" all day. Production's `ai_budget` 
 - **Not verified in production:** a real question through both models (binding envelopes, latency, cost). Expected about 100 neurons a question; the 2,000-neuron daily budget then allows roughly 15–20 site-wide.
 - Rollback: set `AI_MODEL` to `llama-3.3-70b` (Llama alone) and redeploy, or `wrangler rollback` to `f003ec88`.
 
+## Illucia AI question log, no caps (production, 2026-10-04)
+
+- `c7bd545` (both pages send `guesses` and log answers; `/privacy` discloses the log; pushed first, live with `index-DhX0dpZn.js` before the Worker changed), `346bd63` (migration `0009` `illucia_ai_log`, `/user/illucia/ai-answer`, caps settable to `none`) and `08f3011` (`tools/read-illucia-ai-log.js`).
+- Before release: 95 Worker/D1 tests (7 new for the log and caps, each guard seen failing when removed), type check and dry-run build; client 115 Node and 101 UI tests and build; tools 259 tests. `/privacy` text checked in the built page.
+- Migration `0009_illucia_ai_log.sql` applied remotely (non-interactive); production lists `illucia_ai_log` and its two indexes, with 0 rows.
+- Worker `1893d89e-076c-4410-976a-5f50396bcc7e` deployed, replacing `c94ae21e`: `AI_MODEL` `llama-3.3-70b-clef-flash`; `AI_DAILY_NEURONS`, `AI_DAILY_REQUESTS` and `AI_USER_DAILY_QUESTIONS` `none`. Unauthenticated checks: `ask` and `ai-answer` 401, `get-best-scores` 200, both Illucia pages and `/privacy` 200. The log reader ran against production (0 rows).
+- **Not verified in production:** a logged question and answer from a real signed-in round.
+- Rollback: `wrangler rollback` to `c94ae21e` (the log table can stay; that Worker ignores it), or restore numeric caps in `wrangler.jsonc` and redeploy.
+
