@@ -9,7 +9,7 @@ import { greetingLine, openingLine } from '../lib/illucia/observatory-lines.js';
 import { aiNote, ANSWERS, REPLIES, aiAnswerLine, aiFallbackLine, aiQuestionLine, answerLine, askLine, questionLine, questionNote, reasonLine, replyLine, solvedLine } from '../lib/illucia/duel-lines.js';
 import { EXPERIMENTAL_WARNING, answerQuestion, applyConsult, countWords, createSession, herKnowledge, offerStake, previewPoints, rememberLine, roundStakes, startWarning, takeTurn, tierLabel } from '../lib/illucia/duel-session.js';
 import { loadQuestions } from '../lib/illucia-assets.js';
-import { askIlluciaAi } from '../lib/illucia-rounds.js';
+import { askIlluciaAi, logAiAnswer } from '../lib/illucia-rounds.js';
 import { useIlluciaRounds } from '../lib/use-illucia-rounds.js';
 import { ILLUCIA_ALREADY_WON_MESSAGE, ILLUCIA_NO_POINTS } from '../../../shared/scoring-protocol.js';
 import './Illucia.css';
@@ -385,7 +385,7 @@ function DuelPage({ userId, username }) {
   useEffect(() => {
     if (duel?.phase !== 'consulting') return;
     const controller = new AbortController();
-    askIlluciaAi({ roundId: duel.ticket.roundId, candidates: duel.consult, signal: controller.signal })
+    askIlluciaAi({ roundId: duel.ticket.roundId, candidates: duel.consult, guesses: duel.round.guesses, signal: controller.signal })
       .then(reply => setDuel(current => (current === duel ? consulted(current, reply) : current)))
       .catch(() => {});
     return () => controller.abort();
@@ -443,7 +443,11 @@ function DuelPage({ userId, username }) {
           {REPLIES.map(choice => <button key={choice.id} type="button" onClick={() => setDuel(current => reply(current, choice.id))}>{choice.text}</button>)}
         </div>
       </div>}
-      {duel?.phase === 'question' && <Offer duel={duel} onAnswer={id => setDuel(current => answer(current, id))} />}
+      {duel?.phase === 'question' && <Offer duel={duel} onAnswer={id => {
+        // An AI question's answer also goes to the Worker's log.
+        if (duel.pending?.ai) logAiAnswer({ roundId: duel.ticket?.roundId, logId: duel.pending.question.logId, answer: id });
+        setDuel(current => answer(current, id));
+      }} />}
       {duel?.phase === 'error' && <div className="duel-result-actions"><button type="button" className="hm-button primary" onClick={restart}>New word</button></div>}
     </div>
 

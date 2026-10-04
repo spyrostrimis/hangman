@@ -55,12 +55,14 @@ export async function loadIlluciaStats({ signal } = {}) {
 // Experimental mode (v2 E5): ask the Worker's AI route for a meaning question over her candidates
 // (2-80, sorted). The model never sees the board, the player or which word is theirs. Any failure
 // is { ok: false }, and she makes her normal move.
-export async function askIlluciaAi({ roundId, candidates, signal }) {
+// `guesses` (her letters so far) is for the Worker's log of AI questions only.
+export async function askIlluciaAi({ roundId, candidates, guesses, signal }) {
   let reply;
   try {
     // Longer than the Worker's own timeout for the slowest model it may use (40 s), so the
     // Worker's answer, a question or a reason, always arrives.
-    reply = await apiRequest('/user/illucia/ask', { method: 'POST', signal, timeout: 45000, body: { roundId, candidates } });
+    reply = await apiRequest('/user/illucia/ask', { method: 'POST', signal, timeout: 45000,
+      body: { roundId, candidates, ...(Array.isArray(guesses) ? { guesses } : {}) } });
   } catch (error) {
     if (signal?.aborted) throw error;
     return { ok: false, reason: 'unavailable' };
@@ -75,5 +77,13 @@ export async function askIlluciaAi({ roundId, candidates, signal }) {
   }
   // The model's name, shown in her note; anything unexpected is left out rather than displayed.
   const model = typeof reply.model === 'string' && /^[\w .-]{1,40}$/.test(reply.model) ? reply.model : null;
-  return { ok: true, question: reply.question.trim(), yes: reply.yes, no: reply.no, questionsLeft: reply.questionsLeft, model };
+  // The log row for this question, so the player's answer can be added to it.
+  const logId = typeof reply.logId === 'string' && /^[0-9a-f-]{36}$/.test(reply.logId) ? reply.logId : null;
+  return { ok: true, question: reply.question.trim(), yes: reply.yes, no: reply.no, questionsLeft: reply.questionsLeft, model, logId };
+}
+
+// The player's answer to an AI question, for the Worker's log only; failures are ignored.
+export function logAiAnswer({ roundId, logId, answer }) {
+  if (!roundId || !logId || !['yes', 'no', 'declined'].includes(answer)) return Promise.resolve(false);
+  return apiRequest('/user/illucia/ai-answer', { method: 'POST', body: { roundId, logId, answer } }).then(() => true, () => false);
 }

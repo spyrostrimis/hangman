@@ -12,7 +12,7 @@ import { greetingLine, notebookLine, openingLine, questionSmallPrint, turnLine }
 import { aiNote, ANSWERS, aiAnswerLine, aiFallbackLine, aiQuestionLine, answerLine, questionLine } from '../lib/illucia/duel-lines.js';
 import { EXPERIMENTAL_WARNING, answerQuestion, applyConsult, createSession, herKnowledge, offerStake, previewPoints, rememberLine, roundStakes, startWarning, takeTurn, tierLabel } from '../lib/illucia/duel-session.js';
 import { loadQuestions } from '../lib/illucia-assets.js';
-import { askIlluciaAi } from '../lib/illucia-rounds.js';
+import { askIlluciaAi, logAiAnswer } from '../lib/illucia-rounds.js';
 import { useIlluciaRounds } from '../lib/use-illucia-rounds.js';
 import { ILLUCIA_ALREADY_WON_MESSAGE, ILLUCIA_NO_POINTS } from '../../../shared/scoring-protocol.js';
 import './IlluciaObservatory.css';
@@ -497,7 +497,7 @@ function ObservatoryPage({ userId, username }) {
     if (!game?.consult) return;
     const controller = new AbortController();
     const asked = game;
-    askIlluciaAi({ roundId: asked.ticket.roundId, candidates: asked.consult, signal: controller.signal })
+    askIlluciaAi({ roundId: asked.ticket.roundId, candidates: asked.consult, guesses: asked.round.guesses, signal: controller.signal })
       .then(reply => setGame(current => {
         if (current !== asked) return current;
         const turn = current.round.guesses.length;
@@ -522,6 +522,8 @@ function ObservatoryPage({ userId, username }) {
   function answer(choiceId) {
     const result = answerQuestion(game, choiceId);
     if (!result) return;
+    // An AI question's answer also goes to the Worker's log.
+    if (result.ai) logAiAnswer({ roundId: game.ticket?.roundId, logId: game.pending?.question.logId, answer: choiceId });
     const { session } = result;
     const candidates = filterCandidates(toPublicState(session.round), herKnowledge(session).words);
     const lit = brightestStars(candidates, session.knowledge.learned);

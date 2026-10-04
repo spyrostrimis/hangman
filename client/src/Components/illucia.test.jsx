@@ -624,11 +624,14 @@ it('keeps experimental mode off by default and warns when it is switched on', as
 
 it('asks her AI helper instead of WordNet, leans on the answer without ruling words out, and claims nothing', async () => {
   serveQuestions();
+  let asks = 0;
   const requests = serveApi({
     '/user/illucia/start': body => [200, experimentalTicket(body)],
+    // Only the first reply carries a log id: its answer is logged, the second's cannot be.
     '/user/illucia/ask': body => [200, { ok: true, question: 'Can your word mean something that flies?',
       yes: body.candidates.filter(word => BIRDS.has(word)), no: body.candidates.filter(word => !BIRDS.has(word)), questionsLeft: 1,
-      model: '<img src=x>' }],
+      model: '<img src=x>', ...(asks++ === 0 ? { logId: '0b1e2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d' } : {}) }],
+    '/user/illucia/ai-answer': () => [200, { ok: true }],
   });
   const view = mount(); await startExperimental();
   expect(requests.find(([url]) => url === '/user/illucia/start')[1]).toEqual({ word: 'crane', tier: 'master', experimental: true });
@@ -636,7 +639,10 @@ it('asks her AI helper instead of WordNet, leans on the answer without ruling wo
   expect(screen.getByLabelText('Points: No points')).toBeTruthy();
   await forceMisses(await realDecision());
   const ask = requests.filter(([url]) => url === '/user/illucia/ask');
-  expect(ask).toEqual([['/user/illucia/ask', { roundId: 'round-crane-master', candidates: QUESTION_WORDS }]]);
+  // Her letters so far go with the candidates, for the Worker's log.
+  expect(ask).toEqual([['/user/illucia/ask', { roundId: 'round-crane-master', candidates: QUESTION_WORDS, guesses: expect.any(Array) }]]);
+  expect(ask[0][1].guesses.length).toBeGreaterThanOrEqual(2);
+  expect(ask[0][1].guesses.every(letter => /^[a-z]$/.test(letter))).toBe(true);
   expect(bubbles(view.container, 'illucia').at(-1)).toMatch(/Can your word mean something that flies\?$/);
   expect(bubbles(view.container, 'illucia').join(' ')).not.toMatch(/a bird\?/);
   // A model name that is not plain text is left out rather than shown (the Observatory test shows a valid one).
@@ -655,6 +661,9 @@ it('asks her AI helper instead of WordNet, leans on the answer without ruling wo
   // Her second AI question (one left) is declined inside playToHerLoss.
   await playToHerLoss(real, ['x', 'v', 'k']);
   expect(requests.filter(([url]) => url === '/user/illucia/ask')).toHaveLength(2);
+  // The "yes" to the first question was logged; the declined second (no log id) was not.
+  expect(requests.filter(([url]) => url === '/user/illucia/ai-answer'))
+    .toEqual([['/user/illucia/ai-answer', { roundId: 'round-crane-master', logId: '0b1e2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d', answer: 'yes' }]]);
   expect(screen.getByText('Experimental duels earn no points.')).toBeTruthy();
   expect(requests.some(([url]) => url === '/user/illucia/claim')).toBe(false);
 });

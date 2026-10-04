@@ -588,7 +588,8 @@ it('asks her AI helper instead of WordNet, splits her sky by its sort, leans on 
     '/user/illucia/start': body => [200, experimentalTicket(body)],
     '/user/illucia/ask': body => [200, { ok: true, question: 'Can your word mean something that flies?',
       yes: body.candidates.filter(word => BIRDS.has(word)), no: body.candidates.filter(word => !BIRDS.has(word)), questionsLeft: 1,
-      model: 'Llama 3.3 70B and Clef-flash' }],
+      model: 'Llama 3.3 70B and Clef-flash', logId: '0b1e2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d' }],
+    '/user/illucia/ai-answer': () => [200, { ok: true }],
   });
   await forceLetters('zqjxvk');
   const view = mount();
@@ -599,15 +600,21 @@ it('asks her AI helper instead of WordNet, splits her sky by its sort, leans on 
   expect(points(view)).toBe('No points');
   await tick(); await tick(); await tick();
   await settle();
-  expect(requests.filter(([url]) => url === '/user/illucia/ask')).toEqual([['/user/illucia/ask', { roundId: 'round-crane-master', candidates: QUESTION_WORDS }]]);
+  const ask = requests.filter(([url]) => url === '/user/illucia/ask');
+  expect(ask).toEqual([['/user/illucia/ask', { roundId: 'round-crane-master', candidates: QUESTION_WORDS, guesses: expect.any(Array) }]]);
+  expect(ask[0][1].guesses.length).toBeGreaterThanOrEqual(2);
   expect(card(view).querySelector('h3').textContent).toBe('Can your word mean something that flies?');
   expect(view.container.querySelector('.obs-bubble').textContent).toMatch(/Can your word mean something that flies\?$/);
   // Her note names the model the Worker says answered.
   expect(card(view).textContent).toContain('Written by AI (Llama 3.3 70B and Clef-flash, on Cloudflare Workers AI).');
   expect(card(view).textContent).toContain('An AI question earns nothing and cannot be checked.');
   expect([sky(view, 'side-yes'), sky(view, 'side-no')]).toEqual([4, 4]);
+  expect(requests.some(([url]) => url === '/user/illucia/ai-answer')).toBe(false);
   fireEvent.click(screen.getByRole('button', { name: 'Yes, it can' }));
   expect(view.container.querySelector('.obs-bubble').textContent).toMatch(/lean that way/);
+  // The answer goes to the Worker's log with the question's log id.
+  expect(requests.filter(([url]) => url === '/user/illucia/ai-answer').slice(0, 1))
+    .toEqual([['/user/illucia/ai-answer', { roundId: 'round-crane-master', logId: '0b1e2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d', answer: 'yes' }]]);
   // Nothing is ruled out: no star fades, and every word stays possible, the birds weighing three times as much.
   expect(sky(view, 'out')).toBe(0);
   await tick();
