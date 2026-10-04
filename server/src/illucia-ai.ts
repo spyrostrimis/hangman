@@ -4,13 +4,27 @@
 // The model sees the candidate list only, never the player's word. Code validates every
 // reply; any failure, timeout or exhausted budget tells the page to make her normal move.
 import { ILLUCIA_MAX_QUESTIONS } from '../../shared/scoring-protocol.js';
-import { normalizeQuestionResult, questionInput, questionVocabularyProblems, validateReply } from '../../shared/illucia-question.js';
+import {
+  MAX_YES_SHARE, MIN_YES_SHARE, normalizeQuestionResult, questionInput, questionVocabularyProblems, validateReply,
+} from '../../shared/illucia-question.js';
+import { clefInputs, clefProbabilities, clefReserveTokens, clefSort, clefUsage } from '../../shared/illucia-clef.js';
 import { illuciaWordSize } from './illucia-words';
+
+type Rates = { input: number; output: number };
+type Sorter = { id: string; label: string; rates: Rates; timeoutMs: number };
+type AiModel = { id: string; label: string; rates: Rates; maxTokens: number; timeoutMs: number; options: object; sorter?: Sorter };
+
+// Clef-flash, Cloudflare's decision model: it cannot write a question, but sorts candidates
+// under one (D1: 91% agreement with WordNet, every sort within 1.2 s). It bills input only,
+// about 90-99 tokens per candidate.
+const CLEF_FLASH: Sorter = Object.freeze({ id: '@cf/cloudflare/clef-flash', label: 'Clef-flash',
+  rates: Object.freeze({ input: 21818, output: 0 }), timeoutMs: 4000 });
 
 // The models the route may use, chosen by the AI_MODEL var. Rates are neurons per million
 // tokens, checked against Cloudflare's pricing page on 2026-10-02. `label` names the model
-// to the player on every AI question.
-export const AI_MODELS = Object.freeze({
+// to the player on every AI question. With a `sorter`, the first model only writes the
+// question, and the sorter's lists replace its own.
+export const AI_MODELS: Readonly<Record<string, AiModel>> = Object.freeze({
   // The D1 pick. Its longest D1 reply used 310 tokens (80 candidates need about 400), and
   // every reply arrived within 4.8 s (p95 4.4 s).
   'llama-3.3-70b': Object.freeze({ id: '@cf/meta/llama-3.3-70b-instruct-fp8-fast', label: 'Llama 3.3 70B',
@@ -25,8 +39,12 @@ export const AI_MODELS = Object.freeze({
   'gpt-oss-120b-low': Object.freeze({ id: '@cf/openai/gpt-oss-120b', label: 'gpt-oss-120b',
     rates: Object.freeze({ input: 31818, output: 68182 }), maxTokens: 4096, timeoutMs: 40000,
     options: Object.freeze({ reasoning_effort: 'low' }) }),
+  // Owner's choice for production from 2026-10-04: Llama writes, Clef-flash sorts.
+  'llama-3.3-70b-clef-flash': Object.freeze({ id: '@cf/meta/llama-3.3-70b-instruct-fp8-fast', label: 'Llama 3.3 70B',
+    rates: Object.freeze({ input: 26668, output: 204805 }), maxTokens: 768, timeoutMs: 6000, options: Object.freeze({}),
+    sorter: CLEF_FLASH }),
 });
-export type AiModelKey = keyof typeof AI_MODELS;
+export type AiModelKey = string;
 export const DEFAULT_AI_MODEL: AiModelKey = 'llama-3.3-70b';
 export const AI_MAX_CANDIDATES = 80;
 const DEFAULT_LIMITS = Object.freeze({ dailyNeurons: 2000, dailyRequests: 60, userDaily: 30 });
@@ -55,8 +73,8 @@ export function aiLimits(env: AiEnv): AiLimits {
   return { enabled: env.AI_ENABLED === 'true' && valid && typeof (env.AI as AiRunner | undefined)?.run === 'function', model, ...limits };
 }
 
-export const neuronsFor = (model: AiModelKey, promptTokens: number, completionTokens: number) =>
-  (promptTokens * AI_MODELS[model].rates.input + completionTokens * AI_MODELS[model].rates.output) / 1e6;
+export const neuronsFor = (rates: Rates, promptTokens: number, completionTokens: number) =>
+  (promptTokens * rates.input + completionTokens * rates.output) / 1e6;
 
 // The binding may return text, a chat `choices` envelope, or JSON it already parsed into
 // `response` (seen in I7a); a parsed object is re-serialized and validated like text.
@@ -101,8 +119,13 @@ export async function askIllucia(env: AiEnv, userId: string, roundId: string, ca
 
   const model = AI_MODELS[limits.model];
   const input = questionInput('invent', candidates, { maxTokens: model.maxTokens, options: model.options });
-  // Worst case: every prompt byte a token, plus template overhead, and every allowed output token.
-  const reservation = neuronsFor(limits.model, new TextEncoder().encode(JSON.stringify(input.messages)).length + 256, model.maxTokens);
+  // Worst cases: every prompt byte a token, plus template overhead, and every allowed output
+  // token; for the sorter, its measured per-question template too (clefReserveTokens).
+  const inventReservation = neuronsFor(model.rates, new TextEncoder().encode(JSON.stringify(input.messages)).length + 256, model.maxTokens);
+  const sortReservation = model.sorter
+    ? clefInputs(model.sorter.id, candidates, 'Can your word mean anything?')
+      .reduce((sum, part) => sum + neuronsFor(model.sorter!.rates, clefReserveTokens(part), 0), 0) : 0;
+  const reservation = inventReservation + sortReservation;
   const day = dayOf(now);
   const token = crypto.randomUUID();
   const granted = 'EXISTS (SELECT 1 FROM illucia_rounds WHERE id = ? AND ai_token = ?)';
@@ -135,37 +158,78 @@ export async function askIllucia(env: AiEnv, userId: string, roundId: string, ca
     return { ok: false, reason: 'budget', questionsLeft };
   }
 
-  // Replace the reservation with measured usage when it arrives, even after a timeout.
+  // Replace each part of the reservation with measured usage when it arrives, even after a
+  // timeout; a part that never ran is released.
   type Usage = { prompt_tokens?: number | null; completion_tokens?: number | null } | null | undefined;
-  const settle = async (usage: Usage) => {
+  const settle = async (reserved: number, rates: Rates, usage: Usage) => {
     if (!Number.isInteger(usage?.prompt_tokens) || !Number.isInteger(usage?.completion_tokens)) return;
     await db.prepare('UPDATE ai_budget SET neurons = MAX(0, neurons - ? + ?) WHERE day = ?')
-      .bind(reservation, neuronsFor(limits.model, usage!.prompt_tokens!, usage!.completion_tokens!), day).run();
+      .bind(reserved, neuronsFor(rates, usage!.prompt_tokens!, usage!.completion_tokens!), day).run();
+  };
+  const releaseSort = () => (model.sorter ? settle(sortReservation, model.sorter.rates, { prompt_tokens: 0, completion_tokens: 0 }) : null);
+  const race = async <T,>(work: Promise<T>, ms: number) => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const timedOut = new Promise<'timeout'>(resolve => { timer = setTimeout(() => resolve('timeout'), ms); });
+    const result = await Promise.race([work, timedOut]);
+    if (timer !== undefined) clearTimeout(timer);
+    return result;
   };
   const started = Date.now();
-  const call = (env.AI as AiRunner).run(model.id, input).then(readReply, () => null);
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  const timedOut = new Promise<'timeout'>(resolve => { timer = setTimeout(() => resolve('timeout'), timeoutMs ?? model.timeoutMs); });
-  const result = await Promise.race([call, timedOut]);
-  if (timer !== undefined) clearTimeout(timer);
   const log = (outcome: string) => console.log(JSON.stringify({ event: 'illucia_ai', model: limits.model, outcome, ms: Date.now() - started }));
+  const fail = (reason: 'timeout' | 'unavailable' | 'invalid', outcome: string = reason) => {
+    log(outcome);
+    return { ok: false as const, reason, questionsLeft };
+  };
+
+  const call = (env.AI as AiRunner).run(model.id, input).then(readReply, () => null);
+  const result = await race(call, timeoutMs ?? model.timeoutMs);
   if (result === 'timeout') {
-    defer(call.then(late => settle(late?.usage ?? null)).catch(() => {}));
-    log('timeout');
-    return { ok: false, reason: 'timeout', questionsLeft };
+    defer(call.then(late => settle(inventReservation, model.rates, late?.usage ?? null)).catch(() => {}));
+    await releaseSort();
+    return fail('timeout');
   }
-  await settle(result?.usage ?? null);
+  await settle(inventReservation, model.rates, result?.usage ?? null);
   if (!result) {
-    log('unavailable');
-    return { ok: false, reason: 'unavailable', questionsLeft };
+    await releaseSort();
+    return fail('unavailable');
   }
   const verdict = validateReply(result.response, candidates, { mode: 'invent' });
-  if (verdict.outcome !== 'accepted'
-    || questionVocabularyProblems(verdict.question, (word: string) => illuciaWordSize(word) !== null).length) {
-    log('invalid');
-    return { ok: false, reason: 'invalid', questionsLeft };
+  const known = (word: string) => illuciaWordSize(word) !== null;
+  if (!model.sorter) {
+    if (verdict.outcome !== 'accepted' || questionVocabularyProblems(verdict.question, known).length) return fail('invalid');
+    log('accepted');
+    // An accepted reply always has both lists.
+    return { ok: true, question: String(verdict.question).trim(), yes: verdict.yes as string[], no: verdict.no as string[], questionsLeft, model: model.label };
   }
+
+  // With a sorter, only the question must be good: the first model's lists are not used.
+  if (['unparseable', 'wrong-shape', 'rejected-question'].includes(verdict.outcome)
+    || questionVocabularyProblems(verdict.question, known).length) {
+    await releaseSort();
+    return fail('invalid', 'invalid-question');
+  }
+  const question = String(verdict.question).trim();
+  const sorter = model.sorter;
+  type SortReply = { usage: ReturnType<typeof clefUsage>; probabilities: ReturnType<typeof clefProbabilities> } | null;
+  const parts = clefInputs(sorter.id, candidates, question);
+  const sorting: Promise<SortReply[]> = Promise.all(parts.map(part => (env.AI as AiRunner).run(sorter.id, part).then(
+    raw => ({ usage: clefUsage(raw), probabilities: clefProbabilities(raw, Object.keys(part.questions)) }), () => null)));
+  const settleSort = (replies: SortReply[]) => {
+    const tokens = replies.map(reply => reply?.usage?.prompt_tokens);
+    // A part without usage keeps the whole sort reservation (conservative).
+    return tokens.every(value => Number.isInteger(value))
+      ? settle(sortReservation, sorter.rates, { prompt_tokens: (tokens as number[]).reduce((a, b) => a + b, 0), completion_tokens: 0 })
+      : null;
+  };
+  const sorted = await race(sorting, sorter.timeoutMs);
+  if (sorted === 'timeout') {
+    defer(sorting.then(settleSort).catch(() => {}));
+    return fail('timeout', 'sort-timeout');
+  }
+  await settleSort(sorted);
+  if (sorted.some(reply => !reply?.probabilities)) return fail('unavailable', 'sort-unavailable');
+  const split = clefSort(Object.assign({}, ...sorted.map(reply => reply!.probabilities)), candidates);
+  if (split.yesShare < MIN_YES_SHARE || split.yesShare > MAX_YES_SHARE) return fail('invalid', 'sort-uneven');
   log('accepted');
-  // An accepted reply always has both lists.
-  return { ok: true, question: String(verdict.question).trim(), yes: verdict.yes as string[], no: verdict.no as string[], questionsLeft, model: model.label };
+  return { ok: true, question, yes: split.yes, no: split.no, questionsLeft, model: `${model.label} and ${sorter.label}` };
 }

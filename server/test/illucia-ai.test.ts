@@ -17,7 +17,18 @@ const good = (question = 'Can your word mean an animal?', yes = ANIMALS) => ({
   response: JSON.stringify({ question, yes, no: WORDS.filter(word => !yes.includes(word)) }),
   usage: { prompt_tokens: 300, completion_tokens: 60 },
 });
-const fakeAi = { run: async (model: string, input: Call['input']) => { calls.push({ model, input }); return reply(); } };
+type ClefInput = { model: string; state: string; questions: Record<string, { type: string; instructions: string }> };
+// Clef-flash's side of the fake: a probability per word it is asked about.
+const clefDefault = async (input: ClefInput): Promise<unknown> => ({
+  answers: Object.fromEntries(Object.keys(input.questions).map(word => [word, { type: 'noul', noul: clefYes(word) }])),
+  usage: { input_tokens: 90 * Object.keys(input.questions).length, output_tokens: 0 },
+});
+let clefYes: (word: string) => number = word => (ANIMALS.includes(word) ? 0.9 : 0.1);
+let clefReply: (input: ClefInput) => Promise<unknown> = clefDefault;
+const fakeAi = { run: async (model: string, input: Call['input']) => {
+  calls.push({ model, input });
+  return model.includes('clef') ? clefReply(input as unknown as ClefInput) : reply();
+} };
 let vars: Record<string, unknown> = {};
 let requestNumber = 0;
 function request(path: string, options: { body?: unknown; cookie?: string } = {}) {
@@ -47,6 +58,8 @@ beforeEach(async () => {
   calls = [];
   vars = {};
   reply = async () => good();
+  clefYes = word => (ANIMALS.includes(word) ? 0.9 : 0.1);
+  clefReply = clefDefault;
   await env.DB.batch(['illucia_ai_users', 'ai_budget', 'illucia_beaten_words', 'illucia_player_words', 'illucia_tier_stats', 'word_counts',
     'illucia_rounds', 'illucia_players', 'rounds', 'scores', 'users', 'deleted_accounts']
     .map(table => env.DB.prepare(`DELETE FROM ${table}`)));
@@ -239,3 +252,101 @@ describe('Illucia AI question (D2)', () => {
     expect((await budget())!.requests).toBe(1);
   });
 });
+
+describe('Llama writes, Clef-flash sorts (AI_MODEL llama-3.3-70b-clef-flash)', () => {
+  const pipeline = { AI_MODEL: 'llama-3.3-70b-clef-flash' };
+  const llamaNeurons = (300 * 26668 + 60 * 204805) / 1e6;
+  const clefNeurons = (words: number) => (90 * words * 21818) / 1e6;
+
+  it('uses Llama for the question and Clef-flash for the lists, and settles both', async () => {
+    vars = pipeline;
+    // Llama's own lists are wrong (fish missing); with a sorter they are not used.
+    reply = async () => ({ ...good(), response: JSON.stringify({ question: 'Can your word be an animal?', yes: ['bird', 'wolf'],
+      no: ['boat', 'cake', 'lamp', 'tree', 'yarn'] }) });
+    const { cookie } = await signup();
+    const result = await (await ask(cookie, await startRound(cookie))).json();
+    expect(result).toEqual({ ok: true, question: 'Can your word be an animal?', yes: ANIMALS,
+      no: WORDS.filter(word => !ANIMALS.includes(word)), questionsLeft: 1, model: 'Llama 3.3 70B and Clef-flash' });
+    expect(calls.map(c => c.model)).toEqual(['@cf/meta/llama-3.3-70b-instruct-fp8-fast', '@cf/cloudflare/clef-flash']);
+    const clef = calls[1].input as unknown as ClefInput;
+    expect(clef.model).toBe('clef-flash');
+    expect(Object.keys(clef.questions)).toEqual(WORDS);
+    expect(clef.questions.bird.instructions).toBe('Can the word "bird" be an animal?');
+    // The player's word (jazz) is not among these candidates, and nothing else carries it.
+    expect(JSON.stringify(clef)).not.toContain('jazz');
+    expect((await budget())!.neurons).toBeCloseTo(llamaNeurons + clefNeurons(WORDS.length), 6);
+  });
+
+  it('splits more than 64 candidates over two Clef requests', async () => {
+    vars = pipeline;
+    const { cookie } = await signup();
+    const roundId = await startRound(cookie);
+    // Accepted four-letter words, found in the word list rather than hard-coded.
+    const candidates: string[] = [];
+    for (const first of 'bcdfghlmnprst') for (const vowel of 'aeiou') for (const last of 'dgknpt') {
+      const word = `${first}${vowel}${last}s`;
+      if (illuciaWordSize(word) !== null) candidates.push(word);
+    }
+    candidates.sort();
+    candidates.splice(70);
+    expect(candidates.length).toBe(70);
+    clefYes = word => (candidates.indexOf(word) % 2 === 0 ? 0.8 : 0.2);
+    reply = async () => ({ response: JSON.stringify({ question: 'Can your word mean a thing?', yes: [], no: [] }),
+      usage: { prompt_tokens: 300, completion_tokens: 60 } });
+    const result = await (await ask(cookie, roundId, candidates)).json() as { ok: boolean; yes: string[] };
+    expect(result.ok).toBe(true);
+    const sizes = calls.filter(c => c.model.includes('clef')).map(c => Object.keys((c.input as unknown as ClefInput).questions).length);
+    expect(sizes).toEqual([64, 6]);
+    expect(result.yes).toEqual(candidates.filter((_, i) => i % 2 === 0));
+  });
+
+  it('a bad question never reaches Clef, and its sort reservation is released', async () => {
+    vars = pipeline;
+    const { cookie } = await signup();
+    const words = ['jazz', 'quiz', 'fizz'];
+    for (const [index, question] of ['Can your word mean a verb?', 'Does your word have an E?', 'Can your word mean a zorbx?'].entries()) {
+      reply = async () => good(question);
+      const roundId = await startRound(cookie, true, words[index]);
+      expect(await (await ask(cookie, roundId)).json(), question).toMatchObject({ ok: false, reason: 'invalid' });
+    }
+    expect(calls.every(c => !c.model.includes('clef'))).toBe(true);
+    expect((await budget())!.neurons).toBeCloseTo(3 * llamaNeurons, 6);
+  });
+
+  it('falls back when Clef-flash splits unevenly, fails or answers only part', async () => {
+    vars = pipeline;
+    const { cookie } = await signup();
+    const cases: [() => void, string][] = [
+      [() => { clefYes = word => (word === 'bird' ? 0.9 : 0.1); }, 'invalid'],
+      [() => { clefReply = async () => { throw new Error('down'); }; }, 'unavailable'],
+      [() => { clefReply = async () => ({ answers: { bird: { noul: 0.9 } }, usage: { input_tokens: 90 } }); }, 'unavailable'],
+    ];
+    const words = ['jazz', 'quiz', 'fizz'];
+    for (const [index, [setup, reason]] of cases.entries()) {
+      setup();
+      const roundId = await startRound(cookie, true, words[index]);
+      expect(await (await ask(cookie, roundId)).json(), reason).toMatchObject({ ok: false, reason });
+    }
+  });
+
+  it('times out to a fallback when Clef-flash is slow, and settles it when it answers', async () => {
+    const { cookie, id } = await signup();
+    const roundId = await startRound(cookie);
+    let finish: () => void = () => {};
+    clefReply = input => new Promise(resolve => { finish = () => resolve(clefDefault(input)); });
+    const deferred: Promise<unknown>[] = [];
+    const round = (await readAiRound(env.DB, id, roundId, Date.now()))!;
+    const sorterTimeout = AI_MODELS['llama-3.3-70b-clef-flash'].sorter!.timeoutMs;
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    const pending = askIllucia({ ...env, AI: fakeAi, AI_ENABLED: 'true', ...pipeline }, id, roundId, WORDS, round,
+      { defer: work => { deferred.push(work); } });
+    await vi.waitFor(() => expect(calls.some(c => c.model.includes('clef'))).toBe(true));
+    await vi.advanceTimersByTimeAsync(sorterTimeout + 1);
+    vi.useRealTimers();
+    expect(await pending).toEqual({ ok: false, reason: 'timeout', questionsLeft: 1 });
+    finish();
+    await Promise.all(deferred);
+    expect((await budget())!.neurons).toBeCloseTo(llamaNeurons + clefNeurons(WORDS.length), 6);
+  });
+});
+

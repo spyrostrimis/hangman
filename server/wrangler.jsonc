@@ -9,7 +9,7 @@
   "routes": [{ "pattern": "hangman.spyrostrimis.com/user/*", "zone_name": "spyrostrimis.com" }],
   "vars": {
     "APP_ORIGIN": "https://hangman.spyrostrimis.com", "LOCAL_DEV": "false",
-    "AI_ENABLED": "true", "AI_MODEL": "gpt-oss-120b-low", "AI_DAILY_NEURONS": "2000", "AI_DAILY_REQUESTS": "60", "AI_USER_DAILY_QUESTIONS": "30"
+    "AI_ENABLED": "true", "AI_MODEL": "llama-3.3-70b-clef-flash", "AI_DAILY_NEURONS": "2000", "AI_DAILY_REQUESTS": "60", "AI_USER_DAILY_QUESTIONS": "30"
   },
   // Experimental AI mode (v2 D2). Production only: the local environment has no AI binding,
   // so local development and tests never spend the account's Workers AI allowance.
