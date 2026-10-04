@@ -197,8 +197,8 @@ test('her memory of a word: learned from you first, then your plays, then everyo
 
 test('experimental lines: her helper\'s question, her lean, and failures she owns', () => {
   assert.equal(aiQuestionLine('Can your word mean something that flies?', 0), 'I asked my AI helper for a question. Can your word mean something that flies?');
-  assert.equal(aiNote('gpt-oss-120b'), 'Written by an AI model (gpt-oss-120b, on Cloudflare Workers AI). It can be wrong, so I only lean on your answer.');
-  assert.equal(aiNote(null), 'Written by an AI model (on Cloudflare Workers AI). It can be wrong, so I only lean on your answer.');
+  assert.equal(aiNote('Llama 3.3 70B and Clef-flash'), 'Written by AI (Llama 3.3 70B and Clef-flash, on Cloudflare Workers AI). It can be wrong, so I only lean on your answer.');
+  assert.equal(aiNote(null), 'Written by AI (on Cloudflare Workers AI). It can be wrong, so I only lean on your answer.');
   assert.match(aiAnswerLine(false, 0), /lean that way/);
   assert.match(aiAnswerLine(true, 0), /Back to letters/);
   // Each limit says which one stopped her helper.

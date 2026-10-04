@@ -640,7 +640,7 @@ it('asks her AI helper instead of WordNet, leans on the answer without ruling wo
   expect(bubbles(view.container, 'illucia').at(-1)).toMatch(/Can your word mean something that flies\?$/);
   expect(bubbles(view.container, 'illucia').join(' ')).not.toMatch(/a bird\?/);
   // A model name that is not plain text is left out rather than shown (the Observatory test shows a valid one).
-  expect(view.container.querySelectorAll('.duel-bubble small')[2].textContent).toBe('Written by an AI model (on Cloudflare Workers AI). It can be wrong, so I only lean on your answer.');
+  expect(view.container.querySelectorAll('.duel-bubble small')[2].textContent).toBe('Written by AI (on Cloudflare Workers AI). It can be wrong, so I only lean on your answer.');
   expect(screen.getByText(/An AI question earns nothing and cannot be checked/)).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: 'Yes, it can' }));
   const real = await realDecision();
