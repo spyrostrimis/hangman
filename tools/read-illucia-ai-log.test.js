@@ -27,3 +27,37 @@ test('CSV quotes cells that need it', () => {
   assert.equal(toCsv([{ a: 'x', b: 'Can your word mean "a, b"?', c: null }]), 'a,b,c\nx,"Can your word mean ""a, b""?",\n');
   assert.equal(toCsv([]), '');
 });
+
+test('the workbook has a readable summary, one readable row per question, and every raw field', async () => {
+  const { writeWorkbook, questionRows } = await import('./lib/illucia-ai-log-workbook.js');
+  const ExcelJS = (await import('exceljs')).default;
+  const { mkdtemp, rm } = await import('node:fs/promises');
+  const { tmpdir } = await import('node:os');
+  const { join } = await import('node:path');
+  const rows = [
+    row({ created_at: Date.UTC(2026, 9, 4, 19, 5), round_seq: 3, turn: 4, word: 'jazz', pattern: '_azz', missed: 'es',
+      question: 'Can your word mean an animal?', yes_share: 0.375, word_side: 'no', answer: 'yes', inventor: 'Llama 3.3 70B', sorter: 'Clef-flash' }),
+    row({ outcome: 'sort-uneven', yes_share: null, answer: null }),
+  ];
+  const [first] = questionRows(rows);
+  assert.equal(first['When (UTC)'], '2026-10-04 19:05');
+  assert.equal(first['YES %'], 38);
+  assert.equal(first['Sort matched player'], 'NO');
+  assert.equal(first['Write question (s)'], 2);
+  assert.equal(first.Models, 'Llama 3.3 70B + Clef-flash');
+  const dir = await mkdtemp(join(tmpdir(), 'illucia-log-'));
+  try {
+    const path = join(dir, 'log.xlsx');
+    await writeWorkbook(path, rows, summarize(rows));
+    const book = new ExcelJS.Workbook();
+    await book.xlsx.readFile(path);
+    assert.deepEqual(book.worksheets.map(sheet => sheet.name), ['Summary', 'Questions', 'All fields']);
+    const questions = book.getWorksheet('Questions');
+    assert.equal(questions.rowCount, 3);
+    assert.equal(questions.getRow(1).getCell(1).value, 'When (UTC)');
+    assert.equal(questions.getRow(2).getCell(5).value, 'jazz');
+    assert.equal(book.getWorksheet('Summary').getRow(2).getCell(1).value, 'llama-3.3-70b-clef-flash');
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});

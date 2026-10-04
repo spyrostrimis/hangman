@@ -1,6 +1,6 @@
 // Reads the production log of Illucia's AI questions (D1 table illucia_ai_log, migration 0009)
-// and prints a summary per model setting. The full rows are saved, as JSON and CSV, to ignored
-// tools/output/. Read-only: it never changes the log. Uses the server's Wrangler login.
+// and prints a summary per model setting. The rows are saved to ignored tools/output/ as an Excel
+// workbook (Summary, Questions, All fields), JSON and CSV. Read-only: it never changes the log. Uses the server's Wrangler login.
 //
 //   node read-illucia-ai-log.js [--since 2026-10-04]
 import { execFile } from 'node:child_process';
@@ -8,6 +8,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { promisify } from 'node:util';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { writeWorkbook } from './lib/illucia-ai-log-workbook.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 
@@ -51,23 +52,38 @@ export function toCsv(rows) {
   return [columns.join(','), ...rows.map(row => columns.map(column => cell(row[column])).join(','))].join('\n') + '\n';
 }
 
+const parsesAsResult = text => {
+  try { return Array.isArray(JSON.parse(text)?.[0]?.results); } catch { return false; }
+};
+
 async function main() {
   const args = process.argv.slice(2);
   const since = args.includes('--since') ? args[args.indexOf('--since') + 1] : null;
   if (since !== null && !/^\d{4}-\d{2}-\d{2}$/.test(since)) throw new Error('--since takes a date like 2026-10-04.');
   const from = since ? Date.parse(`${since}T00:00:00Z`) : 0;
-  const { stdout } = await promisify(execFile)(process.execPath,
-    [resolve(ROOT, 'server/node_modules/wrangler/bin/wrangler.js'), 'd1', 'execute', 'DB', '--remote', '--json',
-      '--command', `SELECT * FROM illucia_ai_log WHERE created_at >= ${from} ORDER BY created_at`],
-    { cwd: resolve(ROOT, 'server'), windowsHide: true, timeout: 120000, maxBuffer: 256 * 1024 * 1024 });
+  let stdout;
+  try {
+    ({ stdout } = await promisify(execFile)(process.execPath,
+      [resolve(ROOT, 'server/node_modules/wrangler/bin/wrangler.js'), 'd1', 'execute', 'DB', '--remote', '--json',
+        '--command', `SELECT * FROM illucia_ai_log WHERE created_at >= ${from} ORDER BY created_at`],
+      { cwd: resolve(ROOT, 'server'), windowsHide: true, timeout: 120000, maxBuffer: 256 * 1024 * 1024 }));
+  } catch (error) {
+    // Wrangler sometimes crashes on Windows as it exits, after printing its complete answer;
+    // use that answer if it is whole, otherwise show Wrangler's own message.
+    stdout = error.stdout;
+    if (!parsesAsResult(stdout)) throw new Error(`Wrangler failed: ${String(error.stderr || error.message).trim().slice(0, 500)}`);
+  }
   const rows = JSON.parse(stdout)[0].results.map(row => ({ ...row, created: new Date(row.created_at).toISOString() }));
   const stamp = new Date().toISOString().replace(/[:.]/g, '-');
   const base = resolve(ROOT, `tools/output/illucia-ai-log-${stamp}`);
   await mkdir(resolve(ROOT, 'tools/output'), { recursive: true });
   await writeFile(`${base}.json`, JSON.stringify(rows, null, 2) + '\n');
   await writeFile(`${base}.csv`, toCsv(rows));
-  console.log(`${rows.length} rows${since ? ` since ${since}` : ''}. Saved ${base}.json and .csv`);
-  console.log(JSON.stringify(summarize(rows), null, 2));
+  const summary = summarize(rows);
+  await writeWorkbook(`${base}.xlsx`, rows, summary);
+  console.log(`${rows.length} rows${since ? ` since ${since}` : ''}.`);
+  console.log(`Open in Excel (or import into Google Sheets): ${base}.xlsx`);
+  console.log(`Also saved: ${base}.json and .csv`);
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
