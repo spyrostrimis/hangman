@@ -152,3 +152,11 @@ Prompted by players seeing "out of questions" all day. Production's `ai_budget` 
 - **Not verified in production:** a logged question and answer from a real signed-in round.
 - Rollback: `wrangler rollback` to `c94ae21e` (the log table can stay; that Worker ignores it), or restore numeric caps in `wrangler.jsonc` and redeploy.
 
+## Illucia AI fixes from the first live log (production, 2026-10-05)
+
+- `6f8dbc6` (pages: AI only over ≤40 candidates, `unsure` words on neither side; pushed first, live as `index-DrJazoKa.js` before the Worker changed) and `809ba26` (Worker: Llama told this round's earlier questions and repeats rejected, Clef's unsure words (0.4–0.6) on neither side, each side ≥10%, at most 40 candidates). Prompted by the 86-row log of 2026-10-04 (owner's choices).
+- Before release: 97 Worker/D1 tests (each new rule seen failing when removed), type check; client 117 Node and 101 UI tests and build; tools 262 tests.
+- Worker `e159ac58-d36a-4054-a9a1-53fb220bd7ad` deployed, replacing `1893d89e`. Unauthenticated checks: `ask` and `ai-answer` 401, `get-best-scores` 200, both Illucia pages 200.
+- Not verified in production: an authenticated question under the new rules.
+- Rollback: `wrangler rollback` to `1893d89e`; the page accepts replies with or without `unsure`.
+
