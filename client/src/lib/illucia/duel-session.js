@@ -14,9 +14,10 @@ import { ILLUCIA_ALREADY_WON_MESSAGE, ILLUCIA_NO_POINTS, illuciaStumpPoints } fr
 // function takes a session and returns a new one. A session is a plain object, and every
 // function keeps fields it does not know, so a page can carry its own (log, phase, stars).
 
-// Experimental mode (v2 E5): she asks her AI helper only over 2-80 candidates, and leans on the
-// answer rather than trusting it: words on the answered side weigh this many times more.
-export const AI_MAX_CANDIDATES = 80;
+// Experimental mode (v2 E5): she asks her AI helper only over 2-40 candidates (40 since
+// 2026-10-05, for cost), and leans on the answer rather than trusting it: words on the answered
+// side weigh this many times more. Words the sorter was unsure about are on neither side.
+export const AI_MAX_CANDIDATES = 40;
 export const AI_LEAN = 3;
 export const EXPERIMENTAL_WARNING = 'Experimental: Illucia uses an AI model and can make mistakes. No points, and it resets your ladder.';
 export const tierLabel = id => VOCABULARY_TIERS.find(tier => tier.id === id)?.label ?? id;
@@ -120,7 +121,7 @@ export function applyConsult(session, reply) {
   const aiLeft = Math.min(server, reply.ok ? session.aiLeft - 1 : session.aiLeft);
   if (!reply.ok) return { ...session, aiLeft };
   return { ...session, aiLeft, askedAt: turn,
-    pending: { ai: true, checkable: false, question: { question: reply.question, yes: reply.yes, no: reply.no, model: reply.model ?? null, logId: reply.logId ?? null } } };
+    pending: { ai: true, checkable: false, question: { question: reply.question, yes: reply.yes, no: reply.no, unsure: reply.unsure ?? [], model: reply.model ?? null, logId: reply.logId ?? null } } };
 }
 
 // The player answers her open question: 'yes', 'no' or 'declined'. Returns null when there is

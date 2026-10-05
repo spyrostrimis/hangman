@@ -629,7 +629,9 @@ it('asks her AI helper instead of WordNet, leans on the answer without ruling wo
     '/user/illucia/start': body => [200, experimentalTicket(body)],
     // Only the first reply carries a log id: its answer is logged, the second's cannot be.
     '/user/illucia/ask': body => [200, { ok: true, question: 'Can your word mean something that flies?',
-      yes: body.candidates.filter(word => BIRDS.has(word)), no: body.candidates.filter(word => !BIRDS.has(word)), questionsLeft: 1,
+      // "table" comes back unsure: on neither side, so the answer leaves its weight alone.
+      yes: body.candidates.filter(word => BIRDS.has(word)), no: body.candidates.filter(word => !BIRDS.has(word) && word !== 'table'),
+      unsure: body.candidates.filter(word => word === 'table'), questionsLeft: 1,
       model: '<img src=x>', ...(asks++ === 0 ? { logId: '0b1e2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d' } : {}) }],
     '/user/illucia/ai-answer': () => [200, { ok: true }],
   });

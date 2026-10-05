@@ -68,9 +68,11 @@ export async function askIlluciaAi({ roundId, candidates, guesses, signal }) {
     return { ok: false, reason: 'unavailable' };
   }
   if (!reply?.ok) return { ok: false, reason: typeof reply?.reason === 'string' ? reply.reason : 'invalid', questionsLeft: reply?.questionsLeft };
-  // The Worker validated the sort; check again that it is a partition of what she sent.
+  // The Worker validated the sort; check again that it is a partition of what she sent. Words
+  // the sorter was unsure about (`unsure`, optional) are a third part, on neither side.
   const known = new Set(candidates);
-  const sorted = Array.isArray(reply.yes) && Array.isArray(reply.no) ? [...reply.yes, ...reply.no] : [];
+  const unsure = reply.unsure === undefined ? [] : reply.unsure;
+  const sorted = Array.isArray(reply.yes) && Array.isArray(reply.no) && Array.isArray(unsure) ? [...reply.yes, ...reply.no, ...unsure] : [];
   if (typeof reply.question !== 'string' || !reply.question.trim() || sorted.length !== candidates.length
     || new Set(sorted).size !== sorted.length || sorted.some(word => !known.has(word))) {
     return { ok: false, reason: 'invalid', questionsLeft: reply.questionsLeft };
@@ -79,7 +81,7 @@ export async function askIlluciaAi({ roundId, candidates, guesses, signal }) {
   const model = typeof reply.model === 'string' && /^[\w .-]{1,40}$/.test(reply.model) ? reply.model : null;
   // The log row for this question, so the player's answer can be added to it.
   const logId = typeof reply.logId === 'string' && /^[0-9a-f-]{36}$/.test(reply.logId) ? reply.logId : null;
-  return { ok: true, question: reply.question.trim(), yes: reply.yes, no: reply.no, questionsLeft: reply.questionsLeft, model, logId };
+  return { ok: true, question: reply.question.trim(), yes: reply.yes, no: reply.no, unsure, questionsLeft: reply.questionsLeft, model, logId };
 }
 
 // The player's answer to an AI question, for the Worker's log only; failures are ignored.

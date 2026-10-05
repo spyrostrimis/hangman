@@ -170,3 +170,32 @@ test('her memory line knows the word only once it is out', () => {
   assert.equal(rememberLine(played, false), 'CROW again? You have set it against me twice before.');
   assert.equal(rememberLine(createSession('crow', LETTERS_ONLY, MASTER, null), false), null);
 });
+
+test('experimental mode asks her AI helper only over 40 candidates or fewer (2026-10-05)', () => {
+  // Synthetic four-letter words without q or z, so the two misses leave all of them possible.
+  const many = n => Array.from({ length: n }, (_, i) => `b${'aeiou'[i % 5]}${'cdfghjklmnprstvwxy'[Math.floor(i / 5)]}k`);
+  const sessionFor = n => afterMisses(createSession(many(n)[0], { entries: many(n).map(word => Object.freeze({ word, size: 35 })), questions: null },
+    MASTER, ticket({ experimental: true, points: { eligible: false, stump: 0 } })));
+  assert.equal(takeTurn(sessionFor(41)).type, 'letter');
+  const at40 = takeTurn(sessionFor(40));
+  assert.equal(at40.type, 'consult');
+  assert.equal(at40.candidates.length, 40);
+});
+
+test('words the sorter was unsure about keep their weight when the player answers', () => {
+  const session = afterMisses(createSession('crow', ASSETS, MASTER, ticket({ experimental: true, points: { eligible: false, stump: 0 } })));
+  const consult = takeTurn(session);
+  const asked = applyConsult(consult.session, { ok: true, question: 'Can your word mean a bird?', yes: ['crow', 'hawk'],
+    unsure: ['kite', 'wren'], no: ['bolt', 'nail', 'rake', 'tack'], questionsLeft: 1 });
+  assert.deepEqual(asked.pending.question.unsure, ['kite', 'wren']);
+  const weights = herKnowledge(answerQuestion(asked, 'yes').session).weights;
+  const base = word => session.knowledge.weights.get(word);
+  assert.equal(weights.get('hawk'), base('hawk') * AI_LEAN);
+  assert.equal(weights.get('kite'), base('kite'));
+  assert.equal(weights.get('wren'), base('wren'));
+  assert.equal(weights.get('bolt'), base('bolt'));
+  // Answering "no" leans the other way; unsure words still stay as they were.
+  const no = herKnowledge(answerQuestion(asked, 'no').session).weights;
+  assert.equal(no.get('bolt'), base('bolt') * AI_LEAN);
+  assert.equal(no.get('kite'), base('kite'));
+});
