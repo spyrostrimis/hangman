@@ -37,22 +37,27 @@ function assertCandidates(candidates) {
   }
 }
 
+// Added to the invent prompt only when there are earlier questions this round (2026-10-05), so
+// the prompt D1 measured is unchanged without them.
+export const AVOID_INSTRUCTION = 'The "avoid" field lists questions already asked this round: ask a different question, not one of those.';
+
 // `options` are the model's own request settings (e.g. a reasoning effort), merged last.
-/** @param {string} mode @param {string[]} candidates @param {{ question?: string | null, maxTokens: number, options?: object }} settings */
-export function questionInput(mode, candidates, { question = null, maxTokens, options = {} } = {}) {
+// `avoid`: questions already asked this round (invent mode only).
+/** @param {string} mode @param {string[]} candidates @param {{ question?: string | null, maxTokens: number, options?: object, avoid?: string[] }} settings */
+export function questionInput(mode, candidates, { question = null, maxTokens, options = {}, avoid = [] } = {}) {
   assertCandidates(candidates);
   if (!Number.isInteger(maxTokens) || maxTokens < 1) throw new RangeError('maxTokens is required.');
   let user;
   if (mode === 'invent') {
     if (question !== null) throw new Error('Invent mode takes no question.');
-    user = { count: candidates.length, candidates };
+    user = { count: candidates.length, candidates, ...(avoid.length ? { avoid } : {}) };
   } else if (mode === 'sort') {
     if (typeof question !== 'string' || !question.endsWith('?')) throw new Error('Sort mode needs a question.');
     user = { question, count: candidates.length, candidates };
   } else throw new Error('Unknown question mode.');
   return {
     messages: [
-      { role: 'system', content: mode === 'invent' ? INVENT_PROMPT : SORT_PROMPT },
+      { role: 'system', content: mode === 'invent' ? (avoid.length ? `${INVENT_PROMPT}\n${AVOID_INSTRUCTION}` : INVENT_PROMPT) : SORT_PROMPT },
       { role: 'user', content: JSON.stringify(user) },
     ],
     max_tokens: maxTokens, temperature: 0, seed: SEED, stream: false, ...options,

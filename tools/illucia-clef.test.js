@@ -51,3 +51,10 @@ test('the reservation covers the measured Clef input tokens, where bytes alone f
   const [input] = clefInputs('@cf/cloudflare/clef', words(36), 'Can your word mean a man-made object?');
   assert.ok(clefReserveTokens(input) - Buffer.byteLength(JSON.stringify(input)) - 256 >= 36 * 120);
 });
+
+test('three-way sides: unsure words (0.4 to under 0.6) go on neither side', async () => {
+  const { clefSides } = await import('./lib/illucia-clef.js');
+  const p = { crane: 0.98, eagle: 0.6, robin: 0.59, table: 0.4, tiger: 0.39, zebra: 0.01 };
+  assert.deepEqual(clefSides(p, ['crane', 'eagle', 'robin', 'table', 'tiger', 'zebra']),
+    { yes: ['crane', 'eagle'], no: ['tiger', 'zebra'], unsure: ['robin', 'table'] });
+});

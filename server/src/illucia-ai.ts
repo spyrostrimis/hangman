@@ -7,7 +7,7 @@ import { ILLUCIA_MAX_QUESTIONS } from '../../shared/scoring-protocol.js';
 import {
   MAX_YES_SHARE, MIN_YES_SHARE, normalizeQuestionResult, questionInput, questionVocabularyProblems, validateReply,
 } from '../../shared/illucia-question.js';
-import { clefInputs, clefProbabilities, clefReserveTokens, clefSort, clefUsage } from '../../shared/illucia-clef.js';
+import { clefInputs, clefProbabilities, clefReserveTokens, clefSides, clefUsage } from '../../shared/illucia-clef.js';
 import { illuciaWordSize } from './illucia-words';
 
 type Rates = { input: number; output: number };
@@ -46,7 +46,14 @@ export const AI_MODELS: Readonly<Record<string, AiModel>> = Object.freeze({
 });
 export type AiModelKey = string;
 export const DEFAULT_AI_MODEL: AiModelKey = 'llama-3.3-70b';
-export const AI_MAX_CANDIDATES = 80;
+// Owner's decision 2026-10-05: ask the AI only over 40 candidates or fewer (Clef's sort costs
+// about 2.5 neurons a candidate; the live log showed 137 neurons a sort at 61–80).
+export const AI_MAX_CANDIDATES = 40;
+// With a sorter, each side needs at least this share of her candidates (2026-10-05; WordNet's
+// narrow questions use the same floor). Unsure words count for neither side.
+export const SORT_MIN_SIDE = 0.1;
+// Questions compare without case, spacing or the final question mark.
+const sameQuestion = (question: string) => question.trim().toLowerCase().replace(/\s+/g, ' ').replace(/\?+$/, '');
 const DEFAULT_LIMITS = Object.freeze({ dailyNeurons: 2000, dailyRequests: 60, userDaily: 30 });
 
 export type AiLimits = { enabled: boolean; model: AiModelKey; dailyNeurons: number; dailyRequests: number; userDaily: number };
@@ -100,7 +107,7 @@ export const dayOf = (now: number) => new Date(now).toISOString().slice(0, 10);
 export type AskOutcome =
   | { status: 409; error: string }
   | { ok: false; reason: 'disabled' | 'round-limit' | 'user-limit' | 'budget' | 'timeout' | 'unavailable' | 'invalid'; questionsLeft: number }
-  | { ok: true; question: string; yes: string[]; no: string[]; questionsLeft: number; model: string };
+  | { ok: true; question: string; yes: string[]; no: string[]; unsure?: string[]; questionsLeft: number; model: string };
 type RoundRow = { length: number; experimental: number; claimed_at: number | null; expires_at: number; ai_questions: number;
   word: string; seq: number; tier: string };
 // What happened, for the log (illucia_ai_log); filled in as the request runs.
@@ -137,7 +144,11 @@ export async function askIllucia(env: AiEnv, userId: string, roundId: string, ca
   const model = AI_MODELS[limits.model];
   trace.inventor = model.label;
   trace.sorter = model.sorter?.label ?? null;
-  const input = questionInput('invent', candidates, { maxTokens: model.maxTokens, options: model.options });
+  // The questions already asked this round (from the log), so the model can ask something new.
+  const earlier = ((await env.DB.prepare(`SELECT question FROM illucia_ai_log WHERE round_id = ? AND question IS NOT NULL
+    ORDER BY created_at`).bind(roundId).all()).results as { question: string }[]).map(row => row.question);
+  const avoid = [...new Map(earlier.map(question => [sameQuestion(question), question])).values()];
+  const input = questionInput('invent', candidates, { maxTokens: model.maxTokens, options: model.options, avoid });
   // Worst cases: every prompt byte a token, plus template overhead, and every allowed output
   // token; for the sorter, its measured per-question template too (clefReserveTokens).
   const inventReservation = neuronsFor(model.rates, new TextEncoder().encode(JSON.stringify(input.messages)).length + 256, model.maxTokens);
@@ -236,6 +247,11 @@ export async function askIllucia(env: AiEnv, userId: string, roundId: string, ca
     await releaseSort();
     return fail('invalid', 'invalid-question');
   }
+  // The model was told what was asked; a repeat anyway is rejected before any sorting.
+  if (avoid.some(previous => sameQuestion(previous) === sameQuestion(String(verdict.question)))) {
+    await releaseSort();
+    return fail('invalid', 'repeated-question');
+  }
   const question = String(verdict.question).trim();
   const sorter = model.sorter;
   type SortReply = { usage: ReturnType<typeof clefUsage>; probabilities: ReturnType<typeof clefProbabilities> } | null;
@@ -260,8 +276,10 @@ export async function askIllucia(env: AiEnv, userId: string, roundId: string, ca
   if (sorted.some(reply => !reply?.probabilities)) return fail('unavailable', 'sort-unavailable');
   const probabilities = Object.assign({}, ...sorted.map(reply => reply!.probabilities));
   trace.probabilities = probabilities;
-  const split = clefSort(probabilities, candidates);
-  if (split.yesShare < MIN_YES_SHARE || split.yesShare > MAX_YES_SHARE) return fail('invalid', 'sort-uneven');
+  // Three ways: Clef's unsure words (probability 0.4 to under 0.6) go on neither side.
+  const sides = clefSides(probabilities, candidates);
+  const floor = SORT_MIN_SIDE * candidates.length;
+  if (sides.yes.length < floor || sides.no.length < floor) return fail('invalid', 'sort-uneven');
   log('accepted');
-  return { ok: true, question, yes: split.yes, no: split.no, questionsLeft, model: `${model.label} and ${sorter.label}` };
+  return { ok: true, question, yes: sides.yes, no: sides.no, unsure: sides.unsure, questionsLeft, model: `${model.label} and ${sorter.label}` };
 }

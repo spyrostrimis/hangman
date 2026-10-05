@@ -266,7 +266,7 @@ describe('Llama writes, Clef-flash sorts (AI_MODEL llama-3.3-70b-clef-flash)', (
     const { cookie } = await signup();
     const result = await (await ask(cookie, await startRound(cookie))).json();
     expect(result).toEqual({ logId: expect.any(String), ok: true, question: 'Can your word be an animal?', yes: ANIMALS,
-      no: WORDS.filter(word => !ANIMALS.includes(word)), questionsLeft: 1, model: 'Llama 3.3 70B and Clef-flash' });
+      no: WORDS.filter(word => !ANIMALS.includes(word)), unsure: [], questionsLeft: 1, model: 'Llama 3.3 70B and Clef-flash' });
     expect(calls.map(c => c.model)).toEqual(['@cf/meta/llama-3.3-70b-instruct-fp8-fast', '@cf/cloudflare/clef-flash']);
     const clef = calls[1].input as unknown as ClefInput;
     expect(clef.model).toBe('clef-flash');
@@ -277,27 +277,22 @@ describe('Llama writes, Clef-flash sorts (AI_MODEL llama-3.3-70b-clef-flash)', (
     expect((await budget())!.neurons).toBeCloseTo(llamaNeurons + clefNeurons(WORDS.length), 6);
   });
 
-  it('splits more than 64 candidates over two Clef requests', async () => {
+  it('asks only over 40 candidates or fewer (owner, 2026-10-05)', async () => {
     vars = pipeline;
     const { cookie } = await signup();
     const roundId = await startRound(cookie);
     // Accepted four-letter words, found in the word list rather than hard-coded.
-    const candidates: string[] = [];
+    const words: string[] = [];
     for (const first of 'bcdfghlmnprst') for (const vowel of 'aeiou') for (const last of 'dgknpt') {
       const word = `${first}${vowel}${last}s`;
-      if (illuciaWordSize(word) !== null) candidates.push(word);
+      if (illuciaWordSize(word) !== null) words.push(word);
     }
-    candidates.sort();
-    candidates.splice(70);
-    expect(candidates.length).toBe(70);
-    clefYes = word => (candidates.indexOf(word) % 2 === 0 ? 0.8 : 0.2);
-    reply = async () => ({ response: JSON.stringify({ question: 'Can your word mean a thing?', yes: [], no: [] }),
-      usage: { prompt_tokens: 300, completion_tokens: 60 } });
-    const result = await (await ask(cookie, roundId, candidates)).json() as { ok: boolean; yes: string[] };
-    expect(result.ok).toBe(true);
-    const sizes = calls.filter(c => c.model.includes('clef')).map(c => Object.keys((c.input as unknown as ClefInput).questions).length);
-    expect(sizes).toEqual([64, 6]);
-    expect(result.yes).toEqual(candidates.filter((_, i) => i % 2 === 0));
+    words.sort();
+    expect((await ask(cookie, roundId, words.slice(0, 41))).status).toBe(400);
+    expect(calls).toHaveLength(0);
+    clefYes = word => (words.indexOf(word) % 2 === 0 ? 0.8 : 0.2);
+    expect(await (await ask(cookie, roundId, words.slice(0, 40))).json()).toMatchObject({ ok: true });
+    expect(Object.keys((calls.find(c => c.model.includes('clef'))!.input as unknown as ClefInput).questions)).toHaveLength(40);
   });
 
   it('a bad question never reaches Clef, and its sort reservation is released', async () => {
@@ -317,7 +312,7 @@ describe('Llama writes, Clef-flash sorts (AI_MODEL llama-3.3-70b-clef-flash)', (
     vars = pipeline;
     const { cookie } = await signup();
     const cases: [() => void, string][] = [
-      [() => { clefYes = word => (word === 'bird' ? 0.9 : 0.1); }, 'invalid'],
+      [() => { clefYes = () => 0.1; }, 'invalid'],
       [() => { clefReply = async () => { throw new Error('down'); }; }, 'unavailable'],
       [() => { clefReply = async () => ({ answers: { bird: { noul: 0.9 } }, usage: { input_tokens: 90 } }); }, 'unavailable'],
     ];
@@ -429,6 +424,8 @@ describe('The AI question log (illucia_ai_log)', () => {
 
   it('"none" removes the site and per-player caps', async () => {
     vars = { ...pipeline, AI_DAILY_NEURONS: 'none', AI_DAILY_REQUESTS: 'none', AI_USER_DAILY_QUESTIONS: 'none' };
+    let asked = 0;
+    reply = async () => good(['Can your word mean an animal?', 'Can your word be a creature?'][asked++ % 2]);
     const { cookie } = await signup();
     for (const word of ['jazz', 'quiz', 'fizz']) {
       const roundId = await startRound(cookie, true, word);
@@ -449,6 +446,38 @@ describe('The AI question log (illucia_ai_log)', () => {
     expect(await rows()).toHaveLength(2);
     expect((await request('delete-account', { cookie, body: { credential: 'cd'.repeat(32) } })).status).toBe(200);
     expect((await rows()).map(row => row.round_id)).toHaveLength(1);
+  });
+});
+
+describe('Live fixes after the first log (2026-10-05)', () => {
+  const pipeline = { AI_MODEL: 'llama-3.3-70b-clef-flash' };
+
+  it('tells Llama the questions already asked this round, and rejects a repeat anyway', async () => {
+    vars = pipeline;
+    const { cookie } = await signup();
+    const roundId = await startRound(cookie);
+    expect(await (await ask(cookie, roundId)).json()).toMatchObject({ ok: true });
+    // The first request had nothing to avoid.
+    expect(JSON.parse(calls[0].input.messages[1].content)).not.toHaveProperty('avoid');
+    // Same question again (different case and spacing): rejected, and Clef is not asked.
+    reply = async () => good('can your word mean  an Animal?');
+    const second = await (await ask(cookie, roundId)).json();
+    expect(second).toMatchObject({ ok: false, reason: 'invalid' });
+    const llama = calls.filter(c => !c.model.includes('clef'));
+    expect(JSON.parse(llama[1].input.messages[1].content).avoid).toEqual(['Can your word mean an animal?']);
+    expect(llama[1].input.messages[0].content).toMatch(/already asked this round/);
+    expect(calls.filter(c => c.model.includes('clef'))).toHaveLength(1);
+    const rows = (await env.DB.prepare('SELECT outcome FROM illucia_ai_log ORDER BY created_at').all()).results;
+    expect(rows).toEqual([{ outcome: 'accepted' }, { outcome: 'repeated-question' }]);
+  });
+
+  it('puts unsure words (0.4 to under 0.6) on neither side, and accepts a side down to 10%', async () => {
+    vars = pipeline;
+    const { cookie } = await signup();
+    // 8 candidates: bird yes (0.9), fish and wolf unsure (0.5, 0.45), the rest no (0.1).
+    clefYes = word => ({ bird: 0.9, fish: 0.5, wolf: 0.45 } as Record<string, number>)[word] ?? 0.1;
+    const result = await (await ask(cookie, await startRound(cookie))).json();
+    expect(result).toMatchObject({ ok: true, yes: ['bird'], unsure: ['fish', 'wolf'], no: ['boat', 'cake', 'lamp', 'tree', 'yarn'] });
   });
 });
 

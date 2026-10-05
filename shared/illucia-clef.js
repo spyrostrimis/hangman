@@ -53,6 +53,16 @@ export function clefProbabilities(raw, words) {
 }
 
 // YES at or above the threshold; lists sorted like the candidates.
+// Three ways, for live play (2026-10-05): a probability between `low` and `high` is unsure, and
+// such a word goes on neither side, so the player's answer leaves its weight alone.
+export const CLEF_UNSURE = Object.freeze({ low: 0.4, high: 0.6 });
+export function clefSides(probabilities, candidates, { low, high } = CLEF_UNSURE) {
+  const yes = candidates.filter(word => probabilities[word] >= high);
+  const no = candidates.filter(word => probabilities[word] < low);
+  const unsure = candidates.filter(word => probabilities[word] >= low && probabilities[word] < high);
+  return { yes, no, unsure };
+}
+
 export function clefSort(probabilities, candidates, threshold = 0.5) {
   const yes = candidates.filter(word => probabilities[word] >= threshold);
   const no = candidates.filter(word => probabilities[word] < threshold);

@@ -187,3 +187,13 @@ test('question vocabulary: short words from the allowlist, longer ones must be k
   assert.deepEqual(questionVocabularyProblems('Can your word mean a zorbx or xyz?', w => w === 'your' || isKnown(w)), ['zorbx', 'xyz']);
   assert.deepEqual(questionVocabularyProblems('Can your word mean a bird?', () => false), ['your', 'word', 'mean', 'bird']);
 });
+
+test('earlier questions this round are passed as "avoid", with the instruction only then', async () => {
+  const { AVOID_INSTRUCTION } = await import('./lib/illucia-question-model.js');
+  const plain = questionInput('invent', candidates, { maxTokens: 9 });
+  assert.equal(plain.messages[0].content, INVENT_PROMPT);
+  assert.equal(Object.hasOwn(JSON.parse(plain.messages[1].content), 'avoid'), false);
+  const later = questionInput('invent', candidates, { maxTokens: 9, avoid: ['Can your word mean a bird?'] });
+  assert.equal(later.messages[0].content, `${INVENT_PROMPT}\n${AVOID_INSTRUCTION}`);
+  assert.deepEqual(JSON.parse(later.messages[1].content).avoid, ['Can your word mean a bird?']);
+});
