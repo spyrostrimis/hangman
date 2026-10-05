@@ -62,16 +62,21 @@ async function main() {
   if (since !== null && !/^\d{4}-\d{2}-\d{2}$/.test(since)) throw new Error('--since takes a date like 2026-10-04.');
   const from = since ? Date.parse(`${since}T00:00:00Z`) : 0;
   let stdout;
-  try {
-    ({ stdout } = await promisify(execFile)(process.execPath,
-      [resolve(ROOT, 'server/node_modules/wrangler/bin/wrangler.js'), 'd1', 'execute', 'DB', '--remote', '--json',
-        '--command', `SELECT * FROM illucia_ai_log WHERE created_at >= ${from} ORDER BY created_at`],
-      { cwd: resolve(ROOT, 'server'), windowsHide: true, timeout: 120000, maxBuffer: 256 * 1024 * 1024 }));
-  } catch (error) {
-    // Wrangler sometimes crashes on Windows as it exits, after printing its complete answer;
-    // use that answer if it is whole, otherwise show Wrangler's own message.
-    stdout = error.stdout;
-    if (!parsesAsResult(stdout)) throw new Error(`Wrangler failed: ${String(error.stderr || error.message).trim().slice(0, 500)}`);
+  // Wrangler sometimes crashes on Windows: as it exits after printing its complete answer (use
+  // the answer), or with no output at all (try again, up to three times).
+  for (let attempt = 1; ; attempt++) {
+    try {
+      ({ stdout } = await promisify(execFile)(process.execPath,
+        [resolve(ROOT, 'server/node_modules/wrangler/bin/wrangler.js'), 'd1', 'execute', 'DB', '--remote', '--json',
+          '--command', `SELECT * FROM illucia_ai_log WHERE created_at >= ${from} ORDER BY created_at`],
+        { cwd: resolve(ROOT, 'server'), windowsHide: true, timeout: 120000, maxBuffer: 256 * 1024 * 1024 }));
+      break;
+    } catch (error) {
+      stdout = error.stdout;
+      if (parsesAsResult(stdout)) break;
+      if (attempt === 3) throw new Error(`Wrangler failed three times: ${String(error.stderr || error.message).trim().slice(0, 500)}`);
+      console.error(`Wrangler failed (attempt ${attempt} of 3); trying again.`);
+    }
   }
   const rows = JSON.parse(stdout)[0].results.map(row => ({ ...row, created: new Date(row.created_at).toISOString() }));
   const stamp = new Date().toISOString().replace(/[:.]/g, '-');
