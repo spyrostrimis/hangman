@@ -256,7 +256,7 @@ describe('Illucia AI question (D2)', () => {
 describe('Llama writes, Clef-flash sorts (AI_MODEL llama-3.3-70b-clef-flash)', () => {
   const pipeline = { AI_MODEL: 'llama-3.3-70b-clef-flash' };
   const llamaNeurons = (300 * 26668 + 60 * 204805) / 1e6;
-  const clefNeurons = (words: number) => (90 * words * 21818) / 1e6;
+  const clefNeurons = (words: number) => (90 * words * 3455) / 1e6;
 
   it('uses Llama for the question and Clef-flash for the lists, and settles both', async () => {
     vars = pipeline;
@@ -372,7 +372,7 @@ describe('The AI question log (illucia_ai_log)', () => {
     expect(row.sort_ms).toEqual(expect.any(Number));
     expect(JSON.parse(row.probabilities as string)).toMatchObject({ bird: 0.9, boat: 0.1 });
     expect(row.invent_neurons).toBeCloseTo((300 * 26668 + 60 * 204805) / 1e6, 6);
-    expect(row.sort_neurons).toBeCloseTo((90 * WORDS.length * 21818) / 1e6, 6);
+    expect(row.sort_neurons).toBeCloseTo((90 * WORDS.length * 3455) / 1e6, 6);
   });
 
   it('logs failed attempts with their reason and the rejected question', async () => {
@@ -478,6 +478,18 @@ describe('Live fixes after the first log (2026-10-05)', () => {
     clefYes = word => ({ bird: 0.9, fish: 0.5, wolf: 0.45 } as Record<string, number>)[word] ?? 0.1;
     const result = await (await ask(cookie, await startRound(cookie))).json();
     expect(result).toMatchObject({ ok: true, yes: ['bird'], unsure: ['fish', 'wolf'], no: ['boat', 'cake', 'lamp', 'tree', 'yarn'] });
+  });
+});
+
+describe('Gemma writes, Clef-flash sorts (AI_MODEL gemma-4-clef-flash, 2026-10-10)', () => {
+  it('asks Gemma 4 with reasoning off, sorts with Clef-flash, names both, and settles at their prices', async () => {
+    vars = { AI_MODEL: 'gemma-4-clef-flash' };
+    const { cookie } = await signup();
+    const result = await (await ask(cookie, await startRound(cookie))).json();
+    expect(result).toMatchObject({ ok: true, question: 'Can your word mean an animal?', yes: ANIMALS, model: 'Gemma 4 26B A4B and Clef-flash' });
+    expect(calls.map(c => c.model)).toEqual(['@cf/google/gemma-4-26b-a4b-it', '@cf/cloudflare/clef-flash']);
+    expect(calls[0].input).toMatchObject({ chat_template_kwargs: { enable_thinking: false }, max_tokens: 768 });
+    expect((await budget())!.neurons).toBeCloseTo((300 * 9091 + 60 * 27273) / 1e6 + (90 * WORDS.length * 3455) / 1e6, 6);
   });
 });
 

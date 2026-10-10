@@ -9,7 +9,7 @@
   "routes": [{ "pattern": "hangman.spyrostrimis.com/user/*", "zone_name": "spyrostrimis.com" }],
   "vars": {
     "APP_ORIGIN": "https://hangman.spyrostrimis.com", "LOCAL_DEV": "false",
-    "AI_ENABLED": "true", "AI_MODEL": "llama-3.3-70b-clef-flash", "AI_DAILY_NEURONS": "none", "AI_DAILY_REQUESTS": "none", "AI_USER_DAILY_QUESTIONS": "none"
+    "AI_ENABLED": "true", "AI_MODEL": "gemma-4-clef-flash", "AI_DAILY_NEURONS": "none", "AI_DAILY_REQUESTS": "none", "AI_USER_DAILY_QUESTIONS": "none"
   },
   // Experimental AI mode (v2 D2). Production only: the local environment has no AI binding,
   // so local development and tests never spend the account's Workers AI allowance.

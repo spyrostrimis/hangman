@@ -17,8 +17,10 @@ type AiModel = { id: string; label: string; rates: Rates; maxTokens: number; tim
 // Clef-flash, Cloudflare's decision model: it cannot write a question, but sorts candidates
 // under one (D1: 91% agreement with WordNet, every sort within 1.2 s). It bills input only,
 // about 90-99 tokens per candidate.
+// Price: 3,455 neurons per M input tokens since Cloudflare's cut of 2026-10-09 (checked
+// 2026-10-10). Until then this used Clef's rate (21,818) by mistake; Clef-flash was about 8,182.
 const CLEF_FLASH: Sorter = Object.freeze({ id: '@cf/cloudflare/clef-flash', label: 'Clef-flash',
-  rates: Object.freeze({ input: 21818, output: 0 }), timeoutMs: 4000 });
+  rates: Object.freeze({ input: 3455, output: 0 }), timeoutMs: 4000 });
 
 // The models the route may use, chosen by the AI_MODEL var. Rates are neurons per million
 // tokens, checked against Cloudflare's pricing page on 2026-10-02. `label` names the model
@@ -40,6 +42,11 @@ export const AI_MODELS: Readonly<Record<string, AiModel>> = Object.freeze({
     rates: Object.freeze({ input: 31818, output: 68182 }), maxTokens: 4096, timeoutMs: 40000,
     options: Object.freeze({ reasoning_effort: 'low' }) }),
   // Owner's choice for production from 2026-10-04: Llama writes, Clef-flash sorts.
+  // Owner's choice for production from 2026-10-10: Gemma 4 writes, Clef-flash sorts. Reasoning off as
+  // in D1 (10/21 usable alone, invent p95 7.9 s, max 10.2 s on up to 77 candidates; now at most 40).
+  'gemma-4-clef-flash': Object.freeze({ id: '@cf/google/gemma-4-26b-a4b-it', label: 'Gemma 4 26B A4B',
+    rates: Object.freeze({ input: 9091, output: 27273 }), maxTokens: 768, timeoutMs: 10000,
+    options: Object.freeze({ chat_template_kwargs: Object.freeze({ enable_thinking: false }) }), sorter: CLEF_FLASH }),
   'llama-3.3-70b-clef-flash': Object.freeze({ id: '@cf/meta/llama-3.3-70b-instruct-fp8-fast', label: 'Llama 3.3 70B',
     rates: Object.freeze({ input: 26668, output: 204805 }), maxTokens: 768, timeoutMs: 6000, options: Object.freeze({}),
     sorter: CLEF_FLASH }),

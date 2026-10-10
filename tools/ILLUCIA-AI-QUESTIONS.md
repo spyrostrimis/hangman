@@ -397,6 +397,14 @@ for 9 words, 72 for 36. The runs went as follows:
 - **Use in production:** that would be a D2 change (a second model call per question), not
   decided here.
 
+### Correction: Clef-flash's price (2026-10-10)
+
+Clef-flash sorts above were costed at Clef's rate, 21,818 neurons per M input tokens. Clef-flash
+was cheaper: $0.090 per M tokens (about 8,182 neurons per M) until Cloudflare's price cut of
+2026-10-09, and $0.038 per M (3,455 neurons per M) since then. So every Clef-flash sort cost here
+(and in the live log until the 2026-10-10 Worker) is about 2.7 times too high; from 2026-10-09
+on, the real cost is about 6.3 times lower than these figures. Clef's own figures are right.
+
 ## Stopped run: reasoning on (`benchmarks/illucia-d1-reasoning-on.json`)
 
 The first run used each model's default reasoning (gpt-oss-20b at "low"), a 4,096-token
