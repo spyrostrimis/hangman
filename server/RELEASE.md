@@ -160,3 +160,11 @@ Prompted by players seeing "out of questions" all day. Production's `ai_budget` 
 - Not verified in production: an authenticated question under the new rules.
 - Rollback: `wrangler rollback` to `1893d89e`; the page accepts replies with or without `unsure`.
 
+## Illucia AI: Gemma 4 writes, Clef-flash sorts (production, 2026-10-10)
+
+- `b236bbb`: `AI_MODEL` `gemma-4-clef-flash` (Gemma 4 26B A4B, reasoning off, 10 s timeout; Clef-flash sorting unchanged), and Clef-flash costed at its real price (3,455 neurons per M input tokens since Cloudflare's 2026-10-09 cut; it had been costed at Clef's 21,818).
+- Before release: 98 Worker/D1 tests (the new one seen failing with Gemma's reasoning on), type check, dry-run build.
+- Worker `77f9fc97-ad49-420c-bd13-593d62b20f3d` deployed, replacing `e159ac58`. Unauthenticated checks: `ask` 401, `get-best-scores` 200.
+- Not verified in production: a real Gemma question through the binding (envelope, latency).
+- Rollback: set `AI_MODEL` back to `llama-3.3-70b-clef-flash` and redeploy, or `wrangler rollback` to `e159ac58` (that version still has the old Clef-flash rate).
+
